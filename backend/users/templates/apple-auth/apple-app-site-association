@@ -1,0 +1,16 @@
+{
+  "applinks": {
+      "apps": [],
+      "defaults": { "percentEncoded": false },
+      "details": [
+           {
+             "appID": "flat-morning-38803.botics.co",
+             "paths": [ "*" ],
+             "appIDs": ["flat-morning-38803.botics.co"],
+             "components": [
+                 { "/": "/*" }
+             ]
+           }
+       ]
+   }
+}

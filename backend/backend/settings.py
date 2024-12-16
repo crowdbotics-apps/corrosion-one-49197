@@ -36,7 +36,6 @@ ALLOWED_HOSTS = env.list("HOST", default=["*"])
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +43,30 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+LOCAL_APPS = [
+    'users',
+    'utils',
+]
+
+THIRD_PARTY_APPS = [
+    'rest_framework',
+    'rest_framework.authtoken',
+    'jazzmin',
+    'phonenumber_field',
+    'dj_rest_auth',
+    'rest_framework_simplejwt',
+    'corsheaders',
+    'django_json_widget',
+    'django_extensions',
+    'drf_spectacular',
+    'storages',
+    'import_export',
+    'webshell',
+]
+
+
+INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -74,6 +97,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
+
+AUTH_USER_MODEL = 'users.User'
 
 
 # Database

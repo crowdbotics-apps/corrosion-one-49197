@@ -1,0 +1,473 @@
+import json
+import os
+
+import facebook
+import jwt
+from dj_rest_auth.views import LoginView
+from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.core.files import File
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.shortcuts import render
+from django.utils import timezone
+from django.utils.http import urlsafe_base64_decode
+from django.views import View
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, \
+    HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
+from rest_framework.viewsets import GenericViewSet
+from urllib import request as urequest
+from django_user_agents.utils import get_user_agent
+
+from users.models import User
+from utils.utils import may_fail, update_with_kwargs, create_user_activation_link
+from utils.utils.email import send_email_with_template
+from utils.utils.verification_code import setup_verification_code, get_verification_code
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
+from django.views.generic import DetailView, RedirectView, UpdateView
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
+
+from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, SendResetLinkSerializer
+from utils.utils import get_user_by_uidb64, get_and_validate_serializer
+
+User = get_user_model()
+
+class PasswordViewset(GenericViewSet):
+
+    def get_serializer_class(self):
+        match self.action:
+            case 'reset': return ResetPasswordConfirmSerializer
+            case 'change': return ChangePasswordSerializer
+            case 'send_reset_link': return SendResetLinkSerializer
+
+    @action(detail=False, methods=['post'])
+    @get_and_validate_serializer
+    def reset(self, request, serializer, *args, **kwargs):
+        user = get_user_by_uidb64(serializer.data['uidb64'])
+        user.set_password(serializer.data['new_password1'])
+        user.save()
+        return Response()
+
+    @action(detail=False, methods=['post'])
+    @get_and_validate_serializer
+    def change(self, request, serializer, *args, **kwargs):
+        self.request.user.set_password(serializer.data['new_password'])
+        self.request.user.save()
+        return Response()
+
+    @action(detail=False, methods=['post'])
+    @get_and_validate_serializer
+    def send_reset_link(self, request, serializer, *args, **kwargs):
+        # email = self.request.data["email"]
+        # user = User.objects.filter(email=email).first()
+        # if user:
+        #     send_email_with_template(
+        #         subject=f'Reset password email DOLOVO',
+        #         email=user.email,
+        #         template_to_load='emails/forgot_password_email.html',
+        #         context={
+        #             "username": user.username,
+        #             "set_password_link": generate_reset_url(user, self.request),
+        #         }
+        #     )
+
+        return Response()
+
+
+class UserViewSet(GenericViewSet, CreateModelMixin):
+    """
+    ViewSet for managing User objects.
+    """
+    permission_classes = [AllowAny]
+
+    def create(self, request, **kwargs):
+        """
+        Create user and send verification email
+        """
+        serializer = UserCreateSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.create(serializer.data)
+
+        return Response(UserLoginResponseSerializer(user).data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'])
+    def activate(self, request):
+        data = request.data
+        user_id = data.get('uidb64', '')
+        confirmation_token = data.get('token', '')
+        try:
+            user = get_user_by_uidb64(user_id)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is None:
+            return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
+        if user.email_verified:
+            return Response('User already verified ', status=status.HTTP_200_OK)
+        if not default_token_generator.check_token(user, confirmation_token):
+            send_email_with_template(
+                subject='iAscend - Verification Link',
+                email=user.email,
+                template_to_load='emails/activate_user_email.html',
+                context={
+                    "name": user.email,
+                    "verification_link": create_user_activation_link(user, request),
+                }
+            )
+
+            return Response('Token is invalid or expired. We just sent another confirmation email, please check.',
+                            status=status.HTTP_400_BAD_REQUEST)
+        user.email_verified = True
+        user.is_active = True
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['POST'])
+    def forgot_password(self, request):
+        """
+        Send email to reset users password
+        """
+        email = request.data["email"]
+        user = User.objects.filter(email=email).first()
+        if user:
+            code = setup_verification_code(user)
+            name = user.name
+            if name is None or name == '':
+                name = user.email
+            send_email_with_template(
+                subject='iAscend - Reset Password Code',
+                email=user.email,
+                template_to_load='emails/forgot_password_email.html',
+                context={
+                    "name": name if name else user.email,
+                    "code": code,
+                }
+            )
+
+            return Response(status=HTTP_200_OK)
+        return Response({'message': 'The email is invalid'}, status=HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['POST'], url_path='verify')
+    def check_verification_code(self, request):
+        otp = request.data.get("code")
+        try:
+            get_token = get_verification_code(otp)
+        except Exception as e:
+            return Response(e, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        if not get_token:
+            return Response({'message': 'The code is invalid'}, status=HTTP_400_BAD_REQUEST)
+        return Response(status=HTTP_200_OK)
+
+    @action(detail=False, methods=['POST'])
+    def reset_password(self, request):
+        try:
+            otp = request.data.get("code")
+            password = request.data.get("password")
+            get_token = get_verification_code(otp)
+            if not get_token:
+                return Response({'message': 'The code is invalid'}, status=status.HTTP_400_BAD_REQUEST)
+            user = get_token.user
+            user.set_password(password)
+            user.save()
+            get_token.delete()
+        except Exception as e:
+            return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['POST'])
+    def biometrics_login(self, request):
+        try:
+            data = request.data
+            email = data.get('email', '')
+            biometrics_key = data.get('biometrics_key', '')
+            user = User.objects.get(email=email, biometrics_key=biometrics_key)
+            if user:
+                serializer = UserLoginResponseSerializer(user)
+                return Response(serializer.data, status=HTTP_200_OK)
+            else:
+                Response({'message': 'Unable to login with biometrics'}, status=HTTP_400_BAD_REQUEST)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+            return Response({'message': 'Unable to login with biometrics'}, status=HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['POST'])
+    def setup_biometrics(self, request):
+        try:
+            data = request.data
+            biometrics_key = data.get('biometrics_key', '')
+            user = self.request.user
+            user.biometrics_key = biometrics_key
+            user.save()
+            return Response(status=HTTP_200_OK)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+            return Response({'message': 'Unable to setup biometrics'}, status=HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def create_update_user(crate_data, update_data, user, login_type, profile_picture=None, sign_up=False):
+        if user:
+            update_with_kwargs(user, update_data)
+        else:
+            user = User.objects.filter(email=crate_data['email']).first()
+            if user:
+                if user.email_verified:
+                    update_with_kwargs(user, update_data)
+                else:
+                    raise ValidationError(
+                        {'non_field_errors': [
+                            f'Email already linked to an account. Please verify the email first before continue with {login_type}.'
+                        ]}
+                    )
+            else:
+                if not sign_up:
+                    raise ValidationError(
+                        {'non_field_errors': [
+                            f'Email not found. Please sign up first before continue with {login_type}.'
+                        ]}
+                    )
+                user_data = {**crate_data, **update_data}
+                user = User.objects.create(**user_data)
+                user.current_user_type = User.UserType.SEEKER
+                user.save()
+            if profile_picture:
+                try:
+                    result = urequest.urlretrieve(profile_picture)
+                    user.profile_picture.save(os.path.basename(profile_picture), File(open(result[0], 'rb')))
+                except Exception as error:
+                    print(f'Error getting profile picture from {login_type}: {str(error)}')
+        user.last_login = timezone.now()
+        user.save()
+        return user
+
+    @may_fail(User.DoesNotExist, 'Invalid user')
+    @action(detail=False, methods=['post'])
+    def continue_with_google(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        user_info = data.get('user')
+        sign_up = data.get('signUp', False)
+        google_token = data.get('idToken')
+        google_id = user_info.get('id')
+        password = User.objects.make_random_password()
+        email = user_info.get('email', '')
+        name = user_info.get('name', '')
+        first_name = user_info.get('givenName', '')
+        last_name = user_info.get('familyName', '')
+        profile_picture = user_info.get('photo')
+
+        user = User.objects.filter(google_id=google_id).first()
+        if user:
+            if not user.is_active:
+                return Response({'message': 'The account has been removed'}, status=HTTP_404_NOT_FOUND)
+
+        update_data = dict(
+            google_token=google_token,
+            google_id=google_id,
+            email_verified=True,
+        )
+
+        create_data = dict(
+            name=name,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            username=email,
+            password=password,
+        )
+
+        user = self.create_update_user(create_data, update_data, user, 'Google', profile_picture, sign_up)
+        serializer = UserLoginResponseSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @may_fail(User.DoesNotExist, 'Invalid user')
+    @action(detail=False, methods=['post'])
+    def continue_with_facebook(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        access_token = data.get('accessToken')
+        sign_up = data.get('signUp', False)
+        try:
+            graph = facebook.GraphAPI(access_token=access_token)
+            user_info = graph.get_object(
+                id='me',
+                fields='first_name, last_name, id, email, picture.type(large)'
+            )
+        except facebook.GraphAPIError:
+            return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.filter(facebook_id=user_info.get('id')).first()
+        if user:
+            if not user.is_active:
+                return Response({'message': 'The account has been removed'}, status=HTTP_404_NOT_FOUND)
+
+        facebook_id = user_info.get('id')
+        facebook_token = access_token
+        password = User.objects.make_random_password()
+        first_name = user_info.get('first_name', '')
+        last_name = user_info.get('last_name', '')
+        name = first_name + ' ' + last_name
+        email = user_info.get('email') or f'{facebook_id}@iascend.com'
+
+        profile_picture = user_info.get('picture').get('data').get('url')
+
+        update_data = dict(
+            facebook_token=facebook_token,
+            facebook_id=facebook_id,
+            email_verified=True,
+        )
+
+        create_data = dict(
+            name=name,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            username=email,
+            password=password,
+        )
+
+        user = self.create_update_user(create_data, update_data, user, 'Facebook', profile_picture, sign_up)
+
+        serializer = UserLoginResponseSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @may_fail(User.DoesNotExist, 'Invalid user')
+    @action(detail=False, methods=['post'])
+    def continue_with_apple(self, request):
+        data = request.data
+        sign_up = data.get('signUp', False)
+        identity_token = data.get('identityToken', None)
+        try:
+            decoded = jwt.decode(
+                jwt=identity_token,
+                key='',
+                algorithms=['HS256'],
+                options={
+                    "verify_signature": False,
+                    "verify_exp": True
+                }
+            )
+        except:
+            return Response('Invalid token', status=status.HTTP_400_BAD_REQUEST)
+
+        email = decoded.get('email', None)
+
+        password = User.objects.make_random_password()
+        identity_token = data.get('identityToken', None)
+        name = ''
+        first_name = ''
+        last_name = ''
+        full_name = data.get('fullName', None)
+        if full_name:
+            first_name = full_name.get('givenName', '')
+            last_name = full_name.get('familyName', '')
+        if first_name and last_name:
+            name = first_name + ' ' + last_name
+
+        apple_id = decoded.get('id', None)
+        apple_token = identity_token
+
+        user = User.objects.filter(username=email).first()
+        if user:
+            if not user.is_active:
+                return Response({'message': 'The account has been removed'}, status=HTTP_404_NOT_FOUND)
+
+        update_data = dict(
+            apple_id=apple_id,
+            apple_token=apple_token,
+            email_verified=True,
+        )
+
+        create_data = dict(
+            name=name,
+            first_name=first_name if first_name else '',
+            last_name=last_name if last_name else '',
+            email=email,
+            username=email,
+            password=password,
+        )
+
+        user = self.create_update_user(create_data, update_data, user, 'Apple', None, sign_up)
+
+        serializer = UserLoginResponseSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CustomLoginView(LoginView):
+    """
+    Custom login that cheks if user is active
+    """
+
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"message": "Invalid email or password. Please try again."}, status=HTTP_404_NOT_FOUND)
+        if not user.email_verified:
+            return Response("Please verify your account first", status=status.HTTP_400_BAD_REQUEST)
+        if not user.is_active:
+            return Response("The account has been removed", status=status.HTTP_400_BAD_REQUEST)
+        return super().post(request, *args, **kwargs)
+
+
+class DynamicRedirectView(View):
+    def get(self, request, *args, **kwargs):
+        user_agent = get_user_agent(request)
+
+        base_url = settings.REDIRECT_DEEP_LINK
+        slug = kwargs.get('slug', '')
+        splitted_data = slug.split('-_-')
+        if len(splitted_data) != 2:
+            return HttpResponseBadRequest('Invalid link')
+        user_id = splitted_data[0]
+        token = splitted_data[1]
+
+        # Check if the user is on a mobile device
+        if user_agent.is_mobile or user_agent.is_tablet:
+            url = f'{base_url}://activate-user/{user_id}/{token}/'
+            HttpResponseRedirect.allowed_schemes.append(base_url)
+            return HttpResponseRedirect(url)
+        else:
+            # TODO: Todo better
+            # For PC users, render a template
+            try:
+                user = get_user_by_uidb64(user_id)
+            except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+                user = None
+            if user is None:
+                return HttpResponseBadRequest('User not found')
+            if not default_token_generator.check_token(user, token):
+                send_email_with_template(
+                    subject='iAscend - Verification Link',
+                    email=user.email,
+                    template_to_load='emails/activate_user_email.html',
+                    context={
+                        "name": user.email,
+                        "verification_link": create_user_activation_link(user, request),
+                    }
+                )
+
+                return HttpResponseBadRequest('Token is invalid or expired. We just sent another confirmation email, please check.')
+            user.email_verified = True
+            user.save()
+
+            return render(request, 'activate_account.html')
+
+
+def get_user_by_uidb64(uidb64):
+    """
+    Returns user given a uidb64
+    """
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+        user = None
+    return user
+
