@@ -12,8 +12,13 @@ def send_email_with_template(subject, email, context, template_to_load):
     """
     Send an email with an HTML template to the specified email address.
     """
+    updated_context = {
+        **context,
+        'project_name': settings.PROJECT_NAME,
+        'logo_url': settings.LOGO_URL,
+    }
     template = loader.get_template(template_to_load)
-    html_content = template.render(context)
+    html_content = template.render(updated_context)
     send_mail(
         subject,
         html_content,

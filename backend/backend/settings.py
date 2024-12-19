@@ -63,6 +63,7 @@ THIRD_PARTY_APPS = [
     'storages',
     'import_export',
     'webshell',
+    'cities_light',
 ]
 
 
@@ -218,3 +219,19 @@ REST_FRAMEWORK = {
     )
 }
 
+CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities')
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en']
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['US']
+
+EMAIL_HOST = env.str("EMAIL_HOST", "smtp.sendgrid.net")
+EMAIL_HOST_USER = env.str("SENDGRID_USERNAME", "")
+EMAIL_HOST_PASSWORD = env.str("SENDGRID_PASSWORD", "")
+DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL", "")
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
+ALLOW_SUPER_USERS_LOGIN = env.bool("ALLOW_SUPER_USERS_LOGIN", True)
+PROJECT_NAME = env.str("PROJECT_NAME", "Project")
+LOGO_URL = env.str("LOGO_URL", "https://example.com/logo.png")
+REDIRECT_DEEP_LINK = env.str("REDIRECT_DEEP_LINK", "project")

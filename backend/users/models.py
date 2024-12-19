@@ -30,29 +30,12 @@ class User(AbstractUser):
     apple_id = models.CharField('ID for Apple', max_length=64, blank=True, null=True)
     apple_token = models.TextField('Token for Apple', blank=True, null=True)
     timezone = TimeZoneField(default='Etc/UTC')
-    stripe_account_link = models.URLField(_("Account Link"), blank=True, null=True)
-
-    stripe_customer_id = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text='Stripe Customer (consumer facing) ID',
-    )
-    stripe_account_id = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text='Stripe Connected Account ID',
-    )
-
-    stripe_account_linked = models.BooleanField(default=False)
-
     last_activity = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-id']
-        verbose_name = 'Admin'
-        verbose_name_plural = 'Admins'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

@@ -38,7 +38,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, SendResetLinkSerializer
+from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, SendResetLinkSerializer, \
+    UserCreateSerializer, UserLoginResponseSerializer
 from utils.utils import get_user_by_uidb64, get_and_validate_serializer
 
 User = get_user_model()
@@ -91,6 +92,11 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
     """
     permission_classes = [AllowAny]
 
+    def get_serializer_class(self):
+        match self.action:
+            case 'reset': return ResetPasswordConfirmSerializer
+            case 'change': return ChangePasswordSerializer
+
     def create(self, request, **kwargs):
         """
         Create user and send verification email
@@ -102,35 +108,12 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         return Response(UserLoginResponseSerializer(user).data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'])
-    def activate(self, request):
-        data = request.data
-        user_id = data.get('uidb64', '')
-        confirmation_token = data.get('token', '')
-        try:
-            user = get_user_by_uidb64(user_id)
-        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-        if user is None:
-            return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
-        if user.email_verified:
-            return Response('User already verified ', status=status.HTTP_200_OK)
-        if not default_token_generator.check_token(user, confirmation_token):
-            send_email_with_template(
-                subject='iAscend - Verification Link',
-                email=user.email,
-                template_to_load='emails/activate_user_email.html',
-                context={
-                    "name": user.email,
-                    "verification_link": create_user_activation_link(user, request),
-                }
-            )
+    @get_and_validate_serializer
+    def change(self, request, serializer, *args, **kwargs):
+        self.request.user.set_password(serializer.data['new_password'])
+        self.request.user.save()
+        return Response()
 
-            return Response('Token is invalid or expired. We just sent another confirmation email, please check.',
-                            status=status.HTTP_400_BAD_REQUEST)
-        user.email_verified = True
-        user.is_active = True
-        user.save()
-        return Response(status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['POST'])
     def forgot_password(self, request):
@@ -145,7 +128,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             if name is None or name == '':
                 name = user.email
             send_email_with_template(
-                subject='iAscend - Reset Password Code',
+                subject=f'{settings.PROJECT_NAME} - Reset Password Code',
                 email=user.email,
                 template_to_load='emails/forgot_password_email.html',
                 context={
@@ -155,7 +138,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             )
 
             return Response(status=HTTP_200_OK)
-        return Response({'message': 'The email is invalid'}, status=HTTP_400_BAD_REQUEST)
+        return Response('The email is invalid', status=HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['POST'], url_path='verify')
     def check_verification_code(self, request):
@@ -165,7 +148,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         except Exception as e:
             return Response(e, status=HTTP_500_INTERNAL_SERVER_ERROR)
         if not get_token:
-            return Response({'message': 'The code is invalid'}, status=HTTP_400_BAD_REQUEST)
+            return Response('The code is invalid', status=HTTP_400_BAD_REQUEST)
         return Response(status=HTTP_200_OK)
 
     @action(detail=False, methods=['POST'])
@@ -174,8 +157,10 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             otp = request.data.get("code")
             password = request.data.get("password")
             get_token = get_verification_code(otp)
+            if not password:
+                return Response('Password cannot be empty', status=HTTP_400_BAD_REQUEST)
             if not get_token:
-                return Response({'message': 'The code is invalid'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response('The code is invalid', status=status.HTTP_400_BAD_REQUEST)
             user = get_token.user
             user.set_password(password)
             user.save()
@@ -192,12 +177,13 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             biometrics_key = data.get('biometrics_key', '')
             user = User.objects.get(email=email, biometrics_key=biometrics_key)
             if user:
+
                 serializer = UserLoginResponseSerializer(user)
                 return Response(serializer.data, status=HTTP_200_OK)
             else:
-                Response({'message': 'Unable to login with biometrics'}, status=HTTP_400_BAD_REQUEST)
+                Response( 'Unable to login with biometrics', status=HTTP_400_BAD_REQUEST)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-            return Response({'message': 'Unable to login with biometrics'}, status=HTTP_400_BAD_REQUEST)
+            return Response( 'Unable to login with biometrics', status=HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['POST'])
     def setup_biometrics(self, request):
@@ -209,7 +195,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             user.save()
             return Response(status=HTTP_200_OK)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-            return Response({'message': 'Unable to setup biometrics'}, status=HTTP_400_BAD_REQUEST)
+            return Response('Unable to setup biometrics', status=HTTP_400_BAD_REQUEST)
 
     @staticmethod
     def create_update_user(crate_data, update_data, user, login_type, profile_picture=None, sign_up=False):
@@ -265,7 +251,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         user = User.objects.filter(google_id=google_id).first()
         if user:
             if not user.is_active:
-                return Response({'message': 'The account has been removed'}, status=HTTP_404_NOT_FOUND)
+                return Response('The account has been removed', status=HTTP_404_NOT_FOUND)
 
         update_data = dict(
             google_token=google_token,
@@ -304,7 +290,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         user = User.objects.filter(facebook_id=user_info.get('id')).first()
         if user:
             if not user.is_active:
-                return Response({'message': 'The account has been removed'}, status=HTTP_404_NOT_FOUND)
+                return Response( 'The account has been removed', status=HTTP_404_NOT_FOUND)
 
         facebook_id = user_info.get('id')
         facebook_token = access_token
@@ -312,7 +298,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         first_name = user_info.get('first_name', '')
         last_name = user_info.get('last_name', '')
         name = first_name + ' ' + last_name
-        email = user_info.get('email') or f'{facebook_id}@iascend.com'
+        email = user_info.get('email') or f'{facebook_id}@crowdbotics.com'
 
         profile_picture = user_info.get('picture').get('data').get('url')
 
@@ -375,7 +361,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         user = User.objects.filter(username=email).first()
         if user:
             if not user.is_active:
-                return Response({'message': 'The account has been removed'}, status=HTTP_404_NOT_FOUND)
+                return Response( 'The account has been removed', status=HTTP_404_NOT_FOUND)
 
         update_data = dict(
             apple_id=apple_id,
@@ -397,77 +383,62 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         serializer = UserLoginResponseSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class CustomLoginView(LoginView):
-    """
-    Custom login that cheks if user is active
-    """
-
-    def post(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'])
+    def login(self, request):
         email = request.data.get('email')
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response({"message": "Invalid email or password. Please try again."}, status=HTTP_404_NOT_FOUND)
+            return Response("Invalid email or password. Please try again.", status=HTTP_404_NOT_FOUND)
+        if user.is_superuser:
+            if settings.ALLOW_SUPER_USERS_LOGIN:
+                return Response(UserLoginResponseSerializer(user).data)
+            else:
+                return Response("Unsupported account type", status=status.HTTP_400_BAD_REQUEST)
         if not user.email_verified:
             return Response("Please verify your account first", status=status.HTTP_400_BAD_REQUEST)
         if not user.is_active:
             return Response("The account has been removed", status=status.HTTP_400_BAD_REQUEST)
-        return super().post(request, *args, **kwargs)
+        return Response(UserLoginResponseSerializer(user).data)
 
-
-class DynamicRedirectView(View):
-    def get(self, request, *args, **kwargs):
-        user_agent = get_user_agent(request)
-
+    @action(detail=False, methods=['get'], url_path='activate/(?P<slug>[A-Za-z0-9-_.]+)')
+    def activate(self, request, slug=None):
         base_url = settings.REDIRECT_DEEP_LINK
-        slug = kwargs.get('slug', '')
         splitted_data = slug.split('-_-')
         if len(splitted_data) != 2:
-            return HttpResponseBadRequest('Invalid link')
-        user_id = splitted_data[0]
-        token = splitted_data[1]
+            return Response( 'Invalid link', status=status.HTTP_400_BAD_REQUEST)
+
+        user_id, token = splitted_data
 
         # Check if the user is on a mobile device
+        user_agent = get_user_agent(request)
         if user_agent.is_mobile or user_agent.is_tablet:
             url = f'{base_url}://activate-user/{user_id}/{token}/'
             HttpResponseRedirect.allowed_schemes.append(base_url)
             return HttpResponseRedirect(url)
-        else:
-            # TODO: Todo better
-            # For PC users, render a template
-            try:
-                user = get_user_by_uidb64(user_id)
-            except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-                user = None
-            if user is None:
-                return HttpResponseBadRequest('User not found')
-            if not default_token_generator.check_token(user, token):
-                send_email_with_template(
-                    subject='iAscend - Verification Link',
-                    email=user.email,
-                    template_to_load='emails/activate_user_email.html',
-                    context={
-                        "name": user.email,
-                        "verification_link": create_user_activation_link(user, request),
-                    }
-                )
 
-                return HttpResponseBadRequest('Token is invalid or expired. We just sent another confirmation email, please check.')
-            user.email_verified = True
-            user.save()
+        # For non-mobile users, render a template
+        try:
+            user = get_user_by_uidb64(user_id)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
 
-            return render(request, 'activate_account.html')
+        if not default_token_generator.check_token(user, token):
+            # Resend confirmation email
+            send_email_with_template(
+                subject=f'{settings.PROJECT_NAME} - Verification Link',
+                email=user.email,
+                template_to_load='emails/activate_user_email.html',
+                context={
+                    "name": user.email,
+                    "verification_link": create_user_activation_link(user, request),
+                }
+            )
+            return Response('Token is invalid or expired. We sent another confirmation email.', status=status.HTTP_400_BAD_REQUEST)
 
-
-def get_user_by_uidb64(uidb64):
-    """
-    Returns user given a uidb64
-    """
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User._default_manager.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-        user = None
-    return user
-
+        user.email_verified = True
+        user.save()
+        context = {
+            "project_name": settings.PROJECT_NAME,
+        }
+        return render(request, 'activate_account.html', context)

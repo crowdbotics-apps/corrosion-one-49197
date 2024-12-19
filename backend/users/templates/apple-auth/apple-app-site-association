@@ -4,9 +4,9 @@
       "defaults": { "percentEncoded": false },
       "details": [
            {
-             "appID": "flat-morning-38803.botics.co",
+             "appID": "REPLACE_WITH_APP_ID",
              "paths": [ "*" ],
-             "appIDs": ["flat-morning-38803.botics.co"],
+             "appIDs": ["REPLACE_WITH_APP_ID"],
              "components": [
                  { "/": "/*" }
              ]

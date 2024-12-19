@@ -8,7 +8,6 @@ def setup_verification_code(user):
     Creates verification code
     """
     code = random.randint(1000, 9999)
-    print(code)
     user_code = UserVerificationCode.objects.filter(user=user)
     if user_code.exists():
         user_code.delete()

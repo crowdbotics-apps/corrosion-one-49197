@@ -1,14 +1,11 @@
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import IntegerField, ModelSerializer, Serializer, CharField
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.http import HttpRequest
-from rest_framework import serializers
-from phonenumbers import region_code_for_number
-
-from users.models import User
-from utils.utils import create_user_activation_link, send_notifications
+from utils.utils import create_user_activation_link
 from utils.utils.email import send_email_with_template
 
 
@@ -130,12 +127,12 @@ class UserCreateSerializer(Serializer):
         """
         request = self._get_request()
         email = validated_data['email']
-        user = User(email=email, username=email, is_active=True, current_user_type=User.UserType.SEEKER)
+        user = User(email=email, username=email)
         user.set_password(validated_data['password'])
         user.save()
 
         send_email_with_template(
-            subject='iAscend - Verification Link',
+            subject=f'{settings.PROJECT_NAME} - Verification Link',
             email=user.email,
             template_to_load='emails/activate_user_email.html',
             context={
@@ -144,115 +141,16 @@ class UserCreateSerializer(Serializer):
             }
         )
 
-        send_notifications(
-            users=[user],
-            title='iAscend - Verification Link',
-            description=f'The verification link has been sent to you',
-        )
-
         return user
 
 
 class UserDetailSerializer(ModelSerializer):
-    status = IntegerField(source='seeker.status')
-    phone_without_country_code = serializers.CharField(source='seeker.phone_number.national_number', allow_null=True,
-                                                       allow_blank=True, read_only=True)
-    phone_country_code_name = serializers.SerializerMethodField()
-    phone_country_code = serializers.CharField(source='seeker.phone_number.country_code', allow_null=True,
-                                               allow_blank=True,
-                                               read_only=True)
-    phone_number = serializers.CharField(source='seeker.phone_number', allow_null=True, allow_blank=True)
-
-    profile_picture = serializers.SerializerMethodField()
-    date_of_birth = serializers.DateField(source='seeker.date_of_birth', allow_null=True)
-    gender = serializers.IntegerField(source='seeker.gender.id', allow_null=True)
-    zodiac = serializers.IntegerField(source='seeker.zodiac', allow_null=True)
-    city = serializers.IntegerField(source='seeker.city.pk', allow_null=True)
-    state = IntegerField(read_only=True, source='seeker.city.region.pk', allow_null=True)
-    client_link = serializers.CharField(source='seeker.client_link', allow_null=True, allow_blank=True)
-
-    is_recommended = serializers.BooleanField(source='specialist.is_recommended', allow_null=True)
-    rating = SerializerMethodField()
-    certification = serializers.FileField(source='specialist.certification', allow_null=True)
-    experience = serializers.CharField(source='specialist.experience', allow_null=True)
-    bio = serializers.CharField(source='specialist.bio', allow_null=True)
-    job_title = serializers.CharField(source='specialist.job_title', allow_null=True, allow_blank=True)
-    selected_modalities = serializers.SerializerMethodField()
-    specialist_status = serializers.SerializerMethodField()
-    profile_flag = serializers.SerializerMethodField()
-    earned = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'name', 'is_active', 'phone_number', 'phone_without_country_code',
-                  'phone_country_code',
-                  'phone_country_code_name', 'current_user_type', 'specialist', 'seeker', 'status', 'specialist_status',
-                  'earned', 'sessions',
-                  'stripe_account_linked', 'profile_picture', 'date_of_birth', 'gender', 'zodiac', 'city',
-                  'client_link',
-                  'is_recommended', 'rating', 'certification', 'experience', 'bio', 'job_title',
-                  'selected_modalities',
-                  'state', 'profile_flag', 'stripe_account_link']
+        fields = ['id', 'email', 'name', 'first_name', 'last_name']
 
-    def get_earned(self, obj):
-        specialist = getattr(obj, 'specialist', None)
-        if specialist:
-            sessions = specialist.sessions_history.filter(status=Session.SessionStatus.CONFIRMED)
-            sessions_transactions = []
 
-            for session in sessions:
-                # Filter transactions and check if any instance is found before appending
-                transaction_instance = session.transactions.filter(status=20, transaction_type=20).first()
-                if transaction_instance is not None:
-                    sessions_transactions.append(transaction_instance)
-
-            if sessions_transactions:
-                return sum([t.amount / 100 for t in sessions_transactions])
-
-        return 0
-
-    def get_profile_flag(self, obj):
-        if hasattr(obj, 'seeker'):
-            return obj.seeker.profile_flag
-        return None
-
-    def get_rating(self, obj):
-        if hasattr(obj, 'specialist'):
-            if obj.specialist.rating is not None:
-                return round(obj.specialist.rating, 1)
-            return None
-        return None
-
-    def get_phone_country_code_name(self, obj):
-        if hasattr(obj, 'seeker') and obj.seeker.phone_number:
-            country_code_name = region_code_for_number(obj.seeker.phone_number)
-            return country_code_name
-        return None
-
-    def get_specialist_status(self, obj):
-        if hasattr(obj, 'specialist'):
-            return obj.specialist.status
-        return None
-
-    def get_profile_picture(self, obj):
-        if hasattr(obj, 'seeker'):
-            if obj.current_user_type == User.UserType.SEEKER:
-                if obj.seeker.profile_picture:
-                    return obj.seeker.profile_picture.url
-                return None
-            elif obj.current_user_type == User.UserType.SPECIALIST:
-                if obj.specialist.profile_picture:
-                    return obj.specialist.profile_picture.url
-                return None
-            return None
-        return None
-
-    def get_selected_modalities(self, obj):
-        if obj.current_user_type == User.UserType.SPECIALIST:
-            if obj.specialist.selected_modalities:
-                return obj.specialist.selected_modalities
-            return None
-        return None
 
 
 class UserLoginResponseSerializer(Serializer):
