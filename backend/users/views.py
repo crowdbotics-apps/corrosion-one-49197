@@ -44,47 +44,6 @@ from utils.utils import get_user_by_uidb64, get_and_validate_serializer
 
 User = get_user_model()
 
-class PasswordViewset(GenericViewSet):
-
-    def get_serializer_class(self):
-        match self.action:
-            case 'reset': return ResetPasswordConfirmSerializer
-            case 'change': return ChangePasswordSerializer
-            case 'send_reset_link': return SendResetLinkSerializer
-
-    @action(detail=False, methods=['post'])
-    @get_and_validate_serializer
-    def reset(self, request, serializer, *args, **kwargs):
-        user = get_user_by_uidb64(serializer.data['uidb64'])
-        user.set_password(serializer.data['new_password1'])
-        user.save()
-        return Response()
-
-    @action(detail=False, methods=['post'])
-    @get_and_validate_serializer
-    def change(self, request, serializer, *args, **kwargs):
-        self.request.user.set_password(serializer.data['new_password'])
-        self.request.user.save()
-        return Response()
-
-    @action(detail=False, methods=['post'])
-    @get_and_validate_serializer
-    def send_reset_link(self, request, serializer, *args, **kwargs):
-        # email = self.request.data["email"]
-        # user = User.objects.filter(email=email).first()
-        # if user:
-        #     send_email_with_template(
-        #         subject=f'Reset password email DOLOVO',
-        #         email=user.email,
-        #         template_to_load='emails/forgot_password_email.html',
-        #         context={
-        #             "username": user.username,
-        #             "set_password_link": generate_reset_url(user, self.request),
-        #         }
-        #     )
-
-        return Response()
-
 
 class UserViewSet(GenericViewSet, CreateModelMixin):
     """
@@ -177,9 +136,8 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             biometrics_key = data.get('biometrics_key', '')
             user = User.objects.get(email=email, biometrics_key=biometrics_key)
             if user:
-
                 serializer = UserLoginResponseSerializer(user)
-                return Response(serializer.data, status=HTTP_200_OK)
+                return Response(serializer.data)
             else:
                 Response( 'Unable to login with biometrics', status=HTTP_400_BAD_REQUEST)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
@@ -221,12 +179,12 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
                     )
                 user_data = {**crate_data, **update_data}
                 user = User.objects.create(**user_data)
-                user.current_user_type = User.UserType.SEEKER
                 user.save()
             if profile_picture:
                 try:
                     result = urequest.urlretrieve(profile_picture)
-                    user.profile_picture.save(os.path.basename(profile_picture), File(open(result[0], 'rb')))
+
+                    # user.profile_picture.save(os.path.basename(profile_picture), File(open(result[0], 'rb')))
                 except Exception as error:
                     print(f'Error getting profile picture from {login_type}: {str(error)}')
         user.last_login = timezone.now()

@@ -1,0 +1,18 @@
+meta {
+  name: Biometrics Login
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{url}}users/biometrics_login/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "hassan.bittar@crowdbotics.com",
+    "biometrics_key": "a"
+  }
+}
