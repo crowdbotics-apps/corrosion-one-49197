@@ -1,0 +1,18 @@
+meta {
+  name: Continue With Apple
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{url}}users/continue_with_apple/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "identity_token": "token",
+    "signUp": false
+  }
+}

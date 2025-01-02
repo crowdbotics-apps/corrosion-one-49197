@@ -1,0 +1,18 @@
+meta {
+  name: Continue With Facebook
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{url}}users/continue_with_facebook/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "accessToken": "token",
+    "signUp": false
+  }
+}

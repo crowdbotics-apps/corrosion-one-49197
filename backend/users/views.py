@@ -1,17 +1,15 @@
 import json
-import os
+from urllib import request as urequest
 
 import facebook
 import jwt
-from dj_rest_auth.views import LoginView
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.core.files import File
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
-from django.utils.http import urlsafe_base64_decode
-from django.views import View
+from django_user_agents.utils import get_user_agent
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -21,26 +19,14 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, \
     HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 from rest_framework.viewsets import GenericViewSet
-from urllib import request as urequest
-from django_user_agents.utils import get_user_agent
 
 from users.models import User
+from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserCreateSerializer, \
+    UserLoginResponseSerializer
+from utils.utils import get_user_by_uidb64, get_and_validate_serializer
 from utils.utils import may_fail, update_with_kwargs, create_user_activation_link
 from utils.utils.email import send_email_with_template
 from utils.utils.verification_code import setup_verification_code, get_verification_code
-
-from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse
-from django.views.generic import DetailView, RedirectView, UpdateView
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
-
-from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, SendResetLinkSerializer, \
-    UserCreateSerializer, UserLoginResponseSerializer
-from utils.utils import get_user_by_uidb64, get_and_validate_serializer
 
 User = get_user_model()
 
@@ -341,13 +327,11 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         serializer = UserLoginResponseSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @may_fail(User.DoesNotExist, 'Invalid email or password. Please try again')
     @action(detail=False, methods=['post'])
     def login(self, request):
         email = request.data.get('email')
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response("Invalid email or password. Please try again.", status=HTTP_404_NOT_FOUND)
+        user = User.objects.get(email=email)
         if user.is_superuser:
             if settings.ALLOW_SUPER_USERS_LOGIN:
                 return Response(UserLoginResponseSerializer(user).data)
