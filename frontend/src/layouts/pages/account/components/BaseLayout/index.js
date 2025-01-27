@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -35,7 +35,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
-function BaseLayout({ stickyNavbar, children }) {
+function BaseLayout({ stickyNavbar = false, children }) {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
 
@@ -47,7 +47,7 @@ function BaseLayout({ stickyNavbar, children }) {
         : setTabsOrientation("horizontal");
     }
 
-    /** 
+    /**
      The event listener that's calling the handleTabsOrientation function when resizing the window.
     */
     window.addEventListener("resize", handleTabsOrientation);
@@ -83,11 +83,6 @@ function BaseLayout({ stickyNavbar, children }) {
     </DashboardLayout>
   );
 }
-
-// Setting default values for the props of BaseLayout
-BaseLayout.defaultProps = {
-  stickyNavbar: false,
-};
 
 // Typechecking props for BaseLayout
 BaseLayout.propTypes = {

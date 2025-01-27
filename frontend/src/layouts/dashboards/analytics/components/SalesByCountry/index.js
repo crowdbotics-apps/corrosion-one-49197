@@ -11,16 +11,15 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // @react-jvectormap components
-import { VectorMap } from "@react-jvectormap/core";
-import { worldMerc } from "@react-jvectormap/world";
+import {VectorMap} from "@react-jvectormap/core";
+import {worldMerc} from "@react-jvectormap/world";
 
 // @mui material components
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import Icon from "@mui/material/Icon";
 
 // Material Dashboard 3 PRO React components
 import MDBox from "components/MDBox";

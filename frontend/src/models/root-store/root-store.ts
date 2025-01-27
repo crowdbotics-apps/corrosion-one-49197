@@ -1,7 +1,6 @@
 import {Instance, SnapshotOut, types} from 'mobx-state-tree'
 import {LoginStoreModel} from '../login-store/login-store'
 import {withEnvironment} from "../extensions/with-environment";
-import {ProjectStoreModel} from "../project-store/project-store";
 
 /**
  * A RootStore model.

@@ -1,9 +1,7 @@
-import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config";
+import {ApiConfig, DEFAULT_API_CONFIG} from "./api-config";
 import * as Types from "./api.types";
-import { ApiBase, ApiReturnType } from "./api-base";
-import { API_VERSION_PREFIX } from "../constants";
-
-import { SimplePostResult } from "./api.types";
+import {ApiBase, ApiReturnType} from "./api-base";
+import {API_VERSION_PREFIX} from "../constants";
 
 /**
  * Manages all requests to the API.

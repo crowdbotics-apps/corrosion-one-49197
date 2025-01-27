@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useEffect, useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -51,7 +51,7 @@ import categoriesListData from "layouts/pages/rtl/data/categoriesListData";
 import caloriesChartData from "layouts/pages/rtl/data/caloriesChartData";
 
 // Material Dashboard 3 PRO React contexts
-import { useMaterialUIController, setDirection } from "context";
+import {setDirection, useMaterialUIController} from "context";
 
 function RTL() {
   const [, dispatch] = useMaterialUIController();

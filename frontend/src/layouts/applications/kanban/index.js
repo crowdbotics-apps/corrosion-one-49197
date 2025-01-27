@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
+import {useState} from "react";
 
 // @asseinfo/react-kanban components
 import Board from "@asseinfo/react-kanban";
@@ -22,7 +22,7 @@ import Board from "@asseinfo/react-kanban";
 import parse from "html-react-parser";
 
 // uuid is a library for generating unique id
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 
 // @mui material components
 import Icon from "@mui/material/Icon";
@@ -45,7 +45,7 @@ import Header from "layouts/applications/kanban/components/Header";
 import boards from "layouts/applications/kanban/data";
 
 // Material Dashboard 3 PRO React context
-import { useMaterialUIController } from "context";
+import {useMaterialUIController} from "context";
 
 function Kanban() {
   const [controller] = useMaterialUIController();

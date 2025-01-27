@@ -1,6 +1,7 @@
 import * as Types from "./api.types";
 import {
-  DownloadFileResult, GenericResponse,
+  DownloadFileResult,
+  GenericResponse,
   ListResult,
   NoResponseGetResult,
   NoResponsePostResult,

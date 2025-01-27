@@ -13,9 +13,9 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
+import {useState} from "react";
 // react-router-dom components
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";

@@ -11,7 +11,7 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -22,7 +22,6 @@ import Grid from "@mui/material/Grid";
 // Material Dashboard 3 PRO React components
 import MDBox from "components/MDBox";
 // import MDTypography from "components/MDTypography";
-
 // Material Dashboard 3 PRO React examples
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";

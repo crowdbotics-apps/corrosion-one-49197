@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -50,7 +50,7 @@ function Header({ children }) {
         : setTabsOrientation("horizontal");
     }
 
-    /** 
+    /**
      The event listener that's calling the handleTabsOrientation function when resizing the window.
     */
     window.addEventListener("resize", handleTabsOrientation);
@@ -155,10 +155,6 @@ function Header({ children }) {
   );
 }
 
-// Setting default props for the Header
-Header.defaultProps = {
-  children: "",
-};
 
 // Typechecking props for the Header
 Header.propTypes = {

@@ -13,10 +13,10 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
 // react-router-dom components
-import { useLocation, NavLink } from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -41,14 +41,9 @@ import SidenavRoot from "examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
 
 // Material Dashboard 3 PRO React context
-import {
-  useMaterialUIController,
-  setMiniSidenav,
-  setTransparentSidenav,
-  setWhiteSidenav,
-} from "context";
+import {setMiniSidenav, setTransparentSidenav, setWhiteSidenav, useMaterialUIController,} from "context";
 
-function Sidenav({ color, brand, brandName, routes, ...rest }) {
+function Sidenav({ color = "info", brand = "", brandName, routes, ...rest }) {
   const [openCollapse, setOpenCollapse] = useState(false);
   const [openNestedCollapse, setOpenNestedCollapse] = useState(false);
   const [controller, dispatch] = useMaterialUIController();
@@ -90,7 +85,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       );
     }
 
-    /** 
+    /**
      The event listener that's calling the handleMiniSidenav function when resizing the window.
     */
     window.addEventListener("resize", handleMiniSidenav);
@@ -303,12 +298,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     </SidenavRoot>
   );
 }
-
-// Setting default values for the props of Sidenav
-Sidenav.defaultProps = {
-  color: "info",
-  brand: "",
-};
 
 // Typechecking props for the Sidenav
 Sidenav.propTypes = {

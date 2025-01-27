@@ -11,13 +11,13 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 // @mui material components
 import Collapse from "@mui/material/Collapse";
@@ -29,12 +29,12 @@ import MDTypography from "components/MDTypography";
 
 function DefaultNavbarDropdown({
   name,
-  icon,
-  children,
-  collapseStatus,
-  light,
-  href,
-  route,
+  icon = false,
+  children = false,
+  collapseStatus = false,
+  light = false,
+  href = "",
+  route = "",
   collapse,
   ...rest
 }) {
@@ -97,16 +97,6 @@ function DefaultNavbarDropdown({
     </>
   );
 }
-
-// Setting default values for the props of DefaultNavbarDropdown
-DefaultNavbarDropdown.defaultProps = {
-  icon: false,
-  children: false,
-  collapseStatus: false,
-  light: false,
-  href: "",
-  route: "",
-};
 
 // Typechecking props for the DefaultNavbarDropdown
 DefaultNavbarDropdown.propTypes = {

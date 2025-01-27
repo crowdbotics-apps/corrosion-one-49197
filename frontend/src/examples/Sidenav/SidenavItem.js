@@ -11,7 +11,7 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -26,10 +26,10 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 
 // Custom styles for the SidenavItem
-import { item, itemContent, itemArrow } from "examples/Sidenav/styles/sidenavItem";
+import {item, itemArrow, itemContent} from "examples/Sidenav/styles/sidenavItem";
 
 // Material Dashboard 3 PRO React contexts
-import { useMaterialUIController } from "context";
+import {useMaterialUIController} from "context";
 
 function SidenavItem({ color, name, active, nested, children, open, ...rest }) {
   const [controller] = useMaterialUIController();

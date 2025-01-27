@@ -4,7 +4,6 @@ import moment from "moment";
 import numeral from "numeral";
 import {useMediaQuery} from "@mui/material";
 import theme from "../assets/theme";
-import {wrappifyApiCall} from "./helpers_ts";
 
 export const useIsMobile = () => {
   return useMediaQuery(theme.breakpoints.down('lg'));

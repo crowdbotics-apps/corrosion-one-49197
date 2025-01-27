@@ -11,7 +11,7 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -31,9 +31,9 @@ import PageLayout from "examples/LayoutContainers/PageLayout";
 import pageRoutes from "page.routes";
 
 // Material Dashboard 3 PRO React context
-import { useMaterialUIController } from "context";
+import {useMaterialUIController} from "context";
 
-function IllustrationLayout({ header, title, description, illustration, children }) {
+function IllustrationLayout({ header = "", title = "", description = "", illustration = "", children }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -90,14 +90,6 @@ function IllustrationLayout({ header, title, description, illustration, children
     </PageLayout>
   );
 }
-
-// Setting default values for the props of IllustrationLayout
-IllustrationLayout.defaultProps = {
-  header: "",
-  title: "",
-  description: "",
-  illustration: "",
-};
 
 // Typechecking props for the IllustrationLayout
 IllustrationLayout.propTypes = {

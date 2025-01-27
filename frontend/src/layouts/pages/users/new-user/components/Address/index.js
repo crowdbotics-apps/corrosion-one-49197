@@ -11,7 +11,7 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // prop-type is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -28,7 +28,7 @@ import MDInput from "components/MDInput";
 
 // NewUser page components
 import FormField from "layouts/pages/users/new-user/components/FormField";
-import { Field, ErrorMessage } from "formik";
+import {Field} from "formik";
 
 function Address({ formData }) {
   const { formField, values, errors, touched, setValues } = formData;

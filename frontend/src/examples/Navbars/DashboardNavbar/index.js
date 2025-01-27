@@ -13,10 +13,10 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -41,19 +41,14 @@ import NotificationItem from "examples/Items/NotificationItem";
 import {
   navbar,
   navbarContainer,
-  navbarRow,
-  navbarIconButton,
   navbarDesktopMenu,
+  navbarIconButton,
   navbarMobileMenu,
+  navbarRow,
 } from "examples/Navbars/DashboardNavbar/styles";
 
 // Material Dashboard 3 PRO React context
-import {
-  useMaterialUIController,
-  setTransparentNavbar,
-  setMiniSidenav,
-  setOpenConfigurator,
-} from "context";
+import {setMiniSidenav, setOpenConfigurator, setTransparentNavbar, useMaterialUIController,} from "context";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -84,8 +79,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
       );
     }
 
-    /** 
-     The event listener that's calling the handleTransparentNavbar function when 
+    /**
+     The event listener that's calling the handleTransparentNavbar function when
      scrolling the window.
     */
     window.addEventListener("scroll", handleTransparentNavbar);

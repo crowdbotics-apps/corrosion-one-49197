@@ -18,16 +18,16 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // draft-js
-import { EditorState, ContentState, convertFromHTML } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
-import { convertToHTML } from "draft-convert";
+import {ContentState, convertFromHTML, EditorState} from "draft-js";
+import {Editor} from "react-draft-wysiwyg";
+import {convertToHTML} from "draft-convert";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 // Custom styles for the MDEditor
 import MDEditorRoot from "components/MDEditor/MDEditorRoot";
 
 // Material Dashboard 3 PRO React context
-import { useMaterialUIController } from "context";
+import {useMaterialUIController} from "context";
 
 function MDEditor({ value }) {
   const [controller] = useMaterialUIController();

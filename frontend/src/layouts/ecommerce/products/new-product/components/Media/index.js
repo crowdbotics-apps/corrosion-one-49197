@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useMemo } from "react";
+import {useMemo} from "react";
 
 // Material Dashboard 3 PRO React components
 import MDBox from "components/MDBox";

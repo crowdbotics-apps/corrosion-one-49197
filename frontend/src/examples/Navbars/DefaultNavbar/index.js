@@ -14,13 +14,13 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect, Fragment } from "react";
+import {Fragment, useEffect, useState} from "react";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
 
 // react-router components
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 // @mui material components
 import Icon from "@mui/material/Icon";
@@ -44,9 +44,9 @@ import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMob
 import breakpoints from "assets/theme/base/breakpoints";
 
 // Material Dashboard 3 PRO React context
-import { useMaterialUIController } from "context";
+import {useMaterialUIController} from "context";
 
-function DefaultNavbar({ routes, brand, transparent, light, action }) {
+function DefaultNavbar({ routes, brand = "Material Dashboard PRO", transparent = false, light = false, action = false}) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -74,8 +74,8 @@ function DefaultNavbar({ routes, brand, transparent, light, action }) {
       }
     }
 
-    /** 
-     The event listener that's calling the displayMobileNavbar function when 
+    /**
+     The event listener that's calling the displayMobileNavbar function when
      resizing the window.
     */
     window.addEventListener("resize", displayMobileNavbar);
@@ -584,14 +584,6 @@ function DefaultNavbar({ routes, brand, transparent, light, action }) {
     </Container>
   );
 }
-
-// Declaring default props for DefaultNavbar
-DefaultNavbar.defaultProps = {
-  brand: "Material Dashboard PRO",
-  transparent: false,
-  light: false,
-  action: false,
-};
 
 // Typechecking props for the DefaultNavbar
 DefaultNavbar.propTypes = {

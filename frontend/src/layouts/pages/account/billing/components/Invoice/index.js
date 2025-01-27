@@ -11,7 +11,7 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -23,7 +23,7 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
-function Invoice({ date, id, price, noGutter }) {
+function Invoice({ date, id, price, noGutter = false }) {
   return (
     <MDBox
       component="li"
@@ -57,10 +57,6 @@ function Invoice({ date, id, price, noGutter }) {
   );
 }
 
-// Setting default values for the props of Invoice
-Invoice.defaultProps = {
-  noGutter: false,
-};
 
 // Typechecking props for the Invoice
 Invoice.propTypes = {

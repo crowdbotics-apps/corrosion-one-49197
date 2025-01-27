@@ -11,7 +11,7 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -22,7 +22,6 @@ import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 // import MDButton from "components/MDButton";
-
 // Billing page components
 import Transaction from "layouts/pages/account/billing/components/Transaction";
 

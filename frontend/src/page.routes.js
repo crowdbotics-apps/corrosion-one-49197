@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-/** 
+/**
   All of the routes for the page layout of Material Dashboard 3 PRO React are added here,
   You can add a new route, customize the routes and delete the routes here.
 
@@ -28,7 +28,7 @@ Coded by www.creative-tim.com
   5. The `collapse` key is used for making a collapsible item on the DefaultNavbar that contains other routes inside (nested routes), you need to pass the nested routes inside an array as a value for the `collapse` key.
   6. The `route` key is used to store the route location which is used for the react router.
   7. The `href` key is used to store the external links location.
-*/
+ */
 
 // @mui material components
 import Icon from "@mui/material/Icon";

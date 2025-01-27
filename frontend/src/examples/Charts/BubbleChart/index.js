@@ -13,20 +13,14 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useMemo } from "react";
+import {useMemo} from "react";
 
 // porp-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
 // react-chartjs-2 components
-import { Bubble } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  LinearScale,
-  PointElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import {Bubble} from "react-chartjs-2";
+import {Chart as ChartJS, Legend, LinearScale, PointElement, Tooltip,} from "chart.js";
 
 // @mui material components
 import Card from "@mui/material/Card";
