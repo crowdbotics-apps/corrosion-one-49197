@@ -36,6 +36,8 @@ import {ROLES, ROUTES} from "../../../services/constants";
 import {runInAction} from "mobx";
 import {Form, Formik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
 
 
 function SignIn() {
@@ -44,14 +46,14 @@ function SignIn() {
   const navigate = useNavigate()
   const formikRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   const login = (data) => {
     setLoading(true)
-    api.login(data.email, data.password).handle( {
+    api.login(data.email, data.password).handle({
         onSuccess: (result) => {
           const {response} = result
           const {user, access_token} = response
@@ -129,32 +131,36 @@ function SignIn() {
               type={'password'}
               errors={errors}
             />
-            <MDBox textAlign="right">
-              <MDTypography variant="button" color="text">
-                <MDTypography
-                  component={Link}
-                  to={ROUTES.FORGOT_PASSWORD}
-                  variant="button"
-                  color="dark"
-                  fontWeight="regular"
-                >
-                  Forgot Password?
-                </MDTypography>
-              </MDTypography>
-            </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Remember me
-              </MDTypography>
-            </MDBox>
-            <MDBox mt={10} mb={1} textAlign={"center"}>
+            <Grid container>
+              <Grid item xs={6}>
+                <MDBox display="flex" alignItems="center" ml={-1}>
+                  <Switch checked={rememberMe} onChange={handleSetRememberMe}/>
+                  <MDTypography
+                    variant="button"
+                    fontWeight="regular"
+                    color="text"
+                    onClick={handleSetRememberMe}
+                    sx={{cursor: "pointer", userSelect: "none", ml: -1}}
+                  >
+                    &nbsp;&nbsp;Remember me
+                  </MDTypography>
+                </MDBox>
+              </Grid>
+              <Grid item xs={6}>
+                <MDBox textAlign="right">
+                  <MDTypography
+                    component={Link}
+                    to={ROUTES.FORGOT_PASSWORD}
+                    variant="button"
+                    color="text"
+                    fontWeight="regular"
+                  >
+                    Forgot Password?
+                  </MDTypography>
+                </MDBox>
+              </Grid>
+            </Grid>
+            <MDBox mt={8} mb={1} textAlign={"center"}>
               <MDButton
                 fullWidth
                 variant="contained"
@@ -162,6 +168,7 @@ function SignIn() {
                 loading={loading}
                 disabled={loading || !isValid}
                 type='submit'
+                size={"large"}
               >
                 Continue
               </MDButton>
