@@ -30,6 +30,9 @@ import MDButton from "components/MDButton";
 
 // Image
 import bgImage from "assets/svgs/backgroundAuth.svg";
+import facebookIcon from "assets/svgs/facebook.svg";
+import googleIcon from "assets/svgs/google.svg";
+
 import IllustrationLayout from "components/IllustrationLayout";
 import {useApi, useLoginStore} from "../../../services/helpers";
 import {ROLES, ROUTES} from "../../../services/constants";
@@ -37,6 +40,7 @@ import {runInAction} from "mobx";
 import {Form, Formik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
 import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
 
 
 function SignIn() {
@@ -88,6 +92,14 @@ function SignIn() {
     email: "",
     password: "",
   };
+
+  const googleSignIn = () => {
+    console.log('Google Sign In')
+  }
+
+  const facebookSignIn = () => {
+    console.log('Facebook Sign In')
+  }
 
   useEffect(() => {
     // if (loginStore.isLoggedIn) {
@@ -181,60 +193,41 @@ function SignIn() {
                   variant="button"
                   color="info"
                   fontWeight="medium"
-                  textGradient
                 >
                   Sign up
                 </MDTypography>
               </MDTypography>
             </MDBox>
+            <MDBox mt={3} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+              <Divider sx={{flexGrow: 1}}/>
+              <MDTypography color="text" fontWeight="regular"  variant="button">
+                or
+              </MDTypography>
+              <Divider sx={{flexGrow: 1}}/>
+            </MDBox>
+            <MDBox mt={3} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+              <MDBox
+                component="img"
+                src={googleIcon}
+                alt="google"
+                width={"32px"}
+                mr={5}
+                sx={{cursor: "pointer"}}
+                onClick={googleSignIn}
+              />
+              <MDBox
+                component="img"
+                src={facebookIcon}
+                alt="facebook"
+                width={"32px"}
+                sx={{cursor: "pointer"}}
+                onClick={facebookSignIn}
+              />
+            </MDBox>
+
           </Form>
         )}
       </Formik>
-      {/*<MDBox component="form" role="form">*/}
-      {/*  <MDBox mb={2}>*/}
-      {/*    <MDInput type="email" label="Email" fullWidth />*/}
-      {/*  </MDBox>*/}
-      {/*  <MDBox mb={2}>*/}
-      {/*    <MDInput type="password" label="Password" fullWidth />*/}
-      {/*  </MDBox>*/}
-      {/*  <MDBox display="flex" alignItems="center" ml={-1}>*/}
-      {/*    <Switch checked={rememberMe} onChange={handleSetRememberMe} />*/}
-      {/*    <MDTypography*/}
-      {/*      variant="button"*/}
-      {/*      fontWeight="regular"*/}
-      {/*      color="text"*/}
-      {/*      onClick={handleSetRememberMe}*/}
-      {/*      sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}*/}
-      {/*    >*/}
-      {/*      &nbsp;&nbsp;Remember me*/}
-      {/*    </MDTypography>*/}
-      {/*  </MDBox>*/}
-      {/*  <MDBox mt={4} mb={1}>*/}
-      {/*    <MDButton variant="contained" color="primary" size="large" fullWidth>*/}
-      {/*      sign in*/}
-      {/*    </MDButton>*/}
-      {/*  </MDBox>*/}
-      {/*  <MDBox mt={4} mb={1}>*/}
-      {/*    <MDButton variant="outlined" color="secondary" size="large" fullWidth>*/}
-      {/*      cancel*/}
-      {/*    </MDButton>*/}
-      {/*  </MDBox>*/}
-      {/*  <MDBox mt={3} textAlign="center">*/}
-      {/*    <MDTypography variant="button" color="text">*/}
-      {/*      Don&apos;t have an account?{" "}*/}
-      {/*      <MDTypography*/}
-      {/*        component={Link}*/}
-      {/*        to="/authentication/sign-up/cover"*/}
-      {/*        variant="button"*/}
-      {/*        color="info"*/}
-      {/*        fontWeight="medium"*/}
-      {/*        textGradient*/}
-      {/*      >*/}
-      {/*        Sign up*/}
-      {/*      </MDTypography>*/}
-      {/*    </MDTypography>*/}
-      {/*  </MDBox>*/}
-      {/*</MDBox>*/}
     </IllustrationLayout>
   );
 }

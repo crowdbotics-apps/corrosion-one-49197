@@ -26,7 +26,7 @@ import MDButton from "components/MDButton";
 import borders from "assets/theme/base/borders";
 
 // Images
-import masterCardLogo from "assets/images/logos/mastercard.png";
+import masterCardLogo from "../../../../../../assets/imagesExamples/logos/mastercard.png";
 
 function PaymentDetails() {
   const { borderWidth, borderColor } = borders;

@@ -21,12 +21,12 @@ import StatusCell from "layouts/ecommerce/orders/order-list/components/StatusCel
 import CustomerCell from "layouts/ecommerce/orders/order-list/components/CustomerCell";
 
 // Images
-import team1 from "assets/images/team-1.jpg";
-import team2 from "assets/images/team-2.jpg";
-import team3 from "assets/images/team-3.jpg";
-import team4 from "assets/images/team-4.jpg";
-import team5 from "assets/images/team-5.jpg";
-import ivana from "assets/images/ivana-squares.jpg";
+import team1 from "../../../../../assets/imagesExamples/team-1.jpg";
+import team2 from "../../../../../assets/imagesExamples/team-2.jpg";
+import team3 from "../../../../../assets/imagesExamples/team-3.jpg";
+import team4 from "../../../../../assets/imagesExamples/team-4.jpg";
+import team5 from "../../../../../assets/imagesExamples/team-5.jpg";
+import ivana from "../../../../../assets/imagesExamples/ivana-squares.jpg";
 
 const dataTableData = {
   columns: [

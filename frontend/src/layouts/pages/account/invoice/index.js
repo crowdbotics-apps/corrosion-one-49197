@@ -29,8 +29,8 @@ import MDButton from "components/MDButton";
 import BaseLayout from "layouts/pages/account/components/BaseLayout";
 
 // Images
-import logoCT from "assets/images/logo-ct.png";
-import logoCTDark from "assets/images/logo-ct-dark.png";
+import logoCT from "../../../../assets/imagesExamples/logo-ct.png";
+import logoCTDark from "../../../../assets/imagesExamples/logo-ct-dark.png";
 
 // Material Dashboard 3 PRO React context
 import {useMaterialUIController} from "context";

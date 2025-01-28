@@ -24,7 +24,7 @@ import MDAvatar from "components/MDAvatar";
 import MDBadge from "components/MDBadge";
 
 // Images
-import orderImage from "assets/images/product-12.jpg";
+import orderImage from "../../../../../../assets/imagesExamples/product-12.jpg";
 
 function OrderInfo() {
   return (

@@ -25,8 +25,8 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
 // Images
-import masterCardLogo from "assets/images/logos/mastercard.png";
-import visaLogo from "assets/images/logos/visa.png";
+import masterCardLogo from "../../../../../../assets/imagesExamples/logos/mastercard.png";
+import visaLogo from "../../../../../../assets/imagesExamples/logos/visa.png";
 
 // Material Dashboard 3 PRO React context
 import {useMaterialUIController} from "context";

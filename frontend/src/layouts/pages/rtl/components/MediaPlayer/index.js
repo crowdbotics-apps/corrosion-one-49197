@@ -23,7 +23,7 @@ import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
 // Images
-import bgImage from "assets/images/bg-player.jpeg";
+import bgImage from "../../../../../assets/imagesExamples/bg-player.jpeg";
 
 function MediaPlayer() {
   const mediaPlayerButtonStyles = ({ functions: { pxToRem } }) => ({

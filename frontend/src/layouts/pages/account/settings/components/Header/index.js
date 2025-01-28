@@ -26,7 +26,7 @@ import MDTypography from "components/MDTypography";
 import MDAvatar from "components/MDAvatar";
 
 // Images
-import burceMars from "assets/images/bruce-mars.jpg";
+import burceMars from "../../../../../../assets/imagesExamples/bruce-mars.jpg";
 
 function Header() {
   const [visible, setVisible] = useState(true);

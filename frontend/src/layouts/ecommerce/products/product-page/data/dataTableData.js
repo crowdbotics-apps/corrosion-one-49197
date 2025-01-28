@@ -23,10 +23,10 @@ import ReviewCell from "layouts/ecommerce/products/product-page/components/Revie
 import DefaultCell from "layouts/ecommerce/products/product-page/components/DefaultCell";
 
 // Images
-import blackChair from "assets/images/ecommerce/black-chair.jpeg";
-import chairPink from "assets/images/ecommerce/chair-pink.jpeg";
-import chairSteel from "assets/images/ecommerce/chair-steel.jpeg";
-import chairWood from "assets/images/ecommerce/chair-wood.jpeg";
+import blackChair from "../../../../../assets/imagesExamples/ecommerce/black-chair.jpeg";
+import chairPink from "../../../../../assets/imagesExamples/ecommerce/chair-pink.jpeg";
+import chairSteel from "../../../../../assets/imagesExamples/ecommerce/chair-steel.jpeg";
+import chairWood from "../../../../../assets/imagesExamples/ecommerce/chair-wood.jpeg";
 
 const dataTableData = {
   columns: [

@@ -30,10 +30,10 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 
 // Images
-import logoSlack from "assets/images/small-logos/logo-slack.svg";
-import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
-import logoAtlassian from "assets/images/small-logos/logo-atlassian.svg";
-import logoAsana from "assets/images/small-logos/logo-asana.svg";
+import logoSlack from "../../../../../../assets/imagesExamples/small-logos/logo-slack.svg";
+import logoSpotify from "../../../../../../assets/imagesExamples/small-logos/logo-spotify.svg";
+import logoAtlassian from "../../../../../../assets/imagesExamples/small-logos/logo-atlassian.svg";
+import logoAsana from "../../../../../../assets/imagesExamples/small-logos/logo-asana.svg";
 
 // Material Dashboard 3 PRO React components
 import {useMaterialUIController} from "context";

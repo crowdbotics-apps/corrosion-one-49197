@@ -72,7 +72,7 @@ import MDAvatar from "components/MDAvatar";
 import Icon from "@mui/material/Icon";
 
 // Images
-import profilePicture from "assets/images/team-3.jpg";
+import profilePicture from "./assets/imagesExamples/team-3.jpg";
 import SignIn from "./pages/auth/signIn";
 
 const routes = [

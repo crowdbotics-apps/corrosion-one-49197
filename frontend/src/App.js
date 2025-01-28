@@ -40,8 +40,8 @@ import routes, {unprotectedRoutes} from "routes";
 import {setMiniSidenav, useMaterialUIController,} from "context";
 
 // Images
-import brandWhite from "assets/images/logo-ct.png";
-import brandDark from "assets/images/logo-ct-dark.png";
+import brandWhite from "./assets/imagesExamples/logo-ct.png";
+import brandDark from "./assets/imagesExamples/logo-ct-dark.png";
 import {setupRootStore} from "./models";
 import useCurrentBreakpoint from "./services/helpers";
 

@@ -39,9 +39,9 @@ import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarCha
 import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
 
 // Images
-import booking1 from "assets/images/products/product-1-min.jpg";
-import booking2 from "assets/images/products/product-2-min.jpg";
-import booking3 from "assets/images/products/product-3-min.jpg";
+import booking1 from "../../../assets/imagesExamples/products/product-1-min.jpg";
+import booking2 from "../../../assets/imagesExamples/products/product-2-min.jpg";
+import booking3 from "../../../assets/imagesExamples/products/product-3-min.jpg";
 
 function Analytics() {
   const { sales, tasks } = reportsLineChartData;

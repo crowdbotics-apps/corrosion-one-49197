@@ -28,7 +28,7 @@ import MDButton from "components/MDButton";
 import FormField from "layouts/applications/wizard/components/FormField";
 
 // Images
-import team2 from "assets/images/team-2.jpg";
+import team2 from "../../../../../assets/imagesExamples/team-2.jpg";
 
 function About() {
   return (

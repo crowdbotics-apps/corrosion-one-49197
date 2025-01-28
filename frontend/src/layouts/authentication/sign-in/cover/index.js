@@ -32,7 +32,7 @@ import MDButton from "components/MDButton";
 import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-cover.jpeg";
+import bgImage from "../../../../assets/imagesExamples/bg-sign-in-cover.jpeg";
 
 function Cover() {
   const [rememberMe, setRememberMe] = useState(true);

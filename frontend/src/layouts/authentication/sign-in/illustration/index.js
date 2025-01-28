@@ -31,7 +31,7 @@ import MDButton from "components/MDButton";
 import IllustrationLayout from "layouts/authentication/components/IllustrationLayout";
 
 // Image
-import bgImage from "assets/images/illustrations/illustration-reset.jpg";
+import bgImage from "../../../../assets/imagesExamples/illustrations/illustration-reset.jpg";
 
 function Illustration() {
   const [rememberMe, setRememberMe] = useState(false);

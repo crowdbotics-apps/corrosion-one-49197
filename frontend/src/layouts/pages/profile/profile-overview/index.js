@@ -42,14 +42,14 @@ import PlatformSettings from "layouts/pages/profile/profile-overview/components/
 import profilesListData from "layouts/pages/profile/profile-overview/data/profilesListData";
 
 // Images
-import homeDecor1 from "assets/images/home-decor-1.jpg";
-import homeDecor2 from "assets/images/home-decor-2.jpg";
-import homeDecor3 from "assets/images/home-decor-3.jpg";
-import homeDecor4 from "assets/images/home-decor-4.jpeg";
-import team1 from "assets/images/team-1.jpg";
-import team2 from "assets/images/team-2.jpg";
-import team3 from "assets/images/team-3.jpg";
-import team4 from "assets/images/team-4.jpg";
+import homeDecor1 from "../../../../assets/imagesExamples/home-decor-1.jpg";
+import homeDecor2 from "../../../../assets/imagesExamples/home-decor-2.jpg";
+import homeDecor3 from "../../../../assets/imagesExamples/home-decor-3.jpg";
+import homeDecor4 from "../../../../assets/imagesExamples/home-decor-4.jpeg";
+import team1 from "../../../../assets/imagesExamples/team-1.jpg";
+import team2 from "../../../../assets/imagesExamples/team-2.jpg";
+import team3 from "../../../../assets/imagesExamples/team-3.jpg";
+import team4 from "../../../../assets/imagesExamples/team-4.jpg";
 
 function Overview() {
   return (
