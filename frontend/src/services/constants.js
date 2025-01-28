@@ -16,7 +16,6 @@ export const DASHBOARD_PROJECT_MANAGER_PREFIX = '/project-manager'
 export const DASHBOARD_SUPPLY_MANAGER_PREFIX = '/supply-manager'
 
 export const ROUTES = {
-  ROOT: "/",
   LOGOUT: "/logout",
   LOGIN: "/",
   FORGOT_PASSWORD: "/forgot-password",

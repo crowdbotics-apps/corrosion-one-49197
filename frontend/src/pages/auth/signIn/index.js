@@ -25,7 +25,6 @@ import Switch from "@mui/material/Switch";
 // Material Dashboard 3 PRO React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 
 // Image

@@ -37,7 +37,7 @@ const FormikFileInput = (props) => {
 }
 
 const FormikBooleanInput = (props) => {
-  const [field, meta] = useField(props);
+  const [field] = useField(props);
   // const errorText = meta.error && meta.touched ? meta.error : '';
   const { fullWidth, label, ...rest} = props
   return (
@@ -145,11 +145,10 @@ const FormikDateTimePicker = (props) => {
 
 
 const FormikSelectInput = (props) => {
-  const [field, meta] = useField(props);
-  const errorText = meta.error && meta.touched ? meta.error : '';
+  const [meta] = useField(props);
   const {
-    name, errors, type = 'text', multiple,
-    freeSolo, value, label, fullWidth = true,
+    name, errors, multiple,
+    freeSolo, value, label,
     options = [], setFieldValue, initialValue,
     onChangeSelect, labelFieldName = 'name', ...rest
   } = props
