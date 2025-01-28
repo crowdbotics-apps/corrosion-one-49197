@@ -28,6 +28,7 @@ import PageLayout from "components/PageLayout";
 // Material Dashboard 3 PRO React context
 import {useMaterialUIController} from "context";
 import Card from "@mui/material/Card";
+import logo from "assets/svgs/logo.svg";
 
 function IllustrationLayout({header = "", title = "", description = "", illustration = "", children}) {
   const [controller] = useMaterialUIController();
@@ -42,17 +43,26 @@ function IllustrationLayout({header = "", title = "", description = "", illustra
             darkMode ? background.default : white.main,
         }}
       >
-        <Grid item xs={12} lg={8}>
+        <Grid item xs={12} lg={6} md={6} xl={8}>
           <MDBox
-            display={{xs: "none", lg: "flex"}}
+            display={{xs: "none", md: "flex"}}
             width="calc(100%)"
             height="calc(100vh)"
             sx={{backgroundImage: `url(${illustration})`, backgroundRepeat: "no-repeat", backgroundSize: "cover"}}
           />
         </Grid>
-        <Grid item xs={12} sm={8} md={6} lg={4} xl={4} sx={{my: "auto"}}>
-          <Card sx={{borderRadius: 0, width: "97%"}}>
-            <MDBox display="flex" flexDirection="column" justifyContent="center" height="96vh" mx={3}>
+        <Grid item xs={12} sm={12} md={6} lg={6} xl={4} sx={{my: "auto"}}>
+          <Card sx={{borderRadius: 0,     width: {
+              xs: '100%',
+              sm: '100%',
+              md: '100%',
+              lg: '97%',
+              xl: '97%',
+            },}}>
+            <MDBox display="flex" flexDirection="column" justifyContent="center" height="96vh" mx={3}
+                   sx={ {xl: { height: "100vh" } }}
+            >
+              <MDBox component="img" src={logo} alt="logo" width={"300px"} mx={"auto"} mb={3} display={{xs: "flex", md: "none"}} />
               <MDBox py={3} px={3} textAlign="center">
                 {!header ? (
                   <>

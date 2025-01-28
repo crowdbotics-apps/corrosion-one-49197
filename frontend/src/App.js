@@ -43,6 +43,7 @@ import {setMiniSidenav, useMaterialUIController,} from "context";
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 import {setupRootStore} from "./models";
+import useCurrentBreakpoint from "./services/helpers";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -58,7 +59,7 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
   const [rootStore, setRootStore] = useState(undefined)
-
+  const currentBp = useCurrentBreakpoint();
 
   useEffect(() => {
     (async () => {
@@ -92,6 +93,7 @@ export default function App() {
     }
   };
 
+
   // Setting the dir attribute for the body element
   useEffect(() => {
     document.body.setAttribute("dir", direction);
@@ -123,6 +125,9 @@ export default function App() {
       return null;
     });
 
+
+
+  console.log('Current Breakpoint:', currentBp);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>

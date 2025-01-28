@@ -37,7 +37,6 @@ import {runInAction} from "mobx";
 import {Form, Formik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 
 
 function SignIn() {
@@ -172,6 +171,21 @@ function SignIn() {
               >
                 Continue
               </MDButton>
+            </MDBox>
+            <MDBox mt={3} textAlign="center">
+              <MDTypography variant="button" color="text">
+                Don&apos;t have an account?{" "}
+                <MDTypography
+                  component={Link}
+                  to="/authentication/sign-up/cover"
+                  variant="button"
+                  color="info"
+                  fontWeight="medium"
+                  textGradient
+                >
+                  Sign up
+                </MDTypography>
+              </MDTypography>
             </MDBox>
           </Form>
         )}

@@ -1,17 +1,17 @@
 /**
-=========================================================
-* Material Dashboard 3 PRO React - v2.3.0
-=========================================================
+ =========================================================
+ * Material Dashboard 2 PRO React - v2.1.0
+ =========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+ * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
+ * Copyright 2022 Creative Tim (https://www.creative-tim.com)
 
-Coded by www.creative-tim.com
+ Coded by www.creative-tim.com
 
-=========================================================
+ =========================================================
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ */
 
 import {forwardRef} from "react";
 
@@ -21,11 +21,11 @@ import PropTypes from "prop-types";
 // Custom styles for MDButton
 import MDButtonRoot from "components/MDButton/MDButtonRoot";
 
-// Material Dashboard 3 PRO React contexts
+// Material Dashboard 2 PRO React contexts
 import {useMaterialUIController} from "context";
-
+import {CircularProgress} from "@mui/material";
 const MDButton = forwardRef(
-  ({ color, variant, size, circular, iconOnly, children, ...rest }, ref) => {
+  ({ loading = false, color = "white", variant = "contained", size = "medium", circular = false, iconOnly = false, children,  ...rest }, ref) => {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
 
@@ -38,20 +38,11 @@ const MDButton = forwardRef(
         size={size}
         ownerState={{ color, variant, size, circular, iconOnly, darkMode }}
       >
-        {children}
+        {loading ? <CircularProgress color="inherit" size={15} /> : children}
       </MDButtonRoot>
     );
   }
 );
-
-// Setting default values for the props of MDButton
-MDButton.defaultProps = {
-  size: "medium",
-  variant: "contained",
-  color: "white",
-  circular: false,
-  iconOnly: false,
-};
 
 // Typechecking props for the MDButton
 MDButton.propTypes = {

@@ -158,3 +158,22 @@ export class RNFile {
     this.type = type;
   }
 }
+
+function useCurrentBreakpoint() {
+
+  // Call useMediaQuery for each breakpoint separately, in the same order, unconditionally.
+  // That way, React can keep track of the hook calls properly.
+  const matchesXL = useMediaQuery(theme.breakpoints.up('xl'));
+  const matchesLG = useMediaQuery(theme.breakpoints.up('lg'));
+  const matchesMD = useMediaQuery(theme.breakpoints.up('md'));
+  const matchesSM = useMediaQuery(theme.breakpoints.up('sm'));
+
+  // Now determine the current breakpoint:
+  if (matchesXL) return 'xl';
+  if (matchesLG) return 'lg';
+  if (matchesMD) return 'md';
+  if (matchesSM) return 'sm';
+  return 'xs';
+}
+
+export default useCurrentBreakpoint;

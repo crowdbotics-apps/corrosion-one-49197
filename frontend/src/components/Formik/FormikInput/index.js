@@ -224,9 +224,6 @@ const FormikInput = (props) => {
   return component
 
 }
-FormikInput.defaultProps = {
-  type: "text"
-};
 
 FormikInput.propTypes = {
   type: PropTypes.oneOf([
