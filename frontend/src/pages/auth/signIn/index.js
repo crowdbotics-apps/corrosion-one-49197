@@ -188,7 +188,7 @@ function SignIn() {
                 Don&apos;t have an account?{" "}
                 <MDTypography
                   component={Link}
-                  to="/authentication/sign-up/cover"
+                  to={ROUTES.SIGN_UP}
                   variant="button"
                   color="info"
                   fontWeight="medium"

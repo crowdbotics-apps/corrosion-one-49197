@@ -17,6 +17,9 @@ export const DASHBOARD_SUPPLY_MANAGER_PREFIX = '/supply-manager'
 
 export const ROUTES = {
   LOGOUT: "/logout",
+  SIGN_UP: "/signup",
+  SIGN_UP_2: "/signup",
+  SIGN_UP_3: "/signup",
   LOGIN: "/",
   FORGOT_PASSWORD: "/forgot-password",
   SET_NEW_PASSWORD: "/set-new-password/*",
@@ -30,43 +33,6 @@ export const ROUTES = {
   USER_ACCOUNT_SETTINGS: `/account-settings`,
   DIRECT_MESSAGES: (id) => `/project/${id}/direct-messages`,
   NOTIFICATIONS: `/notifications/`,
-  USER_PROJECT_SELECTED: (id) => `/project/${id}/`,
-  USER_SUPPLY_MANAGER_PRODUCTS_SELECTED: (manufacturerId) => `/manufacturer/${manufacturerId}/products/`,
-  CONTACT_LIST_PROJECT_MANAGER: (id, categoryId) => `/project/${id}/contact-list/${categoryId}/`,
-  PROGRAM_DOCUMENTS: (manufacturerId) => `/manufacturer/${manufacturerId}/program-documents-list/`,
-  PM_PROGRAM_DOCUMENTS: (id, categoryId) => `/project/${id}/products/${categoryId}/program-documents-list/`,
-  // CATEGORY_SCREEN_PROJECT_MANAGER: `${DASHBOARD_PROJECT_MANAGER_PREFIX}/category-screen`,
-  USER_ORDERS_AND_QUOTES: (id) => `/project/${id}/orders-and-quotes`,
-  USER_SHOPPING_CART: (id) => `/project/${id}/shopping-cart`,
-  PROJECT_PRODUCTS_BY_CATEGORY: (id, categoryId) => `/project/${id}/products/${categoryId}/`,
-  SUPPLY_MANAGER_PRODUCTS_BY_CATEGORY: (manufacturerId, categoryId) => `/manufacturer/${manufacturerId}/products/${categoryId}/`,
-  // PROJECT_PACKAGES_BY_CATEGORY: (id, categoryId) => `/project/${id}/packages/${categoryId}/`,
-  PACKAGE_DETAIL: (id, packageId) => `/project/${id}/packages/${packageId}/`,
-  SUPPLY_MANAGER_PACKAGE_DETAIL: (manufacturerId, packageId) => `/manufacturer/${manufacturerId}/packages/${packageId}/`,
-  USER_PROJECT_PACKAGES: (idProject) => `/project/${idProject}/package/`,
-  USER_PRODUCTS: (idProject) => `/project/${idProject}/products`,
-  USER_PRODUCT_DETAIL: (idProject, idprod) => `/project/${idProject}/product/${idprod}/`,
-  SUPPLY_MANAGER_PRODUCT_DETAIL: (manufacturerId, idprod) => `/manufacturer/${manufacturerId}/product/${idprod}/`,
-  ORDER_DETAILS_PROJECT_MANAGER: `/order-details`,
-  USER_ORDERS_AND_QUOTES_DETAIL: (idProject, idOrder) => `/project/${idProject}/orders-and-quotes/${idOrder}/`,
-  USER_SHOPPING_CART_DETAIL: (idProject, idOrder) => `/project/${idProject}/shopping-cart/${idOrder}/`, // exactly like order, only selected button change
-  // Supply manager routes
-
-
-// Admin routes
-  ADMIN_ANALYTICS: '/dashboard/analytics',
-  ADMIN_ALL_USERS: '/dashboard/all-users',
-  ADMIN_CREATE_NEW_USER: '/dashboard/create-user-account',
-  ADMIN_ORDER_MANAGEMENT_DETAIL: (id) => `/dashboard/order-management/${id}`,
-  ADMIN_PRODUCT_DETAIL: (id) => `/management/manage-products/${id}/detail/`,
-  ADMIN_PRODUCT_ORDER_DETAIL: (id, projectId, orderId) => `/management/manage-products/${id}/detail/${projectId}/order/${orderId}/`,
-  ADMIN_PRODUCT_ORDER_LIST: (projectId, orderId) => `/management/manage-products/${projectId}/project/${orderId}/order/`,
-  ADMIN_CREATE_NEW_PRODUCT: '/management/manage-products/new',
-  ADMIN_UPDATE_PRODUCT: (id) => `/management/manage-products/${id}/`,
-  ADMIN_PRODUCTS: '/management/manage-products/',
-  ADMIN_CREATE_NEW_BRAND: '/management/manage-brands/new',
-  ADMIN_BRAND: '/management/manage-brands',
-  ADMIN_UPDATE_BRAND: (id) => `/management/manage-brands/${id}/`,
 }
 
 export const PM_ROUTES_WITH_NO_PROJECT = [
@@ -86,48 +52,7 @@ export const PM_ROUTES_WITH_NO_PROJECT = [
   ROUTES.DIRECT_MESSAGES(':id'),
 ]
 
-export const PM_TASKS = {
-  SHARE: 'share',
-  APPROVE_ORDER: 'approve_order',
-  EDIT_ORDER: 'edit_order',
-  APPROVE_CONTRACT: 'approve_contract',
-  REJECT: 'reject',
-}
-
-export const VENDOR_TASKS = {
-  APPROVE_ORDER: 'approve_order',
-  EDIT_ORDER: 'edit_order',
-  APPROVE_CONTRACT: 'approve_contract',
-  REJECT: 'reject',
-  MARK_FULFILLED: 'mark_fulfilled',
-}
-
-export const ORDER_PHASES = {
-    QUOTE: 'Quote',
-    COLLABORATION: 'Collaboration',
-    CONTRACT: 'Contract',
-    DELIVERY: 'Delivery',
-    FULFILLMENT: 'Fulfillment',
-    COMPLETE: 'Complete',
-    REJECTED: 'Rejected',
-}
-
-export const RENAMED_STATUS_OPTIONS = {
-  REQUESTED: 'Quote/Cart Requested',
-  PENDING_BUYER: 'Pending Buyer Approval',
-  PENDING_SUPPLIER: 'Pending Supplier Acceptance',
-  QUOTE_CREATED: 'Shopping Cart Created',
-  CONTRACT: 'Contract',
-  DELIVERY: 'Delivery',
-  FULFILLMENT: 'Fulfillment',
-  COMPLETE: 'Complete',
-  REJECTED: 'Rejected',
-}
-
-export const BUTTON_OPTIONS = {
-  PROJECTS: 1,
-  PRODUCTS: 2,
-  ORDERS: 3,
-  SHOPPING_CART: 4,
-  PROGRAM_DOCUMENTS: 5,
-}
+export const ACCOUNT_TYPES = [
+  {id: 1, value: "OWNER", name: "Owner"},
+  {id: 2, value: "INSPECTOR", name: "Inspector"},
+]

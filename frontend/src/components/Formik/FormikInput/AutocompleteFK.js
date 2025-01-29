@@ -18,7 +18,8 @@ const AutocompleteFK = React.memo(
     overrideError,
     getOptionLabel,
     filterOptions, // (options, state) => options // disable local filtering
-     multiple = false
+     multiple = false,
+     disableClearable = false,
   }) => {
     const [field, meta] = useField({ name: fieldName });
     const errorText = meta.error && meta.touched ? meta.error : "";
@@ -37,6 +38,7 @@ const AutocompleteFK = React.memo(
       <FormControl sx={{ width: "100%" }}>
         <MDBox {...styleContainer}>
           <Autocomplete
+            disableClearable={disableClearable}
             accessKey={accessKey}
             size={"small"}
             multiple={multiple}

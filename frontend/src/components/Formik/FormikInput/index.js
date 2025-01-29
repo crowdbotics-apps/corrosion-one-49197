@@ -15,7 +15,12 @@ import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
 import moment from "moment";
 import Checkbox from "@mui/material/Checkbox";
 import MDTypography from "../../MDTypography";
-import MDInputPhone from "../MDInputPhone";
+import {defaultCountries, FlagImage, parseCountry, PhoneInput, usePhoneInput} from 'react-international-phone';
+import 'react-international-phone/style.css';
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import {InputAdornment, Select, TextField} from "@mui/material";
+import MDInput from "../../MDInput";
 
 const FormikFileInput = (props) => {
   const [field, meta] = useField(props);
@@ -49,26 +54,111 @@ const FormikBooleanInput = (props) => {
 }
 
 const FormikPhoneInput = (props) => {
-  const [field, meta] = useField(props);
-  const errorText = meta.error && meta.touched ? meta.error : '';
-  const {variant = "outlined", disabled=false,...rest} = props
+// Extract Formik's field and meta objects
+  const [field, meta, helpers] = useField(props)
+  const { name, label, variant = 'outlined', disabled = false, ...rest } = props
+  const { value, touched, error } = meta
+  const { setValue, setTouched } = helpers
+
+  // Setup phone input handling from react-international-phone
+  const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
+    usePhoneInput({
+      defaultCountry: 'us',
+      value, // Provide the current Formik value to the phone input
+      countries: defaultCountries,
+      onChange: (data) => {
+        // Whenever the input changes, update Formik's state
+        setValue(data.phone)
+      },
+    })
+
+  // Determine error text for Formik
+  const errorText = touched && error ? error : ''
 
   return (
     <MDBox {...rest}>
-      <InputMask
-        mask="+1(999)-999-9999"
-        disabled={disabled}
-        {...field}
-      >
-        <MDInputPhone
-          variant={variant}
-          fullWidth
-          {...rest}
-          {...field}
-          helperText={errorText}
-          error={!!errorText}
-        />
-      </InputMask>
+    <MDInput
+      {...field}
+      {...rest}
+      // Formik props
+      name={name}
+      value={inputValue}
+      onChange={(e) => {
+        // Update phone input value
+        handlePhoneValueChange(e)
+        // Mark field as touched in Formik
+        if (!touched) {
+          setTouched(true)
+        }
+      }}
+      inputRef={inputRef}
+      disabled={disabled}
+      // MUI TextField props
+      variant={variant}
+      fullWidth
+      label={label || 'Phone number'}
+      placeholder="Phone number"
+      type="tel"
+      error={Boolean(errorText)}
+      helperText={errorText}
+      // Render the country selector inside InputAdornment
+      InputProps={{
+        startAdornment: (
+          <InputAdornment
+            position="start"
+            style={{ marginRight: '2px', marginLeft: '-8px' }}
+          >
+            <Select
+              value={country.iso2}
+              onChange={(e) => setCountry(e.target.value)}
+              renderValue={(val) => <FlagImage iso2={val} style={{ display: 'flex' }} />}
+              MenuProps={{
+                style: {
+                  height: '300px',
+                  width: '360px',
+                  top: '10px',
+                  left: '-34px',
+                },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'left',
+                },
+              }}
+              sx={{
+                width: 'max-content',
+                // Hide default outline except on focus
+                fieldset: {
+                  display: 'none',
+                },
+                '&.Mui-focused:has(div[aria-expanded="false"])': {
+                  fieldset: {
+                    display: 'block',
+                  },
+                },
+                '.MuiSelect-select': {
+                  padding: '8px',
+                  paddingRight: '24px !important',
+                },
+                svg: {
+                  right: 0,
+                },
+              }}
+            >
+              {defaultCountries.map((c) => {
+                const parsedCountry = parseCountry(c)
+                return (
+                  <MenuItem key={parsedCountry.iso2} value={parsedCountry.iso2}>
+                    <FlagImage iso2={parsedCountry.iso2} style={{ marginRight: '8px' }} />
+                    <Typography marginRight="8px">{parsedCountry.name}</Typography>
+                    <Typography color="gray">+{parsedCountry.dialCode}</Typography>
+                  </MenuItem>
+                )
+              })}
+            </Select>
+          </InputAdornment>
+        ),
+      }}
+    />
     </MDBox>
   )
 }

@@ -75,7 +75,8 @@ import Icon from "@mui/material/Icon";
 import profilePicture from "./assets/imagesExamples/team-3.jpg";
 import {
   SignIn,
-  ForgotPassword
+  ForgotPassword,
+  SignUp
 } from "./pages";
 import {ROUTES} from "./services/constants";
 
@@ -550,5 +551,13 @@ export const unprotectedRoutes = [
     key: "forgot-password",
     route: ROUTES.FORGOT_PASSWORD,
     component: <ForgotPassword />,
-  }
+  },
+  {
+    type: "fixed",
+    name: "Sign Up",
+    key: "sign-up",
+    route: ROUTES.SIGN_UP,
+    component: <SignUp />,
+  },
+
 ]
