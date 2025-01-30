@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from timezone_field import TimeZoneField
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class User(AbstractUser):
@@ -31,6 +32,9 @@ class User(AbstractUser):
     apple_token = models.TextField('Token for Apple', blank=True, null=True)
     timezone = TimeZoneField(default='Etc/UTC')
     last_activity = models.DateTimeField(auto_now=True)
+    phone_number = PhoneNumberField('Phone Number', max_length=50, null=True, blank=True)
+    phone_verified = models.BooleanField(_("Phone Verified"), default=False)
+    last_verification_email_sent = models.DateTimeField(_("Last Verification Email Sent"), null=True, blank=True)
 
     class Meta:
         ordering = ['-id']

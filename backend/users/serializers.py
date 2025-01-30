@@ -5,6 +5,10 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import IntegerField, ModelSerializer, Serializer, CharField
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.http import HttpRequest
+from django.utils import timezone
+
+from inspector.models import Inspector
+from owner.models import Owner
 from utils.utils import create_user_activation_link
 from utils.utils.email import send_email_with_template
 
@@ -99,6 +103,7 @@ class UserCreateSerializer(Serializer):
     """
     email = serializers.EmailField()
     password = serializers.CharField()
+    account_type = serializers.CharField()
 
     def _get_request(self):
         request = self.context.get('request')
@@ -121,6 +126,17 @@ class UserCreateSerializer(Serializer):
                 user.delete()
         return email
 
+
+    def validate(self, attrs):
+        account_type = attrs.get('account_type')
+        if account_type not in ['OWNER', 'INSPECTOR']:
+            raise ValidationError(
+                _("Invalid account type. Account type must be either 'OWNER' or 'INSPECTOR'.")
+            )
+        if account_type == 'INSPECTOR':
+            attrs['phone_number'] = attrs.get('phone_number')
+        return attrs
+
     def create(self, validated_data):
         """
         Create user and sends verification email
@@ -129,7 +145,16 @@ class UserCreateSerializer(Serializer):
         email = validated_data['email']
         user = User(email=email, username=email)
         user.set_password(validated_data['password'])
+        user.last_verification_email_sent = timezone.now()
         user.save()
+
+        account_type = validated_data['account_type']
+        if account_type == 'INSPECTOR':
+            inspector = Inspector.objects.create(user=user)
+            inspector.save()
+        else:
+            owner = Owner.objects.create(user=user)
+            owner.save()
 
         send_email_with_template(
             subject=f'{settings.PROJECT_NAME} - Verification Link',
@@ -141,14 +166,31 @@ class UserCreateSerializer(Serializer):
             }
         )
 
+
         return user
 
 
 class UserDetailSerializer(ModelSerializer):
+    status = SerializerMethodField()
+    user_type = SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'name', 'first_name', 'last_name']
+        fields = ['id', 'email', 'name', 'first_name', 'last_name', 'status', 'user_type']
+
+    def get_status(self, obj):
+        if hasattr(obj, 'owner'):
+            return obj.owner.status
+        elif hasattr(obj, 'inspector'):
+            return obj.inspector.status
+        return None
+
+    def get_user_type(self, obj):
+        if hasattr(obj, 'owner'):
+            return 'OWNER'
+        elif hasattr(obj, 'inspector'):
+            return 'INSPECTOR'
+        return None
 
 
 

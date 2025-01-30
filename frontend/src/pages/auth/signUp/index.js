@@ -47,13 +47,43 @@ function SignUp() {
   const navigate = useNavigate()
   const formikRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [stage, setStage] = useState(1);
 
 
   const signup = (data) => {
-
+    const dataToSend = {
+      ...data,
+      account_type: data.account_type.value
+    }
+    console.log(dataToSend)
+    api.signup(dataToSend).handle({
+        onSuccess: (result) => {
+          console.log(result)
+          const {response} = result
+          // const {user, access_token} = response
+          // runInAction(() => {
+          //   loginStore.setUser(user)
+          //   loginStore.setApiToken(access_token)
+          // })
+          //
+          // if (user.is_superuser || user.group === ROLES.ADMIN.name) {
+          //   navigate(ROUTES.ADMIN_ANALYTICS)
+          // } else if (!(user.is_superuser || user.group === ROLES.ADMIN.name) && user?.password_changed_by_admin) {
+          //   navigate(ROUTES.USER_CHANGE_PASSWORD)
+          // } else {
+          //   navigate(ROUTES.USER_PROJECT_SELECTOR)
+          // }
+        },
+        errorMessage: 'Error creating account',
+        onError: (result) => {
+          formikRef.current?.setErrors(result.errors)
+        },
+        onFinally: () => setLoading(false)
+      }
+    )
   }
 
-  const validationSchema =
+  const validationSchemaFirstStep =
     Yup.object().shape({
       account_type: Yup.object().required(),
       email: Yup.string().email().required(),
@@ -61,10 +91,19 @@ function SignUp() {
       confirm_password: Yup.string()
         .required('Confirm Password is required')
         .oneOf([Yup.ref("password")], "Passwords must match"),
-      phone_number: Yup.string().required('Phone Number is required')
+      phone_number: Yup.string().when('account_type', {
+        is: (account_type) => account_type.id === ACCOUNT_TYPES[1].id,
+        then: () => Yup.string() .required('Phone Number is required')
+          .test('valid-phone', 'Phone Number is required', function (value) {
+            if (!value) return false; // If no value, fail (Yup will report "required")
+            if (value.length <= 6) return false; // If less than 3 characters, fail
+            return true;
+          }),
+        otherwise: () =>  Yup.string().notRequired()
+      })
     })
 
-  const initialValues = {
+  const initialValuesFirstStep = {
     account_type: ACCOUNT_TYPES[0],
     email: "",
     password: "",
@@ -72,10 +111,10 @@ function SignUp() {
     phone_number: "",
   };
 
-  const formik = useFormik({
-    initialValues,
+  const formikFirstStep = useFormik({
+    initialValues: initialValuesFirstStep,
     validateOnChange: false,
-    validationSchema: validationSchema,
+    validationSchema: validationSchemaFirstStep,
     onSubmit: (values) => signup(values),
   })
 
@@ -90,52 +129,52 @@ function SignUp() {
 
   return (
     <IllustrationLayout
-      title={`Create ${formik.values.account_type.name} Account`}
+      title={`Create ${formikFirstStep.values.account_type.name} Account`}
       description=""
       illustration={bgImage}
     >
-      <FormikProvider value={formik}>
+      <FormikProvider value={formikFirstStep}>
           <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
             <FormikInput
               type={"autocomplete"}
-              value={formik.values.account_type}
+              value={formikFirstStep.values.account_type}
               fieldName={"account_type"}
               label={"Account Type"}
               options={ACCOUNT_TYPES}
               accessKey={"name"}
               multiple={false}
               onChange={(value) => {
-                formik.setFieldValue('account_type', value)
+                formikFirstStep.setFieldValue('account_type', value)
               }}
-              mb={2}
               disableClearable
+              styleContainer={{mb:2}}
             />
             <FormikInput
               name={'email'}
               label={'Email address'}
               type={'email'}
-              errors={formik.errors}
+              errors={formikFirstStep.errors}
               mb={2}
             />
-            <FormikInput
+            {formikFirstStep.values.account_type === ACCOUNT_TYPES[1] && <FormikInput
               name={'phone_number'}
               label={'Phone Number'}
               type={'phone_input'}
-              errors={formik.errors}
+              errors={formikFirstStep.errors}
               mb={2}
-            />
+            />}
             <FormikInput
               name={'password'}
               label={'Set Password'}
               type={'password'}
-              errors={formik.errors}
+              errors={formikFirstStep.errors}
               mb={2}
             />
             <FormikInput
               name={'confirm_password'}
               label={'Confirm Password'}
               type={'password'}
-              errors={formik.errors}
+              errors={formikFirstStep.errors}
               mb={1}
             />
             <MDBox textAlign="center">
@@ -163,14 +202,15 @@ function SignUp() {
                 </MDTypography>
               </MDTypography>
             </MDBox>
-            <MDBox mt={3} textAlign={"center"}>
+            <MDBox mt={10} textAlign={"center"}>
               <MDButton
                 fullWidth
                 variant="contained"
                 color="primary"
                 loading={loading}
-                disabled={loading || !formik.isValid}
+                disabled={loading || !formikFirstStep.isValid}
                 size={"large"}
+                type='submit'
               >
                 Continue
               </MDButton>
@@ -211,6 +251,12 @@ function SignUp() {
                 sx={{cursor: "pointer"}}
                 onClick={facebookSignIn}
               />
+            </MDBox>
+            <MDBox display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={'70%'} mx={'auto'} mt={5}>
+              <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={'#3C7092'} />
+              <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 2 ? '#3C7092' : '#C6C9CE'} />
+              <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 3 ? '#3C7092' : '#C6C9CE'} />
+              {formikFirstStep.values.account_type === ACCOUNT_TYPES[1] &&  <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 4 ? '#3C7092' : '#C6C9CE'} />}
             </MDBox>
           </Form>
       </FormikProvider>

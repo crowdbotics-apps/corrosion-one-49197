@@ -47,6 +47,8 @@ INSTALLED_APPS = [
 LOCAL_APPS = [
     'users',
     'utils',
+    'owner',
+    'inspector',
 ]
 
 THIRD_PARTY_APPS = [
@@ -70,6 +72,7 @@ THIRD_PARTY_APPS = [
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -231,7 +234,27 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
+EMAIL_AVAILABLE = env.bool("EMAIL_AVAILABLE", False)
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+if EMAIL_AVAILABLE:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+
 ALLOW_SUPER_USERS_LOGIN = env.bool("ALLOW_SUPER_USERS_LOGIN", True)
 PROJECT_NAME = env.str("PROJECT_NAME", "Project")
 LOGO_URL = env.str("LOGO_URL", "https://example.com/logo.png")
 REDIRECT_DEEP_LINK = env.str("REDIRECT_DEEP_LINK", "project")
+
+
+CORS_ALLOW_ALL = DEBUG
+CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://0.0.0.0:3000',
+]
+
+CORS_EXPOSE_HEADERS = [
+    'content-disposition',
+]

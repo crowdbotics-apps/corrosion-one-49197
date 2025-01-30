@@ -90,3 +90,11 @@ ENV/
 myvenv/
 .idea/
 mediafiles/
+/cities/admin1CodesASCII.txt
+/cities/admin2Codes.txt
+/cities/alternateNames.txt
+/cities/alternateNames.zip
+/cities/cities15000.txt
+/cities/cities15000.zip
+/cities/countryInfo.txt
+/cities/install_datetime

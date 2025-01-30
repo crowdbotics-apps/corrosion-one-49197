@@ -41,6 +41,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         match self.action:
             case 'reset': return ResetPasswordConfirmSerializer
             case 'change': return ChangePasswordSerializer
+            case _: return UserCreateSerializer
 
     def create(self, request, **kwargs):
         """
@@ -338,9 +339,13 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             else:
                 return Response("Unsupported account type", status=status.HTTP_400_BAD_REQUEST)
         if not user.email_verified:
-            return Response("Please verify your account first", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Please verify your email address", status=status.HTTP_400_BAD_REQUEST)
+        # if not user.phone_verified:
+        #     return Response("Please verify your phone number", status=status.HTTP_400_BAD_REQUEST)
         if not user.is_active:
             return Response("The account has been removed", status=status.HTTP_400_BAD_REQUEST)
+        if not user.check_password(request.data.get('password')):
+            return Response("Invalid email or password. Please try again", status=status.HTTP_400_BAD_REQUEST)
         return Response(UserLoginResponseSerializer(user).data)
 
     @action(detail=False, methods=['get'], url_path='activate/(?P<slug>[A-Za-z0-9-_.]+)')
@@ -376,6 +381,8 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
                     "verification_link": create_user_activation_link(user, request),
                 }
             )
+            user.last_verification_email_sent = timezone.now()
+            user.save()
             return Response('Token is invalid or expired. We sent another confirmation email.', status=status.HTTP_400_BAD_REQUEST)
 
         user.email_verified = True
@@ -384,3 +391,29 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             "project_name": settings.PROJECT_NAME,
         }
         return render(request, 'activate_account.html', context)
+
+
+    @action(detail=False, methods=['post'])
+    def resend_verification_email(self, request):
+        email = request.data.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
+            if user.email_verified:
+                return Response('Email already verified', status=HTTP_400_BAD_REQUEST)
+            last_verification_email_sent = user.last_verification_email_sent
+            if last_verification_email_sent and (timezone.now() - last_verification_email_sent).seconds < 300:
+                return Response('Please wait for 5 minutes before sending another verification email',
+                                status=HTTP_400_BAD_REQUEST)
+            send_email_with_template(
+                subject=f'{settings.PROJECT_NAME} - Verification Link',
+                email=user.email,
+                template_to_load='emails/activate_user_email.html',
+                context={
+                    "name": user.email,
+                    "verification_link": create_user_activation_link(user, request),
+                }
+            )
+            user.last_verification_email_sent = timezone.now()
+            user.save()
+            return Response('Verification email sent', status=HTTP_200_OK)
+        return Response('The email is invalid', status=HTTP_400_BAD_REQUEST)
