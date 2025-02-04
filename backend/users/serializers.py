@@ -173,10 +173,11 @@ class UserCreateSerializer(Serializer):
 class UserDetailSerializer(ModelSerializer):
     status = SerializerMethodField()
     user_type = SerializerMethodField()
+    phone_number = SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'name', 'first_name', 'last_name', 'status', 'user_type']
+        fields = ['id', 'email', 'name', 'first_name', 'last_name', 'status', 'user_type', 'phone_number']
 
     def get_status(self, obj):
         if hasattr(obj, 'owner'):
@@ -191,6 +192,9 @@ class UserDetailSerializer(ModelSerializer):
         elif hasattr(obj, 'inspector'):
             return 'INSPECTOR'
         return None
+
+    def get_phone_number(self, obj):
+        return obj.phone_number.as_international
 
 
 

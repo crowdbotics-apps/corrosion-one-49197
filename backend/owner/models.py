@@ -21,7 +21,7 @@ class Owner(models.Model):
     @property
     def status(self):
         if self.user.phone_verified:
-            return 3
+            return 4
         if self.company_name:
             return 2
         return 1

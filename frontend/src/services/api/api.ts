@@ -12,10 +12,18 @@ export class Api extends ApiBase {
   }
 
   login(username: string, password: string): ApiReturnType<Types.SimplePostResult> {
-    return this.simple_post(`${API_VERSION_PREFIX}/login/`, {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/login/`, {
       email: username,
       password,
     });
+  }
+
+  signup(data: any): ApiReturnType<Types.SimplePostResult> {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/`, data);
+  }
+
+  resendVerificationEmail(data: any): ApiReturnType<Types.GenericResponse> {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/resend_verification_email/`, data);
   }
 
   forgotPassword(email: string): ApiReturnType<Types.GenericResponse> {
@@ -42,8 +50,16 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/region/`, data);
   }
 
-  getOrdersAdmin(data: any) {
-    return this.simple_get(`${API_VERSION_PREFIX}/order/`, data);
+  getIndustries() {
+    return this.simple_get(`${API_VERSION_PREFIX}/owner/industry/`);
+  }
+
+  updateOwnerData(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/owner/complete/`, data);
+  }
+
+  verifyCode(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/verify_phone_code/`, data);
   }
 
   getOrdersStatusAdmin(data: any) {

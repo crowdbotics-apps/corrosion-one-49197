@@ -219,7 +219,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities')
@@ -258,3 +261,8 @@ CORS_ALLOWED_ORIGINS = [
 CORS_EXPOSE_HEADERS = [
     'content-disposition',
 ]
+
+TWILIO_API_KEY_SID = env.str("TWILIO_API_KEY_SID", "")
+TWILIO_API_KEY_SECRET = env.str("TWILIO_API_KEY_SECRET", "")
+TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "")
+TWILIO_NUMBER = env.str("TWILIO_NUMBER", "")

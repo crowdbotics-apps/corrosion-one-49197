@@ -1,17 +1,17 @@
 /**
-=========================================================
-* Material Dashboard 3 PRO React - v2.3.0
-=========================================================
+ =========================================================
+ * Material Dashboard 3 PRO React - v2.3.0
+ =========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+ * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
+ * Copyright 2024 Creative Tim (https://www.creative-tim.com)
 
-Coded by www.creative-tim.com
+ Coded by www.creative-tim.com
 
  =========================================================
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ */
 
 import {useEffect, useState} from "react";
 
@@ -57,13 +57,13 @@ export default function App() {
     darkMode,
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const { pathname } = useLocation();
+  const {pathname} = useLocation();
   const [rootStore, setRootStore] = useState(undefined)
   const currentBp = useCurrentBreakpoint();
 
   useEffect(() => {
     (async () => {
-      setupRootStore().then((rootStore)=>{
+      setupRootStore().then((rootStore) => {
         setRootStore(rootStore)
       })
     })()
@@ -71,10 +71,11 @@ export default function App() {
 
 
   useEffect(() => {
-    if(rootStore){
+    // console.log('Root Store:', JSON.stringify(rootStore.loginStore))
+    if (rootStore) {
       rootStore.loginStore.setUp()
     }
-  },[rootStore])
+  }, [rootStore])
 
 
   // Open sidenav when mouse enter on mini sidenav
@@ -126,12 +127,11 @@ export default function App() {
     });
 
 
-
   console.log('Current Breakpoint:', currentBp);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
-      <CssBaseline />
+      <CssBaseline/>
       {layout === "dashboard" && (
         <>
           <Sidenav
@@ -151,7 +151,7 @@ export default function App() {
       <Routes>
         {getRoutes(unprotectedRoutes)}
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboards/analytics" />} />
+        <Route path="*" element={<Navigate to="/dashboards/analytics"/>}/>
       </Routes>
     </ThemeProvider>
   );

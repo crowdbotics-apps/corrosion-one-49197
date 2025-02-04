@@ -48,37 +48,56 @@ function SignIn() {
   const navigate = useNavigate()
   const formikRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
+  const [rememberMe, setRememberMe] = useState(loginStore.remember_me);
+  const [showResendEmail, setShowResendEmail] = useState(false);
 
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const handleSetRememberMe = () => {
+    setRememberMe(!rememberMe)
+    loginStore.setRememberMe(!rememberMe)
+  };
 
   const login = (data) => {
     setLoading(true)
     api.login(data.email, data.password).handle({
         onSuccess: (result) => {
+          if (rememberMe) {
+            loginStore.setStoredEmail(data.email)
+          } else{
+            loginStore.setStoredEmail('')
+          }
           const {response} = result
-          const {user, access_token} = response
+          const {user, access} = response
+
           runInAction(() => {
             loginStore.setUser(user)
-            loginStore.setApiToken(access_token)
+            loginStore.setApiToken(access)
           })
-
-          if (user.is_superuser || user.group === ROLES.ADMIN.name) {
-            navigate(ROUTES.ADMIN_ANALYTICS)
-          } else if (!(user.is_superuser || user.group === ROLES.ADMIN.name) && user?.password_changed_by_admin) {
-            navigate(ROUTES.USER_CHANGE_PASSWORD)
-          } else {
-            navigate(ROUTES.USER_PROJECT_SELECTOR)
+          if (loginStore.status !== 4) {
+            navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})
           }
         },
         errorMessage: 'Error signing in',
         onError: (result) => {
+          console.log(result)
+          if (result.errors === "Please verify your email address") {
+            setShowResendEmail(true)
+          }
           formikRef.current?.setErrors(result.errors)
         },
         onFinally: () => setLoading(false)
       }
     )
+  }
+
+  const resendEmail = (data) => {
+    api.resendVerificationEmail(data).handle({
+      onSuccess: (result) => {
+        setShowResendEmail(false)
+      },
+      successMessage: 'Email sent successfully',
+      errorMessage: 'Error resending email',
+    })
   }
 
   const validationSchema =
@@ -88,7 +107,7 @@ function SignIn() {
     })
 
   const initialValues = {
-    email: "",
+    email: loginStore.stored_email || "",
     password: "",
   };
 
@@ -101,14 +120,12 @@ function SignIn() {
   }
 
   useEffect(() => {
-    // if (loginStore.isLoggedIn) {
-    //   if (loginStore.is_superuser || loginStore.group === ROLES.ADMIN.name) {
-    //     navigate(ROUTES.ADMIN_ANALYTICS)
-    //   } else {
-    //     navigate(ROUTES.USER_PROJECT_SELECTOR)
-    //   }
-    // }
-
+    console.log(loginStore.isLoggedIn)
+    if (loginStore.isLoggedIn) {
+      if (loginStore.status !== 4) {
+        navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})
+      }
+    }
   }, [])
 
   return (
@@ -176,7 +193,7 @@ function SignIn() {
                 variant="contained"
                 color="primary"
                 loading={loading}
-                disabled={loading || !isValid}
+                disabled={loading}
                 type='submit'
                 size={"large"}
               >
@@ -197,6 +214,11 @@ function SignIn() {
                 </MDTypography>
               </MDTypography>
             </MDBox>
+            {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
+              <MDTypography variant="button" color="text" onClick={() => resendEmail({email: formikRef.current?.values.email})}>
+                Didn&apos;t receive the verification email?{" "}
+              </MDTypography>
+            </MDBox>}
             <MDBox mt={3} display={"flex"} justifyContent={"center"} alignItems={"center"}>
               <Divider sx={{flexGrow: 1}}/>
               <MDTypography color="text" fontWeight="regular"  variant="button">

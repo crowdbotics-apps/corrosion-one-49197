@@ -19,6 +19,8 @@ from django.urls import path, include
 
 api_v1 = [
     path('users/', include('users.urls')),
+    # path('inspector/', include('inspector.urls')),
+    path('owner/', include('owner.urls')),
 ]
 
 urlpatterns = [

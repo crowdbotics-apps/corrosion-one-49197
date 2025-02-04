@@ -63,7 +63,7 @@ function IllustrationLayout({header = "", title = "", description = "", illustra
                    sx={ {xl: { height: "100vh" } }}
             >
               <MDBox component="img" src={logo} alt="logo" width={"300px"} mx={"auto"} mb={3} display={{xs: "flex", md: "none"}} />
-              <MDBox py={3} px={3} textAlign="center">
+              <MDBox py={3} px={3} pb={1} textAlign="center">
                 {!header ? (
                   <>
                     <MDBox mb={1} textAlign="center">

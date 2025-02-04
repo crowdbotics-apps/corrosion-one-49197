@@ -51,6 +51,7 @@
     "react-draft-wysiwyg": "1.15.0",
     "react-flatpickr": "3.10.13",
     "react-github-btn": "1.4.0",
+    "react-google-recaptcha": "^3.1.0",
     "react-images-viewer": "1.7.1",
     "react-input-mask": "^2.0.4",
     "react-international-phone": "^4.5.0",
