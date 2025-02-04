@@ -57,8 +57,14 @@ def code_live_time():
 
 
 class UserVerificationCode(models.Model):
+    class CodeTypes(models.TextChoices):
+        PHONE_VERIFICATION = 'phone_verification', _('Phone Verification')
+        PASSWORD_RESET = 'password_reset', _('Password Reset')
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     verification_code = models.CharField(_("Verification code"), max_length=6)
     expires_on = models.DateTimeField(_("Expires On"), default=code_live_time)
     timestamp = models.DateTimeField(_("Timestamp"), auto_now_add=True)
+    last_sent = models.DateTimeField(_("Last Sent"), auto_now=True)
     active = models.BooleanField(default=True)
+    code_type = models.CharField(_("Code Type"), max_length=50, choices=CodeTypes, default=CodeTypes.PASSWORD_RESET)

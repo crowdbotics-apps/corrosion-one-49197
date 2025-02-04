@@ -20,13 +20,14 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, \
     HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 from rest_framework.viewsets import GenericViewSet
 
-from users.models import User
+from users.models import User, UserVerificationCode
 from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserCreateSerializer, \
     UserLoginResponseSerializer
 from utils.utils import get_user_by_uidb64, get_and_validate_serializer
 from utils.utils import may_fail, update_with_kwargs, create_user_activation_link
 from utils.utils.email import send_email_with_template
-from utils.utils.verification_code import setup_verification_code, get_verification_code
+from utils.utils.send_sms import send_sms
+from utils.utils.verification_code import setup_verification_code, get_verification_code, get_current_verification_code
 
 User = get_user_model()
 
@@ -69,7 +70,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         email = request.data["email"]
         user = User.objects.filter(email=email).first()
         if user:
-            code = setup_verification_code(user)
+            code = setup_verification_code(user, UserVerificationCode.CodeTypes.PASSWORD_RESET)
             name = user.name
             if name is None or name == '':
                 name = user.email
@@ -90,7 +91,46 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
     def check_verification_code(self, request):
         otp = request.data.get("code")
         try:
-            get_token = get_verification_code(otp)
+            get_token = get_verification_code(otp, UserVerificationCode.CodeTypes.PASSWORD_RESET)
+        except Exception as e:
+            return Response(e, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        if not get_token:
+            return Response('The code is invalid', status=HTTP_400_BAD_REQUEST)
+        return Response(status=HTTP_200_OK)
+
+    @action(detail=False, methods=['POST'])
+    def send_phone_code(self, request):
+        """
+        Send phone code
+        """
+        user = self.request.user
+        if not user:
+            return Response('User not found', status=HTTP_400_BAD_REQUEST)
+        if user.phone_verified:
+            return Response('Phone already verified', status=HTTP_400_BAD_REQUEST)
+        code = get_current_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
+        if code:
+            if code.last_sent and (timezone.now() - code.last_sent).seconds < 30:
+                return Response('Please wait for 30 seconds before sending another verification code',
+                                status=HTTP_400_BAD_REQUEST)
+            else:
+                message = f'Your verification code is {code}'
+                code.last_sent = timezone.now()
+                code.save()
+                send_sms(message, user.phone_number.as_e164)
+                return Response()
+        code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
+        message = f'Your verification code is {code}'
+        send_sms(message, user.phone_number.as_e164)
+        return Response()
+
+    @action(detail=False, methods=['POST'])
+    def verify_phone_code(self, code):
+        """
+        Verify phone code
+        """
+        try:
+            get_token = get_verification_code(code, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
         except Exception as e:
             return Response(e, status=HTTP_500_INTERNAL_SERVER_ERROR)
         if not get_token:
@@ -102,7 +142,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         try:
             otp = request.data.get("code")
             password = request.data.get("password")
-            get_token = get_verification_code(otp)
+            get_token = get_verification_code(otp, UserVerificationCode.CodeTypes.PASSWORD_RESET)
             if not password:
                 return Response('Password cannot be empty', status=HTTP_400_BAD_REQUEST)
             if not get_token:

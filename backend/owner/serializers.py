@@ -51,5 +51,5 @@ class OwnerCompleteSerializer(serializers.ModelSerializer):
         self.instance.save()
         code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
         message = f'Your verification code is {code}'
-        send_sms(message, user.phone_number)
+        send_sms(message, user.phone_number.as_e164)
         return super().save(**kwargs)
