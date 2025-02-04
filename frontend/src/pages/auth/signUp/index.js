@@ -121,6 +121,17 @@ function SignUp() {
     })
   }
 
+  const sendVerificationCode = () => {
+    setLoading(true)
+    api.sendVerificationCode().handle({
+      onSuccess: (result) => {
+        console.log(result)
+      },
+      errorMessage: 'Error sending verification code',
+      onFinally: () => setLoading(false)
+    })
+  }
+
   const getIndustries = () => {
     api.getIndustries().handle({
       onSuccess: (result) => {
@@ -474,10 +485,21 @@ function SignUp() {
             label={'Verification Code'}
             type={'number'}
             errors={formikThirdStep.errors}
-            mb={2}
+            style={{mb: 0}}
           />
+          <MDBox mt={0} mb={3}>
+            <MDTypography
+              onClick={sendVerificationCode}
+              sx={{
+                cursor: "pointer",
+                fontSize: 14,
+                textAlign: "right",
+                color: "#BFBFBF",
+              }}
+            >Resend Code</MDTypography>
+          </MDBox>
           <FormControlLabel control={<Checkbox defaultChecked color={'primary'} />} label="Send me marketing and promotional emails" />
-          <MDBox display={'flex'} alignItems={'center'} justifyContent={'center'} mt={5}>
+          <MDBox display={'flex'} alignItems={'center'} justifyContent={'center'} mt={7}>
             <ReCAPTCHA
               sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
               onChange={
