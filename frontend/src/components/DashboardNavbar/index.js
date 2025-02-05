@@ -51,6 +51,7 @@ import {
 import {setMiniSidenav, setOpenConfigurator, setTransparentNavbar, useMaterialUIController,} from "context";
 import MDTypography from "../MDTypography";
 import {useLoginStore} from "../../services/helpers";
+import {ACCOUNT_TYPES} from "../../services/constants";
 
 function DashboardNavbar({absolute, light, isMini}) {
   const [navbarType, setNavbarType] = useState();
@@ -162,12 +163,12 @@ function DashboardNavbar({absolute, light, isMini}) {
               {miniSidenav ? "menu_open" : "menu"}
             </Icon>
           </IconButton>
-          <Breadcrumbs
-            icon="home"
-            title={route[route.length - 1]}
-            route={route}
-            light={light}
-          />
+          {/*<Breadcrumbs*/}
+          {/*  icon="home"*/}
+          {/*  title={route[route.length - 1]}*/}
+          {/*  route={route}*/}
+          {/*  light={light}*/}
+          {/*/>*/}
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, {isMini})}>
@@ -211,11 +212,12 @@ function DashboardNavbar({absolute, light, isMini}) {
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon>
               </IconButton>
-
-                <MDTypography variant="h6" fontWeight="bold" color="inherit">
-                  {loginStore.user_type}
-                </MDTypography>
             </MDBox>
+            <MDBox sx={{width:1.5, height: 20, backgroundColor: '#000000'}} ml={1} mr={1.5} />
+            <MDTypography variant="h6" color="primary" sx={{fontSize: 16}}>
+              {ACCOUNT_TYPES.find((type) => type.value === loginStore.user_type)?.name}
+              {/*{ROLES. = loginStore.user_type}*/}
+            </MDTypography>
           </MDBox>
         )}
       </Toolbar>

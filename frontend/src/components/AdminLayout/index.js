@@ -59,7 +59,7 @@ function AdminLayout
           pl={contentCentered ? pxToRem(170) : 2}
           pt={2}
         >
-          <MDTypography variant={'h1'} color={'title'} sx={isMobile ? {fontSize:"26px"}:{}}>
+          <MDTypography variant={'h2'} color={'title'} sx={isMobile ? {fontSize:"26px"}:{}}>
             {title}
           </MDTypography>
           {hasNavigationBack && (
