@@ -125,10 +125,11 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         return Response()
 
     @action(detail=False, methods=['POST'])
-    def verify_phone_code(self, code):
+    def verify_phone_code(self, request):
         """
         Verify phone code
         """
+        code = request.data.get("verification_code", None)
         try:
             get_token = get_verification_code(code, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
         except Exception as e:

@@ -194,6 +194,8 @@ class UserDetailSerializer(ModelSerializer):
         return None
 
     def get_phone_number(self, obj):
+        if not obj.phone_number:
+            return None
         return obj.phone_number.as_international
 
 

@@ -120,7 +120,6 @@ function SignIn() {
   }
 
   useEffect(() => {
-    console.log(loginStore.isLoggedIn)
     if (loginStore.isLoggedIn) {
       if (loginStore.status !== 4) {
         navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})

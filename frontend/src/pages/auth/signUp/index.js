@@ -34,7 +34,7 @@ import facebookIcon from "assets/svgs/facebook.svg";
 import googleIcon from "assets/svgs/google.svg";
 
 import IllustrationLayout from "components/IllustrationLayout";
-import {useApi, useLoginStore} from "../../../services/helpers";
+import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
 import {ACCOUNT_TYPES, ROLES, ROUTES} from "../../../services/constants";
 import {runInAction} from "mobx";
 import {Form, Formik, FormikProvider, useFormik} from "formik";
@@ -62,24 +62,18 @@ function SignUp() {
       ...data,
       account_type: data.account_type.value
     }
-    console.log(dataToSend)
     api.signup(dataToSend).handle({
         onSuccess: (result) => {
-          console.log(result)
           const {response} = result
-          // const {user, access_token} = response
-          // runInAction(() => {
-          //   loginStore.setUser(user)
-          //   loginStore.setApiToken(access_token)
-          // })
-          //
-          // if (user.is_superuser || user.group === ROLES.ADMIN.name) {
-          //   navigate(ROUTES.ADMIN_ANALYTICS)
-          // } else if (!(user.is_superuser || user.group === ROLES.ADMIN.name) && user?.password_changed_by_admin) {
-          //   navigate(ROUTES.USER_CHANGE_PASSWORD)
-          // } else {
-          //   navigate(ROUTES.USER_PROJECT_SELECTOR)
-          // }
+          const {user, access} = response
+          runInAction(() => {
+            loginStore.setUser(user)
+            loginStore.setApiToken(access)
+          })
+          if (loginStore.status !== 4) {
+            setStage(user.status)
+            showMessage('Please verify your email to continue', 'success')
+          }
         },
         errorMessage: 'Error creating account',
         onError: (result) => {
@@ -94,7 +88,7 @@ function SignUp() {
     setLoading(true)
     api.updateOwnerData(data).handle({
       onSuccess: (result) => {
-        console.log(result)
+        console.log('updateOwnerData ', result)
         setStage(2)
 
       },
@@ -110,7 +104,6 @@ function SignUp() {
     setLoading(true)
     api.verifyCode(data).handle({
       onSuccess: (result) => {
-        console.log(result)
         setStage(3)
       },
       errorMessage: 'Error verifying code',
@@ -249,10 +242,13 @@ function SignUp() {
 
   useEffect(() => {
     if (loginStore.isLoggedIn) {
-      getIndustries()
+      if (loginStore.status !== 4) {
+        setStage(loginStore.status)
+      }
     } else {
       setStage(0)
     }
+    getIndustries()
   }, [])
 
   useEffect(() => {
@@ -272,6 +268,7 @@ function SignUp() {
     }
 
   }, [formikFirstStep.values.account_type, stage])
+
 
   const firstStep = () => {
     return (
