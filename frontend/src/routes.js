@@ -76,7 +76,7 @@ import profilePicture from "./assets/imagesExamples/team-3.jpg";
 import {
   SignIn,
   ForgotPassword,
-  SignUp
+  SignUp, HomeOwner
 } from "./pages";
 import {ROUTES} from "./services/constants";
 
@@ -559,5 +559,63 @@ export const unprotectedRoutes = [
     route: ROUTES.SIGN_UP,
     component: <SignUp />,
   },
-
 ]
+
+export const protectedRoutes = [
+  {
+    type: "collapse",
+    name: "Dashboard",
+    key: "owner-dashboard",
+    route: ROUTES.OWNER_DASHBOARD,
+    component: <HomeOwner />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Find Jobs",
+    key: "changelog",
+    href: "https://github.com/creativetimofficial/ct-material-dashboard-pro-react/blob/main/CHANGELOG.md",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Applied Jobs",
+    key: "changelog",
+    href: "https://github.com/creativetimofficial/ct-material-dashboard-pro-react/blob/main/CHANGELOG.md",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Favorite Jobs",
+    key: "changelog",
+    href: "https://github.com/creativetimofficial/ct-material-dashboard-pro-react/blob/main/CHANGELOG.md",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Messages",
+    key: "changelog",
+    href: "https://github.com/creativetimofficial/ct-material-dashboard-pro-react/blob/main/CHANGELOG.md",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Payment",
+    key: "changelog",
+    href: "https://github.com/creativetimofficial/ct-material-dashboard-pro-react/blob/main/CHANGELOG.md",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Jobs Alerts",
+    key: "changelog",
+    href: "https://github.com/creativetimofficial/ct-material-dashboard-pro-react/blob/main/CHANGELOG.md",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    noCollapse: true,
+  },
+  ];

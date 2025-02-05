@@ -1,7 +1,6 @@
 import {Instance, SnapshotOut, types} from "mobx-state-tree"
 import {withEnvironment} from "../extensions/with-environment";
 import {withRootStore} from "../extensions/with-root-store";
-import {ROLES} from "../../services/constants";
 
 /**
  * Model description here for TypeScript hints.

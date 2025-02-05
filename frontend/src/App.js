@@ -34,7 +34,7 @@ import themeDark from "assets/theme-dark";
 
 
 // Material Dashboard 3 PRO React routes
-import routes, {unprotectedRoutes} from "routes";
+import routes, {protectedRoutes, unprotectedRoutes} from "routes";
 
 // Material Dashboard 3 PRO React contexts
 import {setMiniSidenav, useMaterialUIController,} from "context";
@@ -44,6 +44,8 @@ import brandWhite from "./assets/imagesExamples/logo-ct.png";
 import brandDark from "./assets/imagesExamples/logo-ct-dark.png";
 import {setupRootStore} from "./models";
 import useCurrentBreakpoint from "./services/helpers";
+import {ROUTES} from "./services/constants";
+import {SignUp} from "./pages";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -142,7 +144,7 @@ export default function App() {
                 : brandWhite
             }
             brandName="Creative Tim"
-            routes={routes}
+            routes={protectedRoutes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
@@ -150,8 +152,7 @@ export default function App() {
       )}
       <Routes>
         {getRoutes(unprotectedRoutes)}
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboards/analytics"/>}/>
+        {getRoutes(protectedRoutes)}
       </Routes>
     </ThemeProvider>
   );

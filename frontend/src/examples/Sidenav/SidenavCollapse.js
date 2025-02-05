@@ -1,17 +1,17 @@
 /**
 =========================================================
-* Material Dashboard 3 PRO React - v2.3.0
+* Material Dashboard 2 PRO React - v2.1.0
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
 
 Coded by www.creative-tim.com
 
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- */
+*/
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -23,22 +23,22 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Icon from "@mui/material/Icon";
 
-// Material Dashboard 3 PRO React components
+// Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 
 // Custom styles for the SidenavCollapse
 import {
-  collapseArrow,
-  collapseIcon,
-  collapseIconBox,
   collapseItem,
+  collapseIconBox,
+  collapseIcon,
   collapseText,
+  collapseArrow,
 } from "examples/Sidenav/styles/sidenavCollapse";
 
-// Material Dashboard 3 PRO React context
-import {useMaterialUIController} from "context";
+// Material Dashboard 2 PRO React context
+import { useMaterialUIController } from "context";
 
-function SidenavCollapse({ icon, name, children = false, active = false, noCollapse = false, open = false, ...rest }) {
+function SidenavCollapse({ icon = null, name, children, active, noCollapse, open, ...rest }) {
   const [controller] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } = controller;
 
@@ -54,11 +54,11 @@ function SidenavCollapse({ icon, name, children = false, active = false, noColla
           <ListItemIcon
             sx={(theme) => collapseIconBox(theme, { transparentSidenav, whiteSidenav, darkMode })}
           >
-            {typeof icon === "string" ? (
-              <Icon sx={(theme) => collapseIcon(theme, { active })}>{icon}</Icon>
-            ) : (
-              icon
-            )}
+            {/*{typeof icon === "string" ? (*/}
+            {/*  <Icon sx={(theme) => collapseIcon(theme, { active })}>{icon}</Icon>*/}
+            {/*) : (*/}
+            {/*  icon*/}
+            {/*)}*/}
           </ListItemIcon>
 
           <ListItemText
@@ -99,9 +99,17 @@ function SidenavCollapse({ icon, name, children = false, active = false, noColla
   );
 }
 
+// Setting default values for the props of SidenavCollapse
+SidenavCollapse.defaultProps = {
+  active: false,
+  noCollapse: false,
+  children: false,
+  open: false,
+};
+
 // Typechecking props for the SidenavCollapse
 SidenavCollapse.propTypes = {
-  icon: PropTypes.node.isRequired,
+  icon: PropTypes.node,
   name: PropTypes.string.isRequired,
   children: PropTypes.node,
   active: PropTypes.bool,

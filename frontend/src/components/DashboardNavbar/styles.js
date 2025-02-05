@@ -1,12 +1,10 @@
-import pxToRem from "../../../assets/theme/functions/pxToRem";
-
 /**
 =========================================================
-* Material Dashboard 2 PRO React - v2.1.0
+* Material Dashboard 3 PRO React - v2.3.0
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
+* Copyright 2024 Creative Tim (https://www.creative-tim.com)
 
 Coded by www.creative-tim.com
 
@@ -15,7 +13,8 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 function navbar(theme, ownerState) {
-  const { palette, boxShadows, functions, transitions, breakpoints, borders } = theme;
+  const { palette, boxShadows, functions, transitions, breakpoints, borders } =
+    theme;
   const { transparentNavbar, absolute, light, darkMode } = ownerState;
 
   const { dark, white, text, transparent, background } = palette;
@@ -24,16 +23,45 @@ function navbar(theme, ownerState) {
   const { borderRadius } = borders;
 
   return {
-    height: pxToRem(80),
-    backgroundColor: "#ffffff",
+    boxShadow: transparentNavbar || absolute ? "none" : navbarBoxShadow,
+    backdropFilter:
+      transparentNavbar || absolute
+        ? "none"
+        : `saturate(200%) blur(${pxToRem(30)})`,
+    backgroundColor:
+      transparentNavbar || absolute
+        ? `${transparent.main} !important`
+        : rgba(darkMode ? background.default : white.main, 0.8),
+
+    color: () => {
+      let color;
+
+      if (light) {
+        color = white.main;
+      } else if (transparentNavbar) {
+        color = text.main;
+      } else {
+        color = dark.main;
+      }
+
+      return color;
+    },
+    top: absolute ? 0 : pxToRem(12),
+    minHeight: pxToRem(54),
     display: "grid",
     alignItems: "center",
-    borderRadius: 0,
-    opacity: 1,
+    borderRadius: borderRadius.xl,
     paddingTop: pxToRem(8),
     paddingBottom: pxToRem(8),
     paddingRight: absolute ? pxToRem(8) : 0,
     paddingLeft: absolute ? pxToRem(16) : 0,
+
+    "& > *": {
+      transition: transitions.create("all", {
+        easing: transitions.easing.easeInOut,
+        duration: transitions.duration.standard,
+      }),
+    },
 
     "& .MuiToolbar-root": {
       display: "flex",
@@ -42,7 +70,7 @@ function navbar(theme, ownerState) {
 
       [breakpoints.up("sm")]: {
         minHeight: "auto",
-        padding: `${pxToRem(4)} ${pxToRem(16)}`,
+        padding: 0,
       },
     },
   };
@@ -68,7 +96,6 @@ const navbarRow = ({ breakpoints }, { isMini }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   width: "100%",
-
 
   [breakpoints.up("md")]: {
     justifyContent: isMini ? "space-between" : "stretch",
@@ -104,7 +131,8 @@ const navbarDesktopMenu = ({ breakpoints }) => ({
   cursor: "pointer",
 
   [breakpoints.up("xl")]: {
-    display: "inline-block !important",
+    display: "grid !important",
+    placeItems: "center",
   },
 });
 

@@ -1,10 +1,10 @@
 /**
 =========================================================
-* Material Dashboard 3 PRO React - v2.3.0
+* Material Dashboard 2 PRO React - v2.1.0
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
 
 Coded by www.creative-tim.com
 
@@ -13,8 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 function collapseItem(theme, ownerState) {
-  const { palette, transitions, breakpoints, boxShadows, borders, functions } =
-    theme;
+  const { palette, transitions, breakpoints, boxShadows, borders, functions } = theme;
   const { active, transparentSidenav, whiteSidenav, darkMode } = ownerState;
 
   const { white, transparent, dark, grey } = palette;
@@ -29,30 +28,29 @@ function collapseItem(theme, ownerState) {
       if (transparentSidenav && darkMode) {
         backgroundValue = active ? rgba(white.main, 0.2) : transparent.main;
       } else if (transparentSidenav && !darkMode) {
-        backgroundValue = active ? grey[100] : transparent.main;
+        backgroundValue = active ? grey[300] : transparent.main;
       } else if (whiteSidenav) {
-        backgroundValue = active ? grey[100] : transparent.main;
+        backgroundValue = active ? grey[200] : transparent.main;
       } else {
         backgroundValue = active ? rgba(white.main, 0.2) : transparent.main;
       }
 
+      if (active) {
+        backgroundValue = '#81D61E'
+      }
+
       return backgroundValue;
     },
-    color:
-      (transparentSidenav && !darkMode) || whiteSidenav
-        ? dark.main
-        : white.main,
+    color: (transparentSidenav && !darkMode) || whiteSidenav ? dark.main : white.main,
     display: "flex",
     alignItems: "center",
     width: "100%",
-    padding: `${pxToRem(8)} ${pxToRem(12)}`,
-    margin: `${pxToRem(1.5)} ${pxToRem(12)}`,
-    borderRadius: borderRadius.md,
+    padding: `${pxToRem(8)} ${pxToRem(16)}`,
+    borderRadius: 0,
     cursor: "pointer",
     userSelect: "none",
     whiteSpace: "nowrap",
-    boxShadow:
-      active && !whiteSidenav && !darkMode && !transparentSidenav ? md : "none",
+    boxShadow: active && !whiteSidenav && !darkMode && !transparentSidenav ? md : "none",
     [breakpoints.up("xl")]: {
       transition: transitions.create(["box-shadow", "background-color"], {
         easing: transitions.easing.easeInOut,
@@ -73,17 +71,14 @@ function collapseIconBox(theme, ownerState) {
   const { palette, transitions, borders, functions } = theme;
   const { transparentSidenav, whiteSidenav, darkMode } = ownerState;
 
-  const { white, dark, grey } = palette;
+  const { white, dark } = palette;
   const { borderRadius } = borders;
   const { pxToRem } = functions;
 
   return {
-    minWidth: pxToRem(18),
-    minHeight: pxToRem(18),
-    color:
-      (transparentSidenav && !darkMode) || whiteSidenav
-        ? grey[500]
-        : white.main,
+    minWidth: 0,
+    minHeight: pxToRem(32),
+    color: (transparentSidenav && !darkMode) || whiteSidenav ? dark.main : white.main,
     borderRadius: borderRadius.md,
     display: "grid",
     placeItems: "center",
@@ -115,8 +110,7 @@ function collapseText(theme, ownerState) {
     [breakpoints.up("xl")]: {
       opacity: miniSidenav || (miniSidenav && transparentSidenav) ? 0 : 1,
       maxWidth: miniSidenav || (miniSidenav && transparentSidenav) ? 0 : "100%",
-      marginLeft:
-        miniSidenav || (miniSidenav && transparentSidenav) ? 0 : pxToRem(10),
+      marginLeft: miniSidenav || (miniSidenav && transparentSidenav) ? 0 : pxToRem(10),
       transition: transitions.create(["opacity", "margin"], {
         easing: transitions.easing.easeInOut,
         duration: transitions.duration.standard,
@@ -124,8 +118,8 @@ function collapseText(theme, ownerState) {
     },
 
     "& span": {
-      fontWeight: active ? fontWeightRegular : fontWeightLight,
-      fontSize: size.xs,
+      fontWeight: 500,
+      fontSize: pxToRem(14),
       lineHeight: 0,
     },
   };
@@ -133,17 +127,10 @@ function collapseText(theme, ownerState) {
 
 function collapseArrow(theme, ownerState) {
   const { palette, typography, transitions, breakpoints, functions } = theme;
-  const {
-    noCollapse,
-    transparentSidenav,
-    whiteSidenav,
-    miniSidenav,
-    open,
-    active,
-    darkMode,
-  } = ownerState;
+  const { noCollapse, transparentSidenav, whiteSidenav, miniSidenav, open, active, darkMode } =
+    ownerState;
 
-  const { white, dark, grey } = palette;
+  const { white, dark } = palette;
   const { size } = typography;
   const { pxToRem, rgba } = functions;
 
@@ -158,7 +145,7 @@ function collapseArrow(theme, ownerState) {
       if (transparentSidenav && darkMode) {
         colorValue = open || active ? white.main : rgba(white.main, 0.25);
       } else if (transparentSidenav || whiteSidenav) {
-        colorValue = open || active ? grey[600] : rgba(dark.main, 0.25);
+        colorValue = open || active ? dark.main : rgba(dark.main, 0.25);
       } else {
         colorValue = open || active ? white.main : rgba(white.main, 0.5);
       }
@@ -179,10 +166,4 @@ function collapseArrow(theme, ownerState) {
   };
 }
 
-export {
-  collapseItem,
-  collapseIconBox,
-  collapseIcon,
-  collapseText,
-  collapseArrow,
-};
+export { collapseItem, collapseIconBox, collapseIcon, collapseText, collapseArrow };

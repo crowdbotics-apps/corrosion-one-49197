@@ -2,11 +2,11 @@
 
 /**
 =========================================================
-* Material Dashboard 3 PRO React - v2.3.0
+* Material Dashboard 2 PRO React - v2.1.0
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
 
 Coded by www.creative-tim.com
 
@@ -16,19 +16,18 @@ Coded by www.creative-tim.com
 */
 function item(theme, ownerState) {
   const { palette, borders, functions, transitions } = theme;
-  const { active, color, transparentSidenav, whiteSidenav, darkMode } =
-    ownerState;
+  const { active, color, transparentSidenav, whiteSidenav, darkMode } = ownerState;
 
   const { transparent, white, grey } = palette;
   const { borderRadius } = borders;
   const { rgba } = functions;
 
   return {
-    pl: "15px",
+    pl: 3,
     mt: 0.375,
     mb: 0.3,
     width: "100%",
-    borderRadius: borderRadius.md,
+    borderRadius: 0,
     cursor: "pointer",
     backgroundColor: () => {
       let backgroundValue = transparent.main;
@@ -45,6 +44,9 @@ function item(theme, ownerState) {
       } else if (active) {
         backgroundValue = palette[color].main;
       }
+      if (active) {
+        backgroundValue = '#81D61E'
+      }
 
       return backgroundValue;
     },
@@ -56,26 +58,14 @@ function item(theme, ownerState) {
     "&:hover, &:focus": {
       backgroundColor:
         !active &&
-        rgba(
-          (transparentSidenav && !darkMode) || whiteSidenav
-            ? grey[400]
-            : white.main,
-          0.2
-        ),
+        rgba((transparentSidenav && !darkMode) || whiteSidenav ? grey[400] : white.main, 0.2),
     },
   };
 }
 
 function itemContent(theme, ownerState) {
   const { palette, typography, transitions, functions } = theme;
-  const {
-    miniSidenav,
-    name,
-    active,
-    transparentSidenav,
-    whiteSidenav,
-    darkMode,
-  } = ownerState;
+  const { miniSidenav, name, active, transparentSidenav, whiteSidenav, darkMode } = ownerState;
 
   const { white, dark } = palette;
   const { size, fontWeightRegular, fontWeightLight } = typography;
@@ -86,19 +76,18 @@ function itemContent(theme, ownerState) {
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
-    padding: `${pxToRem(8)} ${pxToRem(12)}`,
-    marginLeft: pxToRem(18),
+    padding: `${pxToRem(12)} ${pxToRem(16)}`,
+
     userSelect: "none",
     position: "relative",
 
     "& span": {
       color:
-        ((transparentSidenav && !darkMode) || whiteSidenav) &&
-        (active === "isParent" || !active)
+        ((transparentSidenav && !darkMode) || whiteSidenav) && (active === "isParent" || !active)
           ? dark.main
           : white.main,
-      fontWeight: active ? fontWeightRegular : fontWeightLight,
-      fontSize: size.xs,
+      fontWeight: 400,
+      fontSize: pxToRem(14),
       opacity: miniSidenav ? 0 : 1,
       transition: transitions.create(["opacity", "color"], {
         easing: transitions.easing.easeInOut,
@@ -107,10 +96,8 @@ function itemContent(theme, ownerState) {
     },
 
     "&::before": {
-      content: `"${name[0]}"`,
       color:
-        ((transparentSidenav && !darkMode) || whiteSidenav) &&
-        (active === "isParent" || !active)
+        ((transparentSidenav && !darkMode) || whiteSidenav) && (active === "isParent" || !active)
           ? dark.main
           : white.main,
       fontWeight: fontWeightRegular,
@@ -119,25 +106,17 @@ function itemContent(theme, ownerState) {
       position: "absolute",
       top: "50%",
       transform: "translateY(-50%)",
-      left: pxToRem(-15),
       opacity: 1,
-      borderRadius: "50%",
-      fontSize: size.xs,
+      borderRadius: 0,
+      fontSize: size.sm,
     },
   };
 }
 
 function itemArrow(theme, ownerState) {
   const { palette, typography, transitions, breakpoints, functions } = theme;
-  const {
-    noCollapse,
-    transparentSidenav,
-    whiteSidenav,
-    miniSidenav,
-    open,
-    active,
-    darkMode,
-  } = ownerState;
+  const { noCollapse, transparentSidenav, whiteSidenav, miniSidenav, open, active, darkMode } =
+    ownerState;
 
   const { white, dark } = palette;
   const { size } = typography;

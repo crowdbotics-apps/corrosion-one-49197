@@ -1,17 +1,17 @@
 /**
 =========================================================
-* Material Dashboard 3 PRO React - v2.3.0
+* Material Dashboard 2 PRO React - v2.1.0
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
 
 Coded by www.creative-tim.com
 
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- */
+*/
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -22,14 +22,14 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Icon from "@mui/material/Icon";
 
-// Material Dashboard 3 PRO React components
+// Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 
 // Custom styles for the SidenavItem
-import {item, itemArrow, itemContent} from "examples/Sidenav/styles/sidenavItem";
+import { item, itemContent, itemArrow } from "examples/Sidenav/styles/sidenavItem";
 
-// Material Dashboard 3 PRO React contexts
-import {useMaterialUIController} from "context";
+// Material Dashboard 2 PRO React contexts
+import { useMaterialUIController } from "context";
 
 function SidenavItem({ color, name, active, nested, children, open, ...rest }) {
   const [controller] = useMaterialUIController();
