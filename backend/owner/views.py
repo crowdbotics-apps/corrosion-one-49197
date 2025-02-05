@@ -16,6 +16,7 @@ from users.serializers import UserDetailSerializer
 class IndustryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     queryset = Industry.objects.all()
     serializer_class = IndustrySerializer
+    permission_classes = []
 
 
 class OwnerViewSet(viewsets.GenericViewSet):
