@@ -12,6 +12,19 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 import environ
 from pathlib import Path
+import google.auth
+from google.oauth2 import service_account
+from google.cloud import secretmanager
+from google.auth.exceptions import DefaultCredentialsError
+from google.api_core.exceptions import PermissionDenied
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
+import io
+import logging
+import json
+import base64
+import binascii
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,6 +45,28 @@ DEBUG = env.bool("DEBUG", default=False)
 SECRET_KEY = env.str("SECRET_KEY")
 
 ALLOWED_HOSTS = env.list("HOST", default=["*"])
+
+try:
+    # Pull secrets from Google Cloud Secret Manager
+    _, project = google.auth.default()
+    client = secretmanager.SecretManagerServiceClient()
+    settings_name = os.environ.get("SETTINGS_NAME", "django_settings")
+    name = client.secret_version_path(project, settings_name, "latest")
+    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+    env.read_env(io.StringIO(payload))
+except (DefaultCredentialsError, PermissionDenied):
+    pass
+
+try:
+    # Pull secrets from Aure KeyVault
+    credentials = DefaultAzureCredential()
+    vault_url = env.str("AZURE_KEYVAULT_RESOURCEENDPOINT", "")
+    vault_secret_name = env.str("AZURE_KEY_VAULT_SECRET_NAME", "secrets")
+    client = SecretClient(vault_url=vault_url, credential=credentials)
+    secret = client.get_secret(vault_secret_name)
+    env.read_env(io.StringIO(secret.value))
+except Exception as e:
+    pass
 
 # Application definition
 
@@ -173,8 +208,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build/static')]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build')]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
@@ -184,6 +219,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# Configuration for Azure Storage
+AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
+if AS_BUCKET_NAME:
+    AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
+    AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
+    AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
+    AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
+    AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
+    DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
+    STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
+
 
 # AWS S3 config
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
@@ -243,6 +290,24 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 if EMAIL_AVAILABLE:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
+# GCP config
+def google_service_account_config():
+    # base64 encoded service_account.json file
+    service_account_config = env.str("GS_CREDENTIALS", "")
+    if not service_account_config:
+        return {}
+    try:
+        return json.loads(base64.b64decode(service_account_config))
+    except (binascii.Error, ValueError):
+        return {}
+GOOGLE_SERVICE_ACCOUNT_CONFIG = google_service_account_config()
+if GOOGLE_SERVICE_ACCOUNT_CONFIG:
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(GOOGLE_SERVICE_ACCOUNT_CONFIG)
+GS_BUCKET_NAME = env.str("GS_BUCKET_NAME", "")
+if GS_BUCKET_NAME:
+    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+    STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+    GS_DEFAULT_ACL = "publicRead"
 
 ALLOW_SUPER_USERS_LOGIN = env.bool("ALLOW_SUPER_USERS_LOGIN", True)
 PROJECT_NAME = env.str("PROJECT_NAME", "Project")
