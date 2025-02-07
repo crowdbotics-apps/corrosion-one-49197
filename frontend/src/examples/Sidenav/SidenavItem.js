@@ -78,15 +78,6 @@ function SidenavItem({ color, name, active, nested, children, open, ...rest }) {
   );
 }
 
-// Setting default values for the props of SidenavItem
-SidenavItem.defaultProps = {
-  color: "info",
-  active: false,
-  nested: false,
-  children: false,
-  open: false,
-};
-
 // Typechecking props for the SidenavItem
 SidenavItem.propTypes = {
   color: PropTypes.oneOf(["primary", "secondary", "info", "success", "warning", "error", "dark"]),

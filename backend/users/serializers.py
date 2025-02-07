@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.validators import validate_international_phonenumber
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import IntegerField, ModelSerializer, Serializer, CharField
@@ -104,6 +105,7 @@ class UserCreateSerializer(Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
     account_type = serializers.CharField()
+    phone_number = serializers.CharField(required=False)
 
     def _get_request(self):
         request = self.context.get('request')
@@ -134,7 +136,14 @@ class UserCreateSerializer(Serializer):
                 _("Invalid account type. Account type must be either 'OWNER' or 'INSPECTOR'.")
             )
         if account_type == 'INSPECTOR':
-            attrs['phone_number'] = attrs.get('phone_number')
+            phone_number = attrs.get('phone_number', None)
+            if not phone_number:
+                raise ValidationError({'phone_number': 'Phone number is required for inspector account.'})
+            try:
+                validate_international_phonenumber(phone_number)
+            except Exception as error:
+                raise serializers.ValidationError({'phone_number': error.message})
+            attrs['phone_number'] = phone_number
         return attrs
 
     def create(self, validated_data):
@@ -152,10 +161,11 @@ class UserCreateSerializer(Serializer):
         if account_type == 'INSPECTOR':
             inspector = Inspector.objects.create(user=user)
             inspector.save()
+            user.phone_number = validated_data['phone_number']
+            user.save()
         else:
             owner = Owner.objects.create(user=user)
             owner.save()
-
         send_email_with_template(
             subject=f'{settings.PROJECT_NAME} - Verification Link',
             email=user.email,

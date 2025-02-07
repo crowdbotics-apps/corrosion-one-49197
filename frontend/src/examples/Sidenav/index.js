@@ -49,6 +49,7 @@ import {
 } from "context";
 import logo from "../../assets/svgs/logo.svg";
 import pxToRem from "../../assets/theme/functions/pxToRem";
+import {useLoginStore} from "../../services/helpers";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [openCollapse, setOpenCollapse] = useState(false);
@@ -61,6 +62,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const items = pathname.split("/").slice(1);
   const itemParentName = items[1];
   const itemName = items[items.length - 1];
+  const loginStore = useLoginStore();
 
   let textColor = "white";
 
@@ -244,25 +246,29 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     }
   );
 
-  return (
-    <SidenavRoot
-      {...rest}
-      variant="permanent"
-      ownerState={{ transparentSidenav, whiteSidenav, miniSidenav, darkMode }}
-    >
-      <MDBox textAlign="center">
-        <MDBox display={"flex"} justifyContent={"center"} alignItems={"center"} height={pxToRem(80)} bgColor={'#ffffff'}>
-          <MDBox
-            component="img"
-            src={logo}
-            alt={'logo'}
-            width={"85%"}
-          />
+  if (loginStore.isLoggedIn) {
+    return (
+      <SidenavRoot
+        {...rest}
+        variant="permanent"
+        ownerState={{ transparentSidenav, whiteSidenav, miniSidenav, darkMode }}
+      >
+        <MDBox textAlign="center">
+          <MDBox display={"flex"} justifyContent={"center"} alignItems={"center"} height={pxToRem(80)} bgColor={'#ffffff'}>
+            <MDBox
+              component="img"
+              src={logo}
+              alt={'logo'}
+              width={"85%"}
+            />
+          </MDBox>
         </MDBox>
-      </MDBox>
-      <List>{renderRoutes}</List>
-    </SidenavRoot>
-  );
+        <List>{renderRoutes}</List>
+      </SidenavRoot>
+    );
+  }
+
+
 }
 
 // Setting default values for the props of Sidenav

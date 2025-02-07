@@ -53,7 +53,7 @@ import MDTypography from "../MDTypography";
 import {useLoginStore} from "../../services/helpers";
 import {ACCOUNT_TYPES} from "../../services/constants";
 
-function DashboardNavbar({absolute, light, isMini}) {
+function DashboardNavbar({absolute = false, light = false, isMini = false}) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -66,6 +66,12 @@ function DashboardNavbar({absolute, light, isMini}) {
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
   const loginStore = useLoginStore()
+
+  const logout = () => {
+    loginStore.reset()
+    window.location.href = '/'
+
+  }
 
   useEffect(() => {
     // Setting the navbar type
@@ -214,9 +220,8 @@ function DashboardNavbar({absolute, light, isMini}) {
               </IconButton>
             </MDBox>
             <MDBox sx={{width:1.5, height: 20, backgroundColor: '#000000'}} ml={1} mr={1.5} />
-            <MDTypography variant="h6" color="primary" sx={{fontSize: 16}}>
+            <MDTypography variant="h6" color="primary" sx={{fontSize: 16}} onClick={() => logout()}>
               {ACCOUNT_TYPES.find((type) => type.value === loginStore.user_type)?.name}
-              {/*{ROLES. = loginStore.user_type}*/}
             </MDTypography>
           </MDBox>
         )}
@@ -224,13 +229,6 @@ function DashboardNavbar({absolute, light, isMini}) {
     </AppBar>
   );
 }
-
-// Setting default values for the props of DashboardNavbar
-DashboardNavbar.defaultProps = {
-  absolute: false,
-  light: false,
-  isMini: false,
-};
 
 // Typechecking props for the DashboardNavbar
 DashboardNavbar.propTypes = {

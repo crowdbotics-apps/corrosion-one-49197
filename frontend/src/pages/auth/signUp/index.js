@@ -42,6 +42,9 @@ import FormikInput from "../../../components/Formik/FormikInput";
 import Divider from "@mui/material/Divider";
 import Checkbox from "@mui/material/Checkbox";
 import {FormControlLabel} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from '@mui/icons-material/Close';
+import UserAvatar from "assets/images/photo-placeholder.png";
 
 
 function SignUp() {
@@ -53,15 +56,22 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
   const [stage, setStage] = useState(state?.status || 0);
   const [industries, setIndustries] = useState([]);
+  const [credentials, setCredentials] = useState([]);
   const [title, setTitle] = useState('Create Account')
   const [subtitle, setSubtitle] = useState('')
-  const userType = state?.user_type || null
+  const [imgPreview, setImgPreview] = useState(UserAvatar);
+
+  const handleUploadFile = (file) => {
+    setImgPreview(URL.createObjectURL(file))
+  }
+
 
   const signup = (data) => {
     const dataToSend = {
       ...data,
       account_type: data.account_type.value
     }
+
     api.signup(dataToSend).handle({
         onSuccess: (result) => {
           const {response} = result
@@ -77,7 +87,7 @@ function SignUp() {
         },
         errorMessage: 'Error creating account',
         onError: (result) => {
-          formikRef.current?.setErrors(result.errors)
+          formikFirstStep.setErrors(result.errors)
         },
         onFinally: () => setLoading(false)
       }
@@ -88,7 +98,6 @@ function SignUp() {
     setLoading(true)
     api.updateOwnerData(data).handle({
       onSuccess: (result) => {
-        console.log('updateOwnerData ', result)
         setStage(2)
 
       },
@@ -99,6 +108,12 @@ function SignUp() {
       onFinally: () => setLoading(false)
     })
   }
+
+  const updateInspectorData = (data) => {
+    console.log('updateInspectorData ', data)
+  }
+
+
 
   const verifyCode = (data) => {
     setLoading(true)
@@ -129,6 +144,15 @@ function SignUp() {
     api.getIndustries().handle({
       onSuccess: (result) => {
         setIndustries(result?.data?.results)
+      },
+    })
+  }
+
+  const getCredentialOptions = () => {
+    api.getCredentialsAvailable().handle({
+      onSuccess: (result) => {
+        console.log('Credential Options:', result)
+        setCredentials(result?.data?.results)
       },
     })
   }
@@ -227,6 +251,34 @@ function SignUp() {
     }
   })
 
+  const initialValuesSecondStepInspector = {
+    profile_picture: "",
+    first_name: "",
+    last_name: "",
+    credentials: [],
+  };
+
+  const validationSchemaSecondStepInspector = Yup.object().shape({
+    profile_picture: Yup.string().required('Profile Picture is required'),
+    first_name: Yup.string().required('First Name is required'),
+    last_name: Yup.string().required('Last Name is required'),
+    credentials: Yup.array().min(1, 'At least one credential is required')
+  })
+
+  const formikSecondStepInspector = useFormik({
+    initialValues: initialValuesSecondStepInspector,
+    validateOnChange: false,
+    validationSchema: validationSchemaSecondStepInspector,
+    onSubmit: (values) => {
+      updateInspectorData(values)
+    }
+  })
+
+  const handleRemoveCredential = (id) => {
+    const newCredentials = formikSecondStepInspector.values.credentials.filter((item) => item.id !== id)
+    formikSecondStepInspector.setFieldValue('credentials', newCredentials)
+  }
+
   const googleSignIn = () => {
     console.log('Google Sign In')
   }
@@ -249,6 +301,7 @@ function SignUp() {
       setStage(0)
     }
     getIndustries()
+    getCredentialOptions()
   }, [])
 
   useEffect(() => {
@@ -256,11 +309,12 @@ function SignUp() {
       setTitle(`Create ${formikFirstStep.values.account_type.name} Account`)
       setSubtitle(`Enter your email and password to create an account. We'll email you a verification link.`)
     } else if (stage === 1) {
-      if (formikFirstStep.values.account_type.id === ACCOUNT_TYPES[0].id) {
+      if (loginStore.account_type === ACCOUNT_TYPES[0].value) {
         setTitle('Owner Details')
         setSubtitle('Provide your personal and company details.')
       } else {
-      //TODO
+        setTitle('Inspector Details')
+        setSubtitle('Provide your personal details and credentials.')
       }
     } else if (stage === 2) {
       setTitle('Verification Code')
@@ -269,11 +323,64 @@ function SignUp() {
 
   }, [formikFirstStep.values.account_type, stage])
 
+  const renderFooter = () => {
+    const isLoggedIn = loginStore.isLoggedIn
+    let isInspector
+    if (isLoggedIn) {
+      isInspector = loginStore.user_type === ACCOUNT_TYPES[1].value
+    } else {
+      isInspector = formikFirstStep.values.account_type.value === ACCOUNT_TYPES[1].value
+    }
+
+    return (
+      <MDBox display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={isInspector ? '80%' : '70%'} mx={'auto'} mt={5}>
+        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={'#3C7092'}/>
+        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 1 ? '#3C7092' : '#C6C9CE'}/>
+        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 2 ? '#3C7092' : '#C6C9CE'}/>
+        {isInspector &&
+          <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 3 ? '#3C7092' : '#C6C9CE'}/>
+        }
+      </MDBox>
+    )
+  }
+
+  const renderInspectorCredentials = (item) => {
+    return (
+      <MDBox
+        key={item.id}
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between" // let text + "X" be spaced out
+        borderRadius="24px"
+        p={0.25}
+        px={1}
+        sx={{ border: '1px solid #C6C9CE' }}
+        // optional: add minWidth so text + X have some horizontal space
+      >
+        {/* The credential text */}
+        <MDTypography sx={{ fontSize: 14, fontWeight: 500 }}>
+          {item.name}
+        </MDTypography>
+
+        {/* "X" Button */}
+        <IconButton
+          aria-label="remove"
+          size="small"
+          onClick={() => handleRemoveCredential(item.id)}
+          sx={{ ml: 1, p:0 }} // small margin to separate from text
+        >
+          <CloseIcon fontSize="inherit" />
+        </IconButton>
+      </MDBox>
+    )
+  }
+
 
   const firstStep = () => {
     return (
       <FormikProvider value={formikFirstStep}>
         <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+          {/*<MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikFirstStep.values)}</MDTypography>*/}
           <FormikInput
             type={"autocomplete"}
             value={formikFirstStep.values.account_type}
@@ -473,6 +580,135 @@ function SignUp() {
     )
   }
 
+  const secondStepInspector = () => {
+    console.log('formikFirstStep.values.account_type.values', formikFirstStep.values.account_type)
+    return (
+      <FormikProvider value={formikSecondStepInspector}>
+        {/*<MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikSecondStepInspector.values)}</MDTypography>*/}
+        <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+          <MDBox sx={{position: 'relative'}} display="flex" justifyContent="center" alignItems="center"
+                 flexDirection="column" mb={4}>
+            <label htmlFor='input_file'>
+              <MDBox
+                component={"img"}
+                src={imgPreview}
+                alt={"Profile Picture"}
+                width={100}
+                height={100}
+                borderRadius={'50%'}
+                sx={{objectFit: 'cover'}}
+              />
+            </label>
+              <input
+                type='file'
+                accept='image/*'
+                id={'input_file'}
+                onChange={(e) => {
+                  const file = e.target.files[0]
+                  handleUploadFile(file);
+                  formikSecondStepInspector.setFieldValue('profile_picture', file)
+                }}
+                style={{display: 'none'}}
+              />
+              <label htmlFor='input_file'>
+                <MDTypography
+                  component={"span"}
+                  variant='caption'
+                  fontSize={14}
+                  sx={{cursor: 'pointer', mt: 1, fontWeight: "bold", color: '#000000'}}
+                >
+                  Upload Your Photo
+                </MDTypography>
+              </label>
+            {formikSecondStepInspector.errors.profile_picture && (
+              <MDTypography variant={"caption"} color={"error"}>{formikSecondStepInspector.errors.profile_picture}</MDTypography>
+            )}
+          </MDBox>
+          {/*<FormikInput*/}
+          {/*  name={'profile_picture'}*/}
+          {/*  label={'Profile Picture'}*/}
+          {/*  type={'file'}*/}
+          {/*  errors={formikSecondStepInspector.errors}*/}
+          {/*  mb={2}*/}
+          {/*/>*/}
+          <FormikInput
+            name={'first_name'}
+            label={'First Name'}
+            type={'text'}
+            errors={formikSecondStepInspector.errors}
+            mb={2}
+          />
+          <FormikInput
+            name={'last_name'}
+            label={'Last Name'}
+            type={'text'}
+            errors={formikSecondStepInspector.errors}
+            mb={2}
+          />
+          <FormikInput
+            type={"autocomplete"}
+            placeholder={"Credentials"}
+            value={formikSecondStep.values.industry}
+            fieldName={"credentials"}
+            label={"Credentials"}
+            options={credentials}
+            accessKey={"name"}
+            multiple
+            onChange={(value) => {
+              const currentValues = [...formikSecondStepInspector.values.credentials]
+              if (currentValues.find((item) => item.id === value?.[0]?.id)) return
+              currentValues.push(value[0])
+              formikSecondStepInspector.setFieldValue('credentials', currentValues)
+            }}
+            // styleContainer={{mb: 2}}
+          />
+          <MDBox
+            display="flex"
+            flexDirection="row"     // or simply remove if default is row
+            flexWrap="wrap"         // allow items to wrap
+            gap={1}                 // optional spacing between items
+            mb={2}
+          >
+            {formikSecondStepInspector.values.credentials.map((item) => renderInspectorCredentials(item))}
+          </MDBox>
+          <MDTypography
+            variant={"caption"}
+            textAlign={"left"}
+            sx={{fontStyle: "italic", color: "#141514"}}
+
+          >
+            Upload documents in your profile settings
+          </MDTypography>
+
+          <MDBox mt={10} textAlign={"center"}>
+            <MDButton
+              fullWidth
+              variant="contained"
+              color="primary"
+              loading={loading}
+              disabled={loading}
+              size={"large"}
+              type='submit'
+            >
+              Continue
+            </MDButton>
+          </MDBox>
+          <MDBox mt={2} mb={1} textAlign={"center"}>
+            <MDButton
+              fullWidth
+              variant="outlined"
+              color="secondary"
+              onClick={cancel}
+              size={"large"}
+            >
+              Cancel
+            </MDButton>
+          </MDBox>
+        </Form>
+      </FormikProvider>
+    )
+  }
+
   const verificationCode = () => {
     return (
       <FormikProvider value={formikThirdStep}>
@@ -542,15 +778,9 @@ function SignUp() {
       illustration={bgImage}
     >
       {stage === 0 && firstStep()}
-      {stage === 1 && secondStepOwner()}
+      {stage === 1 && (loginStore.user_type === ACCOUNT_TYPES[0].value ? secondStepOwner() : secondStepInspector())}
       {stage === 2 && verificationCode()}
-      <MDBox display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={'70%'} mx={'auto'} mt={5}>
-        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={'#3C7092'}/>
-        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 1 ? '#3C7092' : '#C6C9CE'}/>
-        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 2 ? '#3C7092' : '#C6C9CE'}/>
-        {formikFirstStep.values.account_type === ACCOUNT_TYPES[1] &&
-          <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 3 ? '#3C7092' : '#C6C9CE'}/>}
-      </MDBox>
+      {renderFooter()}
     </IllustrationLayout>
   );
 }
