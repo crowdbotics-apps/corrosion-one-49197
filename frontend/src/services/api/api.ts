@@ -58,12 +58,32 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/inspector/credential/`);
   }
 
+  getCountries() {
+    return this.simple_get(`${API_VERSION_PREFIX}/inspector/country/`);
+  }
+
+  getStates(data: any) {
+    return this.simple_get(`${API_VERSION_PREFIX}/inspector/state/`, data);
+  }
+
+  getCities(data: any) {
+    return this.simple_get(`${API_VERSION_PREFIX}/inspector/city/`, data);
+  }
+
   sendVerificationCode() {
     return this.simple_post(`${API_VERSION_PREFIX}/users/send_phone_code/`);
   }
 
   updateOwnerData(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/owner/complete/`, data);
+  }
+
+  updateInspectorWorkArea(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/inspector/workarea/`, data);
+  }
+
+  updateInspectorData(data: any) {
+    return this.post_collected_multipart_form_data(`${API_VERSION_PREFIX}/inspector/complete/`, data);
   }
 
   verifyCode(data: any) {

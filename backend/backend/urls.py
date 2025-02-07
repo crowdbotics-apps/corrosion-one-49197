@@ -21,6 +21,8 @@ api_v1 = [
     path('users/', include('users.urls')),
     path('inspector/', include('inspector.urls')),
     path('owner/', include('owner.urls')),
+    path('cities_light/api/', include('cities_light.contrib.restframework3')),
+
 ]
 
 urlpatterns = [

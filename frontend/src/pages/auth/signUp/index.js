@@ -16,12 +16,11 @@
 import {useEffect, useRef, useState} from "react";
 
 // react-router-dom components
-import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import * as Yup from "yup";
 import ReCAPTCHA from "react-google-recaptcha";
 
 // @mui material components
-import Switch from "@mui/material/Switch";
 
 // Material Dashboard 3 PRO React components
 import MDBox from "components/MDBox";
@@ -35,9 +34,9 @@ import googleIcon from "assets/svgs/google.svg";
 
 import IllustrationLayout from "components/IllustrationLayout";
 import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
-import {ACCOUNT_TYPES, ROLES, ROUTES} from "../../../services/constants";
+import {ACCOUNT_TYPES, ROUTES} from "../../../services/constants";
 import {runInAction} from "mobx";
-import {Form, Formik, FormikProvider, useFormik} from "formik";
+import {Form, FormikProvider, useFormik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
 import Divider from "@mui/material/Divider";
 import Checkbox from "@mui/material/Checkbox";
@@ -52,7 +51,6 @@ function SignUp() {
   const api = useApi()
   const {state} = useLocation();
   const navigate = useNavigate()
-  const formikRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [stage, setStage] = useState(state?.status || 0);
   const [industries, setIndustries] = useState([]);
@@ -60,6 +58,10 @@ function SignUp() {
   const [title, setTitle] = useState('Create Account')
   const [subtitle, setSubtitle] = useState('')
   const [imgPreview, setImgPreview] = useState(UserAvatar);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
 
   const handleUploadFile = (file) => {
     setImgPreview(URL.createObjectURL(file))
@@ -110,16 +112,37 @@ function SignUp() {
   }
 
   const updateInspectorData = (data) => {
-    console.log('updateInspectorData ', data)
+    setLoading(true)
+    api.updateInspectorData(data).handle({
+      onSuccess: (result) => {
+        setStage(2)
+      },
+      errorMessage: 'Error updating owner data',
+      onError: (result) => {
+        formikSecondStep.setErrors(result.errors)
+      },
+      onFinally: () => setLoading(false)
+    })
   }
 
-
-
+  const updateInspectorWorkArea = (data) => {
+    setLoading(true)
+    api.updateInspectorWorkArea(data).handle({
+      onSuccess: (result) => {
+        setStage(3)
+      },
+      errorMessage: 'Error updating inspector work area',
+      onError: (result) => {
+        formikThirdStepInspector.setErrors(result.errors)
+      },
+      onFinally: () => setLoading(false)
+    })
+  }
   const verifyCode = (data) => {
     setLoading(true)
     api.verifyCode(data).handle({
       onSuccess: (result) => {
-        setStage(3)
+        setStage(4)
       },
       errorMessage: 'Error verifying code',
       onError: (result) => {
@@ -151,8 +174,31 @@ function SignUp() {
   const getCredentialOptions = () => {
     api.getCredentialsAvailable().handle({
       onSuccess: (result) => {
-        console.log('Credential Options:', result)
         setCredentials(result?.data?.results)
+      },
+    })
+  }
+
+  const getCountries = () => {
+    api.getCountries().handle({
+      onSuccess: (result) => {
+        setCountries(result?.data)
+      },
+    })
+  }
+
+  const getStates = (countryIds) => {
+    api.getStates({countries: countryIds.toString()}).handle({
+      onSuccess: (result) => {
+        setStates(result?.data)
+      },
+    })
+  }
+
+  const getCities = (stateIds) => {
+    api.getCities({states: stateIds.toString()}).handle({
+      onSuccess: (result) => {
+        setCities(result?.data)
       },
     })
   }
@@ -270,13 +316,54 @@ function SignUp() {
     validateOnChange: false,
     validationSchema: validationSchemaSecondStepInspector,
     onSubmit: (values) => {
-      updateInspectorData(values)
+      const valuesToSend = {...values}
+      valuesToSend.credentials = valuesToSend.credentials.map((item) => item.id)
+      updateInspectorData(valuesToSend)
+    }
+  })
+
+
+  const initialValuesThirdStepInspector = {
+    country: [],
+    state: [],
+    city: [],
+  }
+
+  const validationSchemaThirdStepInspector = Yup.object().shape({
+    country: Yup.array().min(1, 'At least one country is required'),
+    state: Yup.array().min(1, 'At least one state is required'),
+    city: Yup.array().min(1, 'At least one city is required'),
+  })
+
+  const formikThirdStepInspector = useFormik({
+    initialValues: initialValuesThirdStepInspector,
+    validateOnChange: false,
+    validationSchema: validationSchemaThirdStepInspector,
+    onSubmit: (values) => {
+      const valuesToSend = {...values}
+      valuesToSend.city = valuesToSend.city.map((item) => item.id)
+      updateInspectorWorkArea(valuesToSend)
     }
   })
 
   const handleRemoveCredential = (id) => {
     const newCredentials = formikSecondStepInspector.values.credentials.filter((item) => item.id !== id)
     formikSecondStepInspector.setFieldValue('credentials', newCredentials)
+  }
+
+  const handleRemoveCountry = (id) => {
+    const newCountries = formikThirdStepInspector.values.country.filter((item) => item.id !== id)
+    formikThirdStepInspector.setFieldValue('country', newCountries)
+  }
+
+  const handleRemoveState = (id) => {
+    const newStates = formikThirdStepInspector.values.state.filter((item) => item.id !== id)
+    formikThirdStepInspector.setFieldValue('state', newStates)
+  }
+
+  const handleRemoveCity = (id) => {
+    const newCities = formikThirdStepInspector.values.city.filter((item) => item.id !== id)
+    formikThirdStepInspector.setFieldValue('city', newCities)
   }
 
   const googleSignIn = () => {
@@ -302,7 +389,15 @@ function SignUp() {
     }
     getIndustries()
     getCredentialOptions()
+    getCountries()
   }, [])
+  useEffect(() => {
+    getCities(formikThirdStepInspector.values.state.map((item) => item.id))
+  }, [formikThirdStepInspector.values.state])
+
+  useEffect(() => {
+    getStates(formikThirdStepInspector.values.country.map((item) => item.id))
+  }, [formikThirdStepInspector.values.country])
 
   useEffect(() => {
     if (stage === 0) {
@@ -317,6 +412,14 @@ function SignUp() {
         setSubtitle('Provide your personal details and credentials.')
       }
     } else if (stage === 2) {
+      if (loginStore.account_type === ACCOUNT_TYPES[0].value) {
+        setTitle('Verification Code')
+        setSubtitle(`We’ve sent a verification code to your phone number ${loginStore.phone_number}. Enter the code below to verify your account.`)
+      } else {
+        setTitle('Work Area')
+        setSubtitle('Select your work area.')
+      }
+    } else if (stage === 3) {
       setTitle('Verification Code')
       setSubtitle(`We’ve sent a verification code to your phone number ${loginStore.phone_number}. Enter the code below to verify your account.`)
     }
@@ -333,7 +436,8 @@ function SignUp() {
     }
 
     return (
-      <MDBox display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={isInspector ? '80%' : '70%'} mx={'auto'} mt={5}>
+      <MDBox display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={isInspector ? '80%' : '70%'}
+             mx={'auto'} mt={5}>
         <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={'#3C7092'}/>
         <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 1 ? '#3C7092' : '#C6C9CE'}/>
         <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 2 ? '#3C7092' : '#C6C9CE'}/>
@@ -342,6 +446,34 @@ function SignUp() {
         }
       </MDBox>
     )
+  }
+
+  const renderBody = () => {
+    const isLoggedIn = loginStore.isLoggedIn
+    let isInspector
+    if (isLoggedIn) {
+      isInspector = loginStore.user_type === ACCOUNT_TYPES[1].value
+    } else {
+      isInspector = formikFirstStep.values.account_type.value === ACCOUNT_TYPES[1].value
+    }
+
+    if (!isLoggedIn) {
+      return firstStep()
+    } else {
+      switch (stage) {
+        case 0:
+          return firstStep()
+        case 1:
+          return !isInspector ? secondStepOwner() : secondStepInspector()
+        case 2:
+          return !isInspector ? verificationCode() : setInspectorWorkArea()
+        case 3:
+          return verificationCode()
+        default:
+          return firstStep()
+      }
+    }
+
   }
 
   const renderInspectorCredentials = (item) => {
@@ -354,11 +486,11 @@ function SignUp() {
         borderRadius="24px"
         p={0.25}
         px={1}
-        sx={{ border: '1px solid #C6C9CE' }}
+        sx={{border: '1px solid #C6C9CE'}}
         // optional: add minWidth so text + X have some horizontal space
       >
         {/* The credential text */}
-        <MDTypography sx={{ fontSize: 14, fontWeight: 500 }}>
+        <MDTypography sx={{fontSize: 14, fontWeight: 500}}>
           {item.name}
         </MDTypography>
 
@@ -367,9 +499,40 @@ function SignUp() {
           aria-label="remove"
           size="small"
           onClick={() => handleRemoveCredential(item.id)}
-          sx={{ ml: 1, p:0 }} // small margin to separate from text
+          sx={{ml: 1, p: 0}} // small margin to separate from text
         >
-          <CloseIcon fontSize="inherit" />
+          <CloseIcon fontSize="inherit"/>
+        </IconButton>
+      </MDBox>
+    )
+  }
+
+  const renderWorkArea = (item, handleRemove) => {
+    return (
+      <MDBox
+        key={item.id}
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between" // let text + "X" be spaced out
+        borderRadius="24px"
+        p={0.25}
+        px={1}
+        sx={{border: '1px solid #C6C9CE'}}
+        // optional: add minWidth so text + X have some horizontal space
+      >
+        {/* The credential text */}
+        <MDTypography sx={{fontSize: 14, fontWeight: 500}}>
+          {item.name}
+        </MDTypography>
+
+        {/* "X" Button */}
+        <IconButton
+          aria-label="remove"
+          size="small"
+          onClick={() => handleRemove(item.id)}
+          sx={{ml: 1, p: 0}} // small margin to separate from text
+        >
+          <CloseIcon fontSize="inherit"/>
         </IconButton>
       </MDBox>
     )
@@ -581,7 +744,6 @@ function SignUp() {
   }
 
   const secondStepInspector = () => {
-    console.log('formikFirstStep.values.account_type.values', formikFirstStep.values.account_type)
     return (
       <FormikProvider value={formikSecondStepInspector}>
         {/*<MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikSecondStepInspector.values)}</MDTypography>*/}
@@ -599,38 +761,32 @@ function SignUp() {
                 sx={{objectFit: 'cover'}}
               />
             </label>
-              <input
-                type='file'
-                accept='image/*'
-                id={'input_file'}
-                onChange={(e) => {
-                  const file = e.target.files[0]
-                  handleUploadFile(file);
-                  formikSecondStepInspector.setFieldValue('profile_picture', file)
-                }}
-                style={{display: 'none'}}
-              />
-              <label htmlFor='input_file'>
-                <MDTypography
-                  component={"span"}
-                  variant='caption'
-                  fontSize={14}
-                  sx={{cursor: 'pointer', mt: 1, fontWeight: "bold", color: '#000000'}}
-                >
-                  Upload Your Photo
-                </MDTypography>
-              </label>
+            <input
+              type='file'
+              accept='image/*'
+              id={'input_file'}
+              onChange={(e) => {
+                const file = e.target.files[0]
+                handleUploadFile(file);
+                formikSecondStepInspector.setFieldValue('profile_picture', file)
+              }}
+              style={{display: 'none'}}
+            />
+            <label htmlFor='input_file'>
+              <MDTypography
+                component={"span"}
+                variant='caption'
+                fontSize={14}
+                sx={{cursor: 'pointer', mt: 1, fontWeight: "bold", color: '#000000'}}
+              >
+                Upload Your Photo
+              </MDTypography>
+            </label>
             {formikSecondStepInspector.errors.profile_picture && (
-              <MDTypography variant={"caption"} color={"error"}>{formikSecondStepInspector.errors.profile_picture}</MDTypography>
+              <MDTypography variant={"caption"}
+                            color={"error"}>{formikSecondStepInspector.errors.profile_picture}</MDTypography>
             )}
           </MDBox>
-          {/*<FormikInput*/}
-          {/*  name={'profile_picture'}*/}
-          {/*  label={'Profile Picture'}*/}
-          {/*  type={'file'}*/}
-          {/*  errors={formikSecondStepInspector.errors}*/}
-          {/*  mb={2}*/}
-          {/*/>*/}
           <FormikInput
             name={'first_name'}
             label={'First Name'}
@@ -660,15 +816,8 @@ function SignUp() {
               currentValues.push(value[0])
               formikSecondStepInspector.setFieldValue('credentials', currentValues)
             }}
-            // styleContainer={{mb: 2}}
           />
-          <MDBox
-            display="flex"
-            flexDirection="row"     // or simply remove if default is row
-            flexWrap="wrap"         // allow items to wrap
-            gap={1}                 // optional spacing between items
-            mb={2}
-          >
+          <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
             {formikSecondStepInspector.values.credentials.map((item) => renderInspectorCredentials(item))}
           </MDBox>
           <MDTypography
@@ -709,6 +858,96 @@ function SignUp() {
     )
   }
 
+  const setInspectorWorkArea = () => {
+    return (
+      <FormikProvider value={formikThirdStepInspector}>
+        <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+          <FormikInput
+            type={"autocomplete"}
+            value={[]}
+            fieldName={"country"}
+            label={"Country"}
+            placeholder={"Country"}
+            options={countries}
+            accessKey={"name"}
+            multiple
+            onChange={(value) => {
+              const currentValues = [...formikThirdStepInspector.values.country]
+              if (currentValues.find((item) => item.id === value?.[0]?.id)) return
+              currentValues.push(value[0])
+              formikThirdStepInspector.setFieldValue('country', currentValues)
+            }}
+          />
+          <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
+            {formikThirdStepInspector.values.country.map((item) => renderWorkArea(item, handleRemoveCountry))}
+          </MDBox>
+          <FormikInput
+            type={"autocomplete"}
+            value={[]}
+            fieldName={"state"}
+            label={"State"}
+            options={states}
+            accessKey={"name"}
+            multiple={true}
+            onChange={(value) => {
+              const currentValues = [...formikThirdStepInspector.values.state]
+              if (currentValues.find((item) => item.id === value?.[0]?.id)) return
+              currentValues.push(value[0])
+              formikThirdStepInspector.setFieldValue('state', currentValues)
+            }}
+          />
+          <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
+            {formikThirdStepInspector.values.state.map((item) => renderWorkArea(item, handleRemoveState))}
+          </MDBox>
+          <FormikInput
+            type={"autocomplete"}
+            value={[]}
+            fieldName={"city"}
+            label={"City"}
+            options={cities}
+            accessKey={"name"}
+            multiple={true}
+            onChange={(value) => {
+              const currentValues = [...formikThirdStepInspector.values.city]
+              if (currentValues.find((item) => item.id === value?.[0]?.id)) return
+              currentValues.push(value[0])
+              formikThirdStepInspector.setFieldValue('city', currentValues)
+            }}
+          />
+          <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
+            {formikThirdStepInspector.values.city.map((item) => renderWorkArea(item, handleRemoveCity))}
+          </MDBox>
+          <MDBox mt={10} textAlign={"center"}>
+            <MDButton
+              fullWidth
+              variant="contained"
+              color="primary"
+              loading={loading}
+              disabled={loading}
+              size={"large"}
+              type='submit'
+            >
+              Continue
+            </MDButton>
+          </MDBox>
+          <MDBox mt={2} mb={1} textAlign={"center"}>
+            <MDButton
+              fullWidth
+              variant="outlined"
+              color="secondary"
+              onClick={cancel}
+              size={"large"}
+            >
+              Cancel
+            </MDButton>
+          </MDBox>
+
+        </Form>
+      </FormikProvider>
+    )
+
+  }
+
   const verificationCode = () => {
     return (
       <FormikProvider value={formikThirdStep}>
@@ -731,7 +970,8 @@ function SignUp() {
               }}
             >Resend Code</MDTypography>
           </MDBox>
-          <FormControlLabel control={<Checkbox defaultChecked color={'primary'} />} label="Send me marketing and promotional emails" />
+          <FormControlLabel control={<Checkbox defaultChecked color={'primary'}/>}
+                            label="Send me marketing and promotional emails"/>
           <MDBox display={'flex'} alignItems={'center'} justifyContent={'center'} mt={7}>
             <ReCAPTCHA
               sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
@@ -777,9 +1017,7 @@ function SignUp() {
       description={subtitle}
       illustration={bgImage}
     >
-      {stage === 0 && firstStep()}
-      {stage === 1 && (loginStore.user_type === ACCOUNT_TYPES[0].value ? secondStepOwner() : secondStepInspector())}
-      {stage === 2 && verificationCode()}
+      {renderBody()}
       {renderFooter()}
     </IllustrationLayout>
   );

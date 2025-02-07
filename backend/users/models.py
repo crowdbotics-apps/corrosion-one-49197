@@ -35,6 +35,7 @@ class User(AbstractUser):
     phone_number = PhoneNumberField('Phone Number', max_length=50, null=True, blank=True)
     phone_verified = models.BooleanField(_("Phone Verified"), default=False)
     last_verification_email_sent = models.DateTimeField(_("Last Verification Email Sent"), null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile-picture', null=True, blank=True)
 
     class Meta:
         ordering = ['-id']
