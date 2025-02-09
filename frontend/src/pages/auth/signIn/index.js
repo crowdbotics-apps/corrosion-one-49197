@@ -128,7 +128,7 @@ function SignIn() {
         navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})
       } else {
         if (loginStore.user_type === ROLES.OWNER) navigate(ROUTES.OWNER_DASHBOARD)
-        // if (loginStore.user_type === ROLES.INSPECTOR) navigate(ROUTES.INSPECTOR_DASHBOARD)
+        if (loginStore.user_type === ROLES.INSPECTOR) navigate(ROUTES.OWNER_DASHBOARD)
       }
     }
   }, [])
