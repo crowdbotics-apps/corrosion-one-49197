@@ -321,6 +321,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:3001',
     'http://0.0.0.0:3000',
+    'http://192.168.183.108:3000',
+    'http://192.168.183.108',
+    'https://corrosion-one-49197.azurewebsites.net',
+    'http://corrosion-one-49197.azurewebsites.net'
 ]
 
 CORS_EXPOSE_HEADERS = [

@@ -60,7 +60,6 @@ function SignUp() {
   const [imgPreview, setImgPreview] = useState(UserAvatar);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
 
 
   const handleUploadFile = (file) => {
@@ -71,7 +70,7 @@ function SignUp() {
   const signup = (data) => {
     const dataToSend = {
       ...data,
-      account_type: data.account_type.value
+      user_type: data.user_type.value
     }
 
     api.signup(dataToSend).handle({
@@ -100,12 +99,16 @@ function SignUp() {
     setLoading(true)
     api.updateOwnerData(data).handle({
       onSuccess: (result) => {
+        runInAction(() => {
+          loginStore.setUser(result.data)
+        })
         setStage(2)
 
       },
       errorMessage: 'Error updating owner data',
       onError: (result) => {
-        formikSecondStep.setErrors(result.errors)
+        console.log('error', result)
+        formikSecondStep.setErrors(result?.errors)
       },
       onFinally: () => setLoading(false)
     })
@@ -115,11 +118,15 @@ function SignUp() {
     setLoading(true)
     api.updateInspectorData(data).handle({
       onSuccess: (result) => {
+        console.log('updateInspectorData', result)
+        runInAction(() => {
+          loginStore.setUser(result.response)
+        })
         setStage(2)
       },
       errorMessage: 'Error updating owner data',
       onError: (result) => {
-        formikSecondStep.setErrors(result.errors)
+        formikSecondStep.setErrors(result?.errors)
       },
       onFinally: () => setLoading(false)
     })
@@ -198,28 +205,22 @@ function SignUp() {
     })
   }
 
-  const getCities = (stateIds) => {
-    api.getCities({states: stateIds.toString()}).handle({
-      onSuccess: (result) => {
-        setCities(result?.data)
-      },
-    })
-  }
 
   // First step of the form
 
   const validationSchemaFirstStep =
     Yup.object().shape({
-      account_type: Yup.object().required(),
+      user_type: Yup.object().required(),
       email: Yup.string().email().required(),
       password: Yup.string().required(),
       confirm_password: Yup.string()
         .required('Confirm Password is required')
         .oneOf([Yup.ref("password")], "Passwords must match"),
-      phone_number: Yup.string().when('account_type', {
-        is: (account_type) => account_type.id === ACCOUNT_TYPES[1].id,
+      phone_number: Yup.string().when('user_type', {
+        is: (user_type) => user_type.id === ACCOUNT_TYPES[1].id,
         then: () => Yup.string().required('Phone Number is required')
           .test('valid-phone', 'Phone Number is required', function (value) {
+            console.log(value)
             if (!value) return false; // If no value, fail (Yup will report "required")
             if (value.length <= 6) return false; // If less than 3 characters, fail
             return true;
@@ -229,7 +230,7 @@ function SignUp() {
     })
 
   const initialValuesFirstStep = {
-    account_type: ACCOUNT_TYPES[0],
+    user_type: ACCOUNT_TYPES[0],
     email: "",
     password: "",
     confirm_password: "",
@@ -329,13 +330,11 @@ function SignUp() {
   const initialValuesThirdStepInspector = {
     country: [],
     state: [],
-    city: [],
   }
 
   const validationSchemaThirdStepInspector = Yup.object().shape({
     country: Yup.array().min(1, 'At least one country is required'),
     state: Yup.array().min(1, 'At least one state is required'),
-    city: Yup.array().min(1, 'At least one city is required'),
   })
 
   const formikThirdStepInspector = useFormik({
@@ -344,7 +343,7 @@ function SignUp() {
     validationSchema: validationSchemaThirdStepInspector,
     onSubmit: (values) => {
       const valuesToSend = {...values}
-      valuesToSend.city = valuesToSend.city.map((item) => item.id)
+      valuesToSend.state = valuesToSend.state.map((item) => item.id)
       updateInspectorWorkArea(valuesToSend)
     }
   })
@@ -361,25 +360,13 @@ function SignUp() {
       return item.country_id !== id
     })
 
-    const newCities = formikThirdStepInspector.values.city.filter((item) => {
-      return item.country_id !== id
-    })
-
     formikThirdStepInspector.setFieldValue('country', newCountries)
     formikThirdStepInspector.setFieldValue('state', newStates)
-    formikThirdStepInspector.setFieldValue('city', newCities)
   }
 
   const handleRemoveState = (id) => {
     const newStates = formikThirdStepInspector.values.state.filter((item) => item.id !== id)
-    const newCities = formikThirdStepInspector.values.city.filter((item) => item.region_id !== id)
     formikThirdStepInspector.setFieldValue('state', newStates)
-    formikThirdStepInspector.setFieldValue('city', newCities)
-  }
-
-  const handleRemoveCity = (id) => {
-    const newCities = formikThirdStepInspector.values.city.filter((item) => item.id !== id)
-    formikThirdStepInspector.setFieldValue('city', newCities)
   }
 
   const googleSignIn = () => {
@@ -407,9 +394,6 @@ function SignUp() {
     getCredentialOptions()
     getCountries()
   }, [])
-  useEffect(() => {
-    getCities(formikThirdStepInspector.values.state.map((item) => item.id))
-  }, [formikThirdStepInspector.values.state])
 
   useEffect(() => {
     getStates(formikThirdStepInspector.values.country.map((item) => item.id))
@@ -417,10 +401,10 @@ function SignUp() {
 
   useEffect(() => {
     if (stage === 0) {
-      setTitle(`Create ${formikFirstStep.values.account_type.name} Account`)
+      setTitle(`Create ${formikFirstStep.values.user_type.name} Account`)
       setSubtitle(`Enter your email and password to create an account. We'll email you a verification link.`)
     } else if (stage === 1) {
-      if (loginStore.account_type === ACCOUNT_TYPES[0].value) {
+      if (loginStore.user_type === ACCOUNT_TYPES[0].value) {
         setTitle('Owner Details')
         setSubtitle('Provide your personal and company details.')
       } else {
@@ -428,7 +412,7 @@ function SignUp() {
         setSubtitle('Provide your personal details and credentials.')
       }
     } else if (stage === 2) {
-      if (loginStore.account_type === ACCOUNT_TYPES[0].value) {
+      if (loginStore.user_type === ACCOUNT_TYPES[0].value) {
         setTitle('Verification Code')
         setSubtitle(`We’ve sent a verification code to your phone number ${loginStore.phone_number}. Enter the code below to verify your account.`)
       } else {
@@ -440,7 +424,7 @@ function SignUp() {
       setSubtitle(`We’ve sent a verification code to your phone number ${loginStore.phone_number}. Enter the code below to verify your account.`)
     }
 
-  }, [formikFirstStep.values.account_type, stage])
+  }, [formikFirstStep.values.user_type, stage])
 
   const renderFooter = () => {
     const isLoggedIn = loginStore.isLoggedIn
@@ -448,11 +432,11 @@ function SignUp() {
     if (isLoggedIn) {
       isInspector = loginStore.user_type === ACCOUNT_TYPES[1].value
     } else {
-      isInspector = formikFirstStep.values.account_type.value === ACCOUNT_TYPES[1].value
+      isInspector = formikFirstStep.values.user_type.value === ACCOUNT_TYPES[1].value
     }
 
     return (
-      <MDBox display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={isInspector ? '80%' : '70%'}
+      <MDBox display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={isInspector ? '90%' : '70%'}
              mx={'auto'} mt={5}>
         <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={'#3C7092'}/>
         <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 1 ? '#3C7092' : '#C6C9CE'}/>
@@ -470,7 +454,7 @@ function SignUp() {
     if (isLoggedIn) {
       isInspector = loginStore.user_type === ACCOUNT_TYPES[1].value
     } else {
-      isInspector = formikFirstStep.values.account_type.value === ACCOUNT_TYPES[1].value
+      isInspector = formikFirstStep.values.user_type.value === ACCOUNT_TYPES[1].value
     }
 
     if (!isLoggedIn) {
@@ -562,14 +546,14 @@ function SignUp() {
           {/*<MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikFirstStep.values)}</MDTypography>*/}
           <FormikInput
             type={"autocomplete"}
-            value={formikFirstStep.values.account_type}
-            fieldName={"account_type"}
+            value={formikFirstStep.values.user_type}
+            fieldName={"user_type"}
             label={"Account Type"}
             options={ACCOUNT_TYPES}
             accessKey={"name"}
             multiple={false}
             onChange={(value) => {
-              formikFirstStep.setFieldValue('account_type', value)
+              formikFirstStep.setFieldValue('user_type', value)
             }}
             disableClearable
             styleContainer={{mb: 2}}
@@ -581,7 +565,7 @@ function SignUp() {
             errors={formikFirstStep.errors}
             mb={2}
           />
-          {formikFirstStep.values.account_type === ACCOUNT_TYPES[1] && <FormikInput
+          {formikFirstStep.values.user_type === ACCOUNT_TYPES[1] && <FormikInput
             name={'phone_number'}
             label={'Phone Number'}
             type={'phone_input'}
@@ -914,24 +898,6 @@ function SignUp() {
           />
           <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
             {formikThirdStepInspector.values.state.map((item) => renderWorkArea(item, handleRemoveState))}
-          </MDBox>
-          <FormikInput
-            type={"autocomplete"}
-            value={[]}
-            fieldName={"city"}
-            label={"City"}
-            options={cities}
-            accessKey={"name"}
-            multiple={true}
-            onChange={(value) => {
-              const currentValues = [...formikThirdStepInspector.values.city]
-              if (currentValues.find((item) => item.id === value?.[0]?.id)) return
-              currentValues.push(value[0])
-              formikThirdStepInspector.setFieldValue('city', currentValues)
-            }}
-          />
-          <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-            {formikThirdStepInspector.values.city.map((item) => renderWorkArea(item, handleRemoveCity))}
           </MDBox>
           <MDBox mt={10} textAlign={"center"}>
             <MDButton

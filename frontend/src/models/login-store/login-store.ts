@@ -39,7 +39,6 @@ export const LoginStoreModel = types
       }
     },
     setUp() {
-      console.log('Setting up login store', self.access)
       if (self.access) {
         self.environment.api.apisauce?.setHeader("Authorization", 'Bearer ' + self.access)
       } else {

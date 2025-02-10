@@ -31,10 +31,11 @@ class InspectorViewSet(CollectedMultipartJsonViewMixin, viewsets.GenericViewSet)
     @action(methods=['post'], detail=False)
     def complete(self, request):
         data = request.data
+        user = request.user
         serializer = InspectorCompleteSerializer(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(UserDetailSerializer(serializer.instance.user).data)
+        return Response(UserDetailSerializer(user).data)
 
 
     @action(methods=['post'], detail=False)
@@ -42,12 +43,12 @@ class InspectorViewSet(CollectedMultipartJsonViewMixin, viewsets.GenericViewSet)
         data = request.data
         user = request.user
         inspector = user.inspector
-        cities_id = data.get('city', [])
-        inspector.cities.set(cities_id)
+        states_id = data.get('state', [])
+        inspector.regions.set(states_id)
         code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
         message = f'Your verification code is {code}'
         send_sms(message, user.phone_number.as_e164)
-        return Response()
+        return Response(UserDetailSerializer(user).data)
 
 class CountryViewSet(viewsets.GenericViewSet, GetViewsetMixin):
     permission_classes = []
@@ -66,14 +67,3 @@ class StateViewSet(viewsets.GenericViewSet, GetViewsetMixin):
             return Response([])
         states = Region.objects.filter(country_id__in=countries_ids.split(',')).order_by('name')
         return Response(RegionSerializer(states, many=True, context={'request': request}).data)
-
-
-class CityViewSet(viewsets.GenericViewSet, GetViewsetMixin):
-    permission_classes = []
-
-    def simple_get(self, request, *args, **kwargs):
-        states_ids = request.query_params.get('states', None)
-        if not states_ids:
-            return Response([])
-        cities = City.objects.filter(region_id__in=states_ids.split(',')).order_by('name')
-        return Response(CitySerializer(cities, many=True, context={'request': request}).data)
