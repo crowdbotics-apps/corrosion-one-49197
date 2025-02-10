@@ -11,7 +11,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from inspector.models import Credential
-from inspector.serializers import CredentialSerializer, InspectorCompleteSerializer, CountrySerializer
+from inspector.serializers import CredentialSerializer, InspectorCompleteSerializer, CountrySerializer, CitySerializer, \
+    RegionSerializer
 from users.models import UserVerificationCode
 from users.serializers import UserDetailSerializer
 from utils.utils import CollectedMultipartJsonViewMixin, GetViewsetMixin
@@ -64,7 +65,7 @@ class StateViewSet(viewsets.GenericViewSet, GetViewsetMixin):
         if not countries_ids:
             return Response([])
         states = Region.objects.filter(country_id__in=countries_ids.split(',')).order_by('name')
-        return Response(CountrySerializer(states, many=True, context={'request': request}).data)
+        return Response(RegionSerializer(states, many=True, context={'request': request}).data)
 
 
 class CityViewSet(viewsets.GenericViewSet, GetViewsetMixin):
@@ -75,4 +76,4 @@ class CityViewSet(viewsets.GenericViewSet, GetViewsetMixin):
         if not states_ids:
             return Response([])
         cities = City.objects.filter(region_id__in=states_ids.split(',')).order_by('name')
-        return Response(CountrySerializer(cities, many=True, context={'request': request}).data)
+        return Response(CitySerializer(cities, many=True, context={'request': request}).data)

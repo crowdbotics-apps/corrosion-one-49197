@@ -34,7 +34,7 @@ import googleIcon from "assets/svgs/google.svg";
 
 import IllustrationLayout from "components/IllustrationLayout";
 import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
-import {ACCOUNT_TYPES, ROUTES} from "../../../services/constants";
+import {ACCOUNT_TYPES, ROLES, ROUTES} from "../../../services/constants";
 import {runInAction} from "mobx";
 import {Form, FormikProvider, useFormik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
@@ -141,9 +141,12 @@ function SignUp() {
   const verifyCode = (data) => {
     setLoading(true)
     api.verifyCode(data).handle({
-      onSuccess: (result) => {
-        setStage(4)
+      onSuccess: () => {
+
+        if (loginStore.user_type === ROLES.OWNER) navigate(ROUTES.OWNER_DASHBOARD)
+        if (loginStore.user_type === ROLES.INSPECTOR) navigate(ROUTES.OWNER_DASHBOARD)
       },
+      successMessage: 'Phone number verified successfully',
       errorMessage: 'Error verifying code',
       onError: (result) => {
         formikThirdStep.setErrors(result.errors)
@@ -352,13 +355,26 @@ function SignUp() {
   }
 
   const handleRemoveCountry = (id) => {
-    const newCountries = formikThirdStepInspector.values.country.filter((item) => item.id !== id)
+    const currentCountries = formikThirdStepInspector.values.country
+    const newCountries = currentCountries.filter((item) => item.id !== id)
+    const newStates = formikThirdStepInspector.values.state.filter((item) => {
+      return item.country_id !== id
+    })
+
+    const newCities = formikThirdStepInspector.values.city.filter((item) => {
+      return item.country_id !== id
+    })
+
     formikThirdStepInspector.setFieldValue('country', newCountries)
+    formikThirdStepInspector.setFieldValue('state', newStates)
+    formikThirdStepInspector.setFieldValue('city', newCities)
   }
 
   const handleRemoveState = (id) => {
     const newStates = formikThirdStepInspector.values.state.filter((item) => item.id !== id)
+    const newCities = formikThirdStepInspector.values.city.filter((item) => item.region_id !== id)
     formikThirdStepInspector.setFieldValue('state', newStates)
+    formikThirdStepInspector.setFieldValue('city', newCities)
   }
 
   const handleRemoveCity = (id) => {

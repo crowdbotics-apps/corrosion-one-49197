@@ -1,4 +1,4 @@
-from cities_light.models import Country
+from cities_light.models import Country, Region, City
 from rest_framework import serializers
 
 from inspector.models import Credential, Inspector
@@ -49,3 +49,15 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ['id', 'name']
+
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ['id', 'name', 'country_id']
+
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['id', 'name', 'region_id', 'country_id']
