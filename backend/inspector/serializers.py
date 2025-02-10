@@ -19,7 +19,7 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Inspector
-        fields = ['credentials']
+        fields = ['credentials', 'profile_picture', 'first_name', 'last_name']
 
     def validate(self, attrs):
         user = self.context['request'].user
