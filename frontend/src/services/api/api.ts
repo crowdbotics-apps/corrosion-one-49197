@@ -27,11 +27,11 @@ export class Api extends ApiBase {
   }
 
   forgotPassword(email: string): ApiReturnType<Types.GenericResponse> {
-    return this.simple_post(`${API_VERSION_PREFIX}/reset-password/`, { email: email });
+    return this.simple_post(`${API_VERSION_PREFIX}/users/reset-password/`, { email: email });
   }
 
   resetPassword(data: any): ApiReturnType<Types.GenericResponse> {
-    return this.simple_post(`${API_VERSION_PREFIX}/set-new-password/`, data);
+    return this.simple_post(`${API_VERSION_PREFIX}/users/set-new-password/`, data);
   }
 
   changePassword(data: any): ApiReturnType<Types.GenericResponse> {

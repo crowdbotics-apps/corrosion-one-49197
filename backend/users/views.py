@@ -28,6 +28,7 @@ from utils.utils import may_fail, update_with_kwargs, create_user_activation_lin
 from utils.utils.email import send_email_with_template
 from utils.utils.send_sms import send_sms
 from utils.utils.verification_code import setup_verification_code, get_verification_code, get_current_verification_code
+from utils.utils.verification_link import generate_reset_url
 
 User = get_user_model()
 
@@ -60,6 +61,35 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         self.request.user.set_password(serializer.data['new_password'])
         self.request.user.save()
         return Response()
+
+    @action(detail=False, methods=['POST'], url_path='reset-password')
+    def forgot_password_link(self, request):
+        email = self.request.data["email"]
+        user = User.objects.filter(email=email).first()
+        if user:
+            send_email_with_template(
+                subject=f'Reset password email {settings.PROJECT_NAME}',
+                email=user.email,
+                template_to_load='emails/forgot_password_email_link.html',
+                context={
+                    "username": user.email,
+                    "set_password_link": generate_reset_url(user, self.request),
+                }
+            )
+            return Response()
+        return Response({'details': 'Email not found'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['POST'], url_path='set-new-password')
+    def set_new_password(self, request):
+        ResetPasswordConfirmSerializer.request = self.request
+        serializer = ResetPasswordConfirmSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            user = get_user_by_uidb64(serializer.data['uidb64'])
+            user.set_password(serializer.data['new_password'])
+            user.save()
+        return Response()
+
 
 
     @action(detail=False, methods=['POST'])

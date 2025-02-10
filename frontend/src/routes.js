@@ -76,7 +76,7 @@ import profilePicture from "./assets/imagesExamples/team-3.jpg";
 import {
   SignIn,
   ForgotPassword,
-  SignUp, HomeOwner
+  SignUp, HomeOwner, SetNewPassword
 } from "./pages";
 import {ROUTES} from "./services/constants";
 
@@ -559,6 +559,13 @@ export const unprotectedRoutes = [
     route: ROUTES.SIGN_UP,
     component: <SignUp />,
   },
+  {
+    type: "fixed",
+    name: "Set New Password",
+    key: "set-new-password",
+    route: ROUTES.SET_NEW_PASSWORD,
+    component: <SetNewPassword />,
+  }
 ]
 
 export const protectedRoutes = [
