@@ -41,10 +41,8 @@ function SetNewPassword() {
   const formikRef = useRef();
   const [loading, setLoading] = useState(false);
   const getUrls = window.location.href.split('set-new-password/')[1].split('/')
-  console.log('===> ', getUrls)
 
   const resetPassword = (data) => {
-    console.log('===> ', data)
     const form = {
       new_password: data.password,
       new_password2: data.new_password2,
