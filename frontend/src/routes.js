@@ -569,6 +569,7 @@ export const protectedRoutes = [
     route: ROUTES.OWNER_DASHBOARD,
     component: <HomeOwner />,
     noCollapse: true,
+    icon: <Icon fontSize="small">home_outlined</Icon>,
   },
   {
     type: "collapse",
@@ -576,7 +577,7 @@ export const protectedRoutes = [
     key: "find-jobs",
     route: ROUTES.OWNER_DASHBOARD,
     component: <HomeOwner />,
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">search_outlined</Icon>,
     noCollapse: true,
   },
   {
@@ -585,7 +586,7 @@ export const protectedRoutes = [
     key: "applied-jobs",
     route: ROUTES.OWNER_DASHBOARD,
     component: <HomeOwner />,
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
   },
   {
@@ -594,7 +595,7 @@ export const protectedRoutes = [
     key: "favorite-jobs",
     route: ROUTES.OWNER_DASHBOARD,
     component: <HomeOwner />,
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">restored_outlined</Icon>,
     noCollapse: true,
   },
   {
@@ -603,7 +604,7 @@ export const protectedRoutes = [
     key: "messages",
     route: ROUTES.OWNER_DASHBOARD,
     component: <HomeOwner />,
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">forum_outlined</Icon>,
     noCollapse: true,
   },
   {
@@ -612,7 +613,7 @@ export const protectedRoutes = [
     key: "payment",
     route: ROUTES.OWNER_DASHBOARD,
     component: <HomeOwner />,
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">credit_card_outlined</Icon>,
     noCollapse: true,
   },
   {
@@ -621,7 +622,7 @@ export const protectedRoutes = [
     key: "jobs-alerts",
     route: ROUTES.OWNER_DASHBOARD,
     component: <HomeOwner />,
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">notifications_active_outlined</Icon>,
     noCollapse: true,
   },
   ];
