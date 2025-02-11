@@ -10,7 +10,7 @@ version: 2.1
 executors:
   python-executor:
     docker:
-      - image: circleci/python:3.9
+      - image: circleci/python:3.12
 
 jobs:
   build:
