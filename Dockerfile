@@ -1,7 +1,7 @@
 FROM crowdbotics/cb-django:3.9-slim-buster AS build
 
 # Copy dependency management files and install app packages to /.venv
-COPY backend/Pipfile backend/Pipfile.lock /
+COPY backend/Pipfile* /
 COPY backend/modules/ /modules/
 RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
@@ -31,7 +31,7 @@ ENV PATH="/.venv/bin:$PATH"
 COPY --chown=django:django ./backend .
 
 # Copy web build from  rn_web_build stage
-COPY --chown=django:django --from=rn_web_build /tmp/web_build/backend/web_build ./web_build
+#COPY --chown=django:django --from=rn_web_build /tmp/web_build/backend/web_build ./web_build
 
 # Collect static files and serve app
 RUN python3 manage.py collectstatic --no-input
