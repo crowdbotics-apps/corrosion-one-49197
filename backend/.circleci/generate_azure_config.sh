@@ -18,7 +18,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.7
           docker_layer_caching: true
       - run:
           name: Install Azure CLI
