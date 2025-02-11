@@ -211,14 +211,14 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_UNIQUE_EMAIL = True
 LOGIN_REDIRECT_URL = "users:redirect"
 
-ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
-SOCIALACCOUNT_ADAPTER = "users.adapters.SocialAccountAdapter"
+# ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
+# SOCIALACCOUNT_ADAPTER = "users.adapters.SocialAccountAdapter"
 ACCOUNT_ALLOW_REGISTRATION = env.bool("ACCOUNT_ALLOW_REGISTRATION", True)
 SOCIALACCOUNT_ALLOW_REGISTRATION = env.bool("SOCIALACCOUNT_ALLOW_REGISTRATION", True)
 
 REST_AUTH = {
     # Replace password reset serializer to fix 500 error
-    "PASSWORD_RESET_SERIALIZER": "home.api.v1.serializers.PasswordSerializer",
+    # "PASSWORD_RESET_SERIALIZER": "home.api.v1.serializers.PasswordSerializer",
     # Use custom serializer that has no username and matches web signup
     "REGISTER_SERIALIZER": "home.api.v1.serializers.SignupSerializer",
 }
