@@ -63,6 +63,8 @@ azure-storage-blob = "^12.20.0"
 google-cloud-secret-manager = "^2.20.2"
 google-auth = "^2.31.0"
 google-cloud-storage = "^2.18.0"
+bootstrap4 = "^0.1.0"
+django-allauth = "^65.4.1"
 
 
 [tool.poetry.group.dev.dependencies]
