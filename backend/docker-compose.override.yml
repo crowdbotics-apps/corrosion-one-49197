@@ -1,4 +1,4 @@
-version: "3.9"
+name: corrosion_backend
 
 services:
   web:
@@ -11,7 +11,6 @@ services:
       - ./:/opt/webapp
     ports:
       - "8000:${PORT}"
-
   postgres:
     environment:
       POSTGRES_PASSWORD: <postgres_pwd>
@@ -23,6 +22,6 @@ services:
     ports:
       - "6379:6379"
 
-volumes: 
+volumes:
   postgres-data:
 
