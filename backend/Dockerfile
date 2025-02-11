@@ -57,5 +57,5 @@ RUN touch .env
 
 USER django
 #CMD sleep 999999
-CMD waitress-serve --port=$PORT backend.wsgi:application
+CMD waitress-serve --port=$PORT corrosion_one_49197.wsgi:application
 
