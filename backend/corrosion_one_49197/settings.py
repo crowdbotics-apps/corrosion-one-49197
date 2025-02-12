@@ -24,7 +24,6 @@ from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-from modules.manifest import get_modules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -102,9 +101,8 @@ THIRD_PARTY_APPS = [
     'storages',
     'import_export',
 ]
-MODULES_APPS = get_modules()
 
-INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS + MODULES_APPS
+INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
