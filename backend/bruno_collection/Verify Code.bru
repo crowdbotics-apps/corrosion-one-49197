@@ -1,0 +1,17 @@
+meta {
+  name: Verify Code
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{url}}users/verify/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "code": 7336
+  }
+}

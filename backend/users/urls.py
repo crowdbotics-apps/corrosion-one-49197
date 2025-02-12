@@ -1,14 +1,22 @@
-from django.urls import path
+from django.urls import path, include
+from django.views.generic import TemplateView
+from rest_framework.routers import DefaultRouter
 
-from users.views import (
-    user_redirect_view,
-    user_update_view,
-    user_detail_view,
-)
+from users.views import UserViewSet
 
 app_name = "users"
+router = DefaultRouter()
+router.register(r'', UserViewSet, basename="users")
+
 urlpatterns = [
-    path("~redirect/", view=user_redirect_view, name="redirect"),
-    path("~update/", view=user_update_view, name="update"),
-    path("<str:username>/", view=user_detail_view, name="detail"),
+    path("", include(router.urls)),
+    path('.well-known/apple-app-site-association', TemplateView.as_view(
+        template_name='apple-auth/apple-app-site-association',
+        content_type='application/json'
+    )),
+    path('apple-app-site-association', TemplateView.as_view(
+        template_name='apple-auth/apple-app-site-association',
+        content_type='application/json'
+    )),
+    path("", include(router.urls))
 ]

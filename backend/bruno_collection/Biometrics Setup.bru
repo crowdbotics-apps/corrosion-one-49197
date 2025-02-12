@@ -1,0 +1,21 @@
+meta {
+  name: Biometrics Setup
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{url}}users/setup_biometrics/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "biometrics_key": "a"
+  }
+}

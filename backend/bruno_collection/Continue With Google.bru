@@ -1,0 +1,26 @@
+meta {
+  name: Continue With Google
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{url}}users/continue_with_google/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user": {
+      "id": "1",
+      "email": "a@a.com",
+      "name": "name",
+      "givenName": "givenName",
+      "familyName": "familyName",
+      "photo": "photo"
+    },
+    "idToken": "google token",
+    "signUp": false
+  }
+}

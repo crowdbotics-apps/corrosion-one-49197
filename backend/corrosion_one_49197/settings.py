@@ -72,7 +72,6 @@ SECURE_SSL_REDIRECT = env.bool("SECURE_REDIRECT", default=False)
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -80,12 +79,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites'
 ]
+
 LOCAL_APPS = [
-    'home',
-    'users.apps.UsersConfig',
+    'users',
+    'utils',
+    'owner',
+    'inspector',
 ]
+
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
@@ -102,7 +104,6 @@ THIRD_PARTY_APPS = [
     'webshell',
     'cities_light',
 ]
-
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
