@@ -45,7 +45,9 @@ RUN poetry config virtualenvs.create false \
 FROM deps AS release
 
 WORKDIR /opt/webapp
-ADD . /opt/webapp/
+# ADD . /opt/webapp/
+
+COPY --chown=django:django ./backend .
 
 ARG SECRET_KEY
 RUN python3 manage.py collectstatic --no-input
