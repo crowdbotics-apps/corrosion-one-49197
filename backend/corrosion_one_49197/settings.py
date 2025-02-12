@@ -89,22 +89,24 @@ LOCAL_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'jazzmin',
+    'phonenumber_field',
     'dj_rest_auth',
-    'dj_rest_auth.registration',
-    'bootstrap4',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.google',
+    'rest_framework_simplejwt',
+    'corsheaders',
+    'django_json_widget',
     'django_extensions',
     'drf_spectacular',
     'storages',
     'import_export',
+    'webshell',
+    'cities_light',
 ]
 
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -112,7 +114,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'corrosion_one_49197.urls'
@@ -184,21 +185,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+
+
 STATIC_URL = '/static/'
 
 MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    # 'allauth.account.auth_backends.AuthenticationBackend'
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build')]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build/static')]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
 # allauth / users
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -221,8 +224,19 @@ REST_AUTH = {
     # "REGISTER_SERIALIZER": "home.api.v1.serializers.SignupSerializer",
 }
 
+
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 50,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 # Custom user model
@@ -314,3 +328,30 @@ if AS_BUCKET_NAME:
     STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+ALLOW_SUPER_USERS_LOGIN = env.bool("ALLOW_SUPER_USERS_LOGIN", True)
+PROJECT_NAME = env.str("PROJECT_NAME", "Project")
+LOGO_URL = env.str("LOGO_URL", "https://example.com/logo.png")
+REDIRECT_DEEP_LINK = env.str("REDIRECT_DEEP_LINK", "project")
+
+
+CORS_ALLOW_ALL = DEBUG
+CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://0.0.0.0:3000',
+    'http://192.168.183.108:3000',
+    'http://192.168.183.108',
+    'https://corrosion-one-49197.azurewebsites.net',
+    'http://corrosion-one-49197.azurewebsites.net'
+]
+
+CORS_EXPOSE_HEADERS = [
+    'content-disposition',
+]
+
+TWILIO_API_KEY_SID = env.str("TWILIO_API_KEY_SID", "")
+TWILIO_API_KEY_SECRET = env.str("TWILIO_API_KEY_SECRET", "")
+TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "")
+TWILIO_NUMBER = env.str("TWILIO_NUMBER", "")
