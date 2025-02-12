@@ -35,7 +35,7 @@ RUN apt-get update \
   # Change it at your own risk.
 
 
-ADD poetry.lock pyproject.toml /opt/webapp/
+ADD backend/poetry.lock backend/pyproject.toml /opt/webapp/
 
 # Project initialization:
 RUN poetry config virtualenvs.create false \
