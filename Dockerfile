@@ -1,9 +1,9 @@
 FROM crowdbotics/cb-django:3.9-slim-buster AS build
 
 # Copy dependency management files and install app packages to /.venv
-COPY backend/Pipfile* /
-COPY backend/modules/ /modules/
-RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
+# COPY backend/Pipfile* /
+# COPY backend/modules/ /modules/
+# RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
 FROM node:18.16-alpine AS rn_web_build
 WORKDIR /tmp/web_build
