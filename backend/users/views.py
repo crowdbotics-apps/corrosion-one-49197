@@ -22,7 +22,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from users.models import User, UserVerificationCode
 from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserCreateSerializer, \
-    UserLoginResponseSerializer
+    UserLoginResponseSerializer, UserDetailSerializer
 from utils.utils import get_user_by_uidb64, get_and_validate_serializer
 from utils.utils import may_fail, update_with_kwargs, create_user_activation_link
 from utils.utils.email import send_email_with_template
@@ -171,7 +171,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             return Response('User not found', status=HTTP_400_BAD_REQUEST)
         user.phone_verified = True
         user.save()
-        return Response(status=HTTP_200_OK)
+        return Response(UserDetailSerializer(user).data)
 
     @action(detail=False, methods=['POST'])
     def reset_password(self, request):
@@ -189,7 +189,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             get_token.delete()
         except Exception as e:
             return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(status=status.HTTP_200_OK)
+        return Response()
 
     @action(detail=False, methods=['POST'])
     def biometrics_login(self, request):
