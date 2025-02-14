@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.1e9fd7da.css",
-    "main.js": "/static/js/main.7c5a1256.js",
+    "main.js": "/static/js/main.410269ac.js",
     "static/media/pattern-tree.svg": "/static/media/pattern-tree.c0770e9daa4d75d8775720309a00f287.svg",
     "static/media/product-11.jpg": "/static/media/product-11.a5600b8de08405e600c3.jpg",
     "static/media/home-decor-3.jpg": "/static/media/home-decor-3.74d13fcbd3c631fc7908.jpg",
@@ -66,6 +66,6 @@
   },
   "entrypoints": [
     "static/css/main.1e9fd7da.css",
-    "static/js/main.7c5a1256.js"
+    "static/js/main.410269ac.js"
   ]
 }
