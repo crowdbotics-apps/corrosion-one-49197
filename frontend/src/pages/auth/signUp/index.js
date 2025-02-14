@@ -165,8 +165,8 @@ function SignUp() {
     api.verifyCode(data).handle({
       onSuccess: (result) => {
         loginStore.setUser(result.response)
-        if (loginStore.user_type === ROLES.OWNER) navigate(ROUTES.OWNER_DASHBOARD)
-        if (loginStore.user_type === ROLES.INSPECTOR) navigate(ROUTES.OWNER_DASHBOARD)
+        if (loginStore.user_type === ROLES.OWNER) navigate(ROUTES.DASHBOARD)
+        if (loginStore.user_type === ROLES.INSPECTOR) navigate(ROUTES.DASHBOARD)
       },
       successMessage: 'Phone number verified successfully',
       errorMessage: 'Error verifying code',

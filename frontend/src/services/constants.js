@@ -7,7 +7,9 @@ export const ROUTES = {
   LOGIN: "/",
   FORGOT_PASSWORD: "/forgot-password",
   SET_NEW_PASSWORD: "/set-new-password/*",
-  OWNER_DASHBOARD: `/dashboard-owner`,
+  DASHBOARD: `/dashboard`,
+  SETTINGS: `/settings`,
+  SUPPORT: `/support`,
 
 }
 

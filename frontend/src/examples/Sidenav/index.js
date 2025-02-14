@@ -50,6 +50,7 @@ import {
 import logo from "../../assets/svgs/logo.svg";
 import pxToRem from "../../assets/theme/functions/pxToRem";
 import {useLoginStore} from "../../services/helpers";
+import {ROUTES} from "../../services/constants";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [openCollapse, setOpenCollapse] = useState(false);
@@ -58,7 +59,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } = controller;
   const location = useLocation();
   const { pathname } = location;
-  const collapseName = pathname.split("/").slice(1)[1];
+  const collapseName = pathname.split("/")[1];
   const items = pathname.split("/").slice(1);
   const itemParentName = items[1];
   const itemName = items[items.length - 1];
@@ -164,6 +165,9 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       let returnValue;
       if (!role.includes(loginStore.user_type)) return
 
+      // console.log('key', key)
+      // console.log('collapseName', collapseName)
+
       if (type === "collapse") {
         if (href) {
           returnValue = (
@@ -260,6 +264,41 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           </MDBox>
         </MDBox>
         <List>{renderRoutes}</List>
+        <List sx={{ mt: "auto" }}>
+          <NavLink to={ROUTES.SUPPORT}>
+            <SidenavCollapse
+              name={"Support"}
+              icon={
+                <Icon fontSize="small">support_agent_outlined</Icon>
+              }
+              noCollapse
+              active={false}
+              // active={key === collapseName}
+            />
+          </NavLink>
+          <NavLink to={ROUTES.SETTINGS}>
+            <SidenavCollapse
+              name={"Settings"}
+              icon={
+                <Icon fontSize="small">settings_outlined</Icon>
+              }
+              noCollapse
+              active={false}
+              // active={key === collapseName}
+            />
+          </NavLink>
+          <NavLink to={ROUTES.LOGOUT}>
+            <SidenavCollapse
+              name={"Logout"}
+              icon={
+                <Icon fontSize="small">power_settings_new_outlined</Icon>
+              }
+              noCollapse
+              active={false}
+              // active={key === collapseName}
+            />
+          </NavLink>
+        </List>
       </SidenavRoot>
     );
   }

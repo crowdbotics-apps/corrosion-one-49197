@@ -15,6 +15,7 @@ Coded by www.creative-tim.com
 function collapseItem(theme, ownerState) {
   const { palette, transitions, breakpoints, boxShadows, borders, functions } = theme;
   const { active, transparentSidenav, whiteSidenav, darkMode } = ownerState;
+  console.log('active', active)
 
   const { white, transparent, dark, grey } = palette;
   const { md } = boxShadows;
@@ -36,7 +37,7 @@ function collapseItem(theme, ownerState) {
       }
 
       if (active) {
-        backgroundValue = '#81D61E'
+        backgroundValue = '#EBF7FA'
       }
 
       return backgroundValue;
