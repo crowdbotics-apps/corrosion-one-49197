@@ -41,7 +41,7 @@ function collapseItem(theme, ownerState) {
 
       return backgroundValue;
     },
-    color: (transparentSidenav && !darkMode) || whiteSidenav ? dark.main : white.main,
+    color: dark.main,
     display: "flex",
     alignItems: "center",
     width: "100%",
@@ -78,7 +78,7 @@ function collapseIconBox(theme, ownerState) {
   return {
     minWidth: 0,
     minHeight: pxToRem(32),
-    color: (transparentSidenav && !darkMode) || whiteSidenav ? dark.main : white.main,
+    color: dark.main,
     borderRadius: borderRadius.md,
     display: "grid",
     placeItems: "center",

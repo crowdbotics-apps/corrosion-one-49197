@@ -64,13 +64,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const itemName = items[items.length - 1];
   const loginStore = useLoginStore();
 
-  let textColor = "white";
+  let textColor = "black";
 
-  if (transparentSidenav || (whiteSidenav && !darkMode)) {
-    textColor = "dark";
-  } else if (whiteSidenav && darkMode) {
-    textColor = "inherit";
-  }
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
 
@@ -130,7 +125,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         returnValue = (
           <SidenavItem
             key={key}
-            color={color}
+            color={'black'}
             name={name}
             active={key === itemParentName ? "isParent" : false}
             open={openNestedCollapse === key}
@@ -152,11 +147,11 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
             rel="noreferrer"
             sx={{ textDecoration: "none" }}
           >
-            <SidenavItem color={color} name={name} active={location.pathname.includes(key)} />
+            <SidenavItem color={'black'} name={name} active={location.pathname.includes(key)} />
           </Link>
         ) : (
           <NavLink to={route} key={key} sx={{ textDecoration: "none" }}>
-            <SidenavItem color={color} name={name} active={location.pathname.includes(key)} />
+            <SidenavItem color={'black'} name={name} active={location.pathname.includes(key)} />
           </NavLink>
         );
       }
@@ -165,8 +160,9 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
   const renderRoutes = routes.map(
-    ({ type, name, icon, title, collapse, noCollapse, key, href, route }) => {
+    ({ type, name, icon, title, collapse, noCollapse, key, href, route, role }) => {
       let returnValue;
+      if (!role.includes(loginStore.user_type)) return
 
       if (type === "collapse") {
         if (href) {
@@ -246,7 +242,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
     }
   );
 
-  if (loginStore.isLoggedIn) {
+  if (loginStore.isLoggedIn && loginStore.status === 4) {
     return (
       <SidenavRoot
         {...rest}

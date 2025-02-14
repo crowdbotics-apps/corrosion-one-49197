@@ -85,7 +85,7 @@ function itemContent(theme, ownerState) {
       color:
         ((transparentSidenav && !darkMode) || whiteSidenav) && (active === "isParent" || !active)
           ? dark.main
-          : white.main,
+          : dark.main,
       fontWeight: 400,
       fontSize: pxToRem(14),
       opacity: miniSidenav ? 0 : 1,
@@ -99,7 +99,7 @@ function itemContent(theme, ownerState) {
       color:
         ((transparentSidenav && !darkMode) || whiteSidenav) && (active === "isParent" || !active)
           ? dark.main
-          : white.main,
+          : dark.main,
       fontWeight: fontWeightRegular,
       display: "flex",
       alignItems: "center",
@@ -131,11 +131,11 @@ function itemArrow(theme, ownerState) {
       let colorValue;
 
       if (transparentSidenav && darkMode) {
-        colorValue = open || active ? white.main : rgba(white.main, 0.25);
+        colorValue = open || active ? dark.main : rgba(dark.main, 0.25);
       } else if (transparentSidenav || whiteSidenav) {
         colorValue = open || active ? dark.main : rgba(dark.main, 0.25);
       } else {
-        colorValue = open || active ? white.main : rgba(white.main, 0.5);
+        colorValue = open || active ? dark.main : rgba(dark.main, 0.5);
       }
 
       return colorValue;
