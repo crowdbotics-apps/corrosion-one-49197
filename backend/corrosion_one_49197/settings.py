@@ -400,3 +400,6 @@ JAZZMIN_SETTINGS = {
     "hide_apps": ["authtoken", "auth", 'sites'],
     "hide_models": [],
 }
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en']
+CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities')
