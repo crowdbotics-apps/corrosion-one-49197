@@ -14,3 +14,8 @@ class UserVerificationCodeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UserVerificationCode, UserVerificationCodeAdmin)
+
+
+@admin.register(User)
+class UserAdmin(auth_admin.UserAdmin):
+    pass
