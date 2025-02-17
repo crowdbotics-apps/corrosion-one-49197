@@ -8,7 +8,13 @@ class Industry(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
-# Create your models here.
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Industries'
+        ordering = ['-id']
+
 class Owner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='owner')
     industry = models.ForeignKey(Industry, on_delete=models.SET_NULL, null=True, blank=True, related_name='owners')
