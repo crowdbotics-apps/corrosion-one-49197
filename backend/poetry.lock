@@ -1284,20 +1284,6 @@ files = [
 ]
 
 [[package]]
-name = "facebook-sdk"
-version = "3.1.0"
-description = "This client library is designed to support the Facebook Graph API and the official Facebook JavaScript SDK, which is the canonical way to implement Facebook authentication."
-optional = false
-python-versions = "*"
-files = [
-    {file = "facebook-sdk-3.1.0.tar.gz", hash = "sha256:cabcd2e69ea3d9f042919c99b353df7aa1e2be86d040121f6e9f5e63c1cf0f8d"},
-    {file = "facebook_sdk-3.1.0-py2.py3-none-any.whl", hash = "sha256:2e987b3e0f466a6f4ee77b935eb023dba1384134f004a2af21f1cfff7fe0806e"},
-]
-
-[package.dependencies]
-requests = "*"
-
-[[package]]
 name = "filetype"
 version = "1.2.0"
 description = "Infer file type and MIME type of any file/buffer. No external dependencies."
@@ -3605,4 +3591,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12,<4"
-content-hash = "da61c105cde2249771e4f48c70750512792928fc5d9a65a178f27b3b0ce547e6"
+content-hash = "8b04f92c7a867da80489e4d6e912751836a64319ddb1291856e7bab963ad3e2b"

@@ -1,7 +1,7 @@
 import json
 from urllib import request as urequest
 
-import facebook
+# import facebook
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -293,55 +293,55 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         serializer = UserLoginResponseSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @may_fail(User.DoesNotExist, 'Invalid user')
-    @action(detail=False, methods=['post'])
-    def continue_with_facebook(self, request):
-        data = json.loads(request.body.decode('utf-8'))
-        access_token = data.get('accessToken')
-        sign_up = data.get('signUp', False)
-        try:
-            graph = facebook.GraphAPI(access_token=access_token)
-            user_info = graph.get_object(
-                id='me',
-                fields='first_name, last_name, id, email, picture.type(large)'
-            )
-        except facebook.GraphAPIError:
-            return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
-
-        user = User.objects.filter(facebook_id=user_info.get('id')).first()
-        if user:
-            if not user.is_active:
-                return Response( 'The account has been removed', status=HTTP_404_NOT_FOUND)
-
-        facebook_id = user_info.get('id')
-        facebook_token = access_token
-        password = User.objects.make_random_password()
-        first_name = user_info.get('first_name', '')
-        last_name = user_info.get('last_name', '')
-        name = first_name + ' ' + last_name
-        email = user_info.get('email') or f'{facebook_id}@crowdbotics.com'
-
-        profile_picture = user_info.get('picture').get('data').get('url')
-
-        update_data = dict(
-            facebook_token=facebook_token,
-            facebook_id=facebook_id,
-            email_verified=True,
-        )
-
-        create_data = dict(
-            name=name,
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            username=email,
-            password=password,
-        )
-
-        user = self.create_update_user(create_data, update_data, user, 'Facebook', profile_picture, sign_up)
-
-        serializer = UserLoginResponseSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    # @may_fail(User.DoesNotExist, 'Invalid user')
+    # @action(detail=False, methods=['post'])
+    # def continue_with_facebook(self, request):
+    #     data = json.loads(request.body.decode('utf-8'))
+    #     access_token = data.get('accessToken')
+    #     sign_up = data.get('signUp', False)
+    #     try:
+    #         graph = facebook.GraphAPI(access_token=access_token)
+    #         user_info = graph.get_object(
+    #             id='me',
+    #             fields='first_name, last_name, id, email, picture.type(large)'
+    #         )
+    #     except facebook.GraphAPIError:
+    #         return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     user = User.objects.filter(facebook_id=user_info.get('id')).first()
+    #     if user:
+    #         if not user.is_active:
+    #             return Response( 'The account has been removed', status=HTTP_404_NOT_FOUND)
+    #
+    #     facebook_id = user_info.get('id')
+    #     facebook_token = access_token
+    #     password = User.objects.make_random_password()
+    #     first_name = user_info.get('first_name', '')
+    #     last_name = user_info.get('last_name', '')
+    #     name = first_name + ' ' + last_name
+    #     email = user_info.get('email') or f'{facebook_id}@crowdbotics.com'
+    #
+    #     profile_picture = user_info.get('picture').get('data').get('url')
+    #
+    #     update_data = dict(
+    #         facebook_token=facebook_token,
+    #         facebook_id=facebook_id,
+    #         email_verified=True,
+    #     )
+    #
+    #     create_data = dict(
+    #         name=name,
+    #         first_name=first_name,
+    #         last_name=last_name,
+    #         email=email,
+    #         username=email,
+    #         password=password,
+    #     )
+    #
+    #     user = self.create_update_user(create_data, update_data, user, 'Facebook', profile_picture, sign_up)
+    #
+    #     serializer = UserLoginResponseSerializer(user)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
 
     @may_fail(User.DoesNotExist, 'Invalid user')
     @action(detail=False, methods=['post'])
