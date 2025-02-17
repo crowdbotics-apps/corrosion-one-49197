@@ -75,6 +75,7 @@ SECURE_SSL_REDIRECT = env.bool("SECURE_REDIRECT", default=False)
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -94,7 +95,6 @@ LOCAL_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
-    'jazzmin',
     'phonenumber_field',
     'dj_rest_auth',
     'rest_framework_simplejwt',
@@ -378,3 +378,25 @@ if SENTRY_DSN:
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True
     )
+
+JAZZMIN_SETTINGS = {
+    "site_logo": "logo.png",
+    "site_brand": ".",
+    "site_logo_classes": " elevation-0",  #"img-circle",
+    "site_icon": "favicon.png",
+
+    "login_logo": "logo.png",
+    "icons": {
+        "privacy_policy.PrivacyPolicy": "fas fa-eye-slash",
+        "terms_and_conditions.TermAndCondition": "fas fa-file-contract",
+        "users.User": "fas fa-user",
+        "configuration.Configuration": "fas fa-cogs",
+        "sites.Site": "fas fa-cloud",
+        "course.Course": "fas fa-book",
+        "course.CourseEnrolment": "fas fa-user-plus",
+        "teacher.Teacher": "fas fa-chalkboard-teacher",
+        "student.Student": "fas fa-user-graduate",
+    },
+    "hide_apps": ["authtoken", "auth", 'sites'],
+    "hide_models": [],
+}
