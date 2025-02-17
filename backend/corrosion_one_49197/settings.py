@@ -18,12 +18,14 @@ import json
 import base64
 import binascii
 import google.auth
+import sentry_sdk
 from google.oauth2 import service_account
 from google.cloud import secretmanager
 from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -357,3 +359,22 @@ TWILIO_API_KEY_SID = env.str("TWILIO_API_KEY_SID", "")
 TWILIO_API_KEY_SECRET = env.str("TWILIO_API_KEY_SECRET", "")
 TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "")
 TWILIO_NUMBER = env.str("TWILIO_NUMBER", "")
+
+SENTRY_DSN = env.str("SENTRY_DSN", "")
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[
+            DjangoIntegration(),
+        ],
+
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )
