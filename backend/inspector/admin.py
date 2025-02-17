@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from inspector.models import Inspector
+from inspector.models import Inspector, Credential
+
+@admin.register(Credential)
+class CredentialAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'description']
+    search_fields = ['name', 'description']
 
 
 @admin.register(Inspector)
