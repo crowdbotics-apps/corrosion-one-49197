@@ -48,8 +48,9 @@ function IllustrationLayout({header = "", title = "", description = "", illustra
             display={{xs: "none", md: "flex"}}
             width="calc(100%)"
             height="calc(100vh)"
-            sx={{backgroundImage: `url(${illustration})`, backgroundRepeat: "no-repeat", backgroundSize: "cover"}}
+            sx={{backgroundImage: `url(${illustration})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center center"}}
           />
+
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6} xl={4} sx={{my: "auto"}}>
           <Card sx={{borderRadius: 0,     width: {
