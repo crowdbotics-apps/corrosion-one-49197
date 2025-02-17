@@ -31,6 +31,7 @@ import theme from "assets/theme";
 
 // Material Dashboard 3 PRO React Dark Mode themes
 import themeDark from "assets/theme-dark";
+import icon from 'assets/images/favicon.png';
 
 
 // Material Dashboard 3 PRO React routes
@@ -62,6 +63,11 @@ export default function App() {
   const {pathname} = useLocation();
   const [rootStore, setRootStore] = useState(undefined)
   const currentBp = useCurrentBreakpoint();
+
+  useEffect(() => {
+    const favicon = document.getElementById('favicon');
+    favicon.setAttribute('href', icon);
+  }, []);
 
   useEffect(() => {
     (async () => {
