@@ -69,3 +69,10 @@ class UserVerificationCode(models.Model):
     last_sent = models.DateTimeField(_("Last Sent"), auto_now=True)
     active = models.BooleanField(default=True)
     code_type = models.CharField(_("Code Type"), max_length=50, choices=CodeTypes, default=CodeTypes.PASSWORD_RESET)
+
+    class Meta:
+        verbose_name = 'User Verification Code'
+        verbose_name_plural = 'User Verification Codes'
+
+    def __str__(self):
+        return f'{self.user} - {self.code_type} - {self.verification_code} - {"Active" if self.active else "Inactive"}'

@@ -380,12 +380,12 @@ if SENTRY_DSN:
     )
 
 JAZZMIN_SETTINGS = {
-    "site_logo": "logo.png",
+    "site_logo": "img/logo.png",
     "site_brand": ".",
     "site_logo_classes": " elevation-0",  #"img-circle",
-    "site_icon": "favicon.png",
+    "site_icon": "img/favicon.png",
 
-    "login_logo": "logo.png",
+    "login_logo": "img/logo.png",
     "icons": {
         "privacy_policy.PrivacyPolicy": "fas fa-eye-slash",
         "terms_and_conditions.TermAndCondition": "fas fa-file-contract",
