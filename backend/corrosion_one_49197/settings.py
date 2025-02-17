@@ -86,6 +86,7 @@ LOCAL_APPS = [
     'utils',
     'owner',
     'inspector',
+    'home',
 ]
 
 THIRD_PARTY_APPS = [
