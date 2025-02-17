@@ -22,7 +22,7 @@ class User(AbstractUser):
     """
 
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
-    biometrics_key = models.CharField(_("Biometrics Key"), blank=True, null=True)
+    biometrics_key = models.CharField(_("Biometrics Key"), blank=True, null=True, max_length=255)
     email_verified = models.BooleanField(_("Email Verified"), default=False)
     google_id = models.CharField('ID for Google', max_length=64, blank=True, null=True)
     google_token = models.TextField('Token for Google', blank=True, null=True)
