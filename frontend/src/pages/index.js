@@ -4,7 +4,7 @@ import SignUp from './auth/signUp'
 import HomeOwner from './owner/home';
 import SetNewPassword from "./auth/setNewPassword";
 import Logout from "./auth/logout";
-
+import Settings from "./common/settings";
 
 export {
   SignIn,
@@ -12,5 +12,6 @@ export {
   SignUp,
   HomeOwner,
   SetNewPassword,
-  Logout
+  Logout,
+  Settings
 };
