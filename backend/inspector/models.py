@@ -11,7 +11,6 @@ class Credential(TimeStampedModel):
     def __str__(self):
         return self.name
 
-# Create your models here.
 class Inspector(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='inspector')
     credentials = models.ManyToManyField(Credential, blank=True)
