@@ -28,7 +28,7 @@ import PageLayout from "components/PageLayout";
 // Material Dashboard 3 PRO React context
 import {useMaterialUIController} from "context";
 import Card from "@mui/material/Card";
-import logo from "assets/svgs/logo.svg";
+import logo from "assets/svgs/logo-text.svg";
 
 function IllustrationLayout({header = "", title = "", description = "", illustration = "", children}) {
   const [controller] = useMaterialUIController();

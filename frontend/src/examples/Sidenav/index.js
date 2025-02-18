@@ -47,7 +47,7 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
-import logo from "../../assets/svgs/logo.svg";
+import logo from "../../assets/svgs/logo-text.svg";
 import pxToRem from "../../assets/theme/functions/pxToRem";
 import {useLoginStore} from "../../services/helpers";
 import {ROUTES} from "../../services/constants";
