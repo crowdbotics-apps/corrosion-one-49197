@@ -66,8 +66,8 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/inspector/state/`, data);
   }
 
-  getCities(data: any) {
-    return this.simple_get(`${API_VERSION_PREFIX}/inspector/city/`, data);
+  getLanguages() {
+    return this.simple_get(`${API_VERSION_PREFIX}/inspector/language/`);
   }
 
   sendVerificationCode() {

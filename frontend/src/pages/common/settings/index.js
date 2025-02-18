@@ -5,9 +5,9 @@ import ProductImages from "../../../layouts/ecommerce/products/product-page/comp
 import Grid from "@mui/material/Grid";
 import ProductInfo from "../../../layouts/ecommerce/products/new-product/components/ProductInfo";
 import Card from "@mui/material/Card";
-import {useLoginStore} from "../../../services/helpers";
+import {useApi, useLoginStore} from "../../../services/helpers";
 import Icon from "@mui/material/Icon";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import MDButton from "../../../components/MDButton";
 import ProfileInspector from "./profileInspector";
 import LocationSettings from "./locationSettings";
@@ -16,26 +16,44 @@ import AccountSettings from "./accountSettings";
 import {ROLES} from "../../../services/constants";
 import ProfileOwner from "./profileOwner";
 
+const BUTTONS_INSPECTOR = [
+  {key: 1, name: "Profile", icon: "account_circle_outlined"},
+  {key: 2, name: "Location Preferences", icon: "location_on_outlined"},
+  {key: 3, name: "Credentials", icon: "vpn_key_outlined"},
+  {key: 4, name: "Account Settings", icon: "manage_accounts_outlined"},
+]
+
+const BUTTONS_OWNER = [
+  {key: 1, name: "Profile", icon: "account_circle_outlined"},
+  {key: 4, name: "Account Settings", icon: "manage_accounts_outlined"},
+]
+
+
 function Settings() {
   const loginStore = useLoginStore();
+  const api = useApi()
   const [selectedTab, setSelectedTab] = useState("Profile");
+  const [languages, setLanguages] = useState([]);
+
+  const getLanguages = () => {
+    api.getLanguages().handle({
+      onSuccess: (result) => {
+        console.log(result)
+        setLanguages(result?.data)
+      },
+    })
+  }
 
 
   const updateProfile = (data) => {
     console.log(data)
   }
 
-  const BUTTONS_INSPECTOR = [
-    {key: 1, name: "Profile", icon: "account_circle_outlined"},
-    {key: 2, name: "Location Preferences", icon: "location_on_outlined"},
-    {key: 3, name: "Credentials", icon: "vpn_key_outlined"},
-    {key: 4, name: "Account Settings", icon: "manage_accounts_outlined"},
-  ]
 
-  const BUTTONS_OWNER = [
-    {key: 1, name: "Profile", icon: "account_circle_outlined"},
-    {key: 4, name: "Account Settings", icon: "manage_accounts_outlined"},
-  ]
+
+  useEffect(() => {
+    getLanguages()
+  }, [])
 
 
   const renderButtons = (buttons) => {

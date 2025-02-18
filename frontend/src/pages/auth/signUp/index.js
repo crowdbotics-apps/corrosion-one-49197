@@ -73,6 +73,7 @@ function SignUp() {
       ...data,
       user_type: data.user_type.value
     }
+    setLoading(true)
 
     api.signup(dataToSend).handle({
         onSuccess: (result) => {
@@ -138,12 +139,14 @@ function SignUp() {
   }
 
   const resendEmail = (data) => {
+    setLoading(true)
     api.resendVerificationEmail(data).handle({
       onSuccess: (result) => {
         setShowResendEmail(false)
       },
       successMessage: 'Email sent successfully',
       errorMessage: 'Error resending email',
+      onFinally: () => setLoading(false)
     })
   }
 
@@ -632,7 +635,7 @@ function SignUp() {
               variant="contained"
               color="primary"
               loading={loading}
-              disabled={loading || !formikFirstStep.isValid}
+              disabled={loading}
               size={"large"}
               type='submit'
             >

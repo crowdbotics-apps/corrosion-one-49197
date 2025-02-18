@@ -10,9 +10,9 @@ from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from inspector.models import Credential
+from inspector.models import Credential, Language
 from inspector.serializers import CredentialSerializer, InspectorCompleteSerializer, CountrySerializer, CitySerializer, \
-    RegionSerializer
+    RegionSerializer, LanguageSerializer
 from users.models import UserVerificationCode
 from users.serializers import UserDetailSerializer
 from utils.utils import CollectedMultipartJsonViewMixin, GetViewsetMixin
@@ -67,3 +67,12 @@ class StateViewSet(viewsets.GenericViewSet, GetViewsetMixin):
             return Response([])
         states = Region.objects.filter(country_id__in=countries_ids.split(',')).order_by('name')
         return Response(RegionSerializer(states, many=True, context={'request': request}).data)
+
+
+class LanguageViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+    permission_classes = []
+    serializer_class = LanguageSerializer
+    queryset = Language.objects.all()
+
+
+

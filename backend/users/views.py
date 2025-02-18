@@ -161,16 +161,18 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         """
         code = request.data.get("verification_code", None)
         try:
-            get_token = get_verification_code(code, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
+            token = get_verification_code(code, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
         except Exception as e:
             return Response(e, status=HTTP_500_INTERNAL_SERVER_ERROR)
-        if not get_token:
+        if not token:
             return Response('The code is invalid', status=HTTP_400_BAD_REQUEST)
         user = self.request.user
         if not user:
             return Response('User not found', status=HTTP_400_BAD_REQUEST)
         user.phone_verified = True
         user.save()
+        token.active = False
+        token.save()
         return Response(UserDetailSerializer(user).data)
 
     @action(detail=False, methods=['POST'])
