@@ -206,6 +206,20 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build/static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
+# Configuration for Azure Storage
+AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
+if AS_BUCKET_NAME:
+    AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
+    AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
+
+    AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
+    DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
+    STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
+AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
+AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
+
+
+
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
@@ -329,17 +343,6 @@ if GS_BUCKET_NAME:
     STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     GS_DEFAULT_ACL = "publicRead"
 
-# Configuration for Azure Storage
-AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
-if AS_BUCKET_NAME:
-    AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
-    AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
-
-    AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
-    DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
-    STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
-AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
-AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
