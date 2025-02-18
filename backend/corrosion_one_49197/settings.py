@@ -331,6 +331,9 @@ if GS_BUCKET_NAME:
 
 # Configuration for Azure Storage
 AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
+AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
+AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
+
 if AS_BUCKET_NAME:
     AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
     AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
@@ -338,8 +341,8 @@ if AS_BUCKET_NAME:
     AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
     DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
     STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
-AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
-AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
+    MEDIA_URL = f"https://{AS_BUCKET_NAME}.blob.core.windows.net/{AS_MEDIA_CONTAINER}/"
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
