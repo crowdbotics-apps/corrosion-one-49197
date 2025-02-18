@@ -10,19 +10,18 @@ import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
 import DocumentItem from "./documentItem";
 import AddDocumentBox from "./addDocumentBox";
-import Divider from "@mui/material/Divider";
 
 function ProfileInspector({updateProfile}) {
   const loginStore = useLoginStore();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [languages, setLanguages] = useState([]);
 
   const [docs, setDocs] = useState([
     {id: 1, name: 'Supporting Document', size: 3.5},
     {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 3, name: 'Supporting Document 3', size: 1.3}
+    {id: 3, name: 'Supporting Document 2', size: 4.7},
+    {id: 4, name: 'Supporting Document 2', size: 4.7},
+    {id: 5, name: 'Supporting Document 2', size: 4.7},
   ]);
 
 
@@ -183,27 +182,6 @@ function ProfileInspector({updateProfile}) {
             <Grid item xs={12} lg={6}>
               <FormikInput
                 type={"autocomplete"}
-                placeholder={"Experience"}
-                value={null}
-                fieldName={"credentials"}
-                label={"Experience"}
-                options={[]}
-                accessKey={"name"}
-                multiple
-                onChange={(value) => {
-                  const currentValues = [...formik.values.experience]
-                  if (currentValues.find((item) => item.id === value?.[0]?.id)) return
-                  currentValues.push(value[0])
-                  formik.setFieldValue('experience', currentValues)
-                }}
-              />
-              <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {/*{formik.values.experience.map((item) => renderInspectorCredentials(item))}*/}
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <FormikInput
-                type={"autocomplete"}
                 placeholder={"Languages"}
                 value={null}
                 fieldName={"languages"}
@@ -222,7 +200,7 @@ function ProfileInspector({updateProfile}) {
                 {/*{formik.values.languages.map((item) => renderInspectorLanguages(item))}*/}
               </MDBox>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} lg={6}>
               <FormikInput
                 name={'linkedin'}
                 label={'Linkedin'}
@@ -231,8 +209,6 @@ function ProfileInspector({updateProfile}) {
                 mb={2}
               />
             </Grid>
-
-
           </Grid>
         </Form>
       </FormikProvider>

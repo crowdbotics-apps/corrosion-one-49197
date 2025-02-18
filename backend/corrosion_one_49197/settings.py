@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import io
+from datetime import timedelta
+
 import environ
 import logging
 import json
@@ -107,6 +109,7 @@ THIRD_PARTY_APPS = [
     'webshell',
     'cities_light',
 ]
+
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
@@ -205,6 +208,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
+}
 
 # allauth / users
 ACCOUNT_EMAIL_REQUIRED = True
@@ -403,3 +412,6 @@ JAZZMIN_SETTINGS = {
 
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['en']
 CITIES_LIGHT_DATA_DIR = os.path.join('/tmp', 'cities')
+# ignore cities
+CITIES_LIGHT_CITY_SOURCES = []
+CITIES_LIGHT_SUBREGION_SOURCES = []

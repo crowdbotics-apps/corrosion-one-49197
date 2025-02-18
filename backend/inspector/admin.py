@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from inspector.models import Inspector, Credential
+from inspector.models import Inspector, Credential, Language
+
 
 @admin.register(Credential)
 class CredentialAdmin(admin.ModelAdmin):
@@ -56,3 +57,5 @@ class InspectorAdmin(admin.ModelAdmin):
     def credential(self, obj):
         return ', '.join([credential.name for credential in obj.credentials.all()]) if obj.credentials.exists() else '-'
 
+
+admin.site.register(Language)

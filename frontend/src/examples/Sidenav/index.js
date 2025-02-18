@@ -165,9 +165,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
       let returnValue;
       if (!role.includes(loginStore.user_type)) return
 
-      // console.log('key', key)
-      // console.log('collapseName', collapseName)
-
       if (type === "collapse") {
         if (href) {
           returnValue = (
@@ -247,6 +244,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   );
 
   if (loginStore.isLoggedIn && loginStore.status === 4) {
+
     return (
       <SidenavRoot
         {...rest}
@@ -265,6 +263,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         </MDBox>
         <List>{renderRoutes}</List>
         <List sx={{ mt: "auto" }}>
+          <Divider sx={{my:0}} />
           <NavLink to={ROUTES.SUPPORT}>
             <SidenavCollapse
               name={"Support"}
@@ -272,8 +271,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                 <Icon fontSize="small">support_agent_outlined</Icon>
               }
               noCollapse
-              active={false}
-              // active={key === collapseName}
+              active={"support" === collapseName}
             />
           </NavLink>
           <NavLink to={ROUTES.SETTINGS}>
@@ -283,19 +281,18 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
                 <Icon fontSize="small">settings_outlined</Icon>
               }
               noCollapse
-              active={false}
-              // active={key === collapseName}
+              active={"settings" === collapseName}
             />
           </NavLink>
+          <Divider sx={{my:0}} />
           <NavLink to={ROUTES.LOGOUT}>
             <SidenavCollapse
               name={"Logout"}
               icon={
-                <Icon fontSize="small">power_settings_new_outlined</Icon>
+                <Icon fontSize="small" sx={{color: 'red'}}>power_settings_new_outlined</Icon>
               }
               noCollapse
               active={false}
-              // active={key === collapseName}
             />
           </NavLink>
         </List>
