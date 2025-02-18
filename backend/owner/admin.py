@@ -42,8 +42,8 @@ class OwnerAdmin(admin.ModelAdmin):
     @admin.display(description='Registration Status')
     def status(self, obj):
         user = obj.user
-        if not user.phone_verified:
-            return 'Phone number not verified'
         if not obj.company_name:
             return 'Missing personal data'
+        if not user.phone_verified:
+            return 'Phone number not verified'
         return 'Completed'

@@ -39,12 +39,12 @@ class InspectorAdmin(admin.ModelAdmin):
     @admin.display(description='Registration Status')
     def status(self, obj):
         user = obj.user
-        if not user.phone_verified:
-            return 'Phone number not verified'
         if not user.first_name or not user.last_name:
             return 'Missing personal data'
         if not obj.regions.exists():
             return 'Missing work area'
+        if not user.phone_verified:
+            return 'Phone number not verified'
         return 'Completed'
 
     @admin.display(description='Work Area')
