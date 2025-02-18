@@ -381,8 +381,8 @@ if SENTRY_DSN:
 
 JAZZMIN_SETTINGS = {
     "site_logo": "img/logo.png",
-    "site_brand": ".",
-    "site_logo_classes": " elevation-0",  #"img-circle",
+    "site_brand": "Corrosion One",
+    "site_logo_classes": " elevation-0",
     "site_icon": "img/favicon.png",
 
     "login_logo": "img/logo.png",
