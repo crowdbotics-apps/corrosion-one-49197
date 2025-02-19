@@ -207,7 +207,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'we
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Configuration for Azure Storage
-AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
+AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "stgcontent71740")
 if AS_BUCKET_NAME:
     AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
     AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
