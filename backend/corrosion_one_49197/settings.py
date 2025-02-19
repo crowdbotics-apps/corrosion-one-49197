@@ -207,7 +207,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'we
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Configuration for Azure Storage
-AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "stgcontent71740")
+AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
 if AS_BUCKET_NAME:
     AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
     AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
@@ -216,10 +216,9 @@ if AS_BUCKET_NAME:
     AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
     DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
     STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
-
-
-MEDIA_URL = '/mediafiles/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+else:
+    MEDIA_URL = '/mediafiles/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 
 
