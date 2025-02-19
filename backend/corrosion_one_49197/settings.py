@@ -204,7 +204,6 @@ AUTHENTICATION_BACKENDS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build/static')]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Configuration for Azure Storage
 AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
@@ -213,15 +212,19 @@ AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
 if AS_BUCKET_NAME:
     AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
     AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
+
     AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
     DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
     STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
+    logging.warning("Azure Storage is configured.")
 else:
+    logging.warning("Azure Storage is not configured.")
     MEDIA_URL = '/mediafiles/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-
+logging.warning(f"AS_BUCKET_NAME is '{AS_BUCKET_NAME}' in production.")
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
@@ -279,28 +282,28 @@ DEFAULT_FROM_EMAIL = env.str(
 )
 
 
-# AWS S3 config
-AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
-AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", "")
-AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME", "")
-AWS_STORAGE_REGION = env.str("AWS_STORAGE_REGION", "")
-
-USE_S3 = (
-    AWS_ACCESS_KEY_ID and
-    AWS_SECRET_ACCESS_KEY and
-    AWS_STORAGE_BUCKET_NAME and
-    AWS_STORAGE_REGION
-)
-
-if USE_S3:
-    AWS_S3_CUSTOM_DOMAIN = env.str("AWS_S3_CUSTOM_DOMAIN", "")
-    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
-    AWS_DEFAULT_ACL = env.str("AWS_DEFAULT_ACL", "bucket-owner-full-control")
-    AWS_MEDIA_LOCATION = env.str("AWS_MEDIA_LOCATION", "media")
-    AWS_AUTO_CREATE_BUCKET = env.bool("AWS_AUTO_CREATE_BUCKET", True)
-    DEFAULT_FILE_STORAGE = env.str(
-        "DEFAULT_FILE_STORAGE", "home.storage_backends.MediaStorage"
-    )
+# # AWS S3 config
+# AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
+# AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", "")
+# AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME", "")
+# AWS_STORAGE_REGION = env.str("AWS_STORAGE_REGION", "")
+#
+# USE_S3 = (
+#     AWS_ACCESS_KEY_ID and
+#     AWS_SECRET_ACCESS_KEY and
+#     AWS_STORAGE_BUCKET_NAME and
+#     AWS_STORAGE_REGION
+# )
+#
+# if USE_S3:
+#     AWS_S3_CUSTOM_DOMAIN = env.str("AWS_S3_CUSTOM_DOMAIN", "")
+#     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+#     AWS_DEFAULT_ACL = env.str("AWS_DEFAULT_ACL", "bucket-owner-full-control")
+#     AWS_MEDIA_LOCATION = env.str("AWS_MEDIA_LOCATION", "media")
+#     AWS_AUTO_CREATE_BUCKET = env.bool("AWS_AUTO_CREATE_BUCKET", True)
+#     DEFAULT_FILE_STORAGE = env.str(
+#         "DEFAULT_FILE_STORAGE", "home.storage_backends.MediaStorage"
+#     )
 
 SPECTACULAR_SETTINGS = {
     # available SwaggerUI configuration parameters
