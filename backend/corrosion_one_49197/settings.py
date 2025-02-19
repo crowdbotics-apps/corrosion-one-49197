@@ -207,7 +207,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'we
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Configuration for Azure Storage
-AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
+AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "stgcontent71740")
 AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
 AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
 if AS_BUCKET_NAME:
@@ -219,7 +219,7 @@ if AS_BUCKET_NAME:
 else:
     MEDIA_URL = '/mediafiles/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
-
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 
 
