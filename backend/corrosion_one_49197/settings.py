@@ -218,8 +218,8 @@ if AS_BUCKET_NAME:
     STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
 
 
-# MEDIA_URL = '/mediafiles/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+MEDIA_URL = '/mediafiles/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 
 
