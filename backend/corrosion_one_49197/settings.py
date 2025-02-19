@@ -222,7 +222,7 @@ if AS_BUCKET_NAME:
 
 # MEDIA_URL = '/mediafiles/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
-MEDIA_URL = f"https://{AS_BUCKET_NAME}.blob.core.windows.net/{AS_MEDIA_CONTAINER}/"
+MEDIA_URL = f"https://{AS_BUCKET_NAME}.blob.core.windows.net/media/"
 
 
 
