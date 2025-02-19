@@ -7,7 +7,7 @@ export const FormikTextInput = (props) => {
 
   const [field, meta] = useField(props);
   const errorText = meta.error && meta.touched ? meta.error : '';
-  const {variant="outlined", type, label, value, fullWidth=true, overrideError, multiline, ...rest} = props
+  const {variant="outlined", type, label, value, fullWidth= true, overrideError, multiline, disabled = false, ...rest} = props
 
   return (
     <MDBox {...rest}>
@@ -19,10 +19,10 @@ export const FormikTextInput = (props) => {
         value={value}
         variant={variant}
         fullWidth={fullWidth}
+        disabled={disabled}
         {...field}
         helperText={(overrideError && !!errorText)? overrideError : errorText}
         error={!!errorText}
-        disabled={props.disabled || false}
       />
     </MDBox>
   )

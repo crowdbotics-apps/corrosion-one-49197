@@ -68,17 +68,18 @@ export default styled(TextField)(({ theme, ownerState }) => {
     pointerEvents: disabled ? "none" : "auto",
     color: disabled && "red",
     marginBottom: 18,
+    borderRadius: 8,
     "& .MuiInputLabel-root": {
       color: "#2A272E",
       fontWeight: 400,
       pointerEvents: disabled ? "none" : "auto",
     },
-    "& .MuiInputBase-input.MuiOutlinedInput-input": disabled
-      ? {
-          color: "#00000061",
-          "-webkit-text-fill-color": "#00000061",
-        }
-      : "",
+    // "& .MuiInputBase-input.MuiOutlinedInput-input": disabled
+    //   ? {
+    //       color: "#00000061",
+    //       "-webkit-text-fill-color": "#00000061",
+    //     }
+    //   : "",
     ...(error && errorStyles()),
     ...(success && successStyles()),
   };

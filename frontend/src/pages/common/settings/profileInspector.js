@@ -11,17 +11,16 @@ import FormikInput from "../../../components/Formik/FormikInput";
 import DocumentItem from "./documentItem";
 import AddDocumentBox from "./addDocumentBox";
 
-function ProfileInspector({updateProfile}) {
+function ProfileInspector({updateProfile, languages = []}) {
   const loginStore = useLoginStore();
   const [selectedFile, setSelectedFile] = useState(null);
-  const [languages, setLanguages] = useState([]);
 
   const [docs, setDocs] = useState([
-    {id: 1, name: 'Supporting Document', size: 3.5},
-    {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 3, name: 'Supporting Document 2', size: 4.7},
-    {id: 4, name: 'Supporting Document 2', size: 4.7},
-    {id: 5, name: 'Supporting Document 2', size: 4.7},
+    // {id: 1, name: 'Supporting Document', size: 3.5},
+    // {id: 2, name: 'Supporting Document 2', size: 4.7},
+    // {id: 3, name: 'Supporting Document 2', size: 4.7},
+    // {id: 4, name: 'Supporting Document 2', size: 4.7},
+    // {id: 5, name: 'Supporting Document 2', size: 4.7},
   ]);
 
 
@@ -58,6 +57,7 @@ function ProfileInspector({updateProfile}) {
     linkedin: "",
     documents: [],
     experience: [],
+    languages: [],
   }
 
   const validationSchema = Yup.object().shape({
@@ -186,7 +186,7 @@ function ProfileInspector({updateProfile}) {
                 value={null}
                 fieldName={"languages"}
                 label={"Languages"}
-                options={[]}
+                options={languages}
                 accessKey={"name"}
                 multiple
                 onChange={(value) => {

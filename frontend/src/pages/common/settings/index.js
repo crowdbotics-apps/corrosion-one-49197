@@ -38,8 +38,7 @@ function Settings() {
   const getLanguages = () => {
     api.getLanguages().handle({
       onSuccess: (result) => {
-        console.log(result)
-        setLanguages(result?.data)
+        setLanguages(result?.data?.results)
       },
     })
   }
@@ -103,7 +102,7 @@ function Settings() {
       >
         {renderButtons(loginStore.user_type === ROLES.INSPECTOR ? BUTTONS_INSPECTOR : BUTTONS_OWNER)}
       </MDBox>
-      {selectedTab === "Profile" && loginStore.user_type === ROLES.INSPECTOR && <ProfileInspector updateProfile={updateProfile} />}
+      {selectedTab === "Profile" && loginStore.user_type === ROLES.INSPECTOR && <ProfileInspector updateProfile={updateProfile} languages={languages} />}
       {selectedTab === "Profile" && loginStore.user_type === ROLES.OWNER && <ProfileOwner updateProfile={updateProfile} />}
       {selectedTab === "Location Preferences" && <LocationSettings />}
       {selectedTab === "Credentials" && <Credentials />}
