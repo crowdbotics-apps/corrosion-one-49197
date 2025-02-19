@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from timezone_field import TimeZoneField
 from phonenumber_field.modelfields import PhoneNumberField
 
-from corrosion_one_49197.storage_backends import AzureMediaStorage
+# from corrosion_one_49197.storage_backends import AzureMediaStorage
 
 
 class User(AbstractUser):
