@@ -209,6 +209,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'we
 AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
 AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
 AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
+
 if AS_BUCKET_NAME:
     AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
     AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
@@ -216,7 +217,24 @@ if AS_BUCKET_NAME:
     AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
     DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
     STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
-    logging.warning("Azure Storage is configured.")
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.azure_storage.AzureStorage",
+            "OPTIONS": {
+                "token_credential": DefaultAzureCredential(),
+                "account_name": AS_BUCKET_NAME,
+                "azure_container": AS_MEDIA_CONTAINER,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.azure_storage.AzureStorage",
+            "OPTIONS": {
+                "token_credential": DefaultAzureCredential(),
+                "account_name": AS_BUCKET_NAME,
+                "azure_container": AS_STATIC_CONTAINER,
+            },
+        },
+    }
 else:
     logging.warning("Azure Storage is not configured.")
     MEDIA_URL = '/mediafiles/'

@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from timezone_field import TimeZoneField
 from phonenumber_field.modelfields import PhoneNumberField
 
-from corrosion_one_49197.storage_backends import AzureMediaStorage
+# from corrosion_one_49197.storage_backends import AzureMediaStorage
 
 
 class User(AbstractUser):
@@ -37,7 +37,7 @@ class User(AbstractUser):
     phone_number = PhoneNumberField('Phone Number', max_length=50, null=True, blank=True)
     phone_verified = models.BooleanField(_("Phone Verified"), default=False)
     last_verification_email_sent = models.DateTimeField(_("Last Verification Email Sent"), null=True, blank=True)
-    profile_picture = models.ImageField(storage=AzureMediaStorage(), upload_to='profile-picture', null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile-picture', null=True, blank=True)
     website = models.URLField(_("Website"), null=True, blank=True)
     linkedin = models.URLField(_("LinkedIn"), null=True, blank=True)
 
