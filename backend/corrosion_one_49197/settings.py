@@ -207,7 +207,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'we
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Configuration for Azure Storage
-AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "stgcontent71740")
+AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
 AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
 AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
 if AS_BUCKET_NAME:
@@ -333,15 +333,15 @@ def google_service_account_config():
         return json.loads(base64.b64decode(service_account_config))
     except (binascii.Error, ValueError):
         return {}
-GOOGLE_SERVICE_ACCOUNT_CONFIG = google_service_account_config()
-if GOOGLE_SERVICE_ACCOUNT_CONFIG:
-    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(GOOGLE_SERVICE_ACCOUNT_CONFIG)
-GS_BUCKET_NAME = env.str("GS_BUCKET_NAME", "")
-if GS_BUCKET_NAME:
-    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-    STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
-    GS_DEFAULT_ACL = "publicRead"
-
+# GOOGLE_SERVICE_ACCOUNT_CONFIG = google_service_account_config()
+# if GOOGLE_SERVICE_ACCOUNT_CONFIG:
+#     GS_CREDENTIALS = service_account.Credentials.from_service_account_info(GOOGLE_SERVICE_ACCOUNT_CONFIG)
+# GS_BUCKET_NAME = env.str("GS_BUCKET_NAME", "")
+# if GS_BUCKET_NAME:
+#     DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+#     STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+#     GS_DEFAULT_ACL = "publicRead"
+#
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
