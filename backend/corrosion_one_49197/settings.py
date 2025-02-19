@@ -206,8 +206,23 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'web_build/static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-MEDIA_URL = '/mediafiles/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+# Configuration for Azure Storage
+AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
+if AS_BUCKET_NAME:
+    AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
+    AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
+    AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
+    AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
+    AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
+    DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
+    STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
+
+
+
+# MEDIA_URL = '/mediafiles/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+MEDIA_URL = f"https://{AS_BUCKET_NAME}.blob.core.windows.net/{AS_MEDIA_CONTAINER}/"
+
 
 
 SIMPLE_JWT = {
@@ -329,19 +344,6 @@ if GS_BUCKET_NAME:
     STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     GS_DEFAULT_ACL = "publicRead"
 
-# Configuration for Azure Storage
-AS_BUCKET_NAME = env.str("AS_BUCKET_NAME", "")
-AS_STATIC_CONTAINER = env.str("AS_STATIC_CONTAINER", "static")
-AS_MEDIA_CONTAINER = env.str("AS_MEDIA_CONTAINER", "media")
-
-if AS_BUCKET_NAME:
-    AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
-    AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
-
-    AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
-    DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
-    STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
-    MEDIA_URL = f"https://{AS_BUCKET_NAME}.blob.core.windows.net/{AS_MEDIA_CONTAINER}/"
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
