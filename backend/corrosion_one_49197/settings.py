@@ -242,7 +242,6 @@ else:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-logging.warning(f"AS_BUCKET_NAME is '{AS_BUCKET_NAME}' in production.")
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
@@ -382,7 +381,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://192.168.183.108:3000',
     'http://192.168.183.108',
     'https://corrosion-one-49197.azurewebsites.net',
-    'http://corrosion-one-49197.azurewebsites.net'
+    'http://corrosion-one-49197.azurewebsites.net',
+    'https://stgcontent71740.blob.core.windows.net'
 ]
 
 CORS_EXPOSE_HEADERS = [
