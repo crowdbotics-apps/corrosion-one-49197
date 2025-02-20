@@ -44,6 +44,7 @@ import {FormControlLabel} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
 import UserAvatar from "assets/images/photo-placeholder.png";
+import RenderWorkArea from "../../../components/RenderListOption";
 
 
 function SignUp() {
@@ -525,38 +526,6 @@ function SignUp() {
     )
   }
 
-  const renderWorkArea = (item, handleRemove) => {
-    return (
-      <MDBox
-        key={item.id}
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between" // let text + "X" be spaced out
-        borderRadius="24px"
-        p={0.25}
-        px={1}
-        sx={{border: '1px solid #C6C9CE'}}
-        // optional: add minWidth so text + X have some horizontal space
-      >
-        {/* The credential text */}
-        <MDTypography sx={{fontSize: 14, fontWeight: 500}}>
-          {item.name}
-        </MDTypography>
-
-        {/* "X" Button */}
-        <IconButton
-          aria-label="remove"
-          size="small"
-          onClick={() => handleRemove(item.id)}
-          sx={{ml: 1, p: 0}} // small margin to separate from text
-        >
-          <CloseIcon fontSize="inherit"/>
-        </IconButton>
-      </MDBox>
-    )
-  }
-
-
   const firstStep = () => {
     return (
       <FormikProvider value={formikFirstStep}>
@@ -907,7 +876,7 @@ function SignUp() {
             }}
           />
           <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-            {formikThirdStepInspector.values.country.map((item) => renderWorkArea(item, handleRemoveCountry))}
+            {formikThirdStepInspector.values.country.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={handleRemoveCountry}/>)}
           </MDBox>
           <FormikInput
             type={"autocomplete"}
@@ -925,7 +894,7 @@ function SignUp() {
             }}
           />
           <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-            {formikThirdStepInspector.values.state.map((item) => renderWorkArea(item, handleRemoveState))}
+            {formikThirdStepInspector.values.state.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={handleRemoveState}/>)}
           </MDBox>
           <MDBox mt={10} textAlign={"center"}>
             <MDButton

@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
 import DocumentItem from "./documentItem";
 import AddDocumentBox from "./addDocumentBox";
+import RenderWorkArea from "../../../components/RenderListOption";
 
 function ProfileInspector({updateProfile, languages = []}) {
   const loginStore = useLoginStore();
@@ -63,8 +64,9 @@ function ProfileInspector({updateProfile, languages = []}) {
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().required("First name is required"),
     last_name: Yup.string().required("Last name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
     phone_number: Yup.string().required("Phone number is required"),
+    website: Yup.string().url("Invalid URL"),
+    linkedin: Yup.string().url("Invalid URL"),
   });
 
   const formik = useFormik({
@@ -197,7 +199,7 @@ function ProfileInspector({updateProfile, languages = []}) {
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {/*{formik.values.languages.map((item) => renderInspectorLanguages(item))}*/}
+                {formik.values.languages.map((item) => <RenderWorkArea key={item.id} item={item}/>)}
               </MDBox>
             </Grid>
             <Grid item xs={12} lg={6}>

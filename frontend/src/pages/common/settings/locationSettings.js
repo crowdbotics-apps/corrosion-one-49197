@@ -10,6 +10,7 @@ import {useEffect, useState} from "react";
 import {useApi} from "../../../services/helpers";
 import Grid from "@mui/material/Grid";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import RenderWorkArea from "../../../components/RenderListOption";
 
 function LocationSettings({updateLocation}) {
   const [countries, setCountries] = useState([]);
@@ -79,7 +80,7 @@ function LocationSettings({updateLocation}) {
   }, [formikThirdStepInspector.values.country])
 
 
-  const renderWorkArea = (item, handleRemove) => {
+  const renderWorkArea = (item, handleRemove = () => {}) => {
     return (
       <MDBox
         key={item.id}
@@ -154,7 +155,7 @@ function LocationSettings({updateLocation}) {
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formikThirdStepInspector.values.state.map((item) => renderWorkArea(item, handleRemoveState))}
+                {formikThirdStepInspector.values.state.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={handleRemoveState}/>)}
               </MDBox>
             </Grid>
           </Grid>
