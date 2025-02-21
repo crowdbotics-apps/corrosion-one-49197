@@ -39,7 +39,6 @@ class InspectorViewSet(
     def complete(self, request):
         data = request.data
         user = request.user
-        data.id = user.id
         serializer = InspectorCompleteSerializer(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
