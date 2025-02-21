@@ -35,6 +35,8 @@ function Settings() {
   const [selectedTab, setSelectedTab] = useState("Profile");
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
 
   const getLanguages = () => {
     setLoading(true)
@@ -52,7 +54,6 @@ function Settings() {
     setLoading(true)
     api.updateInspectorData(data).handle({
       onSuccess: (result) => {
-        console.log('Result:', result)
         loginStore.setUser(result.response)
       },
       successMessage: 'Profile updated successfully',
@@ -63,9 +64,38 @@ function Settings() {
     })
   }
 
+  const getCountries = () => {
+    api.getCountries().handle({
+      onSuccess: (result) => {
+        setCountries(result?.data)
+      },
+    })
+  }
+
+  const getStates = (countryIds) => {
+    api.getStates({countries: countryIds.toString()}).handle({
+      onSuccess: (result) => {
+        setStates(result?.data)
+      },
+    })
+  }
+
+  const updateInspectorWorkArea = (data) => {
+    setLoading(true)
+    api.updateInspectorWorkArea(data).handle({
+      successMessage: 'Inspector work area updated successfully',
+      onSuccess: (result) => {
+        loginStore.setUser(result.response)
+      },
+      errorMessage: 'Error updating inspector work area',
+      onFinally: () => setLoading(false)
+    })
+  }
+
 
   useEffect(() => {
     getLanguages()
+    getCountries()
   }, [])
 
 
@@ -99,6 +129,42 @@ function Settings() {
       )
     })
   }
+
+  const renderBody = () => {
+    switch (selectedTab) {
+      case "Profile":
+        if (loginStore.user_type === ROLES.INSPECTOR) {
+          return (
+            <ProfileInspector updateProfile={updateProfile} languages={languages} loading={loading} />
+          )
+        } else {
+          return (
+            <ProfileOwner updateProfile={updateProfile} languages={languages} loading={loading} />
+          )
+        }
+      case "Location Preferences":
+        return (
+          <LocationSettings
+            countries={countries}
+            states={states}
+            getStates={getStates}
+            loading={loading}
+            updateLocation={updateInspectorWorkArea}
+          />
+        )
+      case "Credentials":
+        return (
+          <Credentials />
+        )
+      case "Account Settings":
+        return (
+          <AccountSettings />
+        )
+      default:
+        return (<></>)
+    }
+  }
+
   return (
     <AdminLayout
       title={'Settings'}
@@ -116,11 +182,7 @@ function Settings() {
       >
         {renderButtons(loginStore.user_type === ROLES.INSPECTOR ? BUTTONS_INSPECTOR : BUTTONS_OWNER)}
       </MDBox>
-      {selectedTab === "Profile" && loginStore.user_type === ROLES.INSPECTOR && <ProfileInspector updateProfile={updateProfile} languages={languages} loading={loading} />}
-      {selectedTab === "Profile" && loginStore.user_type === ROLES.OWNER && <ProfileOwner updateProfile={updateProfile} />}
-      {selectedTab === "Location Preferences" && <LocationSettings />}
-      {selectedTab === "Credentials" && <Credentials />}
-      {selectedTab === "Account Settings" && <AccountSettings />}
+      {renderBody()}
 
     </AdminLayout>
   );

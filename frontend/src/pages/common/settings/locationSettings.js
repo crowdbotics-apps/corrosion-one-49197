@@ -4,36 +4,13 @@ import MDButton from "../../../components/MDButton";
 import {Form, FormikProvider, useFormik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
 import * as Yup from "yup";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import {useEffect, useState} from "react";
 import {useApi, useLoginStore} from "../../../services/helpers";
 import Grid from "@mui/material/Grid";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import RenderWorkArea from "../../../components/RenderListOption";
 
-function LocationSettings({updateLocation}) {
+function LocationSettings({updateLocation, countries, states, getStates, loading}) {
   const loginStore = useLoginStore();
-  const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
-  const api = useApi()
-  const [loading, setLoading] = useState(false);
-
-  const getCountries = () => {
-    api.getCountries().handle({
-      onSuccess: (result) => {
-        setCountries(result?.data)
-      },
-    })
-  }
-
-  const getStates = (countryIds) => {
-    api.getStates({countries: countryIds.toString()}).handle({
-      onSuccess: (result) => {
-        setStates(result?.data)
-      },
-    })
-  }
 
   const initialValuesThirdStepInspector = {
     country: loginStore.countries,
@@ -52,7 +29,8 @@ function LocationSettings({updateLocation}) {
     onSubmit: (values) => {
       const valuesToSend = {...values}
       valuesToSend.state = valuesToSend.state.map((item) => item.id)
-      console.log(valuesToSend)
+      valuesToSend.send_verification_code = false
+      updateLocation(valuesToSend)
     }
   })
 
@@ -73,41 +51,8 @@ function LocationSettings({updateLocation}) {
   }
 
   useEffect(() => {
-    getCountries()
-  }, [])
-
-  useEffect(() => {
     getStates(formikThirdStepInspector.values.country.map((item) => item.id))
   }, [formikThirdStepInspector.values.country])
-
-
-  const renderWorkArea = (item, handleRemove = () => {}) => {
-    return (
-      <MDBox
-        key={item.id}
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between" // let text + "X" be spaced out
-        borderRadius="24px"
-        p={0.25}
-        px={1}
-        sx={{border: '1px solid #C6C9CE'}}
-        // optional: add minWidth so text + X have some horizontal space
-      >
-        <IconButton
-          aria-label="remove"
-          size="small"
-          onClick={() => handleRemove(item.id)}
-          sx={{mr: 1, p: 0}} // small margin to separate from text
-        >
-          <HighlightOffIcon sx={{color: "#E14640", fontSize:19}}/>
-        </IconButton>
-        <MDTypography sx={{fontSize: 14, fontWeight: 500}}>
-          {item.name}
-        </MDTypography>
-      </MDBox>
-    )
-  }
 
 
   return (
@@ -136,7 +81,7 @@ function LocationSettings({updateLocation}) {
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formikThirdStepInspector.values.country.map((item) => renderWorkArea(item, handleRemoveCountry))}
+                {formikThirdStepInspector.values.country.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={handleRemoveCountry}/>)}
               </MDBox>
             </Grid>
             <Grid item xs={12} lg={6}>

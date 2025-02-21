@@ -167,6 +167,7 @@ function SignUp() {
       onFinally: () => setLoading(false)
     })
   }
+
   const verifyCode = (data) => {
     const dataToSend = {
       ...data,
