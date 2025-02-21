@@ -122,9 +122,9 @@ function SignUp() {
     })
   }
 
-  const updateInspectorData = (data) => {
+  const completeInspectorData = (data) => {
     setLoading(true)
-    api.updateInspectorData(data).handle({
+    api.completeInspectorData(data).handle({
       onSuccess: (result) => {
         runInAction(() => {
           loginStore.setUser(result.response)
@@ -346,7 +346,7 @@ function SignUp() {
     onSubmit: (values) => {
       const valuesToSend = {...values}
       valuesToSend.credentials = valuesToSend.credentials.map((item) => item.id)
-      updateInspectorData(valuesToSend)
+      completeInspectorData(valuesToSend)
     }
   })
 

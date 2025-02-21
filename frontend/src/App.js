@@ -135,7 +135,7 @@ export default function App() {
     });
 
 
-  console.log('Current Breakpoint:', currentBp);
+  // console.log('Current Breakpoint:', currentBp);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>

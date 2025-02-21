@@ -29,10 +29,11 @@ export const CountryModel = types.model("CountryModel").props({
   name: types.maybeNull(types.string),
 })
 
-const ALLOWED_KEYS_USER = ['id', 'email', 'phone_number', 'profile_picture', 'first_name', 'last_name',
+const ALLOWED_KEYS_USER = ['id', 'email', 'phone_number', 'first_name', 'last_name',
   'status', 'user_type', 'website', 'linkedin', 'access', 'refresh']
 
-const ALLOWED_KEYS_INSPECTOR = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents', 'countries']
+const ALLOWED_KEYS_INSPECTOR = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents',
+  'countries', 'profile_picture']
 
 const ALLOWED_KEYS_OWNER = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents', 'countries']
 

@@ -1,4 +1,5 @@
 from cities_light.models import Country, Region, City
+from django.templatetags.i18n import language
 from rest_framework import serializers
 
 from inspector.models import Credential, Inspector, Language, SupportDocument
@@ -39,14 +40,57 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         user.first_name = data['first_name']
         user.last_name = data['last_name']
-        user.profile_picture = data['profile_picture']
         user.save()
         self.instance = user.inspector
         self.instance.credentials.set(data['credentials'])
+        self.instance.profile_picture = data.get('profile_picture')
         self.instance.save()
 
         return super().save(**kwargs)
 
+class InspectorUpdateSerializer(serializers.ModelSerializer):
+    credentials = serializers.PrimaryKeyRelatedField(queryset=Credential.objects.all(), many=True)
+    profile_picture = SmartUpdatableImageField()
+    languages = serializers.PrimaryKeyRelatedField(queryset=Language.objects.all(), many=True)
+
+    class Meta:
+        model = Inspector
+        fields = ['id', 'credentials', 'profile_picture', 'date_of_birth', 'languages']
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        if not hasattr(user, 'inspector'):
+            raise serializers.ValidationError('User is not an inspector')
+        profile_picture = attrs.get('profile_picture')
+        if profile_picture and profile_picture.size > 5 * 1024 * 1024:  # 5MB limit
+            raise serializers.ValidationError('Profile picture size should not exceed 5MB')
+        return attrs
+
+    def save(self, **kwargs):
+        data = self.validated_data
+        user = self.context['request'].user
+        user.save()
+        self.instance = user.inspector
+        profile_picture = data.get('profile_picture')
+        credentials = data.get('credentials', None)
+        languages = data.get('languages', None)
+        if profile_picture:
+            self.instance.profile_picture = profile_picture
+
+        if credentials:
+            self.instance.credentials.set(credentials)
+
+        if data.get('date_of_birth'):
+            self.instance.date_of_birth = data.get('date_of_birth')
+
+        if languages:
+            self.instance.languages.set(languages)
+
+
+        self.instance.save()
+
+
+        return super().save(**kwargs)
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,7 +129,7 @@ class InspectorDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Inspector
-        fields = ['credentials', 'regions', 'languages', 'date_of_birth', 'support_documents', 'countries']
+        fields = ['credentials', 'regions', 'languages', 'date_of_birth', 'support_documents', 'countries', 'profile_picture']
 
 
     def get_countries(self, obj):

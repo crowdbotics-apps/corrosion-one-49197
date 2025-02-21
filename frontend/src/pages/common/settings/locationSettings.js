@@ -7,12 +7,13 @@ import * as Yup from "yup";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import {useEffect, useState} from "react";
-import {useApi} from "../../../services/helpers";
+import {useApi, useLoginStore} from "../../../services/helpers";
 import Grid from "@mui/material/Grid";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import RenderWorkArea from "../../../components/RenderListOption";
 
 function LocationSettings({updateLocation}) {
+  const loginStore = useLoginStore();
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const api = useApi()
@@ -35,8 +36,8 @@ function LocationSettings({updateLocation}) {
   }
 
   const initialValuesThirdStepInspector = {
-    country: [],
-    state: [],
+    country: loginStore.countries,
+    state: loginStore.regions,
   }
 
   const validationSchemaThirdStepInspector = Yup.object().shape({

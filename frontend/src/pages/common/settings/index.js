@@ -49,7 +49,17 @@ function Settings() {
   }
 
   const updateProfile = (data) => {
-    console.log('===> ', data)
+    setLoading(true)
+    api.updateInspectorData(data).handle({
+      onSuccess: (result) => {
+        loginStore.setUser(result.response)
+      },
+      successMessage: 'Profile updated successfully',
+      errorMessage: 'Error updating profile',
+      onFinally: () => {
+        setLoading(false)
+      }
+    })
   }
 
 

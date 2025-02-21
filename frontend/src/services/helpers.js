@@ -177,3 +177,12 @@ function useCurrentBreakpoint() {
 }
 
 export default useCurrentBreakpoint;
+
+
+export const checkUrl = (url) => {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  } else {
+    return process.env.REACT_APP_API_URL + url
+  }
+}

@@ -4,7 +4,7 @@ import MDBox from "../../../components/MDBox";
 import Icon from "@mui/material/Icon";
 import MDButton from "../../../components/MDButton";
 import {useState} from "react";
-import {useLoginStore} from "../../../services/helpers";
+import {checkUrl, useLoginStore} from "../../../services/helpers";
 import {Form, FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
@@ -15,16 +15,6 @@ import RenderWorkArea from "../../../components/RenderListOption";
 function ProfileInspector({updateProfile, languages = [], loading = false}) {
   const loginStore = useLoginStore();
   const [selectedFile, setSelectedFile] = useState(null);
-
-  const [docs, setDocs] = useState([
-    // {id: 1, name: 'Supporting Document', size: 3.5},
-    // {id: 2, name: 'Supporting Document 2', size: 4.7},
-    // {id: 3, name: 'Supporting Document 2', size: 4.7},
-    // {id: 4, name: 'Supporting Document 2', size: 4.7},
-    // {id: 5, name: 'Supporting Document 2', size: 4.7},
-  ]);
-
-
   const handleOpenDownload = (doc) => {
     // Example: just alert, or open a new page, etc.
     alert(`Open / Download: ${doc.name}`);
@@ -32,7 +22,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
 
   const handleDelete = (doc) => {
     // Remove from array
-    setDocs((prevDocs) => prevDocs.filter((d) => d.id !== doc.id));
+    // setDocs((prevDocs) => prevDocs.filter((d) => d.id !== doc.id));
   };
 
   const handleAddDocument = () => {
@@ -42,7 +32,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
 
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    formik.setFieldValue('profile_picture', e.target.files[0])
   }
 
 
@@ -52,11 +42,9 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
     last_name: loginStore.last_name,
     email: loginStore.email,
     phone_number: loginStore.phone_number,
-    user_type: loginStore.user_type,
     date_of_birth:  loginStore.date_of_birth,
-    website: loginStore.website,
-    linkedin: loginStore.linkedin,
-    documents: loginStore.support_documents,
+    website: loginStore.website || "",
+    linkedin: loginStore.linkedin || "",
     languages: loginStore.languages,
   }
 
@@ -72,9 +60,21 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      updateProfile(values);
+      const dataToSend = {
+        ...values,
+        profile_picture: typeof formik.values.profile_picture === 'object' ? formik.values.profile_picture : checkUrl(loginStore.profile_picture),
+      }
+      dataToSend.languages = dataToSend.languages.map((item) => item.id)
+      updateProfile(dataToSend)
+      setSelectedFile(null)
     }
   });
+
+  const removeLanguage = (id) => {
+    const currentValues = [...formik.values.languages]
+    const newValues = currentValues.filter((item) => item.id !== id)
+    formik.setFieldValue('languages', newValues)
+  }
 
 
   return (
@@ -102,9 +102,9 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                 }}
               >
                 {/* If a file is selected, show image preview; otherwise, show instructions */}
-                {selectedFile ? (
+                {typeof formik.values.profile_picture === 'object' ? (
                   <img
-                    src={URL.createObjectURL(selectedFile)}
+                    src={URL.createObjectURL(formik.values.profile_picture)}
                     alt="Preview"
                     style={{
                       width: '100%',
@@ -113,6 +113,28 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                       borderRadius: '50%'
                     }}
                   />
+                ) : loginStore.profile_picture ? (
+                  <>
+                    <img
+                      onClick={() => document.querySelector('input[type="file"]').click()}
+                      src={checkUrl(loginStore.profile_picture)}
+                      alt="Preview"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                        cursor: 'pointer'
+                      }}
+                    />
+                    <input
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleFileChange}
+                    />
+                  </>
+
                 ) : (
                   <>
                     <Icon sx={{fontSize: 48, color: '#aaa', mb: 1}}>photo_camera_outlined</Icon>
@@ -130,7 +152,8 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                       />
                     </MDButton>
                   </>
-                )}
+                )
+                }
               </MDBox>
             </Grid>
             <Grid item xs={12} lg={4}>
@@ -198,7 +221,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formik.values.languages.map((item) => <RenderWorkArea key={item.id} item={item}/>)}
+                {formik.values.languages.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={removeLanguage}/>)}
               </MDBox>
             </Grid>
             <Grid item xs={12} lg={6}>
@@ -217,7 +240,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
         Supporting Documents
       </MDTypography>
       <Grid container spacing={2}>
-        {docs.map((doc) => (
+        {loginStore.support_documents.map((doc) => (
           <Grid item key={doc.id}>
             <DocumentItem
               key={doc.id}
@@ -227,7 +250,6 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
             />
           </Grid>
         ))}
-
         {/* "Add Supporting Document" dashed box */}
         <Grid item>
           <AddDocumentBox onClick={handleAddDocument}/>

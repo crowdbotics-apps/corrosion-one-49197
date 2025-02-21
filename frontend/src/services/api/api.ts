@@ -82,8 +82,12 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/inspector/workarea/`, data);
   }
 
-  updateInspectorData(data: any) {
+  completeInspectorData(data: any) {
     return this.post_collected_multipart_form_data(`${API_VERSION_PREFIX}/inspector/complete/`, data);
+  }
+
+  updateInspectorData(data: any) {
+    return this.patch_collected_multipart_form_data(`${API_VERSION_PREFIX}/inspector/update/`, data);
   }
 
   verifyCode(data: any) {
