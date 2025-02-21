@@ -1,5 +1,6 @@
 from cities_light.models import Country, Region, City
-from django.templatetags.i18n import language
+import os
+
 from rest_framework import serializers
 
 from inspector.models import Credential, Inspector, Language, SupportDocument
@@ -52,28 +53,44 @@ class InspectorUpdateSerializer(serializers.ModelSerializer):
     credentials = serializers.PrimaryKeyRelatedField(queryset=Credential.objects.all(), many=True)
     profile_picture = SmartUpdatableImageField()
     languages = serializers.PrimaryKeyRelatedField(queryset=Language.objects.all(), many=True)
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    linkedin = serializers.CharField(allow_blank=True)
+    website = serializers.CharField(allow_blank=True)
 
     class Meta:
         model = Inspector
-        fields = ['id', 'credentials', 'profile_picture', 'date_of_birth', 'languages']
+        fields = ['id', 'credentials', 'profile_picture', 'date_of_birth', 'languages', 'first_name', 'last_name',
+                  'website', 'linkedin']
 
     def validate(self, attrs):
         user = self.context['request'].user
         if not hasattr(user, 'inspector'):
             raise serializers.ValidationError('User is not an inspector')
         profile_picture = attrs.get('profile_picture')
-        if profile_picture and profile_picture.size > 5 * 1024 * 1024:  # 5MB limit
+        if profile_picture and profile_picture.size > 5 * 1024 * 1024:
             raise serializers.ValidationError('Profile picture size should not exceed 5MB')
+        support_documents = self.initial_data.get('support_documents')
+        if support_documents:
+            for support_document in support_documents:
+                if 'file' in support_document and support_document['file'].size > 20 * 1024 * 1024:
+                    raise serializers.ValidationError('Support document size should not exceed 20MB')
+            attrs['support_documents'] = support_documents
         return attrs
 
     def save(self, **kwargs):
         data = self.validated_data
         user = self.context['request'].user
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        user.website = data.get('website', user.website)
+        user.linkedin = data.get('linkedin', user.linkedin)
         user.save()
         self.instance = user.inspector
         profile_picture = data.get('profile_picture')
         credentials = data.get('credentials', None)
         languages = data.get('languages', None)
+        support_documents = data.get('support_documents', [])
         if profile_picture:
             self.instance.profile_picture = profile_picture
 
@@ -86,10 +103,18 @@ class InspectorUpdateSerializer(serializers.ModelSerializer):
         if languages:
             self.instance.languages.set(languages)
 
+        current_documents_ids = self.instance.support_documents.all().values_list('id', flat=True)
+        for document in current_documents_ids:
+            if document not in [doc['id'] for doc in support_documents]:
+                SupportDocument.objects.get(id=document).delete()
+
+        if support_documents:
+            for support_document in support_documents:
+                if 'file' in support_document:
+                    SupportDocument.objects.create(inspector=self.instance, document=support_document['file'])
+            data.pop('support_documents')
 
         self.instance.save()
-
-
         return super().save(**kwargs)
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -115,10 +140,18 @@ class LanguageSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class SupportDocumentSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+
     class Meta:
         model = SupportDocument
-        fields = ['id', 'document']
+        fields = ['id', 'document', 'name', 'size']
 
+    def get_name(self, obj):
+        return os.path.basename(obj.document.name)
+
+    def get_size(self, obj):
+        return round(obj.document.size / 1024 / 1024, 2)
 
 class InspectorDetailSerializer(serializers.ModelSerializer):
     credentials = CredentialSerializer(many=True)

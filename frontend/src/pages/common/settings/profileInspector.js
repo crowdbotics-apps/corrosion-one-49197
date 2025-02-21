@@ -11,23 +11,21 @@ import FormikInput from "../../../components/Formik/FormikInput";
 import DocumentItem from "./documentItem";
 import AddDocumentBox from "./addDocumentBox";
 import RenderWorkArea from "../../../components/RenderListOption";
+import moment from "moment";
 
 function ProfileInspector({updateProfile, languages = [], loading = false}) {
   const loginStore = useLoginStore();
-  const [selectedFile, setSelectedFile] = useState(null);
+
   const handleOpenDownload = (doc) => {
-    // Example: just alert, or open a new page, etc.
-    alert(`Open / Download: ${doc.name}`);
+    window.open(checkUrl(doc.document), '_blank');
   };
 
-  const handleDelete = (doc) => {
-    // Remove from array
-    // setDocs((prevDocs) => prevDocs.filter((d) => d.id !== doc.id));
+  const handleDelete = (item) => {
+    formik.setFieldValue('support_documents', formik.values.support_documents.filter((doc) => doc.id !== item.id))
   };
 
-  const handleAddDocument = () => {
-    // Example: could open file dialog, or show a modal
-    alert('Add Document clicked!');
+  const handleAddDocument = (e) => {
+   formik.setFieldValue('support_documents', [...formik.values.support_documents, {id: Math.random(), name: e.target.files[0].name, file: e.target.files[0]}])
   };
 
 
@@ -42,10 +40,11 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
     last_name: loginStore.last_name,
     email: loginStore.email,
     phone_number: loginStore.phone_number,
-    date_of_birth:  loginStore.date_of_birth,
+    date_of_birth:  loginStore.date_of_birth ? moment(loginStore.date_of_birth).format("MM/DD/YYYY") : "",
     website: loginStore.website || "",
     linkedin: loginStore.linkedin || "",
     languages: loginStore.languages,
+    support_documents: loginStore.support_documents
   }
 
   const validationSchema = Yup.object().shape({
@@ -63,10 +62,10 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
       const dataToSend = {
         ...values,
         profile_picture: typeof formik.values.profile_picture === 'object' ? formik.values.profile_picture : checkUrl(loginStore.profile_picture),
+        date_of_birth: moment(values.date_of_birth, "MM/DD/YYYY", true).format("YYYY-MM-DD")
       }
       dataToSend.languages = dataToSend.languages.map((item) => item.id)
       updateProfile(dataToSend)
-      setSelectedFile(null)
     }
   });
 
@@ -191,9 +190,9 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
               <FormikInput
                 name={'date_of_birth'}
                 label={'Date of Birth'}
-                type={'date'}
+                type={'date_year'}
                 errors={formik.errors}
-                containerStyle={{mb: 4}}
+                mb={2}
               />
               <FormikInput
                 name={'website'}
@@ -240,7 +239,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
         Supporting Documents
       </MDTypography>
       <Grid container spacing={2}>
-        {loginStore.support_documents.map((doc) => (
+        {formik.values.support_documents.map((doc) => (
           <Grid item key={doc.id}>
             <DocumentItem
               key={doc.id}
@@ -252,10 +251,19 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
         ))}
         {/* "Add Supporting Document" dashed box */}
         <Grid item>
-          <AddDocumentBox onClick={handleAddDocument}/>
+          <label htmlFor='input_file'>
+            <AddDocumentBox />
+          </label>
+            <input
+              id={'input_file'}
+              hidden
+              accept="pdf/*,xlsx/*,docx/*"
+              type="file"
+              onChange={handleAddDocument}
+            />
         </Grid>
       </Grid>
-      <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
+      <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3}/>
       <MDBox display={"flex"}>
         <MDButton
           type={"submit"}

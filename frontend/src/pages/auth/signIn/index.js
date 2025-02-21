@@ -69,6 +69,8 @@ function SignIn() {
           const {response} = result
           const {user, access} = response
 
+          console.log('User:', user)
+
           runInAction(() => {
             loginStore.setUser(user)
             loginStore.setApiToken(access)

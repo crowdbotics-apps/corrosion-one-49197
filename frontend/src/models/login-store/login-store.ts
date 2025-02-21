@@ -21,7 +21,8 @@ export const CredentialModel = types.model("CredentialModel").props({
 export const SupportDocumentModel = types.model("SupportDocumentModel").props({
   id: types.maybeNull(types.number),
   name: types.maybeNull(types.string),
-  url: types.maybeNull(types.string),
+  document: types.maybeNull(types.string),
+  size: types.maybeNull(types.number),
 })
 
 export const CountryModel = types.model("CountryModel").props({

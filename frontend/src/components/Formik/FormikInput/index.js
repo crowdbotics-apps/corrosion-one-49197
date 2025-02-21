@@ -268,6 +268,38 @@ const FormikSelectInput = (props) => {
   )
 }
 
+
+const FormikDateYearInput = (props) => {
+  const [field, meta] = useField(props);
+  const errorText = meta.error && meta.touched ? meta.error : '';
+  const {variant="outlined", label, value, fullWidth= true, overrideError, multiline, disabled = false, ...rest} = props
+
+  return (
+    <MDBox {...rest}>
+      <InputMask
+        mask="99/99/9999"
+        disabled={disabled}
+        {...field}
+      >
+        {(inputProps) => (
+          <MDInput
+            {...inputProps}
+            label={label}
+            multiline={multiline}
+            rows={props.rows}
+            value={value}
+            variant={variant}
+            fullWidth={fullWidth}
+            disabled={disabled}
+            helperText={overrideError && errorText ? overrideError : errorText}
+            error={!!errorText}
+          />
+        )}
+      </InputMask>
+    </MDBox>
+  )
+}
+
 const FormikInput = (props) => {
   let component = null
   switch (props.type) {
@@ -307,6 +339,9 @@ const FormikInput = (props) => {
     case FieldTypes.file:
       component = <FormikFileInput {...props} />
       break;
+    case FieldTypes.date_year:
+      component = <FormikDateYearInput {...props} />
+      break;
     default:
       component = <FormikTextInput type={"text"} {...props} />
   }
@@ -331,6 +366,7 @@ FormikInput.propTypes = {
     "number",
     "checkbox",
     "datetime",
+    "date_year"
   ]),
 };
 

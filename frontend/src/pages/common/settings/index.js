@@ -52,6 +52,7 @@ function Settings() {
     setLoading(true)
     api.updateInspectorData(data).handle({
       onSuccess: (result) => {
+        console.log('Result:', result)
         loginStore.setUser(result.response)
       },
       successMessage: 'Profile updated successfully',

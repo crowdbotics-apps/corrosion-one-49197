@@ -3,10 +3,9 @@ import { Box, Typography } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 
-export default function AddDocumentBox({ onClick }) {
+export default function AddDocumentBox() {
   return (
     <Box
-      onClick={onClick}
       sx={{
         width: 300,
         height: '100%',

@@ -90,3 +90,4 @@ venv/
 ENV/
 myvenv/
 /mediafiles/profile-picture/*
+/mediafiles/support-documents/

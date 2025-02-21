@@ -11,6 +11,7 @@ export const FieldTypes = {
   textarea: "textarea",
   text: "text",
   email: "email",
-  datetime: "datetime"
+  datetime: "datetime",
+  date_year: "date_year",
 }
 
