@@ -10,9 +10,9 @@ from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from inspector.models import Credential, Language
+from inspector.models import Credential, Language, Inspector
 from inspector.serializers import CredentialSerializer, InspectorCompleteSerializer, CountrySerializer, CitySerializer, \
-    RegionSerializer, LanguageSerializer
+    RegionSerializer, LanguageSerializer, InspectorUpdateSerializer
 from users.models import UserVerificationCode
 from users.serializers import UserDetailSerializer
 from utils.utils import CollectedMultipartJsonViewMixin, GetViewsetMixin
@@ -26,12 +26,20 @@ class CredentialsViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     permission_classes = []
 
 
-class InspectorViewSet(CollectedMultipartJsonViewMixin, viewsets.GenericViewSet):
+class InspectorViewSet(
+    CollectedMultipartJsonViewMixin,
+    viewsets.GenericViewSet,
+    mixins.UpdateModelMixin,
+):
+
+    queryset = Inspector.objects.all()
+    serializer_class = InspectorUpdateSerializer
 
     @action(methods=['post'], detail=False)
     def complete(self, request):
         data = request.data
         user = request.user
+        data.id = user.id
         serializer = InspectorCompleteSerializer(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -49,6 +57,16 @@ class InspectorViewSet(CollectedMultipartJsonViewMixin, viewsets.GenericViewSet)
         message = f'Your verification code is {code}'
         send_sms(message, user.phone_number.as_e164)
         return Response(UserDetailSerializer(user).data)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        request.data['id'] = request.user.inspector.pk
+        instance = request.user.inspector
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(UserDetailSerializer(request.user).data)
 
 class CountryViewSet(viewsets.GenericViewSet, GetViewsetMixin):
     permission_classes = []

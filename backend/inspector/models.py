@@ -18,6 +18,7 @@ class Inspector(models.Model):
     regions = models.ManyToManyField(Region, blank=True)
     languages = models.ManyToManyField('Language', blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile-picture', null=True, blank=True)
 
 
     class Meta:
