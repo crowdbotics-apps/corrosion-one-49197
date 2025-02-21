@@ -55,3 +55,10 @@ class OwnerCompleteSerializer(serializers.ModelSerializer):
         message = f'Your verification code is {code}'
         send_sms(message, user.phone_number.as_e164)
         return super().save(**kwargs)
+
+
+class OwnerDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Owner
+        fields = ['industry', 'company_name']

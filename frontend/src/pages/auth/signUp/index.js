@@ -39,12 +39,11 @@ import {runInAction} from "mobx";
 import {Form, FormikProvider, useFormik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
 import Divider from "@mui/material/Divider";
-import Checkbox from "@mui/material/Checkbox";
-import {FormControlLabel} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
 import UserAvatar from "assets/images/photo-placeholder.png";
 import RenderWorkArea from "../../../components/RenderListOption";
+import CustomCheckbox from "../../../components/CheckboxCustom";
 
 
 function SignUp() {
@@ -52,6 +51,7 @@ function SignUp() {
   const api = useApi()
   const {state} = useLocation();
   const navigate = useNavigate()
+
   const [loading, setLoading] = useState(false);
   const [stage, setStage] = useState(state?.status || 0);
   const [industries, setIndustries] = useState([]);
@@ -62,6 +62,9 @@ function SignUp() {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [showResendEmail, setShowResendEmail] = useState(false);
+  const recaptchaRef = useRef(null);
+  const [recaptchaToken, setRecaptchaToken] = useState('xd');
+  const [marketingAgreement, setMarketingAgreement] = useState(false);
 
 
   const handleUploadFile = (file) => {
@@ -165,12 +168,16 @@ function SignUp() {
     })
   }
   const verifyCode = (data) => {
+    const dataToSend = {
+      ...data,
+      recaptcha: recaptchaToken,
+      marketing_notifications: marketingAgreement
+    }
     setLoading(true)
-    api.verifyCode(data).handle({
+    api.verifyCode(dataToSend).handle({
       onSuccess: (result) => {
         loginStore.setUser(result.response)
-        if (loginStore.user_type === ROLES.OWNER) navigate(ROUTES.DASHBOARD)
-        if (loginStore.user_type === ROLES.INSPECTOR) navigate(ROUTES.DASHBOARD)
+        navigate(ROUTES.DASHBOARD)
       },
       successMessage: 'Phone number verified successfully',
       errorMessage: 'Error verifying code',
@@ -184,8 +191,7 @@ function SignUp() {
   const sendVerificationCode = () => {
     setLoading(true)
     api.sendVerificationCode().handle({
-      onSuccess: (result) => {
-        console.log(result)
+      onSuccess: () => {
       },
       errorMessage: 'Error sending verification code',
       onFinally: () => setLoading(false)
@@ -239,7 +245,6 @@ function SignUp() {
         is: (user_type) => user_type.id === ACCOUNT_TYPES[1].id,
         then: () => Yup.string().required('Phone Number is required')
           .test('valid-phone', 'Phone Number is required', function (value) {
-            console.log(value)
             if (!value) return false; // If no value, fail (Yup will report "required")
             if (value.length <= 6) return false; // If less than 3 characters, fail
             return true;
@@ -702,7 +707,7 @@ function SignUp() {
             mb={2}
           />
           {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
-            <MDTypography variant="button" color="text" onClick={() => resendEmail({email: loginStore.email})}>
+            <MDTypography variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
               Didn&apos;t receive the verification email?{" "}
             </MDTypography>
           </MDBox>}
@@ -812,11 +817,7 @@ function SignUp() {
           <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
             {formikSecondStepInspector.values.credentials.map((item) => renderInspectorCredentials(item))}
           </MDBox>
-          {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
-            <MDTypography variant="button" color="text" onClick={() => resendEmail({email: loginStore.email})}>
-              Didn&apos;t receive the verification email?{" "}
-            </MDTypography>
-          </MDBox>}
+
           <MDTypography
             variant={"caption"}
             textAlign={"left"}
@@ -825,7 +826,11 @@ function SignUp() {
           >
             Upload documents in your profile settings
           </MDTypography>
-
+          {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
+            <MDTypography variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
+              Didn&apos;t receive the verification email?{" "}
+            </MDTypography>
+          </MDBox>}
           <MDBox mt={10} textAlign={"center"}>
             <MDButton
               fullWidth
@@ -946,17 +951,21 @@ function SignUp() {
                 fontSize: 14,
                 textAlign: "right",
                 color: "#BFBFBF",
+                textDecoration: "underline",
+                fontWeight: "bold"
               }}
             >Resend Code</MDTypography>
           </MDBox>
-          <FormControlLabel control={<Checkbox defaultChecked color={'primary'}/>}
-                            label="Send me marketing and promotional emails"/>
+          <CustomCheckbox
+            text="Send Me Marketing And Promotional Emails"
+            onCheck={(value) => setMarketingAgreement(value)}
+          />
           <MDBox display={'flex'} alignItems={'center'} justifyContent={'center'} mt={7}>
             <ReCAPTCHA
               sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY}
               onChange={
                 (value) => {
-                  console.log('Captcha value:', value)
+                  setRecaptchaToken(value)
                 }
               }
             />

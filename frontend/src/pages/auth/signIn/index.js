@@ -76,8 +76,7 @@ function SignIn() {
           if (loginStore.status !== 4) {
             navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})
           } else {
-            if (loginStore.user_type === ROLES.OWNER) navigate(ROUTES.DASHBOARD)
-            if (loginStore.user_type === ROLES.INSPECTOR) navigate(ROUTES.DASHBOARD)
+            navigate(ROUTES.DASHBOARD)
           }
         },
         errorMessage: 'Error signing in',
@@ -126,8 +125,7 @@ function SignIn() {
       if (loginStore.status !== 4) {
         navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})
       } else {
-        if (loginStore.user_type === ROLES.OWNER) navigate(ROUTES.DASHBOARD)
-        if (loginStore.user_type === ROLES.INSPECTOR) navigate(ROUTES.DASHBOARD)
+        navigate(ROUTES.DASHBOARD)
       }
     }
   }, [])
@@ -219,7 +217,7 @@ function SignIn() {
               </MDTypography>
             </MDBox>
             {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
-              <MDTypography variant="button" color="text" onClick={() => resendEmail({email: formikRef.current?.values.email})}>
+              <MDTypography variant="button" color="warning" onClick={() => resendEmail({email: formikRef.current?.values.email})}>
                 Didn&apos;t receive the verification email?{" "}
               </MDTypography>
             </MDBox>}

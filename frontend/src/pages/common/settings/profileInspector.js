@@ -12,7 +12,7 @@ import DocumentItem from "./documentItem";
 import AddDocumentBox from "./addDocumentBox";
 import RenderWorkArea from "../../../components/RenderListOption";
 
-function ProfileInspector({updateProfile, languages = []}) {
+function ProfileInspector({updateProfile, languages = [], loading = false}) {
   const loginStore = useLoginStore();
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -53,20 +53,19 @@ function ProfileInspector({updateProfile, languages = []}) {
     email: loginStore.email,
     phone_number: loginStore.phone_number,
     user_type: loginStore.user_type,
-    date_of_birth: "",
-    website: "",
-    linkedin: "",
-    documents: [],
-    experience: [],
-    languages: [],
+    date_of_birth:  loginStore.date_of_birth,
+    website: loginStore.website,
+    linkedin: loginStore.linkedin,
+    documents: loginStore.support_documents,
+    languages: loginStore.languages,
   }
 
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().required("First name is required"),
     last_name: Yup.string().required("Last name is required"),
     phone_number: Yup.string().required("Phone number is required"),
-    website: Yup.string().url("Invalid URL"),
-    linkedin: Yup.string().url("Invalid URL"),
+    website: Yup.string().url("Invalid URL").nullable(),
+    linkedin: Yup.string().url("Invalid URL").nullable(),
   });
 
   const formik = useFormik({
@@ -242,6 +241,8 @@ function ProfileInspector({updateProfile, languages = []}) {
           color={"secondary"}
           size={"large"}
           sx={{marginLeft: "auto"}}
+          disabled={loading}
+          onClick={formik.handleSubmit}
         >
           Save Changes
         </MDButton>

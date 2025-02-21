@@ -41,6 +41,9 @@ class User(AbstractUser):
     website = models.URLField(_("Website"), null=True, blank=True)
     linkedin = models.URLField(_("LinkedIn"), null=True, blank=True)
 
+    # Notifications
+    marketing_notifications = models.BooleanField(_("Marketing Notifications"), default=True)
+
 
     class Meta:
         ordering = ['-id']

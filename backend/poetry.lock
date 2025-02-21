@@ -903,6 +903,20 @@ socialaccount = ["pyjwt[crypto] (>=1.7)", "requests (>=2.0.0)", "requests-oauthl
 steam = ["python3-openid (>=3.0.8)"]
 
 [[package]]
+name = "django-appconf"
+version = "1.1.0"
+description = "A helper class for handling configuration defaults of packaged apps gracefully."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "django-appconf-1.1.0.tar.gz", hash = "sha256:9fcead372f82a0f21ee189434e7ae9c007cbb29af1118c18251720f3d06243e4"},
+    {file = "django_appconf-1.1.0-py3-none-any.whl", hash = "sha256:7abd5a163ff57557f216e84d3ce9dac36c37ffce1ab9a044d3d53b7c943dd10f"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-autoslug"
 version = "1.9.9"
 description = "An automated slug field for Django."
@@ -1009,6 +1023,20 @@ Django = ">=3.2"
 tablib = {version = ">=3.4.0", extras = ["html", "ods", "xls", "xlsx", "yaml"]}
 
 [[package]]
+name = "django-ipware"
+version = "7.0.1"
+description = "A Django application to retrieve user's IP address"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-ipware-7.0.1.tar.gz", hash = "sha256:d9ec43d2bf7cdf216fed8d494a084deb5761a54860a53b2e74346a4f384cff47"},
+    {file = "django_ipware-7.0.1-py2.py3-none-any.whl", hash = "sha256:db16bbee920f661ae7f678e4270460c85850f03c6761a4eaeb489bdc91f64709"},
+]
+
+[package.dependencies]
+python-ipware = ">=2.0.3"
+
+[[package]]
 name = "django-jazzmin"
 version = "3.0.1"
 description = "Drop-in theme for django admin, that utilises AdminLTE 3 & Bootstrap 4 to make yo' admin look jazzy"
@@ -1085,6 +1113,20 @@ phonenumbers = {version = ">=7.0.2", optional = true, markers = "extra == \"phon
 [package.extras]
 phonenumbers = ["phonenumbers (>=7.0.2)"]
 phonenumberslite = ["phonenumberslite (>=7.0.2)"]
+
+[[package]]
+name = "django-recaptcha"
+version = "4.0.0"
+description = "Django recaptcha form field/widget app."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-recaptcha-4.0.0.tar.gz", hash = "sha256:5316438f97700c431d65351470d1255047e3f2cd9af0f2f13592b637dad9213e"},
+    {file = "django_recaptcha-4.0.0-py3-none-any.whl", hash = "sha256:0d912d5c7c009df4e47accd25029133d47a74342dbd2a8edc2877b6bffa971a3"},
+]
+
+[package.dependencies]
+django = "*"
 
 [[package]]
 name = "django-redis"
@@ -1180,6 +1222,33 @@ files = [
 [package.dependencies]
 django = ">=3.0"
 pytz = "*"
+
+[[package]]
+name = "djangorestframework-recaptcha"
+version = "0.2.0"
+description = "reCAPTCHA field for Django REST framework serializers."
+optional = false
+python-versions = "*"
+files = [
+    {file = "djangorestframework-recaptcha-0.2.0.tar.gz", hash = "sha256:b0442bd9ca9a8f21737a57f1ea7e7bf1c872e725b2423fd34304a821bceec0ff"},
+    {file = "djangorestframework_recaptcha-0.2.0-py2.py3-none-any.whl", hash = "sha256:9d5f0353bc6fa8f7d30b72000a08d1ef1f3ba1bf9162d596a70a02ee119b1d95"},
+]
+
+[package.dependencies]
+django = ">=1.10"
+django-appconf = "*"
+django-ipware = ">=2.0.2"
+djangorestframework = ">=3"
+pytz = "*"
+
+[package.extras]
+complexity = ["xenon (==0.5.4)"]
+documentation = ["Sphinx (==1.7.5)"]
+formatting = ["black (==18.6b2)"]
+publishing = ["twine (==1.11.0)"]
+style = ["flake8 (==3.5.0)"]
+testing = ["pytest (==3.6.1)", "pytest-cov (==2.5.1)", "pytest-django (==3.3.0)", "tox (==3.0.0)"]
+versioning = ["bumpversion (==0.5.3)"]
 
 [[package]]
 name = "djangorestframework-simplejwt"
@@ -2598,6 +2667,20 @@ files = [
 six = ">=1.5"
 
 [[package]]
+name = "python-ipware"
+version = "3.0.0"
+description = "A Python package to retrieve user's IP address"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "python_ipware-3.0.0-py3-none-any.whl", hash = "sha256:fc936e6e7ec9fcc107f9315df40658f468ac72f739482a707181742882e36b60"},
+    {file = "python_ipware-3.0.0.tar.gz", hash = "sha256:9117b1c4dddcb5d5ca49e6a9617de2fc66aec2ef35394563ac4eecabdf58c062"},
+]
+
+[package.extras]
+dev = ["coverage[toml]", "coveralls (>=3.3,<4.0)", "ruff", "twine"]
+
+[[package]]
 name = "python-monkey-business"
 version = "1.1.0"
 description = "Utility functions for monkey-patching python code"
@@ -3591,4 +3674,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12,<4"
-content-hash = "8b04f92c7a867da80489e4d6e912751836a64319ddb1291856e7bab963ad3e2b"
+content-hash = "4821a9ea3f5bf4f8ddd57f35b35f582307c0fe796d1e241ece43b22f6f71d673"

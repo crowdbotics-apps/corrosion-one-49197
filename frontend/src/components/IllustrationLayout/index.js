@@ -34,6 +34,16 @@ function IllustrationLayout({header = "", title = "", description = "", illustra
   const [controller] = useMaterialUIController();
   const {darkMode} = controller;
 
+  const handleDescription = (description) => {
+    // This regex matches digits or the listed special characters
+    const regex = /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/g;
+
+    // Use `String.replace()` with a function to wrap each match in <strong> tags
+    return description.replace(regex, (match) => `<strong>${match}</strong>`);
+  };
+
+  const boldedText = handleDescription(description);
+
   return (
     <PageLayout background="white">
       <Grid
@@ -72,9 +82,10 @@ function IllustrationLayout({header = "", title = "", description = "", illustra
                         {title}
                       </MDTypography>
                     </MDBox>
-                    <MDTypography variant="body2" color="text" textAlign="left">
-                      {description}
-                    </MDTypography>
+                    <p
+                      style={{fontSize: "17px", textAlign: "left"}}
+                      dangerouslySetInnerHTML={{ __html: boldedText }}
+                    />
                   </>
                 ) : (
                   header

@@ -7,9 +7,13 @@ import {Form, FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
 import Grid from "@mui/material/Grid";
+import CustomCheckbox from "../../../components/CheckboxCustom";
+import {ROLES} from "../../../services/constants";
+import {useLoginStore} from "../../../services/helpers";
 
 
 function AccountSettings({updateLocation}) {
+  const loginStore = useLoginStore();
 
   const initialValues = {
     current_password: "",
@@ -34,13 +38,24 @@ function AccountSettings({updateLocation}) {
 
   return (
     <MDBox>
-      <MDTypography fontSize={"18px"} sx={{fontWeight: 500}}>
-        Notifications
-      </MDTypography>
-      <FormControlLabel control={<Checkbox defaultChecked color={'primary'}/>} label="Notify me when a job I'm qualified for is posted"/>
-      <FormControlLabel control={<Checkbox defaultChecked color={'primary'}/>} label="Notify me when  I receive a message"/>
-      <FormControlLabel control={<Checkbox defaultChecked color={'primary'}/>} label="Notify me updates on jobs I've applied for"/>
-      <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
+      {loginStore.user_type === ROLES.INSPECTOR && <>
+        <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
+          Notifications
+        </MDTypography>
+        <CustomCheckbox
+          text="Notify me when a job I'm qualified for is posted"
+          onCheck={(value) => console.log(value)}
+        />
+        <CustomCheckbox
+          text="Notify me when  I receive a message"
+          onCheck={(value) => console.log(value)}
+        />
+        <CustomCheckbox
+          text="Notify me updates on jobs I've applied for"
+          onCheck={(value) => console.log(value)}
+        />
+        <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
+      </>}
       <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
         Change Password
       </MDTypography>
@@ -103,17 +118,6 @@ function AccountSettings({updateLocation}) {
         Delete Account
       </MDButton>
       <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
-      <MDBox display={"flex"}>
-        <MDButton
-          type={"submit"}
-          variant={"contained"}
-          color={"secondary"}
-          size={"large"}
-          sx={{marginLeft: "auto"}}
-        >
-          Save Changes
-        </MDButton>
-      </MDBox>
     </MDBox>
   );
 

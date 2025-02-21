@@ -3,6 +3,7 @@ from urllib import request as urequest
 
 # import facebook
 import jwt
+import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -157,9 +158,12 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
     @action(detail=False, methods=['POST'])
     def verify_phone_code(self, request):
         """
-        Verify phone code
+        Verify phone code marketing emails and recaptcha check
         """
         code = request.data.get("verification_code", None)
+        recaptcha_token = request.data.get("recaptcha", None)
+        marketing_notifications = request.data.get("marketing_notifications", False)
+
         try:
             token = get_verification_code(code, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
         except Exception as e:
@@ -169,7 +173,23 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         user = self.request.user
         if not user:
             return Response('User not found', status=HTTP_400_BAD_REQUEST)
+
+        # if not recaptcha_token:
+        #     return Response('Captcha token is missing.', status=HTTP_400_BAD_REQUEST)
+        #
+        # data = {
+        #     "secret": settings.RECAPTCHA_SECRET_KEY,
+        #     "response": recaptcha_token
+        # }
+        # google_verify_url = "https://www.google.com/recaptcha/api/siteverify"
+        # r = requests.post(google_verify_url, data=data)
+        # result = r.json()
+        #
+        # if not result.get("success"):
+        #     return Response("Invalid reCAPTCHA. Please try again.", status=status.HTTP_400_BAD_REQUEST)
+
         user.phone_verified = True
+        user.marketing_notifications = marketing_notifications
         user.save()
         token.active = False
         token.save()

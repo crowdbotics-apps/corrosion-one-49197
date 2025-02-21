@@ -34,20 +34,23 @@ function Settings() {
   const api = useApi()
   const [selectedTab, setSelectedTab] = useState("Profile");
   const [languages, setLanguages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const getLanguages = () => {
+    setLoading(true)
     api.getLanguages().handle({
       onSuccess: (result) => {
         setLanguages(result?.data?.results)
       },
+      onFinally: () => {
+        setLoading(false)
+      }
     })
   }
 
-
   const updateProfile = (data) => {
-    console.log(data)
+    console.log('===> ', data)
   }
-
 
 
   useEffect(() => {
@@ -102,7 +105,7 @@ function Settings() {
       >
         {renderButtons(loginStore.user_type === ROLES.INSPECTOR ? BUTTONS_INSPECTOR : BUTTONS_OWNER)}
       </MDBox>
-      {selectedTab === "Profile" && loginStore.user_type === ROLES.INSPECTOR && <ProfileInspector updateProfile={updateProfile} languages={languages} />}
+      {selectedTab === "Profile" && loginStore.user_type === ROLES.INSPECTOR && <ProfileInspector updateProfile={updateProfile} languages={languages} loading={loading} />}
       {selectedTab === "Profile" && loginStore.user_type === ROLES.OWNER && <ProfileOwner updateProfile={updateProfile} />}
       {selectedTab === "Location Preferences" && <LocationSettings />}
       {selectedTab === "Credentials" && <Credentials />}

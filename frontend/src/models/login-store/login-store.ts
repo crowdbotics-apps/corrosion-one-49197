@@ -1,6 +1,43 @@
-import {Instance, SnapshotOut, types} from "mobx-state-tree"
+import {cast, Instance, SnapshotOut, types} from "mobx-state-tree"
 import {withEnvironment} from "../extensions/with-environment";
 import {withRootStore} from "../extensions/with-root-store";
+
+export const LanguageModel = types.model("LanguageModel").props({
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+})
+
+export const RegionModel = types.model("RegionModel").props({
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+  country_id: types.maybeNull(types.number),
+})
+
+export const CredentialModel = types.model("CredentialModel").props({
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+})
+
+export const SupportDocumentModel = types.model("SupportDocumentModel").props({
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+  url: types.maybeNull(types.string),
+})
+
+export const CountryModel = types.model("CountryModel").props({
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+})
+
+const ALLOWED_KEYS_USER = ['id', 'email', 'phone_number', 'profile_picture', 'first_name', 'last_name',
+  'status', 'user_type', 'website', 'linkedin', 'access', 'refresh']
+
+const ALLOWED_KEYS_INSPECTOR = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents', 'countries']
+
+const ALLOWED_KEYS_OWNER = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents', 'countries']
+
+const ALLOWED_KEYS = ALLOWED_KEYS_USER.concat(ALLOWED_KEYS_INSPECTOR).concat(ALLOWED_KEYS_OWNER)
+
 
 /**
  * Model description here for TypeScript hints.
@@ -22,6 +59,15 @@ export const LoginStoreModel = types
     profile_picture: types.maybeNull(types.string),
     remember_me: types.optional(types.boolean, false),
     stored_email: types.maybeNull(types.string),
+    website: types.maybeNull(types.string),
+    linkedin: types.maybeNull(types.string),
+    date_of_birth: types.maybeNull(types.string),
+    languages: types.maybeNull(types.array(LanguageModel)),
+    regions: types.maybeNull(types.array(RegionModel)),
+    credentials: types.maybeNull(types.array(CredentialModel)),
+    support_documents: types.maybeNull(types.array(SupportDocumentModel)),
+    countries: types.maybeNull(types.array(CountryModel)),
+
   })
   .views(self => ({
     get isLoggedIn() {
@@ -52,28 +98,38 @@ export const LoginStoreModel = types
       self.stored_email = email
     },
     setUser(user: any) {
-      self.id = user.id
-      self.email = user.email
-      self.phone_number = user.phone_number
-      self.profile_picture = user.profile_picture
-      self.first_name = user.first_name
-      self.last_name = user.last_name
-      self.status = user.status
-      self.user_type = user.user_type
+      ALLOWED_KEYS_USER.forEach((key) => {
+        if (user.hasOwnProperty(key)) { // @ts-ignore
+          self[key] = user[key]
+        }
+      })
+
+      if (user.hasOwnProperty('inspector') && user.inspector) {
+        ALLOWED_KEYS_INSPECTOR.forEach((key) => {
+          if (user.inspector.hasOwnProperty(key)) { // @ts-ignore
+            // @ts-ignore
+            self[key] = user.inspector[key]
+          }
+        })
+      }
+
+
+      if (user.hasOwnProperty('owner') && user.owner) {
+        ALLOWED_KEYS_OWNER.forEach((key) => {
+          if (user.owner.hasOwnProperty(key)) { // @ts-ignore
+            self[key] = user.owner[key]
+          }
+        })
+      }
+
     },
     reset() {
       const api = self.environment.api.apisauce
       api?.deleteHeader("Authorization")
-      self.id = null
-      self.email = null
-      self.access = null
-      self.refresh = null
-      self.phone_number = null
-      self.profile_picture = null
-      self.first_name = null
-      self.last_name = null
-      self.status = null
-      self.user_type = null
+      ALLOWED_KEYS.forEach((key) => {
+        // @ts-ignore
+        self[key] = null
+      })
     },
   }))
 

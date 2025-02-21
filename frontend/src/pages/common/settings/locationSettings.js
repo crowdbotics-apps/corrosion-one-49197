@@ -171,6 +171,8 @@ function LocationSettings({updateLocation}) {
           color={"secondary"}
           size={"large"}
           sx={{marginLeft: "auto"}}
+          disabled={loading}
+          onClick={formikThirdStepInspector.handleSubmit}
         >
           Save Changes
         </MDButton>

@@ -9,7 +9,9 @@ from django.http import HttpRequest
 from django.utils import timezone
 
 from inspector.models import Inspector
+from inspector.serializers import InspectorDetailSerializer
 from owner.models import Owner
+from owner.serializers import OwnerDetailSerializer
 from utils.utils import create_user_activation_link
 from utils.utils.email import send_email_with_template
 
@@ -184,10 +186,14 @@ class UserDetailSerializer(ModelSerializer):
     status = SerializerMethodField()
     user_type = SerializerMethodField()
     phone_number = SerializerMethodField()
+    inspector = SerializerMethodField()
+    owner = SerializerMethodField()
+
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'name', 'first_name', 'last_name', 'status', 'user_type', 'phone_number']
+        fields = ['email', 'name', 'first_name', 'last_name', 'status', 'user_type', 'phone_number', 'linkedin',
+                  'profile_picture', 'website', 'owner', 'inspector']
 
     def get_status(self, obj):
         if hasattr(obj, 'owner'):
@@ -207,6 +213,18 @@ class UserDetailSerializer(ModelSerializer):
         if not obj.phone_number:
             return None
         return obj.phone_number.as_international
+
+    def get_inspector(self, obj):
+        if hasattr(obj, 'inspector'):
+            return InspectorDetailSerializer(obj.inspector).data
+        return None
+
+    def get_owner(self, obj):
+        if hasattr(obj, 'owner'):
+            return OwnerDetailSerializer(obj.owner).data
+        return None
+
+
 
 
 

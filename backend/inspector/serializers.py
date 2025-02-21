@@ -1,7 +1,7 @@
 from cities_light.models import Country, Region, City
 from rest_framework import serializers
 
-from inspector.models import Credential, Inspector, Language
+from inspector.models import Credential, Inspector, Language, SupportDocument
 from utils.utils import SmartUpdatableImageField
 
 
@@ -69,3 +69,26 @@ class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
         fields = ['id', 'name']
+
+class SupportDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SupportDocument
+        fields = ['id', 'document']
+
+
+class InspectorDetailSerializer(serializers.ModelSerializer):
+    credentials = CredentialSerializer(many=True)
+    regions = RegionSerializer(many=True)
+    countries = serializers.SerializerMethodField()
+    languages = LanguageSerializer(many=True)
+    support_documents = SupportDocumentSerializer(many=True)
+
+    class Meta:
+        model = Inspector
+        fields = ['credentials', 'regions', 'languages', 'date_of_birth', 'support_documents', 'countries']
+
+
+    def get_countries(self, obj):
+        return CountrySerializer(Country.objects.filter(region__in=obj.regions.all()).distinct(), many=True).data
+
+
