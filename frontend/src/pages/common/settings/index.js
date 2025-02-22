@@ -15,6 +15,7 @@ import Credentials from "./credentials";
 import AccountSettings from "./accountSettings";
 import {ROLES} from "../../../services/constants";
 import ProfileOwner from "./profileOwner";
+import ConfirmDialogModal from "../../../components/ConfirmDialogModal";
 
 const BUTTONS_INSPECTOR = [
   {key: 1, name: "Profile", icon: "account_circle_outlined"},
@@ -32,12 +33,14 @@ const BUTTONS_OWNER = [
 function Settings() {
   const loginStore = useLoginStore();
   const api = useApi()
+  const formikRefAccountSettings = useRef(null);
   const [selectedTab, setSelectedTab] = useState("Profile");
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
-  const formikRefAccountSettings = useRef(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
 
   const getLanguages = () => {
     setLoading(true)
@@ -117,6 +120,18 @@ function Settings() {
     })
   }
 
+  const deleteAccount = () => {
+    setLoading(true)
+    api.deactivateAccount().handle({
+      onSuccess: () => {
+        loginStore.reset()
+      },
+      successMessage: 'Account deleted successfully',
+      errorMessage: 'Error deleting account',
+      onFinally: () => setLoading(false)
+    })
+  }
+
 
   useEffect(() => {
     getLanguages()
@@ -187,6 +202,7 @@ function Settings() {
             updateNotificationSettings={updateNotificationSettings}
             changePassword={changePassword}
             formikRefAccountSettings={formikRefAccountSettings}
+            setShowDeleteModal={setShowDeleteModal}
           />
         )
       default:
@@ -212,7 +228,15 @@ function Settings() {
         {renderButtons(loginStore.user_type === ROLES.INSPECTOR ? BUTTONS_INSPECTOR : BUTTONS_OWNER)}
       </MDBox>
       {renderBody()}
-
+      <ConfirmDialogModal
+        title={'Do you want to delete your account?'}
+        description={`Account deletion is irreversible. All your data will be lost.`}
+        cancelText={'Cancel'}
+        confirmText={'Confirm'}
+        open={showDeleteModal}
+        handleClose={() => setShowDeleteModal(false)}
+        handleConfirm={() => deleteAccount()}
+      />
     </AdminLayout>
   );
 }

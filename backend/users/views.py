@@ -431,6 +431,8 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
     def login(self, request):
         email = request.data.get('email')
         user = User.objects.get(email=email)
+        if not user.check_password(request.data.get('password')):
+            return Response("Invalid email or password. Please try again", status=status.HTTP_400_BAD_REQUEST)
         if user.is_superuser:
             if settings.ALLOW_SUPER_USERS_LOGIN:
                 return Response(UserLoginResponseSerializer(user).data)
@@ -442,8 +444,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         #     return Response("Please verify your phone number", status=status.HTTP_400_BAD_REQUEST)
         if not user.is_active:
             return Response("The account has been removed", status=status.HTTP_400_BAD_REQUEST)
-        if not user.check_password(request.data.get('password')):
-            return Response("Invalid email or password. Please try again", status=status.HTTP_400_BAD_REQUEST)
+
         return Response(UserLoginResponseSerializer(user).data)
 
     @action(detail=False, methods=['get'], url_path='activate/(?P<slug>[A-Za-z0-9-_.]+)')
@@ -515,3 +516,11 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             user.save()
             return Response('Verification email sent', status=HTTP_200_OK)
         return Response('The email is invalid', status=HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'])
+    def deactivate(self, request):
+        user = request.user
+        user.is_active = False
+        user.save()
+        return Response()
+

@@ -10,7 +10,7 @@ import {ROLES} from "../../../services/constants";
 import {useLoginStore} from "../../../services/helpers";
 
 
-function AccountSettings({updateNotificationSettings, changePassword, formikRefAccountSettings }) {
+function AccountSettings({updateNotificationSettings, changePassword, formikRefAccountSettings, setShowDeleteModal }) {
   const loginStore = useLoginStore();
 
   const initialValues = {
@@ -116,6 +116,7 @@ function AccountSettings({updateNotificationSettings, changePassword, formikRefA
         variant={"contained"}
         color={"error"}
         size={"large"}
+        onClick={() => setShowDeleteModal(true)}
       >
         Delete Account
       </MDButton>

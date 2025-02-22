@@ -94,6 +94,10 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/users/change/`, data);
   }
 
+  deactivateAccount() {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/deactivate/`);
+  }
+
   verifyCode(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/users/verify_phone_code/`, data);
   }
