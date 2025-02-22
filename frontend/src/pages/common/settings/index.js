@@ -7,7 +7,7 @@ import ProductInfo from "../../../layouts/ecommerce/products/new-product/compone
 import Card from "@mui/material/Card";
 import {useApi, useLoginStore} from "../../../services/helpers";
 import Icon from "@mui/material/Icon";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import MDButton from "../../../components/MDButton";
 import ProfileInspector from "./profileInspector";
 import LocationSettings from "./locationSettings";
@@ -37,6 +37,7 @@ function Settings() {
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
+  const formikRefAccountSettings = useRef(null);
 
   const getLanguages = () => {
     setLoading(true)
@@ -100,6 +101,18 @@ function Settings() {
       },
       successMessage: 'Notification settings updated successfully',
       errorMessage: 'Error updating notification settings',
+      onFinally: () => setLoading(false)
+    })
+  }
+
+  const changePassword = (data) => {
+    setLoading(true)
+    api.updatePassword(data).handle({
+      onSuccess: () => {
+        formikRefAccountSettings?.current?.resetForm();
+      },
+      successMessage: 'Password updated successfully',
+      errorMessage: 'Error updating password',
       onFinally: () => setLoading(false)
     })
   }
@@ -170,7 +183,11 @@ function Settings() {
         )
       case "Account Settings":
         return (
-          <AccountSettings updateNotificationSettings={updateNotificationSettings} />
+          <AccountSettings
+            updateNotificationSettings={updateNotificationSettings}
+            changePassword={changePassword}
+            formikRefAccountSettings={formikRefAccountSettings}
+          />
         )
       default:
         return (<></>)

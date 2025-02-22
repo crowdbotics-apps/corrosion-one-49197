@@ -10,7 +10,7 @@ import {ROLES} from "../../../services/constants";
 import {useLoginStore} from "../../../services/helpers";
 
 
-function AccountSettings({updateNotificationSettings}) {
+function AccountSettings({updateNotificationSettings, changePassword, formikRefAccountSettings }) {
   const loginStore = useLoginStore();
 
   const initialValues = {
@@ -28,10 +28,12 @@ function AccountSettings({updateNotificationSettings}) {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: (values, {resetForm}) => {
+      changePassword(values);
     }
   })
+
+  formikRefAccountSettings.current = formik;
 
   return (
     <MDBox>

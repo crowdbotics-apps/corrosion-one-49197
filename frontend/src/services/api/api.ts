@@ -34,10 +34,6 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/users/set-new-password/`, data);
   }
 
-  changePassword(data: any): ApiReturnType<Types.GenericResponse> {
-    return this.simple_post(`${API_VERSION_PREFIX}/change-password/`, data);
-  }
-
   getTermsConditions(): ApiReturnType<Types.SimpleGetResult> {
     return this.simple_get(`${API_VERSION_PREFIX}/terms_and_conditions/`);
   }
@@ -92,6 +88,10 @@ export class Api extends ApiBase {
 
   updateNotificationSettings(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/inspector/notification_settings/`, data);
+  }
+
+  updatePassword(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/change/`, data);
   }
 
   verifyCode(data: any) {
