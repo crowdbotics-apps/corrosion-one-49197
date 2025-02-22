@@ -16,6 +16,10 @@ export const RegionModel = types.model("RegionModel").props({
 export const CredentialModel = types.model("CredentialModel").props({
   id: types.maybeNull(types.number),
   name: types.maybeNull(types.string),
+  document: types.maybeNull(types.string),
+  document_name: types.maybeNull(types.string),
+  size: types.maybeNull(types.number),
+
 })
 
 export const SupportDocumentModel = types.model("SupportDocumentModel").props({

@@ -5,6 +5,11 @@ from users.models import User
 from model_utils.models import TimeStampedModel
 from cities_light.models import City, Region
 
+def file_size(value): # add this to some file where you can import it from
+    limit = 20 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('File too large. Size should not exceed 20 MiB.')
+
 class Credential(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -14,7 +19,7 @@ class Credential(TimeStampedModel):
 
 class Inspector(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='inspector')
-    credentials = models.ManyToManyField(Credential, blank=True)
+    credentials = models.ManyToManyField(Credential, blank=True, through='CredentialDcoument')
     regions = models.ManyToManyField(Region, blank=True)
     languages = models.ManyToManyField('Language', blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
@@ -37,10 +42,14 @@ class Inspector(models.Model):
             return 2
         return 1
 
-def file_size(value): # add this to some file where you can import it from
-    limit = 20 * 1024 * 1024
-    if value.size > limit:
-        raise ValidationError('File too large. Size should not exceed 20 MiB.')
+class CredentialDcoument(TimeStampedModel):
+    credential = models.ForeignKey(Credential, on_delete=models.CASCADE, related_name='documents')
+    inspector = models.ForeignKey('Inspector', on_delete=models.CASCADE, related_name='credential_documents')
+    document = models.FileField(upload_to='credential-documents', validators=[file_size], null=True, blank=True)
+
+    def __str__(self):
+        return self.document.name
+
 
 class SupportDocument(TimeStampedModel):
     inspector = models.ForeignKey(Inspector, on_delete=models.CASCADE, related_name='support_documents')

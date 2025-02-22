@@ -40,6 +40,7 @@ function Settings() {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [credentials, setCredentials] = useState([]);
 
 
   const getLanguages = () => {
@@ -132,10 +133,23 @@ function Settings() {
     })
   }
 
+  const getCredentialOptions = () => {
+    api.getCredentialsAvailable().handle({
+      onSuccess: (result) => {
+        setCredentials(result?.data?.results)
+      },
+    })
+  }
+
+  const updateCredentials = (data) => {
+
+  }
+
 
   useEffect(() => {
     getLanguages()
     getCountries()
+    getCredentialOptions()
   }, [])
 
 
@@ -194,7 +208,11 @@ function Settings() {
         )
       case "Credentials":
         return (
-          <Credentials />
+          <Credentials
+            updateCredentials={updateCredentials}
+            credentials={credentials}
+            loading={loading}
+          />
         )
       case "Account Settings":
         return (

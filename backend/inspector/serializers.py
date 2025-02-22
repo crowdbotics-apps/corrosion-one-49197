@@ -3,7 +3,7 @@ import os
 
 from rest_framework import serializers
 
-from inspector.models import Credential, Inspector, Language, SupportDocument
+from inspector.models import Credential, Inspector, Language, SupportDocument, CredentialDcoument
 from utils.utils import SmartUpdatableImageField
 
 
@@ -153,8 +153,29 @@ class SupportDocumentSerializer(serializers.ModelSerializer):
     def get_size(self, obj):
         return round(obj.document.size / 1024 / 1024, 2)
 
+class CredentialDocumentsSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='credential.name')
+    document_name = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CredentialDcoument
+        fields = ['id', 'name', 'document', 'document_name', 'size']
+
+    def get_document_name(self, obj):
+        if not obj.document:
+            return None
+        return os.path.basename(obj.document.name)
+
+    def get_size(self, obj):
+        if not obj.document:
+            return None
+        return round(obj.document.size / 1024 / 1024, 2)
+
+
+
 class InspectorDetailSerializer(serializers.ModelSerializer):
-    credentials = CredentialSerializer(many=True)
+    credentials = CredentialDocumentsSerializer(many=True, source='credential_documents')
     regions = RegionSerializer(many=True)
     countries = serializers.SerializerMethodField()
     languages = LanguageSerializer(many=True)

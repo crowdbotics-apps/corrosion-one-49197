@@ -131,7 +131,7 @@ function SignUp() {
         })
         setStage(2)
       },
-      errorMessage: 'Error updating owner data',
+      errorMessage: 'Error updating inspector data',
       onError: (result) => {
         if (result?.errors?.non_field_errors?.[0] === "Please verify your email to continue with the sign up process") {
           setShowResendEmail(true)

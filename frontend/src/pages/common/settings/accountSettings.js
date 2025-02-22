@@ -105,7 +105,7 @@ function AccountSettings({updateNotificationSettings, changePassword, formikRefA
       </MDButton>
       <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
       <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
-        Delete your account
+        Delete your {loginStore.user_type === ROLES.INSPECTOR ? "account" : "company"}
       </MDTypography>
       <MDTypography fontSize={"14px"} mb={2}>
         If you delete your Corrosion One account, you will no longer be able to get information about the
@@ -118,7 +118,7 @@ function AccountSettings({updateNotificationSettings, changePassword, formikRefA
         size={"large"}
         onClick={() => setShowDeleteModal(true)}
       >
-        Delete Account
+        Delete {loginStore.user_type === ROLES.INSPECTOR ? "Account" : "Company"}
       </MDButton>
     </MDBox>
   );
