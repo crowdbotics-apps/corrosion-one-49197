@@ -19,6 +19,9 @@ class Inspector(models.Model):
     languages = models.ManyToManyField('Language', blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile-picture', null=True, blank=True)
+    notify_im_qualified = models.BooleanField(default=False)
+    notify_new_message = models.BooleanField(default=False)
+    notify_job_applied = models.BooleanField(default=False)
 
 
     class Meta:

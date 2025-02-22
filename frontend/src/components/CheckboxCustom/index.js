@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-export default function CustomCheckbox({ text, onCheck }) {
-  const [checked, setChecked] = useState(false);
+export default function CustomCheckbox({ text, onCheck, checked }) {
+  const [checkedI, setChecked] = useState(checked);
 
   const handleChange = (e) => {
     const newChecked = e.target.checked;
@@ -16,7 +16,7 @@ export default function CustomCheckbox({ text, onCheck }) {
       {/* Hidden native checkbox for accessibility */}
       <input
         type="checkbox"
-        checked={checked}
+        checked={checkedI}
         onChange={handleChange}
         style={styles.hiddenCheckbox}
       />

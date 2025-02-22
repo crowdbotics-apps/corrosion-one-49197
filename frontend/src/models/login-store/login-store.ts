@@ -34,7 +34,7 @@ const ALLOWED_KEYS_USER = ['id', 'email', 'phone_number', 'first_name', 'last_na
   'status', 'user_type', 'website', 'linkedin', 'access', 'refresh']
 
 const ALLOWED_KEYS_INSPECTOR = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents',
-  'countries', 'profile_picture']
+  'countries', 'profile_picture','notify_im_qualified', 'notify_new_message', 'notify_job_applied']
 
 const ALLOWED_KEYS_OWNER = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents', 'countries']
 
@@ -69,6 +69,9 @@ export const LoginStoreModel = types
     credentials: types.maybeNull(types.array(CredentialModel)),
     support_documents: types.maybeNull(types.array(SupportDocumentModel)),
     countries: types.maybeNull(types.array(CountryModel)),
+    notify_im_qualified: types.maybeNull(types.boolean),
+    notify_new_message: types.maybeNull(types.boolean),
+    notify_job_applied: types.maybeNull(types.boolean),
 
   })
   .views(self => ({

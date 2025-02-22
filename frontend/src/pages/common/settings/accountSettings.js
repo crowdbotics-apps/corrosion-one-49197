@@ -1,8 +1,6 @@
 import MDTypography from "../../../components/MDTypography";
 import MDBox from "../../../components/MDBox";
 import MDButton from "../../../components/MDButton";
-import {FormControlLabel} from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
 import {Form, FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
@@ -12,7 +10,7 @@ import {ROLES} from "../../../services/constants";
 import {useLoginStore} from "../../../services/helpers";
 
 
-function AccountSettings({updateLocation}) {
+function AccountSettings({updateNotificationSettings}) {
   const loginStore = useLoginStore();
 
   const initialValues = {
@@ -26,7 +24,6 @@ function AccountSettings({updateLocation}) {
     new_password: Yup.string().required('New password is required'),
     confirm_password: Yup.string().required('Confirm password is required').oneOf([Yup.ref("new_password")], "Passwords must match"),
   })
-
 
   const formik = useFormik({
     initialValues,
@@ -43,16 +40,19 @@ function AccountSettings({updateLocation}) {
           Notifications
         </MDTypography>
         <CustomCheckbox
+          checked={loginStore.notify_im_qualified}
           text="Notify me when a job I'm qualified for is posted"
-          onCheck={(value) => console.log(value)}
+          onCheck={() => updateNotificationSettings({notification_setting: "notify_im_qualified"})}
         />
         <CustomCheckbox
+          checked={loginStore.notify_new_message}
           text="Notify me when  I receive a message"
-          onCheck={(value) => console.log(value)}
+          onCheck={() => updateNotificationSettings({notification_setting: "notify_new_message"})}
         />
         <CustomCheckbox
+          checked={loginStore.notify_job_applied}
           text="Notify me updates on jobs I've applied for"
-          onCheck={(value) => console.log(value)}
+          onCheck={() => updateNotificationSettings({notification_setting: "notify_job_applied"})}
         />
         <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
       </>}
@@ -117,7 +117,6 @@ function AccountSettings({updateLocation}) {
       >
         Delete Account
       </MDButton>
-      <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
     </MDBox>
   );
 

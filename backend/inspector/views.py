@@ -6,7 +6,7 @@ from django.shortcuts import render
 # Create your views here.
 
 
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -51,10 +51,12 @@ class InspectorViewSet(
         user = request.user
         inspector = user.inspector
         states_id = data.get('state', [])
+        send_verification_code = data.get('send_verification_code', True)
         inspector.regions.set(states_id)
-        code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
-        message = f'Your verification code is {code}'
-        send_sms(message, user.phone_number.as_e164)
+        if send_verification_code:
+            code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
+            message = f'Your verification code is {code}'
+            send_sms(message, user.phone_number.as_e164)
         return Response(UserDetailSerializer(user).data)
 
     def update(self, request, *args, **kwargs):
@@ -66,6 +68,24 @@ class InspectorViewSet(
         self.perform_update(serializer)
 
         return Response(UserDetailSerializer(request.user).data)
+
+    @action(methods=['post'], detail=False)
+    def notification_settings(self, request):
+        data = request.data
+        user = request.user
+        notification_setting = data.get('notification_setting', None)
+        if not notification_setting:
+            return Response('Invalid notification setting', status=status.HTTP_400_BAD_REQUEST)
+        inspector = user.inspector
+        current_value = getattr(inspector, notification_setting, None)
+        if current_value is None:
+            return Response(f"Field '{notification_setting}' not found on Inspector.",
+                            status=status.HTTP_400_BAD_REQUEST)
+        new_value = not current_value
+        setattr(inspector, notification_setting, new_value)
+        inspector.save()
+        return Response(UserDetailSerializer(user).data)
+
 
 class CountryViewSet(viewsets.GenericViewSet, GetViewsetMixin):
     permission_classes = []

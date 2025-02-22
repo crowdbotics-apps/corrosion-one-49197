@@ -92,6 +92,18 @@ function Settings() {
     })
   }
 
+  const updateNotificationSettings = (data) => {
+    setLoading(true)
+    api.updateNotificationSettings(data).handle({
+      onSuccess: (result) => {
+        loginStore.setUser(result.response)
+      },
+      successMessage: 'Notification settings updated successfully',
+      errorMessage: 'Error updating notification settings',
+      onFinally: () => setLoading(false)
+    })
+  }
+
 
   useEffect(() => {
     getLanguages()
@@ -158,7 +170,7 @@ function Settings() {
         )
       case "Account Settings":
         return (
-          <AccountSettings />
+          <AccountSettings updateNotificationSettings={updateNotificationSettings} />
         )
       default:
         return (<></>)

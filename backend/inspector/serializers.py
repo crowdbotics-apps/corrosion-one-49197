@@ -162,7 +162,8 @@ class InspectorDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Inspector
-        fields = ['credentials', 'regions', 'languages', 'date_of_birth', 'support_documents', 'countries', 'profile_picture']
+        fields = ['credentials', 'regions', 'languages', 'date_of_birth', 'support_documents', 'countries',
+                  'profile_picture', 'notify_job_applied', 'notify_im_qualified', 'notify_new_message']
 
 
     def get_countries(self, obj):
