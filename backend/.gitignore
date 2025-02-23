@@ -90,4 +90,6 @@ venv/
 ENV/
 myvenv/
 /mediafiles/profile-picture/*
-/mediafiles/support-documents/
+/mediafiles/support-documents/*
+/mediafiles/owner-banner/*
+/mediafiles/owner-logo/*
