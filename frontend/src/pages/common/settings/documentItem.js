@@ -9,7 +9,6 @@ import {
   MenuItem
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import {InsertDriveFileOutlined} from "@mui/icons-material";
 
 export default function DocumentItem({ doc, onOpenDownload, onDelete }) {

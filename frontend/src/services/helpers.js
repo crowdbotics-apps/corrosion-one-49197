@@ -190,3 +190,29 @@ export const checkUrl = (url) => {
 export const isFile = (file) => {
   return file instanceof File || file instanceof Blob || file instanceof RNFile
 }
+
+export function truncateFilename(filename, maxLength = 50) {
+  // Find the last dot. If none, there's no extension.
+  const dotIndex = filename.lastIndexOf('.');
+  if (dotIndex === -1) {
+    // If no extension, just slice the entire filename
+    return filename.length > maxLength
+      ? filename.slice(0, maxLength)
+      : filename;
+  }
+
+  // Separate base name and extension
+  const base = filename.slice(0, dotIndex);
+  const extension = filename.slice(dotIndex); // includes the "."
+
+  // If base + extension is longer than maxLength, truncate the base
+  if (base.length + extension.length > maxLength) {
+    // e.g. if extension is ".pdf" (4 chars), base can only be up to (maxLength - 4)
+    const sliceLength = maxLength - extension.length;
+    const truncatedBase = base.slice(0, sliceLength);
+    return truncatedBase + extension;
+  }
+
+  // Otherwise, return as-is
+  return filename;
+}

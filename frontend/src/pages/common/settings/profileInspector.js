@@ -4,7 +4,7 @@ import MDBox from "../../../components/MDBox";
 import Icon from "@mui/material/Icon";
 import MDButton from "../../../components/MDButton";
 import {useState} from "react";
-import {checkUrl, useLoginStore} from "../../../services/helpers";
+import {checkUrl, truncateFilename, useLoginStore} from "../../../services/helpers";
 import {Form, FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
@@ -25,7 +25,10 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
   };
 
   const handleAddDocument = (e) => {
-   formik.setFieldValue('support_documents', [...formik.values.support_documents, {id: Math.random(), name: e.target.files[0].name, file: e.target.files[0]}])
+    const file = e.target.files[0];
+    const filename = truncateFilename(file.name);
+    const newFile = new File([file], filename, {type: file.type});
+   formik.setFieldValue('support_documents', [...formik.values.support_documents, {id: Math.random(), name: filename, file: newFile}])
   };
 
 
@@ -65,6 +68,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
         date_of_birth: moment(values.date_of_birth, "MM/DD/YYYY", true).format("YYYY-MM-DD")
       }
       dataToSend.languages = dataToSend.languages.map((item) => item.id)
+      // console.log(dataToSend)
       updateProfile(dataToSend)
     }
   });
@@ -115,6 +119,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                 ) : loginStore.profile_picture ? (
                   <>
                     <img
+                      // TODO: esto es una mierda cambiar por ref
                       onClick={() => document.querySelector('input[type="file"]').click()}
                       src={checkUrl(loginStore.profile_picture)}
                       alt="Preview"
@@ -256,7 +261,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
             <input
               id={'input_file'}
               hidden
-              accept="pdf/*,xlsx/*,docx/*"
+              accept=".pdf,.xlsx,.docx"
               type="file"
               onChange={handleAddDocument}
             />
