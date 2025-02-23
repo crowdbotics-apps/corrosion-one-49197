@@ -101,7 +101,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                 }}
               >
                 {/* If a file is selected, show image preview; otherwise, show instructions */}
-                {typeof formik.values.profile_picture === 'object' ? (
+                {typeof formik.values.profile_picture === 'object' && formik.values.profile_picture ? (
                   <img
                     src={URL.createObjectURL(formik.values.profile_picture)}
                     alt="Preview"
@@ -133,7 +133,6 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                       onChange={handleFileChange}
                     />
                   </>
-
                 ) : (
                   <>
                     <Icon sx={{fontSize: 48, color: '#aaa', mb: 1}}>photo_camera_outlined</Icon>
