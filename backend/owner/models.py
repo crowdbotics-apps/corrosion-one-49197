@@ -3,6 +3,8 @@ from django.db import models
 from users.models import User
 from model_utils.models import TimeStampedModel
 
+from utils.utils import file_size
+
 
 class Industry(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
@@ -19,6 +21,9 @@ class Owner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='owner')
     industry = models.ForeignKey(Industry, on_delete=models.SET_NULL, null=True, blank=True, related_name='owners')
     company_name = models.CharField(max_length=255, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    logo = models.ImageField(upload_to='owner-logo', null=True, blank=True, validators=[file_size])
+    banner = models.ImageField(upload_to='owner-banner', null=True, blank=True, validators=[file_size])
 
 
     class Meta:

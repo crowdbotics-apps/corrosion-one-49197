@@ -157,3 +157,8 @@ def create_user_activation_link(user, request):
     activation_link = (f'{request.scheme}://{request.get_host()}/api/v1/users/activate/'
                        f'{urlsafe_base64_encode(force_bytes(user.pk))}-_-{confirmation_token}/')
     return activation_link
+
+def file_size(value):
+    limit = 5 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('File too large. Size should not exceed 20 MiB.')
