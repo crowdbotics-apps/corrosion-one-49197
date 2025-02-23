@@ -53,7 +53,6 @@ function ProfileOwner({updateProfile, industries, loading}) {
         logo: typeof formik.values.logo === 'object' ? formik.values.logo : checkUrl(loginStore.logo),
         banner: typeof formik.values.banner === 'object' ? formik.values.banner : checkUrl(loginStore.banner),
       }
-      console.log(dataToSend)
       updateProfile(dataToSend);
     }
   });
