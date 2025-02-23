@@ -103,7 +103,7 @@ function SignUp() {
 
   const updateOwnerData = (data) => {
     setLoading(true)
-    api.updateOwnerData(data).handle({
+    api.completeOwnerData(data).handle({
       onSuccess: (result) => {
         runInAction(() => {
           loginStore.setUser(result.data)

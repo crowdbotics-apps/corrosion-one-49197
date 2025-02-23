@@ -155,7 +155,17 @@ function Settings() {
   }
 
   const updateProfileOwner = (data) => {
-    console.log(data)
+    setLoading(true)
+    api.updateOwnerData(data).handle({
+      onSuccess: (result) => {
+        loginStore.setUser(result.response)
+      },
+      successMessage: 'Profile updated successfully',
+      errorMessage: 'Error updating profile',
+      onFinally: () => {
+        setLoading(false)
+      }
+    })
   }
 
 

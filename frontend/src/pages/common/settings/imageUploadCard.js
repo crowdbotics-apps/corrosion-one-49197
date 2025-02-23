@@ -35,9 +35,9 @@ export default function ImageUploadCard({
           cursor: "pointer"
         }}
       >
-        {imageSrc && isFile(imageSrc) ? (
+        {imageSrc  ? (
           <img
-            src={URL.createObjectURL(imageSrc)}
+            src={isFile(imageSrc) ? URL.createObjectURL(imageSrc) : imageSrc}
             alt={title}
             style={{
               width: '100%',

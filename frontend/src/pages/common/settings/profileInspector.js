@@ -68,7 +68,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
         date_of_birth: moment(values.date_of_birth, "MM/DD/YYYY", true).format("YYYY-MM-DD")
       }
       dataToSend.languages = dataToSend.languages.map((item) => item.id)
-      // console.log(dataToSend)
+      console.log('inspector ',dataToSend)
       updateProfile(dataToSend)
     }
   });

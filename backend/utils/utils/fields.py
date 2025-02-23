@@ -43,7 +43,7 @@ class SmartUpdatableFileField(FileField):
                 # return representation == url
 
             self.cached_dict = None
-        except:
+        except Exception as error:
             pass
         return False
 

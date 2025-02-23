@@ -70,7 +70,7 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/users/send_phone_code/`);
   }
 
-  updateOwnerData(data: any) {
+  completeOwnerData(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/owner/complete/`, data);
   }
 
@@ -88,6 +88,10 @@ export class Api extends ApiBase {
 
   updateNotificationSettings(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/inspector/notification_settings/`, data);
+  }
+
+  updateOwnerData(data: any) {
+    return this.patch_collected_multipart_form_data(`${API_VERSION_PREFIX}/owner/update/`, data);
   }
 
   updatePassword(data: any) {

@@ -9,8 +9,9 @@ from rest_framework.response import Response
 
 from owner.models import Owner, Industry
 
-from owner.serializers import IndustrySerializer, OwnerCompleteSerializer
+from owner.serializers import IndustrySerializer, OwnerCompleteSerializer, OwnerUpdateSerializer
 from users.serializers import UserDetailSerializer
+from utils.utils import CollectedMultipartJsonViewMixin
 
 
 class IndustryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
@@ -19,9 +20,13 @@ class IndustryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     permission_classes = []
 
 
-class OwnerViewSet(viewsets.GenericViewSet):
+class OwnerViewSet(
+    CollectedMultipartJsonViewMixin,
+    viewsets.GenericViewSet,
+    mixins.UpdateModelMixin,
+):
     queryset = Owner.objects.all()
-
+    serializer_class = OwnerUpdateSerializer
     @action(methods=['post'], detail=False)
     def complete(self, request):
         data = request.data
@@ -29,3 +34,13 @@ class OwnerViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(UserDetailSerializer(serializer.instance.user).data)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        request.data['id'] = request.user.owner.pk
+        instance = request.user.owner
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(UserDetailSerializer(request.user).data)

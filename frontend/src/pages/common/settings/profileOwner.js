@@ -4,7 +4,7 @@ import MDBox from "../../../components/MDBox";
 import Icon from "@mui/material/Icon";
 import MDButton from "../../../components/MDButton";
 import {useState} from "react";
-import {useLoginStore} from "../../../services/helpers";
+import {checkUrl, isFile, useLoginStore} from "../../../services/helpers";
 import {Form, FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
@@ -13,29 +13,8 @@ import AddDocumentBox from "./addDocumentBox";
 import Divider from "@mui/material/Divider";
 import ImageUploadCard from "./imageUploadCard";
 
-function ProfileOwner({updateProfile, industries}) {
+function ProfileOwner({updateProfile, industries, loading}) {
   const loginStore = useLoginStore();
-
-  const handleOpenDownload = (doc) => {
-    // Example: just alert, or open a new page, etc.
-    alert(`Open / Download: ${doc.name}`);
-  };
-
-  const handleDelete = (doc) => {
-    // Remove from array
-    // setDocs((prevDocs) => prevDocs.filter((d) => d.id !== doc.id));
-  };
-
-  const handleAddDocument = () => {
-    // Example: could open file dialog, or show a modal
-    alert('Add Document clicked!');
-  };
-
-
-  const handleFileChange = (e) => {
-
-  }
-
 
   const initialValues = {
     first_name: loginStore.first_name,
@@ -47,6 +26,8 @@ function ProfileOwner({updateProfile, industries}) {
     company_name: loginStore.company_name,
     address: loginStore.address,
     industry: loginStore.industry,
+    logo: loginStore.logo,
+    banner: loginStore.banner,
   }
 
   const validationSchema = Yup.object().shape({
@@ -68,7 +49,9 @@ function ProfileOwner({updateProfile, industries}) {
     onSubmit: (values) => {
       const dataToSend = {
         ...values,
-        industry: values.industry.id
+        industry: values.industry.id,
+        logo: typeof formik.values.logo === 'object' ? formik.values.logo : checkUrl(loginStore.logo),
+        banner: typeof formik.values.banner === 'object' ? formik.values.banner : checkUrl(loginStore.banner),
       }
       console.log(dataToSend)
       updateProfile(dataToSend);
@@ -92,7 +75,7 @@ function ProfileOwner({updateProfile, industries}) {
         <Grid item xs={12} lg={2}>
           <ImageUploadCard
             title={"Upload Logo"}
-            imageSrc={formik.values.logo}
+            imageSrc={formik.values.logo && isFile(formik.values.logo) ?  formik.values.logo : checkUrl(formik.values.logo)}
             fileSize={loginStore.logo_size}
             onReplace={replaceLogo}
           />
@@ -100,7 +83,7 @@ function ProfileOwner({updateProfile, industries}) {
         <Grid item xs={12} lg={10}>
           <ImageUploadCard
             title={"Banner Image"}
-            imageSrc={formik.values.banner}
+            imageSrc={formik.values.banner && isFile(formik.values.banner) ?  formik.values.banner : checkUrl(formik.values.banner)}
             fileSize={loginStore.banner_size}
             onReplace={replaceBanner}
           />
@@ -202,6 +185,8 @@ function ProfileOwner({updateProfile, industries}) {
           size={"large"}
           sx={{marginLeft: "auto"}}
           onClick={formik.handleSubmit}
+          disabled={loading}
+          loading={loading}
         >
           Save Changes
         </MDButton>
