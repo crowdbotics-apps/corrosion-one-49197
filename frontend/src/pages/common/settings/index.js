@@ -41,6 +41,7 @@ function Settings() {
   const [states, setStates] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [credentials, setCredentials] = useState([]);
+  const [industries, setIndustries] = useState([]);
 
 
   const getLanguages = () => {
@@ -141,8 +142,20 @@ function Settings() {
     })
   }
 
+  const getIndustries = () => {
+    api.getIndustries().handle({
+      onSuccess: (result) => {
+        setIndustries(result?.data?.results)
+      },
+    })
+  }
+
   const updateCredentials = (data) => {
 
+  }
+
+  const updateProfileOwner = (data) => {
+    console.log(data)
   }
 
 
@@ -150,6 +163,7 @@ function Settings() {
     getLanguages()
     getCountries()
     getCredentialOptions()
+    getIndustries()
   }, [])
 
 
@@ -193,7 +207,11 @@ function Settings() {
           )
         } else {
           return (
-            <ProfileOwner updateProfile={updateProfile} languages={languages} loading={loading} />
+            <ProfileOwner
+              updateProfile={updateProfileOwner}
+              loading={loading}
+              industries={industries}
+            />
           )
         }
       case "Location Preferences":

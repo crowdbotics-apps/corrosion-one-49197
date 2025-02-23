@@ -34,13 +34,19 @@ export const CountryModel = types.model("CountryModel").props({
   name: types.maybeNull(types.string),
 })
 
+export const IndustryModel = types.model("IndustryModel").props({
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+})
+
+
 const ALLOWED_KEYS_USER = ['id', 'email', 'phone_number', 'first_name', 'last_name',
   'status', 'user_type', 'website', 'linkedin', 'access', 'refresh']
 
 const ALLOWED_KEYS_INSPECTOR = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents',
   'countries', 'profile_picture','notify_im_qualified', 'notify_new_message', 'notify_job_applied']
 
-const ALLOWED_KEYS_OWNER = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents', 'countries']
+const ALLOWED_KEYS_OWNER = ['company_name', 'industry', 'banner', 'logo', 'address', 'industry']
 
 const ALLOWED_KEYS = ALLOWED_KEYS_USER.concat(ALLOWED_KEYS_INSPECTOR).concat(ALLOWED_KEYS_OWNER)
 
@@ -63,6 +69,7 @@ export const LoginStoreModel = types
     access: types.maybeNull(types.string),
     refresh: types.maybeNull(types.string),
     profile_picture: types.maybeNull(types.string),
+    company_name: types.maybeNull(types.string),
     remember_me: types.optional(types.boolean, false),
     stored_email: types.maybeNull(types.string),
     website: types.maybeNull(types.string),
@@ -76,6 +83,13 @@ export const LoginStoreModel = types
     notify_im_qualified: types.maybeNull(types.boolean),
     notify_new_message: types.maybeNull(types.boolean),
     notify_job_applied: types.maybeNull(types.boolean),
+    industry: types.maybeNull(IndustryModel),
+    banner: types.maybeNull(types.string),
+    logo: types.maybeNull(types.string),
+    address: types.maybeNull(types.string),
+    logo_size: types.maybeNull(types.number),
+    banner_size: types.maybeNull(types.number),
+
 
   })
   .views(self => ({

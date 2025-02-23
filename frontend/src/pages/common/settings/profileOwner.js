@@ -13,19 +13,8 @@ import AddDocumentBox from "./addDocumentBox";
 import Divider from "@mui/material/Divider";
 import ImageUploadCard from "./imageUploadCard";
 
-function ProfileOwner({updateProfile}) {
+function ProfileOwner({updateProfile, industries}) {
   const loginStore = useLoginStore();
-  const [selectedFile, setSelectedFile] = useState(null);
-
-  const [docs, setDocs] = useState([
-    {id: 1, name: 'Supporting Document', size: 3.5},
-    {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 2, name: 'Supporting Document 2', size: 4.7},
-    {id: 3, name: 'Supporting Document 3', size: 1.3}
-  ]);
-
 
   const handleOpenDownload = (doc) => {
     // Example: just alert, or open a new page, etc.
@@ -34,7 +23,7 @@ function ProfileOwner({updateProfile}) {
 
   const handleDelete = (doc) => {
     // Remove from array
-    setDocs((prevDocs) => prevDocs.filter((d) => d.id !== doc.id));
+    // setDocs((prevDocs) => prevDocs.filter((d) => d.id !== doc.id));
   };
 
   const handleAddDocument = () => {
@@ -44,7 +33,7 @@ function ProfileOwner({updateProfile}) {
 
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+
   }
 
 
@@ -53,54 +42,44 @@ function ProfileOwner({updateProfile}) {
     last_name: loginStore.last_name,
     email: loginStore.email,
     phone_number: loginStore.phone_number,
-    user_type: loginStore.user_type,
-    date_of_birth: "",
-    website: "",
-    linkedin: "",
-    documents: [],
-    experience: [],
+    website: loginStore.website,
+    linkedin: loginStore.linkedin,
+    company_name: loginStore.company_name,
+    address: loginStore.address,
+    industry: loginStore.industry,
   }
 
   const validationSchema = Yup.object().shape({
     first_name: Yup.string().required("First name is required"),
     last_name: Yup.string().required("Last name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
     phone_number: Yup.string().required("Phone number is required"),
+    website: Yup.string().url("Invalid URL").nullable(),
+    linkedin: Yup.string().url("Invalid URL").nullable(),
+    company_name: Yup.string().required("Company name is required"),
+    // address: Yup.string().required("Address is required"),
+    // industry: Yup.string().required("Industry is required"),
+    logo: Yup.string().required("Logo is required"),
+    banner: Yup.string().required("Banner is required"),
   });
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      updateProfile(values);
+      const dataToSend = {
+        ...values,
+        industry: values.industry.id
+      }
+      console.log(dataToSend)
+      updateProfile(dataToSend);
     }
   });
-
-  const [logo, setLogo] = useState({
-    src: '',         // or a real URL
-    size: 3.5,
-    isUploaded: true
-  });
-  const [banner, setBanner] = useState({
-    src: '',         // or a real URL
-    size: 4.3,
-    isUploaded: true
-  });
-
-  // Example remove/replace handlers
-  const removeLogo = () => {
-    setLogo({ src: '', size: 0, isUploaded: false });
-  };
-  const replaceLogo = () => {
-    // This is where you'd open a file dialog, then set a new `src`, etc.
-    alert('Replace logo clicked');
+  const replaceLogo = (file) => {
+    formik.setFieldValue('logo', file)
   };
 
-  const removeBanner = () => {
-    setBanner({ src: '', size: 0, isUploaded: false });
-  };
-  const replaceBanner = () => {
-    alert('Replace banner clicked');
+  const replaceBanner = (file) => {
+    formik.setFieldValue('banner', file)
   };
 
 
@@ -112,19 +91,17 @@ function ProfileOwner({updateProfile}) {
       <Grid container spacing={{xs: 0, lg: 3}}>
         <Grid item xs={12} lg={2}>
           <ImageUploadCard
-            title="Upload Logo"
-            imageSrc={logo.isUploaded ? logo.src : ''}
-            fileSize={logo.isUploaded ? logo.size : null}
-            onRemove={removeLogo}
+            title={"Upload Logo"}
+            imageSrc={formik.values.logo}
+            fileSize={loginStore.logo_size}
             onReplace={replaceLogo}
           />
         </Grid>
         <Grid item xs={12} lg={10}>
           <ImageUploadCard
-            title="Banner Image"
-            imageSrc={banner.isUploaded ? banner.src : ''}
-            fileSize={banner.isUploaded ? banner.size : null}
-            onRemove={removeBanner}
+            title={"Banner Image"}
+            imageSrc={formik.values.banner}
+            fileSize={loginStore.banner_size}
             onReplace={replaceBanner}
           />
         </Grid>
@@ -196,6 +173,22 @@ function ProfileOwner({updateProfile}) {
                 mb={2}
               />
             </Grid>
+            <Grid item xs={12}>
+              <FormikInput
+                type={"autocomplete"}
+                placeholder={"Industry"}
+                value={formik.values.industry}
+                fieldName={"industry"}
+                label={"Industry"}
+                options={industries}
+                accessKey={"name"}
+                onChange={(value) => {
+                  formik.setFieldValue('industry', value)
+                }}
+                disableClearable
+                styleContainer={{mb: 2}}
+              />
+            </Grid>
 
           </Grid>
         </Form>
@@ -208,6 +201,7 @@ function ProfileOwner({updateProfile}) {
           color={"secondary"}
           size={"large"}
           sx={{marginLeft: "auto"}}
+          onClick={formik.handleSubmit}
         >
           Save Changes
         </MDButton>

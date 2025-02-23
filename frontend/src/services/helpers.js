@@ -186,3 +186,7 @@ export const checkUrl = (url) => {
     return process.env.REACT_APP_API_URL + url
   }
 }
+
+export const isFile = (file) => {
+  return file instanceof File || file instanceof Blob || file instanceof RNFile
+}

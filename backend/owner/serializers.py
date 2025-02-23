@@ -1,3 +1,5 @@
+import os
+
 from owner.models import Industry, Owner
 
 from rest_framework import  serializers
@@ -58,7 +60,33 @@ class OwnerCompleteSerializer(serializers.ModelSerializer):
 
 
 class OwnerDetailSerializer(serializers.ModelSerializer):
+    industry = IndustrySerializer()
+    banner_name = serializers.SerializerMethodField()
+    logo_name = serializers.SerializerMethodField()
+    banner_size = serializers.SerializerMethodField()
+    logo_size = serializers.SerializerMethodField()
 
     class Meta:
         model = Owner
-        fields = ['industry', 'company_name']
+        fields = ['industry', 'company_name', 'address', 'banner', 'logo', 'banner_name', 'logo_name', 'banner_size',
+                  'logo_size']
+
+    def get_banner_name(self, obj):
+        if not obj.banner:
+            return None
+        return os.path.basename(obj.banner.name)
+
+    def get_logo_name(self, obj):
+        if not obj.logo:
+            return None
+        return os.path.basename(obj.logo.name)
+
+    def get_banner_size(self, obj):
+        if not obj.banner:
+            return None
+        return obj.banner.size
+
+    def get_logo_size(self, obj):
+        if not obj.logo:
+            return None
+        return obj.logo.size
