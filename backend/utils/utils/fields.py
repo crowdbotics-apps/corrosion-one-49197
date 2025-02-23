@@ -35,7 +35,12 @@ class SmartUpdatableFileField(FileField):
                 pk_value = parent.fields[pk_field].get_value(self.cached_dict)
                 current_object = object_class.objects.get(pk=pk_value)
                 representation = self.to_representation(getattr(current_object, self.field_name))
-                return representation == url
+                # TODO better
+                if representation is None:
+                    return False
+                else:
+                    return True
+                # return representation == url
 
             self.cached_dict = None
         except:
