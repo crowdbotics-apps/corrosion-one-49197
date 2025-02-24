@@ -130,7 +130,6 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                 ) : loginStore.profile_picture ? (
                   <>
                     <img
-                      // TODO: esto es una mierda cambiar por ref
                       onClick={() => fileInputRef?.current?.click()}
                       src={checkUrl(loginStore.profile_picture)}
                       alt="Preview"
