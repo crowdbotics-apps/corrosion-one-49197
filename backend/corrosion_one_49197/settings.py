@@ -217,9 +217,10 @@ if AS_BUCKET_NAME:
     AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
     AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
 
-    AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
+    # AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
     DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
     STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
+    AZURE_URL_EXPIRATION_SECS = None
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.azure_storage.AzureStorage",
