@@ -12,6 +12,9 @@ import DocumentItem from "./documentItem";
 import AddDocumentBox from "./addDocumentBox";
 import Divider from "@mui/material/Divider";
 import ImageUploadCard from "./imageUploadCard";
+import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import linkedinIcon from "../../../assets/svgs/linkedin.svg"
 
 function ProfileOwner({updateProfile, industries, loading}) {
   const loginStore = useLoginStore();
@@ -66,28 +69,42 @@ function ProfileOwner({updateProfile, industries, loading}) {
 
 
   return (
-    <MDBox>
+    <MDBox >
       <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
         Logo & Banner
       </MDTypography>
-      <Grid container spacing={{xs: 0, lg: 3}}>
-        <Grid item xs={12} lg={2}>
+      <Grid container spacing={{ xs: 0, lg: 4 }} >
+      <Grid item xs={12} lg={1.5}>
+          <MDTypography fontSize={"14px"} sx={{ fontWeight: 300 }}>
+            Upload Logo
+          </MDTypography>
           <ImageUploadCard
-            title={"Upload Logo"}
-            imageSrc={formik.values.logo && isFile(formik.values.logo) ?  formik.values.logo : checkUrl(formik.values.logo)}
+            imageSrc={
+              formik.values.logo && (isFile(formik.values.logo) || checkUrl(formik.values.logo))
+                ? formik.values.logo
+                : null
+            }
             fileSize={loginStore.logo_size}
             onReplace={replaceLogo}
           />
+
         </Grid>
-        <Grid item xs={12} lg={10}>
+        <Grid item xs={12} lg={10.5}>
+          <MDTypography fontSize={"14px"} sx={{ fontWeight: 300 }}>
+            Banner Image
+          </MDTypography>
           <ImageUploadCard
-            title={"Banner Image"}
-            imageSrc={formik.values.banner && isFile(formik.values.banner) ?  formik.values.banner : checkUrl(formik.values.banner)}
+            imageSrc={
+              formik.values.banner && (isFile(formik.values.banner) || checkUrl(formik.values.banner))
+                ? formik.values.banner
+                : null
+            }
             fileSize={loginStore.banner_size}
             onReplace={replaceBanner}
           />
         </Grid>
       </Grid>
+
       <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
         Basic Information
       </MDTypography>
@@ -111,7 +128,12 @@ function ProfileOwner({updateProfile, industries, loading}) {
               />
               <FormikInput
                 name={'email'}
-                label={'Email'}
+                label={
+                  <MDBox sx={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <MailOutlineIcon style={{ marginRight: '8px', width:'18px', height:'18px', color: '#007BFF' }} />
+                    Email
+                  </MDBox>
+                }
                 type={'email'}
                 errors={formik.errors}
                 disabled
@@ -140,16 +162,28 @@ function ProfileOwner({updateProfile, industries, loading}) {
                 errors={formik.errors}
                 mb={2}
               />
+
               <FormikInput
                 name={'website'}
-                label={'Personal website'}
+                label={
+                  <MDBox sx={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <InsertLinkOutlinedIcon style={{ marginRight: '8px', width:'18px', height:'18px', color: '#007BFF' }} />
+                    Personal website
+                  </MDBox>
+                }
                 type={'text'}
                 errors={formik.errors}
                 mb={2}
               />
+
               <FormikInput
                 name={'linkedin'}
-                label={'Linkedin'}
+                label={
+                  <MDBox sx={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <img src={linkedinIcon}  style={{ marginRight: '8px' }} />
+                    Linkedin
+                  </MDBox>
+                }
                 type={'text'}
                 errors={formik.errors}
                 mb={2}

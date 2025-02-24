@@ -36,6 +36,7 @@ import MDBadge from "components/MDBadge";
 // Material Dashboard 3 PRO React examples
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 // Custom styles for DashboardNavbar
 import {
@@ -185,7 +186,7 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
               sx={navbarIconButton}
               onClick={handleConfiguratorOpen}
             >
-              <Icon sx={iconsStyle}>info</Icon>
+              <HelpOutlineOutlinedIcon sx={iconsStyle} />
             </IconButton>
             <IconButton
               size="small"
