@@ -180,6 +180,10 @@ export default useCurrentBreakpoint;
 
 
 export const checkUrl = (url) => {
+  if (!url) {
+    return process.env.REACT_APP_API_URL
+  }
+
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url
   } else {
