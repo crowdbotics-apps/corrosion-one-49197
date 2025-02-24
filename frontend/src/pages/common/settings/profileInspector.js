@@ -12,6 +12,9 @@ import DocumentItem from "./documentItem";
 import AddDocumentBox from "./addDocumentBox";
 import RenderWorkArea from "../../../components/RenderListOption";
 import moment from "moment";
+import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined"
+import MailOutlineIcon from "@mui/icons-material/MailOutline"
+import linkedinIcon from "assets/svgs/linkedin.svg";
 
 function ProfileInspector({updateProfile, languages = [], loading = false}) {
   const loginStore = useLoginStore();
@@ -188,7 +191,12 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
               />
               <FormikInput
                 name={'email'}
-                label={'Email'}
+                label={
+                  <MDBox sx={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <MailOutlineIcon style={{ marginRight: '8px', width:'18px', height:'18px', color: '#007BFF' }} />
+                    Email
+                  </MDBox>
+                }
                 type={'email'}
                 errors={formik.errors}
                 disabled
@@ -212,7 +220,12 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
               />
               <FormikInput
                 name={'website'}
-                label={'Personal website'}
+                label={
+              <MDBox sx={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <InsertLinkOutlinedIcon style={{ marginRight: '8px', width:'18px', height:'18px', color: '#007BFF' }} />
+                     Personal website
+              </MDBox>
+                }
                 type={'text'}
                 errors={formik.errors}
                 mb={2}
@@ -240,9 +253,15 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
               </MDBox>
             </Grid>
             <Grid item xs={12} lg={6}>
+
               <FormikInput
                 name={'linkedin'}
-                label={'Linkedin'}
+                label={
+                  <MDBox sx={{display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <img src={linkedinIcon}  style={{ marginRight: '8px' }} />
+                    Linkedin
+                  </MDBox>
+                }
                 type={'text'}
                 errors={formik.errors}
                 mb={2}

@@ -17,10 +17,11 @@ import {ROLES} from "../../../services/constants";
 import ProfileOwner from "./profileOwner";
 import ConfirmDialogModal from "../../../components/ConfirmDialogModal";
 
+
 const BUTTONS_INSPECTOR = [
   {key: 1, name: "Profile", icon: "account_circle_outlined"},
   {key: 2, name: "Location Preferences", icon: "location_on_outlined"},
-  {key: 3, name: "Credentials", icon: "vpn_key_outlined"},
+  {key: 3, name: "Credentials", icon: "workspace_premium_outlined_icon"},
   {key: 4, name: "Account Settings", icon: "manage_accounts_outlined"},
 ]
 
