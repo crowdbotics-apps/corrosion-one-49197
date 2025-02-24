@@ -151,7 +151,6 @@ function Settings() {
   }
 
   const updateCredentials = (data) => {
-    console.log('===> ', data)
     setLoading(true)
     api.updateCredentials(data).handle({
       onSuccess: (result) => {

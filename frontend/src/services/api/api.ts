@@ -91,7 +91,7 @@ export class Api extends ApiBase {
   }
 
   updateCredentials(data: any) {
-    return this.simple_post(`${API_VERSION_PREFIX}/inspector/credentials/`, data);
+    return this.post_collected_multipart_form_data(`${API_VERSION_PREFIX}/inspector/credentials/`, data);
   }
 
   updateOwnerData(data: any) {

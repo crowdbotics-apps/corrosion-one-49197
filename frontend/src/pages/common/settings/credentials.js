@@ -7,13 +7,15 @@ import FormikInput from "../../../components/Formik/FormikInput";
 import {useLoginStore} from "../../../services/helpers";
 import IconButton from "@mui/material/IconButton";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import React from "react";
+import {CredentialsInspector} from "../../../components/CredentialsInspector";
 
 
 function Credentials({updateCredentials, credentials, loading}) {
   const loginStore = useLoginStore();
 
   const initialValues  = {
-    credentials: loginStore.credentials,
+    credentials: JSON.parse(JSON.stringify(loginStore.credentials)),
   }
 
   const validationSchema = Yup.object().shape({
@@ -24,6 +26,7 @@ function Credentials({updateCredentials, credentials, loading}) {
     initialValues,
     validationSchema,
     onSubmit: (values) => {
+      console.log('values', values)
       updateCredentials(values);
     }
   })
@@ -31,49 +34,6 @@ function Credentials({updateCredentials, credentials, loading}) {
   const handleRemove = (id) => {
     const currentValues = formik.values.credentials.filter((item) => item.id !== id)
     formik.setFieldValue('credentials', currentValues)
-  }
-
-  const renderCurrentCredentials = (credential, handleRemove) => {
-    return (
-      <MDBox
-        key={credential.id}
-        display="flex"
-        alignItems="center"
-        borderRadius="12px"
-        p={1}
-        px={1}
-        sx={{border: '1px solid #C6C9CE'}}
-        mb={1}
-      >
-        <IconButton
-          aria-label="remove"
-          size="small"
-          onClick={() => handleRemove ? handleRemove(credential.id) : null}
-          sx={{mr: 1, p: 0}}
-        >
-          <HighlightOffIcon sx={{color: "#E14640", height: 26, width: 26}}/>
-        </IconButton>
-        <MDTypography sx={{fontSize: 14, fontWeight: 500}}>
-          {credential.name}
-        </MDTypography>
-        {credential.document && <MDButton
-          color={"secondary"}
-          variant={"outlined"}
-          size={"small"}
-          sx={{marginLeft: "auto"}}
-        >
-          View document
-        </MDButton>}
-        {!credential.document && <MDButton
-          color={"primary"}
-          variant={"outlined"}
-          size={"small"}
-          sx={{marginLeft: "auto"}}
-        >
-          Add document
-        </MDButton>}
-      </MDBox>
-    )
   }
 
   return (
@@ -102,7 +62,15 @@ function Credentials({updateCredentials, credentials, loading}) {
           />
         </Form>
       </FormikProvider>
-      {formik.values.credentials.map((item) => renderCurrentCredentials(item, handleRemove))}
+      {formik.values.credentials.map((item, index) => (
+        <CredentialsInspector
+          id={index}
+          key={index}
+          credential={item}
+          handleRemove={handleRemove}
+          setFieldValue={formik.setFieldValue}
+        />
+      ))}
       <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
       <MDBox display={"flex"}>
         <MDButton
