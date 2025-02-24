@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import MDBox from "../../../components/MDBox";
 import Icon from "@mui/material/Icon";
 import MDButton from "../../../components/MDButton";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {checkUrl, truncateFilename, useLoginStore} from "../../../services/helpers";
 import {Form, FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
@@ -15,6 +15,7 @@ import moment from "moment";
 
 function ProfileInspector({updateProfile, languages = [], loading = false}) {
   const loginStore = useLoginStore();
+  const fileInputRef = useRef(null);
 
   const handleOpenDownload = (doc) => {
     window.open(checkUrl(doc.document), '_blank');
@@ -105,21 +106,32 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
               >
                 {/* If a file is selected, show image preview; otherwise, show instructions */}
                 {typeof formik.values.profile_picture === 'object' && formik.values.profile_picture ? (
-                  <img
-                    src={URL.createObjectURL(formik.values.profile_picture)}
-                    alt="Preview"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      borderRadius: '50%'
-                    }}
-                  />
+                  <>
+                    <img
+                      src={URL.createObjectURL(formik.values.profile_picture)}
+                      onClick={() => fileInputRef?.current?.click()}
+                      alt="Preview"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '50%',
+                        cursor: 'pointer'
+                      }}
+                    />
+                    <input
+                      ref={fileInputRef}
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      onChange={handleFileChange}
+                    />
+                  </>
                 ) : loginStore.profile_picture ? (
                   <>
                     <img
                       // TODO: esto es una mierda cambiar por ref
-                      onClick={() => document.querySelector('input[type="file"]').click()}
+                      onClick={() => fileInputRef?.current?.click()}
                       src={checkUrl(loginStore.profile_picture)}
                       alt="Preview"
                       style={{
@@ -131,6 +143,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                       }}
                     />
                     <input
+                      ref={fileInputRef}
                       hidden
                       accept="image/*"
                       type="file"
@@ -147,6 +160,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                     <MDButton variant="contained" component="label">
                       Upload Photo
                       <input
+                        ref={fileInputRef}
                         hidden
                         accept="image/*"
                         type="file"
