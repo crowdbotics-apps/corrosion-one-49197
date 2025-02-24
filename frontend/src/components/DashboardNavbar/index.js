@@ -224,6 +224,7 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
                   ...navbarMobileMenu,
                   ml: { xs: "auto", sm: 1 },
                   mr: 0,
+                  display: { xs: 'flex', sm: 'none' },
                 }}
                 onClick={handleMiniSidenav}
               >
