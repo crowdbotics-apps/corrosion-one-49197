@@ -90,6 +90,10 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/inspector/notification_settings/`, data);
   }
 
+  updateCredentials(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/inspector/credentials/`, data);
+  }
+
   updateOwnerData(data: any) {
     return this.patch_collected_multipart_form_data(`${API_VERSION_PREFIX}/owner/update/`, data);
   }

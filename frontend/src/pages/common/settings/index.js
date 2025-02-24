@@ -151,7 +151,18 @@ function Settings() {
   }
 
   const updateCredentials = (data) => {
-
+    console.log('===> ', data)
+    setLoading(true)
+    api.updateCredentials(data).handle({
+      onSuccess: (result) => {
+        loginStore.setUser(result.response)
+      },
+      successMessage: 'Credentials updated successfully',
+      errorMessage: 'Error updating credentials',
+      onFinally: () => {
+        setLoading(false)
+      }
+    })
   }
 
   const updateProfileOwner = (data) => {

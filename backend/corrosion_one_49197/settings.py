@@ -239,7 +239,7 @@ if AS_BUCKET_NAME:
         },
     }
 else:
-    logging.warning("Azure Storage is not configured.")
+    # logging.warning("Azure Storage is not configured.")
     MEDIA_URL = '/mediafiles/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"

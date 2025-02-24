@@ -10,7 +10,7 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from inspector.models import Credential, Language, Inspector
+from inspector.models import Credential, Language, Inspector, CredentialDcoument
 from inspector.serializers import CredentialSerializer, InspectorCompleteSerializer, CountrySerializer, CitySerializer, \
     RegionSerializer, LanguageSerializer, InspectorUpdateSerializer
 from users.models import UserVerificationCode
@@ -86,6 +86,25 @@ class InspectorViewSet(
         inspector.save()
         return Response(UserDetailSerializer(user).data)
 
+    @action(methods=['post'], detail=False)
+    def credentials(self, request):
+        data = request.data
+        user = request.user
+        inspector = user.inspector
+        credentials = data.get('credentials', [])
+        credential_documents = inspector.credential_documents.all().values_list('id', flat=True)
+        credentials_ids = [credential['id'] for credential in credentials if not 'credential_id' in credential]
+        for credential_document_id in credential_documents:
+            if credential_document_id not in credentials_ids:
+                CredentialDcoument.objects.get(id=credential_document_id).delete()
+
+        for credential in credentials:
+            credential_id = credential.get('credential_id', None)
+            if credential_id:
+                credential_document = CredentialDcoument.objects.filter(credential_id=credential_id, inspector=inspector)
+                if not credential_document:
+                    CredentialDcoument.objects.create(credential_id=credential_id, inspector=inspector)
+        return Response(UserDetailSerializer(user).data)
 
 class CountryViewSet(viewsets.GenericViewSet, GetViewsetMixin):
     permission_classes = []

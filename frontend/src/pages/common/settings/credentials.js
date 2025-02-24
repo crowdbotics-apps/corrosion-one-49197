@@ -13,23 +13,27 @@ function Credentials({updateCredentials, credentials, loading}) {
   const loginStore = useLoginStore();
 
   const initialValues  = {
-    credentials: [],
+    credentials: loginStore.credentials,
   }
 
   const validationSchema = Yup.object().shape({
-    credentials: Yup.array().min(1, 'At least one credential is required'),
+    // credentials: Yup.array().min(1, 'At least one credential is required'),
   })
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+      updateCredentials(values);
     }
   })
 
-  const renderCurrentCredentials = (credential) => {
+  const handleRemove = (id) => {
+    const currentValues = formik.values.credentials.filter((item) => item.id !== id)
+    formik.setFieldValue('credentials', currentValues)
+  }
 
+  const renderCurrentCredentials = (credential, handleRemove) => {
     return (
       <MDBox
         key={credential.id}
@@ -39,13 +43,13 @@ function Credentials({updateCredentials, credentials, loading}) {
         p={1}
         px={1}
         sx={{border: '1px solid #C6C9CE'}}
-        // optional: add minWidth so text + X have some horizontal space
+        mb={1}
       >
         <IconButton
           aria-label="remove"
           size="small"
-          // onClick={() => handleRemove ? handleRemove(item.id) : null}
-          sx={{mr: 1, p: 0}} // small margin to separate from text
+          onClick={() => handleRemove ? handleRemove(credential.id) : null}
+          sx={{mr: 1, p: 0}}
         >
           <HighlightOffIcon sx={{color: "#E14640", height: 26, width: 26}}/>
         </IconButton>
@@ -91,13 +95,14 @@ function Credentials({updateCredentials, credentials, loading}) {
             onChange={(value) => {
               const currentValues = [...formik.values.credentials]
               if (currentValues.find((item) => item.id === value?.[0]?.id)) return
-              currentValues.push(value[0])
+              const newValues = {...value[0], credential_id: value[0].id}
+              currentValues.push(newValues)
               formik.setFieldValue('credentials', currentValues)
             }}
           />
         </Form>
       </FormikProvider>
-      {loginStore.credentials.map((item) => renderCurrentCredentials(item))}
+      {formik.values.credentials.map((item) => renderCurrentCredentials(item, handleRemove))}
       <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3} />
       <MDBox display={"flex"}>
         <MDButton
@@ -108,6 +113,7 @@ function Credentials({updateCredentials, credentials, loading}) {
           sx={{marginLeft: "auto"}}
           disabled={loading}
           loading={loading}
+          onClick={formik.handleSubmit}
         >
           Save Changes
         </MDButton>
