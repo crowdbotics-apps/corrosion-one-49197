@@ -220,7 +220,7 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
               </IconButton>
             </MDBox>
             <MDBox sx={{width:1.5, height: 20, backgroundColor: '#000000'}} ml={1} mr={1.5} />
-            <MDTypography variant="h6" color="primary" sx={{fontSize: 16}} onClick={() => logout()}>
+            <MDTypography variant="h6" color="primary" sx={{fontSize: 16}}>
               {ACCOUNT_TYPES.find((type) => type.value === loginStore.user_type)?.name}
             </MDTypography>
           </MDBox>
