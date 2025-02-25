@@ -217,10 +217,10 @@ if AS_BUCKET_NAME:
     AZURE_ACCOUNT_NAME = AS_BUCKET_NAME
     AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
 
-    # AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
+    AZURE_URL_EXPIRATION_SECS  = env.int("AZURE_URL_EXPIRATION_SECS", 3600)
     DEFAULT_FILE_STORAGE = "corrosion_one_49197.storage_backends.AzureMediaStorage"
     STATICFILES_STORAGE = "corrosion_one_49197.storage_backends.AzureStaticStorage"
-    AZURE_URL_EXPIRATION_SECS = None
+    # AZURE_URL_EXPIRATION_SECS = None
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.azure_storage.AzureStorage",
@@ -430,10 +430,6 @@ JAZZMIN_SETTINGS = {
         "users.User": "fas fa-user",
         "configuration.Configuration": "fas fa-cogs",
         "sites.Site": "fas fa-cloud",
-        "course.Course": "fas fa-book",
-        "course.CourseEnrolment": "fas fa-user-plus",
-        "teacher.Teacher": "fas fa-chalkboard-teacher",
-        "student.Student": "fas fa-user-graduate",
     },
     "hide_apps": ["authtoken", "auth", 'sites'],
     "hide_models": [],
