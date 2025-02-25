@@ -161,13 +161,17 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
       <Toolbar sx={(theme) => navbarContainer(theme)}>
         <MDBox color="inherit" sx={(theme) => navbarRow(theme, {isMini})}>
           <IconButton
-            sx={navbarDesktopMenu}
-            onClick={handleMiniSidenav}
+            sx={{
+              ...navbarMobileMenu,
+              display: miniSidenav ? "none" : "flex",
+            }}
             size="small"
             disableRipple
+            color="inherit"
+            onClick={handleMiniSidenav}
           >
-            <Icon fontSize="medium" sx={iconsStyle}>
-              {miniSidenav ? "menu_open" : "menu"}
+            <Icon sx={iconsStyle} fontSize="medium">
+              {miniSidenav ? "menu" : "menu_open"}
             </Icon>
           </IconButton>
           {/*<Breadcrumbs*/}
@@ -179,13 +183,79 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, {isMini})}>
+            <IconButton
+              size="small"
+              disableRipple
+              color="inherit"
+              sx={navbarIconButton}
+              onClick={handleConfiguratorOpen}
+            >
+              {/*<HelpOutlineOutlinedIcon sx={iconsStyle} />*/}
+            </IconButton>
+            <IconButton
+              size="small"
+              disableRipple
+              color="inherit"
+              sx={navbarIconButton}
+              aria-controls="notification-menu"
+              aria-haspopup="true"
+              variant="contained"
+              onClick={handleOpenMenu}
+            >
+              {/*<MDBadge badgeContent={9} color="error" size="xs" circular>*/}
+              {/*<Icon sx={iconsStyle}>notifications</Icon>*/}
+              {/*</MDBadge>*/}
+            </IconButton>
+            <MDBox
+              color={light ? "white" : "inherit"}
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <Link to="/authentication/sign-in/basic">
+                <IconButton sx={navbarIconButton} size="small" disableRipple>
+                  {/*<Icon sx={iconsStyle}>account_circle</Icon>*/}
+                </IconButton>
+              </Link>
+              <IconButton
+                size="small"
+                disableRipple
+                color="inherit"
+                sx={{
+                  ...navbarMobileMenu,
+                  ml: { xs: "auto", sm: "auto" },
+                  mr: 0,
+                  display: miniSidenav
+                    ? { xs: 'flex', md: 'flex' }
+                    : { xs: 'flex', md: 'none' },
 
-            <MDBox sx={{width:1.5, height: 20, backgroundColor: '#000000'}} ml={1} mr={1.5} />
-            <MDTypography variant="h6" color="primary" sx={{fontSize: 16}}>
+                }}
+                onClick={handleMiniSidenav}
+              >
+                <Icon sx={iconsStyle} fontSize="medium">
+                  {miniSidenav ? "menu_open" : "menu"}
+                </Icon>
+              </IconButton>
+            </MDBox>
+            <MDBox sx={{ width: 1.5, height: 20, backgroundColor: '#000000' }} ml={1} mr={1.5} />
+            <MDTypography
+              variant="h6"
+              color="primary"
+              sx={{
+                fontSize: 16,
+                ml: { xs: 0, sm: 1 },
+              }}
+              onClick={() => logout()}
+            >
               {ACCOUNT_TYPES.find((type) => type.value === loginStore.user_type)?.name}
             </MDTypography>
           </MDBox>
         )}
+
+
       </Toolbar>
     </AppBar>
   );
