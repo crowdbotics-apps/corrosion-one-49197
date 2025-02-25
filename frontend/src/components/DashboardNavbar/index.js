@@ -161,13 +161,17 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
       <Toolbar sx={(theme) => navbarContainer(theme)}>
         <MDBox color="inherit" sx={(theme) => navbarRow(theme, {isMini})}>
           <IconButton
-            sx={navbarDesktopMenu}
-            onClick={handleMiniSidenav}
+            sx={{
+              ...navbarMobileMenu,
+              display: miniSidenav ? "none" : "flex",
+            }}
             size="small"
             disableRipple
+            color="inherit"
+            onClick={handleMiniSidenav}
           >
-            <Icon fontSize="medium" sx={iconsStyle}>
-              {miniSidenav ? "menu_open" : "menu"}
+            <Icon sx={iconsStyle} fontSize="medium">
+              {miniSidenav ? "menu" : "menu_open"}
             </Icon>
           </IconButton>
           {/*<Breadcrumbs*/}
@@ -222,9 +226,12 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
                 color="inherit"
                 sx={{
                   ...navbarMobileMenu,
-                  ml: { xs: "auto", sm: 1 },
+                  ml: { xs: "auto", sm: "auto" },
                   mr: 0,
-                  display: { xs: 'flex', sm: 'none' },
+                  display: miniSidenav
+                    ? { xs: 'flex', md: 'flex' }
+                    : { xs: 'flex', md: 'none' },
+
                 }}
                 onClick={handleMiniSidenav}
               >
@@ -247,8 +254,6 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
             </MDTypography>
           </MDBox>
         )}
-
-
 
 
       </Toolbar>
