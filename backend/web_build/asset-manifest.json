@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.7170666e.css",
-    "main.js": "/static/js/main.b07f635b.js",
+    "main.js": "/static/js/main.eac5ce71.js",
     "static/media/product-details-1.jpg": "/static/media/product-details-1.dbceaa6d07f741b8de75.jpg",
     "static/media/product-details-2.jpg": "/static/media/product-details-2.ddd6c858035820823168.jpg",
     "static/media/product-details-5.jpg": "/static/media/product-details-5.1e25c0dbb04433a07295.jpg",
@@ -12,11 +12,12 @@
     "static/media/favicon.png": "/static/media/favicon.17e72ab11a01af352c4b.png",
     "static/media/logo-text.svg": "/static/media/logo-text.e7c999f1fdcdc45474e8f9f8ffb0b5a6.svg",
     "static/media/google.svg": "/static/media/google.b04fb47dea074a5c6c8bb3183b0db58e.svg",
+    "static/media/linkedin.svg": "/static/media/linkedin.6b21ee83348609c1fde2ef8a01a9c0ab.svg",
     "index.html": "/index.html",
     "static/media/facebook.svg": "/static/media/facebook.96304a9c32734e80aaeb4dfc06b49ea5.svg"
   },
   "entrypoints": [
     "static/css/main.7170666e.css",
-    "static/js/main.b07f635b.js"
+    "static/js/main.eac5ce71.js"
   ]
 }
