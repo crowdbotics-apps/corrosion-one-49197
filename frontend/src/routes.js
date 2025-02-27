@@ -44,9 +44,11 @@ import profilePicture from "./assets/imagesExamples/team-3.jpg";
 import {
   SignIn,
   ForgotPassword,
-  SignUp, HomeOwner, SetNewPassword, Logout, Settings
+  SignUp,HomeOwner, SetNewPassword, Logout, Settings
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
+import HomeOwnerDos from "./pages/owner/home2"
+
 
 
 export const unprotectedRoutes = [
@@ -96,8 +98,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Find Jobs",
     key: "find-jobs",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.FINDJOBS,
+    component: <HomeOwnerDos />,
     icon: <Icon fontSize="small">search_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],
