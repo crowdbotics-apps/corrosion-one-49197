@@ -20,7 +20,10 @@ const generateRowData = () => {
   const estilo = {
     title:{
       fontWeight: 'bold'
-    }
+    },
+    font: {
+      color: '#7C8493',
+    },
   };
 
   const users = [
@@ -29,74 +32,74 @@ const generateRowData = () => {
       name: (
         <>
           <span style={estilo.title}>Software Engineer</span><br /><br />
-          <span style={estilo.font}>Building innovative software solutions.</span><br /><br />
+          <span style={estilo.font}>Building innovative software solutions.</span>
 
         </>
       ),
       status: "Pending",
       jobStatus: "Active",
-      applicationDate: <span style={estilo.font}>{new Date("2025-02-20").toLocaleDateString()}</span>,
+      applicationDate: <span>{new Date("2025-02-20").toLocaleDateString()}</span>,
     },
     {
       profile_picture: <span style={{ fontSize: "50px" }}>👩‍💻</span>,
       name: (
         <>
           <span style={estilo.title}>Data Scientist</span><br /><br />
-          <span style={estilo.font}>Specializing in analyzing complex data to drive business insights.</span><br /><br />
+          <span style={estilo.font}>Specializing in analyzing complex data to drive business insights.</span>
 
         </>
       ),
       status: "Selected",
       jobStatus: "Not Available",
-      applicationDate: <span style={estilo.font}>{new Date("2025-02-19").toLocaleDateString()}</span>,
+      applicationDate: <span>{new Date("2025-02-19").toLocaleDateString()}</span>,
     },
     {
       profile_picture: <span style={{ fontSize: "50px" }}>🧑‍🎨</span>,
       name: (
         <>
           <span style={estilo.title}>UX/UI Designer</span><br /><br />
-          <span style={estilo.font}> Crafting user-friendly interfaces and seamless experiences.</span><br /><br />
+          <span style={estilo.font}> Crafting user-friendly interfaces and seamless experiences.</span>
 
         </>
       ),
       status: "Accepted",
       jobStatus: "Closed",
-      applicationDate: <span style={estilo.font}>{new Date("2025-02-18").toLocaleDateString()}</span>,
+      applicationDate: <span>{new Date("2025-02-18").toLocaleDateString()}</span>,
     },
     {
       profile_picture: <span style={{ fontSize: "50px" }}>👩‍💼</span>,
       name: (
         <>
           <span style={estilo.title}>Product Manager</span><br /><br />
-          <span style={estilo.font}> Leading product development and driving business success.</span><br /><br />
+          <span style={estilo.font}> Leading product development and driving business success.</span>
 
         </>
       ),
       status: "Pending",
       jobStatus: "Active",
-      applicationDate: <span style={estilo.font}>{new Date("2025-02-17").toLocaleDateString()}</span>,
+      applicationDate: <span>{new Date("2025-02-17").toLocaleDateString()}</span>,
     },
     {
       profile_picture: <span style={{ fontSize: "50px" }}>👨‍💼</span>,
       name: (
         <>
           <span style={estilo.title}>Marketing Specialist</span><br /><br />
-          <span style={estilo.font}> Creating impactful marketing strategies to boost brand awareness.</span><br /><br />
+          <span style={estilo.font}> Creating impactful marketing strategies to boost brand awareness.</span>
 
         </>
       ),
       status: "Selected",
       jobStatus: "Not Available",
-      applicationDate: <span style={estilo.font}>{new Date("2025-02-16").toLocaleDateString()}</span>,
+      applicationDate: <span>{new Date("2025-02-16").toLocaleDateString()}</span>,
     }
   ]
 
   const renderStatusLabel = (status) => (
     <span
       style={{
+        font: 'Poppins',
         display: 'inline-block',
-        minWidth: '120px',
-        height: '35px',
+        padding: '2px 16px',
         borderRadius: '20px',
         backgroundColor: status.color,
         color: status.labelColor,
@@ -104,10 +107,15 @@ const generateRowData = () => {
         lineHeight: '30px',
         fontWeight: 'bold',
         boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+        fontSize: '16px',
+        whiteSpace: 'nowrap',
+        minWidth: 'auto',
       }}
     >
-      {status.label}
-    </span>
+  {status.label}
+</span>
+
+
   );
 
   return users.map(user => {
@@ -123,17 +131,17 @@ const generateRowData = () => {
     };
 
     const statusMap = {
-      Accepted: { color: 'rgba(168, 213, 186, 0.5)', label: 'Accepted', labelColor: '#4bb77a' },
-      Selected: { color: 'rgba(249, 225, 183, 0.5)', label: 'Selected', labelColor: '#d77a02'},
-      Pending: { color: 'rgba(255, 168, 160, 0.5)', label: 'Pending', labelColor: '#c12112' },
+      Accepted: { color: '#D0FFE480', label: 'Accepted', labelColor: '#00AD42' },
+      Selected: { color: '#FFD7D080', label: 'Not Selected',  labelColor: '#FF5F57'},
+      Pending: { color: '#FFBD2E33', label: 'Pending', labelColor: '#FFBD2E'  },
     };
     if (statusMap[user.status]) {
       status = statusMap[user.status];
     }
     const jobStatusMap = {
-      Active: { color: 'rgba(168, 213, 186, 0.5)', label: 'Active', labelColor: '#4bb77a' },
-      'Not Available': {color: 'rgba(249, 225, 183, 0.5)', label: 'Inactive', labelColor: '#d77a02' },
-      Closed: {color: 'rgba(249, 225, 183, 0.5)', label: 'Inactive', labelColor: '#d77a02'  },
+      Active: { color: '#D0FFE480', label: 'Active', labelColor: '#00AD42' },
+      'Not Available': { color: '#FFD7D080', label: 'Not Available', labelColor: '#FF5F57'},
+      Closed: { color: '#FFD7D080',  label: 'Closed', labelColor: '#FF5F57'},
     };
     if (jobStatusMap[user.jobStatus]) {
       jobStatus = jobStatusMap[user.jobStatus];
@@ -147,17 +155,17 @@ const generateRowData = () => {
       status: renderStatusLabel(status),
       jobStatus: renderStatusLabel(jobStatus),
       actions_edit: (
-        <MDButton variant="text" sx={{ color: '#22acac', minWidth: 'auto', padding: 0 }}>
+        <MDButton variant="text" sx={{ color: '#006E90', minWidth: 'auto', padding: 0 }}>
           <BookmarkOutlinedIcon />
         </MDButton>
       ),
       actions_delete: (
-        <MDButton variant="outlined" sx={{ borderColor: '#22acac', color: '#22acac', width: '100px', minWidth: 'auto', padding: 0, fontSize: "15px" }}>
+        <MDButton variant="outlined" sx={{ borderColor: '#006E90', color: '#006E90', width: '100px', minWidth: 'auto', padding: 0, fontSize: "15px" }}>
           View Details
         </MDButton>
       ),
       actions_details: (
-        <MDButton variant="outlined" sx={{ borderColor: 'red', color: 'red' ,width: '100px', minWidth: 'auto', padding: 0, fontSize: "15px" }}>
+        <MDButton variant="outlined" sx={{ borderColor: '#E14640', color: '#E14640' ,width: '100px', minWidth: 'auto', padding: 0, fontSize: "15px" }}>
           Withdraw
         </MDButton>
       ),
@@ -169,7 +177,7 @@ const generateRowData = () => {
 export const dataTableModel = {
   columns: [
     { Header: " ", accessor: "profile_picture", disableOrdering: true, width: 60 },
-    { Header: "Jobs", accessor: 'name', disableOrdering: true },
+    { Header: "Jobs", accessor: 'name', disableOrdering: true, width: 300 },
     { Header: "Aplication Date", accessor: "applicationDate",width: 150},
     { Header: "Aplication Status", accessor: "status" ,width: 170 },
     { Header: "Jobs Status", accessor: "jobStatus", width: 120 },

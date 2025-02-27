@@ -8,13 +8,13 @@
  =========================================================
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 // react-table components
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 // @mui material components
-import { Grid, Table, TableBody, TableContainer, TableRow } from "@mui/material";
+import { Grid, Table, TableBody, TableContainer, TableRow, TextField } from "@mui/material"
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 // Material Dashboard 2 PRO React examples
@@ -24,6 +24,8 @@ import DataTableBodyCell from "./DataTableBodyCell";
 import { EmptyResponseDatatable } from "./EmptyResponseDatatable";
 import Card from "@mui/material/Card";
 import  {PaginationCustom} from "./PaginationCustom";
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import Box from "@mui/material/Box"
 
 function DataTable({
                      entriesPerPage,
@@ -120,6 +122,29 @@ function DataTable({
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
+        <MDBox>
+          <TextField
+            label={
+              <Box display="flex" alignItems="center" sx={{ padding: '2.5rem' , fontSize:'20px'}}>
+                <SearchOutlinedIcon sx={{ marginRight: 1 }} />
+                <span>Search and Filter</span>
+              </Box>
+            }
+            sx={{
+              width: '599px',
+              padding: '2rem',
+
+            }}
+            InputProps={{
+              style: {
+                height: '72px',
+                borderRadius:'12px',
+              },
+            }}
+          />
+
+
+        </MDBox>
         <Table {...getTableProps()}>
           {showHeader && (
             <MDBox key={`tablehead__1`} component="thead">

@@ -41,9 +41,9 @@ function DataTableHeadCell({ width, children, sorted, align, disableOrdering, ..
         <MDTypography
           variant='tableHead'
           sx={{
-            color: '#22acac',
+            color: '#006E90',
             weight: 300,
-            fontSize: '20px',
+            fontSize: '16px',
             paddingBlock: '9px',
           }}
         >
@@ -52,12 +52,12 @@ function DataTableHeadCell({ width, children, sorted, align, disableOrdering, ..
         {disableOrdering !== true && sorted && (
           <MDBox
             position="absolute"
-            top={11}
+            top={2}
             right={align === "right" ? "16px" : 0}
             left={align === "right" ? "-5px" : "unset"}
-            sx={({ typography: { size } }) => ({
-              fontSize: size.lg,
-            })}
+            sx={{
+              fontSize: '32px',
+            }}
           >
             <MDBox
               position="absolute"
@@ -65,6 +65,7 @@ function DataTableHeadCell({ width, children, sorted, align, disableOrdering, ..
               color={sorted === "asce" ? "text" : "secondary"}
               opacity={1}
             >
+              {/*<Icon>caret-up</Icon>*/}
               <Icon>arrow_drop_up</Icon>
             </MDBox>
             <MDBox
@@ -74,6 +75,8 @@ function DataTableHeadCell({ width, children, sorted, align, disableOrdering, ..
               opacity={1}
             >
               <Icon>arrow_drop_down</Icon>
+              {/*<Icon>caret-down</Icon>*/}
+
             </MDBox>
           </MDBox>
         )}

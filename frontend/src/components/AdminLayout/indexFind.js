@@ -72,7 +72,7 @@ function AdminLayoutDos
 
 
           <Grid container>
-            <Grid item xs={12} paddingRight={15} paddingLeft={15} paddingY={12}>
+            <Grid item xs={12} paddingRight={10} paddingLeft={10} paddingY={12}>
               <DataTable
                 table={datatable}
               />

@@ -36,7 +36,7 @@ function collapseItem(theme, ownerState) {
       }
 
       if (active) {
-        backgroundValue = '#EBF7FA'
+        backgroundValue =  '#ECF8FB'
       }
 
       return backgroundValue;
