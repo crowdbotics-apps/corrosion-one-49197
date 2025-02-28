@@ -1,34 +1,19 @@
-/**
- =========================================================
- * Material Dashboard 2 PRO React - v2.1.0
- =========================================================
- * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
- * Copyright 2022 Creative Tim (https://www.creative-tim.com)
- Coded by www.creative-tim.com
- =========================================================
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- */
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-// prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
-// react-table components
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-// @mui material components
-import { Grid, Table, TableBody, TableContainer, TableRow, TextField } from "@mui/material"
-// Material Dashboard 2 PRO React components
+import { Grid, Table, TableBody, TableContainer, TableRow, TextField } from "@mui/material";
 import MDBox from "components/MDBox";
-// Material Dashboard 2 PRO React examples
 import DataTableHeadCell from "./DataTableHeadCell";
 import DataTableBodyCell from "./DataTableBodyCell";
-
 import { EmptyResponseDatatable } from "./EmptyResponseDatatable";
 import Card from "@mui/material/Card";
-import  {PaginationCustom} from "./PaginationCustom";
+import { PaginationCustom } from "./PaginationCustom";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import Box from "@mui/material/Box"
+import Box from "@mui/material/Box";
+import { Button, IconButton } from "@mui/material";
+import Pagination from '@mui/material/Pagination';
 
 function DataTable({
-                     entriesPerPage,
                      table,
                      noEndBorder,
                      searchFunc,
@@ -36,21 +21,18 @@ function DataTable({
                      showHeader = true,
                      showRecords = true,
                      currentPage,
-                     setSelectedProject = () => {},
                      selectedProject = null,
                      start,
                      end,
                      numberOfItems,
                      setPageSize,
-                     pageSize = 10,
-                     onPageChange,
+                     pageSize = 4,
                      showTotalEntries = true,
                      loading = false,
                      emptyLabelText = "No items found",
                      loadingText = "",
                    }) {
-  // const rootStore = useStores()
-  // const {projectStore} = rootStore
+
   const [orderedColumn, setOrderedColumn] = useState();
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
@@ -59,7 +41,7 @@ function DataTable({
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: entriesPerPage.sort((a, b) => a - b).slice(-1) },
+      initialState: { pageIndex: 0, pageSize: pageSize },
     },
     useGlobalFilter,
     useSortBy,
@@ -73,6 +55,7 @@ function DataTable({
     prepareRow,
     rows = [],
     page,
+    gotoPage, // Added for programmatic page change
   } = tableInstance;
 
   const getDataSortedByColumn = (column) => {
@@ -119,6 +102,11 @@ function DataTable({
     }
   }, [onColumnOrdering, sortedByColumn]);
 
+  // Function to handle page change
+  const handlePageChange = (event, newPage) => {
+    gotoPage(newPage - 1); // go to page (React-Table's gotoPage is 0-indexed)
+  };
+
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
@@ -133,7 +121,6 @@ function DataTable({
             sx={{
               width: '599px',
               padding: '2rem',
-
             }}
             InputProps={{
               style: {
@@ -142,9 +129,8 @@ function DataTable({
               },
             }}
           />
-
-
         </MDBox>
+
         <Table {...getTableProps()}>
           {showHeader && (
             <MDBox key={`tablehead__1`} component="thead">
@@ -168,6 +154,7 @@ function DataTable({
               ))}
             </MDBox>
           )}
+
           {showRecords && (
             <TableBody key={`tablebody__2`} {...getTableBodyProps()}>
               {page.map((row, key) => {
@@ -196,6 +183,7 @@ function DataTable({
               })}
             </TableBody>
           )}
+
           {rows?.length === 0 && (
             <EmptyResponseDatatable
               loadingText={loadingText}
@@ -205,7 +193,19 @@ function DataTable({
             />
           )}
         </Table>
+
+        <Grid item container xs={12} justifyContent="center" style={{ padding: '2rem' }}>
+          <Pagination
+            size="large"
+            count={3}
+            variant="outlined"
+            color="secondary"
+            page={currentPage}
+            onChange={handlePageChange}
+          />
+        </Grid>
       </TableContainer>
+
       {showTotalEntries && rows?.length > 0 && (
         <Grid container mt={"14px"}>
           <Grid item>
@@ -217,7 +217,6 @@ function DataTable({
                 endPage={end}
                 setPageSize={setPageSize}
                 pageSize={pageSize}
-                onPageChange={onPageChange}
               />
             </MDBox>
           </Grid>
@@ -227,16 +226,15 @@ function DataTable({
   );
 }
 
-// Setting default values for the props of DataTable
 DataTable.defaultProps = {
-  entriesPerPage: [10, 25, 50, 100],
+  entriesPerPage: [4, 25, 50, 100],
   canSearch: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },
   isSorted: true,
   noEndBorder: false,
 };
-// Typechecking props for the DataTable
+
 DataTable.propTypes = {
   entriesPerPage: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.bool]),
   canSearch: PropTypes.bool,
@@ -258,4 +256,5 @@ DataTable.propTypes = {
   isSorted: PropTypes.bool,
   noEndBorder: PropTypes.bool,
 };
+
 export default DataTable;

@@ -68,9 +68,6 @@ function AdminLayoutDos
           pl={contentCentered ? pxToRem(170) : 2}
           pt={2}
         >
-
-
-
           <Grid container>
             <Grid item xs={12} paddingRight={10} paddingLeft={10} paddingY={12}>
               <DataTable

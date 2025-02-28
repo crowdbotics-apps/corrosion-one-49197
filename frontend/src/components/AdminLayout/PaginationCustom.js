@@ -1,13 +1,13 @@
 import React from 'react';
 import MDBox from "../MDBox";
-import {usePagination} from "./usePagination";
+import { usePagination } from "./usePagination";
 import Icon from "@mui/material/Icon";
 import MDTypography from "../MDTypography";
 import MDPagination from "../MDPagination";
 import Autocomplete from "@mui/material/Autocomplete";
 import MDInput from "../MDInput";
 
-export const PaginationCustom = props => {
+export const PaginationCustom = (props) => {
   const {
     onPageChange,
     totalCount,
@@ -23,11 +23,11 @@ export const PaginationCustom = props => {
     currentPage,
     totalCount,
     siblingCount,
-    pageSize
+    pageSize,
   });
 
   if (currentPage === 0 || paginationRange?.length < 2 || paginationRange === undefined) {
-    return null
+    return null;
   }
 
   const onNext = () => {
@@ -37,12 +37,16 @@ export const PaginationCustom = props => {
   const onPrevious = () => {
     onPageChange(currentPage - 1);
   };
-  const setEntriesPerPage = (value) => setPageSize(value);
+
+  const setEntriesPerPage = (value) => {
+    setPageSize(value);
+    onPageChange(1);
+  };
 
   let lastPage = paginationRange[paginationRange.length - 1];
 
   return (
-    <MDBox mt={2} sx={{height: 50}} display={'flex'}>
+    <MDBox mt={2} sx={{ height: 50 }} display={'flex'}>
       <MDBox>
         <MDPagination
           item
@@ -58,7 +62,7 @@ export const PaginationCustom = props => {
             width: "44px",
           }}
         >
-          <Icon sx={{fontWeight: "bold"}}>chevron_left</Icon>
+          <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
         </MDPagination>
       </MDBox>
       <MDBox
@@ -74,7 +78,7 @@ export const PaginationCustom = props => {
           borderWidth: "0px",
           borderBottomWidth: "1px",
           borderTopWidth: "1px",
-          borderStyle: "solid"
+          borderStyle: "solid",
         }}
       >
         <MDTypography
@@ -103,7 +107,7 @@ export const PaginationCustom = props => {
             width: "44px",
           }}
         >
-          <Icon sx={{fontWeight: "bold"}}>chevron_right</Icon>
+          <Icon sx={{ fontWeight: "bold" }}>chevron_right</Icon>
         </MDPagination>
       </MDBox>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" ml={"20px"} mb={1}>
@@ -111,10 +115,9 @@ export const PaginationCustom = props => {
           <Autocomplete
             disableClearable
             value={pageSize.toString()}
-            options={["5", "10", "15", "20", "25"]}
+            options={["4", "5", "10", "15", "20", "25"]}
             onChange={(event, value) => {
               setEntriesPerPage(parseInt(value));
-              onPageChange(1)
             }}
             size="small"
             sx={{
@@ -153,4 +156,3 @@ export const PaginationCustom = props => {
     </MDBox>
   );
 };
-

@@ -1,9 +1,11 @@
 
-import {Chip, Icon} from "@mui/material";
 import { ENROLMENT_STATUS } from "./helpers";
 import React from "react";
 import MDButton from "../../components/MDButton"
 import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
+import MDBox from "../MDBox"
+import MDAvatar from "../MDAvatar"
+import MDTypography from "../MDTypography"
 
 const STATUS_OPTIONS_COLORS = {
   [ENROLMENT_STATUS.INVITED]: "warning",
@@ -28,92 +30,177 @@ const generateRowData = () => {
 
   const users = [
     {
-      profile_picture: <span style={{ fontSize: "50px" }}>👨‍💻</span>,
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
-        <>
-          <span style={estilo.title}>Software Engineer</span><br /><br />
-          <span style={estilo.font}>Building innovative software solutions.</span>
-
-        </>
+        <MDBox>
+          <MDTypography style={estilo.title}>Software Engineer</MDTypography>
+          <MDTypography style={estilo.font}>Building innovative software solutions.</MDTypography>
+        </MDBox>
       ),
       status: "Pending",
       jobStatus: "Active",
-      applicationDate: <span>{new Date("2025-02-20").toLocaleDateString()}</span>,
+      applicationDate: <MDBox>{new Date("2025-02-20").toLocaleDateString()}</MDBox>,
     },
     {
-      profile_picture: <span style={{ fontSize: "50px" }}>👩‍💻</span>,
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
-        <>
-          <span style={estilo.title}>Data Scientist</span><br /><br />
-          <span style={estilo.font}>Specializing in analyzing complex data to drive business insights.</span>
-
-        </>
+        <MDBox>
+          <MDTypography style={estilo.title}>Data Scientist</MDTypography>
+          <MDTypography style={estilo.font}>Specializing in analyzing complex data to drive business insights.</MDTypography>
+        </MDBox>
       ),
       status: "Selected",
       jobStatus: "Not Available",
-      applicationDate: <span>{new Date("2025-02-19").toLocaleDateString()}</span>,
+      applicationDate: <MDBox>{new Date("2025-02-19").toLocaleDateString()}</MDBox>,
     },
     {
-      profile_picture: <span style={{ fontSize: "50px" }}>🧑‍🎨</span>,
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
-        <>
-          <span style={estilo.title}>UX/UI Designer</span><br /><br />
-          <span style={estilo.font}> Crafting user-friendly interfaces and seamless experiences.</span>
+        <MDBox>
+          <MDTypography style={estilo.title}>UX/UI Designer</MDTypography>
+          <MDTypography style={estilo.font}>Crafting user-friendly interfaces and seamless experiences.</MDTypography>
+        </MDBox>
 
-        </>
       ),
       status: "Accepted",
       jobStatus: "Closed",
-      applicationDate: <span>{new Date("2025-02-18").toLocaleDateString()}</span>,
+      applicationDate: <MDBox>{new Date("2025-02-18").toLocaleDateString()}</MDBox>,
     },
     {
-      profile_picture: <span style={{ fontSize: "50px" }}>👩‍💼</span>,
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
-        <>
-          <span style={estilo.title}>Product Manager</span><br /><br />
-          <span style={estilo.font}> Leading product development and driving business success.</span>
+        <MDBox>
+          <MDTypography style={estilo.title}>Product Manager</MDTypography>
+          <MDTypography style={estilo.font}>Leading product development and driving business success.</MDTypography>
+        </MDBox>
 
-        </>
       ),
       status: "Pending",
       jobStatus: "Active",
-      applicationDate: <span>{new Date("2025-02-17").toLocaleDateString()}</span>,
+      applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
     },
     {
-      profile_picture: <span style={{ fontSize: "50px" }}>👨‍💼</span>,
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
-        <>
-          <span style={estilo.title}>Marketing Specialist</span><br /><br />
-          <span style={estilo.font}> Creating impactful marketing strategies to boost brand awareness.</span>
-
-        </>
+        <MDBox>
+          <MDTypography style={estilo.title}>Marketing Specialist</MDTypography>
+          <MDTypography style={estilo.font}>Creating marketing strategies to boost brand awareness.</MDTypography>
+        </MDBox>
+      ),
+      status: "Pending",
+      jobStatus: "Active",
+      applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Marketing Specialist</MDTypography>
+          <MDTypography style={estilo.font}>Creating marketing strategies to boost brand awareness.</MDTypography>
+        </MDBox>
       ),
       status: "Selected",
       jobStatus: "Not Available",
-      applicationDate: <span>{new Date("2025-02-16").toLocaleDateString()}</span>,
+      applicationDate: <MDBox>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Software Engineer</MDTypography>
+          <MDTypography style={estilo.font}>Building innovative software solutions.</MDTypography>
+        </MDBox>
+      ),
+      status: "Pending",
+      jobStatus: "Active",
+      applicationDate: <MDBox>{new Date("2025-02-20").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Data Scientist</MDTypography>
+          <MDTypography style={estilo.font}>Specializing in analyzing complex data to drive business insights.</MDTypography>
+        </MDBox>
+      ),
+      status: "Selected",
+      jobStatus: "Not Available",
+      applicationDate: <MDBox>{new Date("2025-02-19").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>UX/UI Designer</MDTypography>
+          <MDTypography style={estilo.font}>Crafting user-friendly interfaces and seamless experiences.</MDTypography>
+        </MDBox>
+
+      ),
+      status: "Accepted",
+      jobStatus: "Closed",
+      applicationDate: <MDBox>{new Date("2025-02-18").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Product Manager</MDTypography>
+          <MDTypography style={estilo.font}>Leading product development and driving business success.</MDTypography>
+        </MDBox>
+
+      ),
+      status: "Pending",
+      jobStatus: "Active",
+      applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Marketing Specialist</MDTypography>
+          <MDTypography style={estilo.font}>Creating marketing strategies to boost brand awareness.</MDTypography>
+        </MDBox>
+      ),
+      status: "Pending",
+      jobStatus: "Active",
+      applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Marketing Specialist</MDTypography>
+          <MDTypography style={estilo.font}>Creating marketing strategies to boost brand awareness.</MDTypography>
+        </MDBox>
+      ),
+      status: "Selected",
+      jobStatus: "Not Available",
+      applicationDate: <MDBox>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
     }
   ]
 
+
   const renderStatusLabel = (status) => (
-    <span
+    <MDBox
       style={{
         font: 'Poppins',
         display: 'inline-block',
-        padding: '2px 16px',
         borderRadius: '20px',
         backgroundColor: status.color,
         color: status.labelColor,
         textAlign: 'center',
-        lineHeight: '30px',
+        lineHeight: '40px',
         fontWeight: 'bold',
         boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
         fontSize: '16px',
         whiteSpace: 'nowrap',
-        minWidth: 'auto',
+        width: '150px',
+        height: '40px',
       }}
     >
-  {status.label}
-</span>
+      {status.label}
+    </MDBox>
+
 
 
   );
@@ -202,33 +289,33 @@ export const dataTableModel = {
 //     </Box>
 //   )
 // }
-
-const renderStatus = (item) => {
-  return (
-    <Chip id={item.status} color={STATUS_OPTIONS_COLORS[item.status]} label={ENROLMENT_STATUS._LABELS[item.status]} />
-  )
-}
-
-const popOver = (status, item, setAnchorEl, setOpenPopover, setSelectedItem, extra_jsx) => {
-  return (
-    <>
-      {extra_jsx}
-      {
-        (status === ENROLMENT_STATUS.INVITED || status === ENROLMENT_STATUS.REQUESTED || status === ENROLMENT_STATUS.ACCEPTED ) &&
-        <Icon
-          fontSize='medium' sx={{cursor: 'pointer'}}
-          onClick={(e) => {
-            setAnchorEl(e.currentTarget)
-            setOpenPopover(true)
-            setSelectedItem(item)
-          }}
-        >
-          more_vert
-        </Icon>
-      }
-    </>
-  )
-}
+//
+// const renderStatus = (item) => {
+//   return (
+//     <Chip id={item.status} color={STATUS_OPTIONS_COLORS[item.status]} label={ENROLMENT_STATUS._LABELS[item.status]} />
+//   )
+// }
+//
+// const popOver = (status, item, setAnchorEl, setOpenPopover, setSelectedItem, extra_jsx) => {
+//   return (
+//     <>
+//       {extra_jsx}
+//       {
+//         (status === ENROLMENT_STATUS.INVITED || status === ENROLMENT_STATUS.REQUESTED || status === ENROLMENT_STATUS.ACCEPTED ) &&
+//         <Icon
+//           fontSize='medium' sx={{cursor: 'pointer'}}
+//           onClick={(e) => {
+//             setAnchorEl(e.currentTarget)
+//             setOpenPopover(true)
+//             setSelectedItem(item)
+//           }}
+//         >
+//           more_vert
+//         </Icon>
+//       }
+//     </>
+//   )
+// }
 //
 // export const renderTableRow = (item, setAnchorEl, setOpenPopover, setSelectedItem, bucksButtons) => {
 //   const status =  item.status
