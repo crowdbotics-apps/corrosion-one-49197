@@ -7,10 +7,8 @@ import DataTableHeadCell from "./DataTableHeadCell";
 import DataTableBodyCell from "./DataTableBodyCell";
 import { EmptyResponseDatatable } from "./EmptyResponseDatatable";
 import Card from "@mui/material/Card";
-import { PaginationCustom } from "./PaginationCustom";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Box from "@mui/material/Box";
-import { Button, IconButton } from "@mui/material";
 import Pagination from '@mui/material/Pagination';
 
 function DataTable({
@@ -22,12 +20,7 @@ function DataTable({
                      showRecords = true,
                      currentPage,
                      selectedProject = null,
-                     start,
-                     end,
-                     numberOfItems,
-                     setPageSize,
                      pageSize = 4,
-                     showTotalEntries = true,
                      loading = false,
                      emptyLabelText = "No items found",
                      loadingText = "",
@@ -55,7 +48,7 @@ function DataTable({
     prepareRow,
     rows = [],
     page,
-    gotoPage, // Added for programmatic page change
+    gotoPage,
   } = tableInstance;
 
   const getDataSortedByColumn = (column) => {
@@ -102,9 +95,8 @@ function DataTable({
     }
   }, [onColumnOrdering, sortedByColumn]);
 
-  // Function to handle page change
   const handlePageChange = (event, newPage) => {
-    gotoPage(newPage - 1); // go to page (React-Table's gotoPage is 0-indexed)
+    gotoPage(newPage - 1);
   };
 
   return (
@@ -206,22 +198,6 @@ function DataTable({
         </Grid>
       </TableContainer>
 
-      {showTotalEntries && rows?.length > 0 && (
-        <Grid container mt={"14px"}>
-          <Grid item>
-            <MDBox mb={{ xs: 3, sm: 0 }}>
-              <PaginationCustom
-                currentPage={currentPage}
-                totalCount={numberOfItems}
-                startPage={start}
-                endPage={end}
-                setPageSize={setPageSize}
-                pageSize={pageSize}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-      )}
     </Card>
   );
 }
