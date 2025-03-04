@@ -48,6 +48,7 @@ import {
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerDos from "./pages/owner/home2"
+import HomeOwnerMessages from "./pages/owner/home3"
 
 
 
@@ -168,8 +169,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Messages",
     key: "messages",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.MESSAGES,
+    component: <HomeOwnerMessages />,
     icon: <Icon fontSize="small">forum_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER, ROLES.INSPECTOR],

@@ -13,7 +13,7 @@ function DataTableBodyCell({ noBorder, align, children, odd, width, selected = f
       sx={({ palette: { light, table }, typography: { size } }) => ({
         fontSize: size.sm,
         borderBottom: "none",
-        height: "66px",
+        height: "100px",
         backgroundColor: odd ? "#F8FCFD" : "white",
       })}
     >

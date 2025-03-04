@@ -9,6 +9,7 @@ export const ROUTES = {
   SET_NEW_PASSWORD: "/set-new-password/*",
   DASHBOARD: `/dashboard`,
   FINDJOBS: `/find-jobs`,
+  MESSAGES: `/messages`,
   SETTINGS: `/settings`,
   SUPPORT: `/support`,
 

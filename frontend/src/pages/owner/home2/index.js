@@ -1,12 +1,22 @@
-import AdminLayoutDos from "../../../components/AdminLayout/indexFind"
+
+import AdminLayout from "../../../components/AdminLayout"
+import DataTable from "../../../components/AdminLayout/dataTable"
+import { useState } from "react"
+import { dataTableModel } from "../../../components/AdminLayout/utils"
+
 
 
 function HomeOwnerDos() {
+  const [datatable, setDatatable] = useState({...dataTableModel});
   return (
-    <AdminLayoutDos
+    <AdminLayout
       title={'Find Jobs'}
+      showCard
     >
-    </AdminLayoutDos>
+      <DataTable
+        table={datatable}
+      />
+    </AdminLayout>
   );
 }
 

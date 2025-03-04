@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 import { Grid, Table, TableBody, TableContainer, TableRow, TextField } from "@mui/material";
 import MDBox from "components/MDBox";
-import DataTableHeadCell from "./DataTableHeadCell";
-import DataTableBodyCell from "./DataTableBodyCell";
-import { EmptyResponseDatatable } from "./EmptyResponseDatatable";
+import DataTableHeadCell from "../DataTableHeadCell";
+import DataTableBodyCell from "../DataTableBodyCell";
+import { EmptyResponseDatatable } from "../EmptyResponseDatatable";
 import Card from "@mui/material/Card";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Box from "@mui/material/Box";
@@ -105,18 +105,18 @@ function DataTable({
         <MDBox>
           <TextField
             label={
-              <Box display="flex" alignItems="center" sx={{ padding: '2.5rem' , fontSize:'20px'}}>
+              <Box display="flex" alignItems="center" sx={{ padding: '2rem' , fontSize:'16px'}}>
                 <SearchOutlinedIcon sx={{ marginRight: 1 }} />
                 <Box>Search and Filter</Box>
               </Box>
             }
             sx={{
-              width: '599px',
+              width: '352px',
               padding: '2rem',
             }}
             InputProps={{
               style: {
-                height: '72px',
+                height: '50px',
                 borderRadius:'12px',
               },
             }}
@@ -186,16 +186,6 @@ function DataTable({
           )}
         </Table>
 
-        <Grid item container xs={12} justifyContent="center" style={{ padding: '2rem' }}>
-          <Pagination
-            size="large"
-            count={3}
-            variant="outlined"
-            color="secondary"
-            page={currentPage}
-            onChange={handlePageChange}
-          />
-        </Grid>
       </TableContainer>
 
     </Card>

@@ -107,8 +107,8 @@ const generateRowData = () => {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Software Engineer</MDTypography>
-          <MDTypography style={estilo.font}>Building innovative software solutions.</MDTypography>
+          <MDTypography style={estilo.title}>Cloud Architect</MDTypography>
+          <MDTypography style={estilo.font}>Creating scalable and secure cloud infrastructure solutions.</MDTypography>
         </MDBox>
       ),
       status: "Pending",
@@ -119,8 +119,8 @@ const generateRowData = () => {
       profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Data Scientist</MDTypography>
-          <MDTypography style={estilo.font}>Specializing in analyzing complex data to drive business insights.</MDTypography>
+          <MDTypography style={estilo.title}>AI Specialist</MDTypography>
+          <MDTypography style={estilo.font}>Using advanced AI algorithms for business optimization.</MDTypography>
         </MDBox>
       ),
       status: "Selected",
@@ -131,8 +131,8 @@ const generateRowData = () => {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>UX/UI Designer</MDTypography>
-          <MDTypography style={estilo.font}>Crafting user-friendly interfaces and seamless experiences.</MDTypography>
+          <MDTypography style={estilo.title}>Game Developer</MDTypography>
+          <MDTypography style={estilo.font}>Creating immersive, interactive gaming experiences with advanced technology.</MDTypography>
         </MDBox>
 
       ),
@@ -144,8 +144,8 @@ const generateRowData = () => {
       profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Product Manager</MDTypography>
-          <MDTypography style={estilo.font}>Leading product development and driving business success.</MDTypography>
+          <MDTypography style={estilo.title}>Operations Manager</MDTypography>
+          <MDTypography style={estilo.font}>Optimizing business processes to improve efficiency and profitability.</MDTypography>
         </MDBox>
 
       ),
@@ -157,8 +157,8 @@ const generateRowData = () => {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Marketing Specialist</MDTypography>
-          <MDTypography style={estilo.font}>Creating marketing strategies to boost brand awareness.</MDTypography>
+          <MDTypography style={estilo.title}>SEO Expert</MDTypography>
+          <MDTypography style={estilo.font}>Enhancing website visibility and driving traffic through SEO.</MDTypography>
         </MDBox>
       ),
       status: "Pending",
@@ -169,14 +169,15 @@ const generateRowData = () => {
       profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Marketing Specialist</MDTypography>
-          <MDTypography style={estilo.font}>Creating marketing strategies to boost brand awareness.</MDTypography>
+          <MDTypography style={estilo.title}>Content Strategist</MDTypography>
+          <MDTypography style={estilo.font}>Developing content plans to drive engagement and brand storytelling.</MDTypography>
         </MDBox>
       ),
       status: "Selected",
       jobStatus: "Not Available",
       applicationDate: <MDBox>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
     }
+
   ]
 
 
@@ -247,14 +248,32 @@ const generateRowData = () => {
         </MDButton>
       ),
       actions_delete: (
-        <MDButton variant="outlined" sx={{ borderColor: '#006E90', color: '#006E90', width: '100px', minWidth: 'auto', padding: 0, fontSize: "15px" }}>
-          View Details
-        </MDButton>
-      ),
-      actions_details: (
-        <MDButton variant="outlined" sx={{ borderColor: '#E14640', color: '#E14640' ,width: '100px', minWidth: 'auto', padding: 0, fontSize: "15px" }}>
-          Withdraw
-        </MDButton>
+        <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '100px', md: '200px' }, minWidth: 'auto', padding: 0, }}>
+          <MDButton
+            variant="outlined"
+            sx={{
+              borderColor: '#006E90',
+              color: '#006E90',
+              fontSize: '15px',
+
+            }}
+          >
+            View Details
+          </MDButton>
+
+          <MDButton
+            variant="outlined"
+            sx={{
+              borderColor: '#E14640',
+              color: '#E14640',
+              fontSize: '15px',
+            }}
+          >
+            Withdraw
+          </MDButton>
+        </MDBox>
+
+
       ),
     };
   });
@@ -275,54 +294,4 @@ export const dataTableModel = {
   rows: generateRowData(),
 };
 
-//
-// const renderProfilePicture = (item) => {
-//   return (
-//     <Box display={"flex"} alignItems={"center"} gap={1}>
-//       {item.image
-//         ? <Box component={"img"} src={item.image} alt={"profile_picture"} width={"40px"}
-//                sx={{objectFit: 'cover'}} borderRadius={"50%"}/>
-//         : <Box component={"img"} src={defaultImg} alt={"profile_picture"} width={"40px"}
-//                borderRadius={"50%"}/>
-//       }
-//
-//     </Box>
-//   )
-// }
-//
-// const renderStatus = (item) => {
-//   return (
-//     <Chip id={item.status} color={STATUS_OPTIONS_COLORS[item.status]} label={ENROLMENT_STATUS._LABELS[item.status]} />
-//   )
-// }
-//
-// const popOver = (status, item, setAnchorEl, setOpenPopover, setSelectedItem, extra_jsx) => {
-//   return (
-//     <>
-//       {extra_jsx}
-//       {
-//         (status === ENROLMENT_STATUS.INVITED || status === ENROLMENT_STATUS.REQUESTED || status === ENROLMENT_STATUS.ACCEPTED ) &&
-//         <Icon
-//           fontSize='medium' sx={{cursor: 'pointer'}}
-//           onClick={(e) => {
-//             setAnchorEl(e.currentTarget)
-//             setOpenPopover(true)
-//             setSelectedItem(item)
-//           }}
-//         >
-//           more_vert
-//         </Icon>
-//       }
-//     </>
-//   )
-// }
-//
-// export const renderTableRow = (item, setAnchorEl, setOpenPopover, setSelectedItem, bucksButtons) => {
-//   const status =  item.status
-//   item.profile_picture = renderProfilePicture(item)
-//   item.status_id = item.status
-//   item.status = renderStatus(item)
-//   item.actions = (popOver(status, item, setAnchorEl, setOpenPopover, setSelectedItem))
-//   item.bucks = item.student_id ? bucksButtons(item) : '-'
-//   return item
-// }
+
