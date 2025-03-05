@@ -1,226 +1,212 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import PropTypes from "prop-types";
-import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { Grid, Table, TableBody, TableContainer, TableRow, TextField } from "@mui/material";
+import React, { useState } from "react";
+import { Table, TableBody, TableRow, TableCell, Box, TextField, Card } from "@mui/material";
 import MDBox from "components/MDBox";
-import DataTableHeadCell from "../DataTableHeadCell";
-import DataTableBodyCell from "../DataTableBodyCell";
-import { EmptyResponseDatatable } from "../EmptyResponseDatatable";
-import Card from "@mui/material/Card";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import Box from "@mui/material/Box";
-import Pagination from '@mui/material/Pagination';
+import MDTypography from "../../MDTypography";
+import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
+import SendIcon from '@mui/icons-material/Send';
+import MDButton from "../../MDButton";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 
 function DataTable({
                      table,
-                     noEndBorder,
-                     searchFunc,
-                     searchQuery = "",
                      showHeader = true,
-                     showRecords = true,
-                     currentPage,
-                     selectedProject = null,
-                     pageSize = 4,
-                     loading = false,
-                     emptyLabelText = "No items found",
-                     loadingText = "",
+                     searchQuery = "",
+                     searchFunc,
                    }) {
+  const [selectedChat, setSelectedChat] = useState(null);
 
-  const [orderedColumn, setOrderedColumn] = useState();
-  const columns = useMemo(() => table.columns, [table]);
-  const data = useMemo(() => table.rows, [table]);
-  const [sortedByColumn, setSortedByColumn] = useState({ column: "", order: "none" });
-  const tableInstance = useTable(
-    {
-      columns,
-      data,
-      initialState: { pageIndex: 0, pageSize: pageSize },
-    },
-    useGlobalFilter,
-    useSortBy,
-    usePagination
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    rows = [],
-    page,
-    gotoPage,
-  } = tableInstance;
-
-  const getDataSortedByColumn = (column) => {
-    if (column.disableOrdering) {
-      return;
-    }
-    const columnName = column.custom_ordering ? column.custom_ordering : column.id;
-    if (sortedByColumn.column !== columnName) {
-      setSortedByColumn({ column: columnName, order: "asce" });
-    } else if (sortedByColumn.order === "asce") {
-      setSortedByColumn({ column: columnName, order: "desc" });
-    } else {
-      setSortedByColumn({ column: "", order: "none" });
-    }
-  };
-
-  const setSortedValue = (column) => {
-    const sortedColum = { ...orderedColumn };
-    if (column.id === sortedColum.column) {
-      return sortedColum.order;
-    } else {
-      return "none";
-    }
-  };
-
-  const onColumnOrdering = useCallback(
-    (ordering) => {
-      const { column, order } = ordering;
-      if (column === "") {
-        searchFunc?.(searchQuery);
-      } else if (order === "asce") {
-        searchFunc?.(searchQuery, currentPage, `${column}`);
-      } else {
-        searchFunc?.(searchQuery, currentPage, `-${column}`);
-      }
-      setOrderedColumn(ordering);
-    },
-    [currentPage, searchFunc, searchQuery]
-  );
-
-  useEffect(() => {
-    if (onColumnOrdering) {
-      onColumnOrdering(sortedByColumn);
-    }
-  }, [onColumnOrdering, sortedByColumn]);
-
-  const handlePageChange = (event, newPage) => {
-    gotoPage(newPage - 1);
+  const handleRowClick = (chat) => {
+    setSelectedChat(selectedChat === chat ? null : chat);
   };
 
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
-      <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox>
-          <TextField
-            label={
-              <Box display="flex" alignItems="center" sx={{ padding: '2rem' , fontSize:'16px'}}>
-                <SearchOutlinedIcon sx={{ marginRight: 1 }} />
-                <Box>Search and Filter</Box>
-              </Box>
-            }
-            sx={{
-              width: '352px',
-              padding: '2rem',
-            }}
-            InputProps={{
-              style: {
-                height: '50px',
-                borderRadius:'12px',
-              },
-            }}
-          />
-        </MDBox>
+      <MDBox sx={{ display: "flex", width: "100%", height: "100%" }}>
+        <MDBox sx={{ flex: 1 }}>
+          <MDBox>
+            <TextField
+              label={
+                <Box display="flex" alignItems="center" sx={{ padding: '2rem', fontSize: '16px' }}>
+                  <SearchOutlinedIcon sx={{ marginRight: 1 }} />
+                  <Box>Search messages</Box>
+                </Box>
+              }
+              sx={{
+                width: '352px',
+                padding: '2rem',
+              }}
+              InputProps={{
+                style: {
+                  height: '50px',
+                  borderRadius: '12px',
+                },
+              }}
+              value={searchQuery}
+              onChange={(e) => searchFunc && searchFunc(e.target.value)}
+            />
+          </MDBox>
 
-        <Table {...getTableProps()}>
-          {showHeader && (
-            <MDBox key={`tablehead__1`} component="thead">
-              {headerGroups.map((headerGroup, idx) => (
-                <TableRow key={`tablerow__${idx}`} {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column, idx3) => {
-                    return (
-                      <DataTableHeadCell
-                        key={`tablecell__${idx3}`}
-                        onClick={() => getDataSortedByColumn(column)}
-                        width={column.width ? column.width : "50px"}
-                        align={column.align ? column.align : "left"}
-                        sorted={setSortedValue(column)}
-                        disableOrdering={column?.disableOrdering}
-                      >
-                        {column.render("Header")}
-                      </DataTableHeadCell>
-                    );
-                  })}
+          <Table>
+            {showHeader && (
+              <MDBox component="thead">
+                {table.columns.map((column, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>{column.Header}</TableCell>
+                  </TableRow>
+                ))}
+              </MDBox>
+            )}
+
+            <TableBody>
+              {table.rows.map((chat, idx) => (
+                <TableRow
+                  key={idx}
+                  onClick={() => handleRowClick(chat)}
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: selectedChat === chat ? "#EBF7FA" : "white",
+                    height: "60px",
+                  }}
+                >
+                  <TableCell sx={{ height: "60px" }}>
+                    {chat.nameDescription}
+                  </TableCell>
                 </TableRow>
               ))}
+            </TableBody>
+          </Table>
+        </MDBox>
+
+        <MDBox sx={{
+          width: "100%",
+          height: "100%",
+          padding: "20px",
+          borderLeft: "1px solid #ccc",
+          backgroundColor: "white",
+          marginLeft: "20px",
+          overflowY: "auto"
+        }}>
+          {selectedChat ? (
+            <MDBox sx={{
+              width: "80%",
+              height: "700px",
+              padding: "20px",
+              backgroundColor: "white",
+              margin: "auto",
+              overflowY: "auto",
+            }}>
+
+              <MDBox sx={{
+                backgroundColor: "white",
+                borderBlockEnd: "1px solid #ccc",
+                height: "90px",
+                display: "flex",
+              }}>
+                <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px", }}>{selectedChat.principal}</MDBox>
+                <MDBox sx={{
+                  backgroundColor: "white",
+                  height: "90px",
+                  width: "400px",
+                  marginLeft: "200px",
+                  gap: 2,
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center"
+                }}>
+                  <DriveFileRenameOutlineOutlinedIcon />
+                  <StarOutlineIcon />
+                  <MoreVertIcon />
+
+
+                </MDBox>
+
+              </MDBox>
+
+              <MDBox sx={{
+                backgroundColor: "white",
+                borderBlockEnd: "1px solid #ccc",
+                height: "150px",
+              }}>
+
+              </MDBox>
+
+              {selectedChat.messages.map((message, index) => (
+                <MDBox key={index} style={{ display: "flex", flexDirection: "column", alignItems: index % 2 === 0 ? "flex-end" : "flex-start", marginBottom: "10px" }}>
+
+                  <MDTypography variant="body2" component="p" sx={{ marginBottom: "8px", color: "#25324B" }}>
+                    {index % 2 === 0 ? "You" : selectedChat.name}
+                  </MDTypography>
+
+                  <MDBox
+                    sx={{
+                      padding: "10px",
+                      width: "30%",
+                      borderRadius: "8px",
+                      backgroundColor: index % 2 === 0 ? "#EBF7FA" : "white",
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                      fontFamily: "Roboto, sans-serif",
+                      color: "#555",
+                      textAlign: "left",
+                    }}
+                  >
+                    {message}
+                  </MDBox>
+                </MDBox>
+              ))}
+
+            </MDBox>
+          ) : (
+            <MDBox sx={{ textAlign: "center", fontSize: "18px", color: "#888" }}>
+              <MDTypography>Select a chat to view the conversation.</MDTypography>
             </MDBox>
           )}
 
-          {showRecords && (
-            <TableBody key={`tablebody__2`} {...getTableBodyProps()}>
-              {page.map((row, key) => {
-                prepareRow(row);
-                return (
-                  <TableRow
-                    key={`tablerow2__${key}`}
-                    {...row.getRowProps()}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    {row.cells.map((cell, idx2) => (
-                      <DataTableBodyCell
-                        key={`tablecell__${idx2}`}
-                        odd={key % 2 === 0}
-                        selected={row.original.id === selectedProject?.id}
-                        noBorder={noEndBorder && rows.length - 1 === key}
-                        width={cell.column.width}
-                        align={cell.column.align ? cell.column.align : "left"}
-                        {...cell.getCellProps()}
-                      >
-                        {cell.render("Cell")}
-                      </DataTableBodyCell>
-                    ))}
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          )}
+          <MDBox display="flex" justifyContent="center">
+            {selectedChat && (
+              <TextField
+                sx={{
+                  width: '80%',
+                  marginTop: "30px",
+                }}
+                label="Reply message"
+                InputProps={{
+                  startAdornment: (
+                    <MDBox display="flex" alignItems="center">
+                      <AttachFileOutlinedIcon sx={{ marginRight: 1 }} />
+                    </MDBox>
+                  ),
+                  endAdornment: (
+                    <MDButton
+                      sx={{
+                        backgroundColor: '#6DDA43',
+                        '&:hover': {
+                          backgroundColor: '#5cb039',
+                        },
+                        padding: '1px 20px',
+                        minWidth: 'auto',
+                        borderRadius: '20px',
+                      }}
+                      startIcon={<SendIcon />}
+                    />
+                  ),
+                  style: {
+                    height: '50px',
+                  },
+                }}
+                value={searchQuery}
+                onChange={(e) => searchFunc && searchFunc(e.target.value)}
+              />
+            )}
+          </MDBox>
 
-          {rows?.length === 0 && (
-            <EmptyResponseDatatable
-              loadingText={loadingText}
-              loading={loading}
-              text={emptyLabelText}
-              colSpan={table.columns.length}
-            />
-          )}
-        </Table>
+        </MDBox>
 
-      </TableContainer>
-
+      </MDBox>
     </Card>
   );
 }
-
-DataTable.defaultProps = {
-  entriesPerPage: [4, 25, 50, 100],
-  canSearch: false,
-  showTotalEntries: true,
-  pagination: { variant: "gradient", color: "info" },
-  isSorted: true,
-  noEndBorder: false,
-};
-
-DataTable.propTypes = {
-  entriesPerPage: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.bool]),
-  canSearch: PropTypes.bool,
-  showTotalEntries: PropTypes.bool,
-  table: PropTypes.objectOf(PropTypes.array).isRequired,
-  pagination: PropTypes.shape({
-    variant: PropTypes.oneOf(["contained", "gradient"]),
-    color: PropTypes.oneOf([
-      "primary",
-      "secondary",
-      "info",
-      "success",
-      "warning",
-      "error",
-      "dark",
-      "light",
-    ]),
-  }),
-  isSorted: PropTypes.bool,
-  noEndBorder: PropTypes.bool,
-};
 
 export default DataTable;

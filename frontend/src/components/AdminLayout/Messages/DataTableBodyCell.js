@@ -1,9 +1,8 @@
-import PropTypes from "prop-types";
+import MDBox from "../../MDBox"
+import PropTypes from 'prop-types';
 
-// Material Dashboard 2 PRO React components
-import MDBox from "components/MDBox";
 
-function DataTableBodyCell({ noBorder, align, children, odd, width, selected = false }) {
+function DataTableBodyCell({ width, noBorder, align, children, odd, selected = false }) {
   return (
     <MDBox
       component="td"
@@ -13,8 +12,13 @@ function DataTableBodyCell({ noBorder, align, children, odd, width, selected = f
       sx={({ palette: { light, table }, typography: { size } }) => ({
         fontSize: size.sm,
         borderBottom: "none",
-        height: "100px",
-        backgroundColor: odd ? "#F8FCFD" : "white",
+        height: "20px",
+        borderRadius: "1px",
+        transition: "background-color 0.3s ease",
+        cursor: "pointer",
+        '&:hover': {
+          backgroundColor: selected ? "#EBF7FA" : "#EBF7FA",
+        },
       })}
     >
       <MDBox
@@ -24,10 +28,15 @@ function DataTableBodyCell({ noBorder, align, children, odd, width, selected = f
           verticalAlign: "middle",
           fontSize: "17px",
           lineHeight: "19px",
+          fontFamily: "'Roboto', sans-serif",
+          color: selected ? "#25D366" : "#000000",
         }}
       >
         {children}
+        <br/>
+        <hr style={{color: '#888'}}/>
       </MDBox>
+
     </MDBox>
   );
 }
@@ -46,4 +55,6 @@ DataTableBodyCell.propTypes = {
 };
 
 export default DataTableBodyCell;
+
+
 
