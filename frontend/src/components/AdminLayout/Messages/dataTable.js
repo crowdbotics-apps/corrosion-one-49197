@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Table, TableBody, TableRow, TableCell, Box, TextField, Card } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react"
+import { TextField} from "@mui/material";
 import MDBox from "components/MDBox";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import MDTypography from "../../MDTypography";
@@ -10,17 +10,19 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
-import  EmojiPicker  from 'emoji-picker-react';
+import EmojiPicker from 'emoji-picker-react';
 import MDInput from "../../MDInput"
+import Grid from "@mui/material/Grid"
 
 function DataTable({
-                     table,
+                     data,
                      showHeader = true,
                    }) {
   const [selectedChat, setSelectedChat] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
   const [fileName, setFileName] = useState('');
+  const chatContainerRef = useRef(null);
 
   const searchFunc = (value) => {
     setSearchQuery(value);
@@ -47,17 +49,29 @@ function DataTable({
     setSelectedChat(selectedChat === chat ? null : chat);
   };
 
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    if (selectedChat && selectedChat.messages) {
+      scrollToBottom();
+    }
+  }, [selectedChat]);
+
   return (
-    <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
+    <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white" }}>
       <MDBox sx={{ display: "flex", width: "100%", height: "100%" }}>
         <MDBox sx={{ flex: 1 }}>
           <MDBox>
             <TextField
               label={
-                <Box display="flex" alignItems="center" sx={{ padding: '2rem', fontSize: '16px' }}>
+                <MDBox display="flex" alignItems="center" sx={{ padding: '2rem', fontSize: '16px' }}>
                   <SearchOutlinedIcon sx={{ marginRight: 1 }} />
-                  <Box>Search messages</Box>
-                </Box>
+                  <MDBox>Search messages</MDBox>
+                </MDBox>
               }
               sx={{
                 width: '352px',
@@ -69,126 +83,162 @@ function DataTable({
                   borderRadius: '12px',
                 },
               }}
-              // value={searchQuery}
-              // onChange={(e) => searchFunc(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => searchFunc(e.target.value)}
             />
           </MDBox>
 
-          <Table>
+          <Grid container spacing={2}>
             {showHeader && (
-              <MDBox component="thead">
-                {table.columns.map((column, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell>{column.Header}</TableCell>
-                  </TableRow>
-                ))}
-              </MDBox>
+              <Grid item xs={12}>
+                <Grid container spacing={2}>
+                  {data.columns.map((column, idx) => (
+                    <Grid item key={idx} xs={12} sm={4}>
+                      <MDBox sx={{ fontWeight: 'bold' }}>{column.Header}</MDBox>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Grid>
             )}
 
-            <TableBody>
-              {table.rows.map((chat, idx) => (
-                <TableRow
-                  key={idx}
-                  onClick={() => handleRowClick(chat)}
-                  style={{
-                    cursor: "pointer",
-                    backgroundColor: selectedChat === chat ? "#EBF7FA" : "white",
-                    height: "60px",
-                  }}
-                >
-                  <TableCell sx={{ height: "60px", borderRadius: '12px' }}>
-                    {chat.nameDescription}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            {data.rows.map((chat, idx) => (
+              <Grid
+                item
+                key={idx}
+                md={12}
+                xs={6}
+                onClick={() => handleRowClick(chat)}
+                sx={{
+                  marginLeft: '20px',
+                  cursor: "pointer",
+                  backgroundColor: selectedChat === chat ? "#EBF7FA" : "white",
+                  padding: '12px',
+                  borderRadius: '8px',
+                  boxShadow: '0 2px 0 rgba(0, 0, 0, 0.1)',
+                }}
+
+              >
+                <MDBox sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <MDBox>{chat.nameDescription}</MDBox>
+
+                </MDBox>
+              </Grid>
+            ))}
+          </Grid>
         </MDBox>
 
-        <MDBox sx={{
+        <Grid sx={{
           width: "100%",
           height: "100%",
           padding: "20px",
           borderLeft: "1px solid #ccc",
           backgroundColor: "white",
           marginLeft: "20px",
-          overflowY: "auto"
         }}>
           {selectedChat ? (
-            <MDBox sx={{
+            <Grid sx={{
               width: "80%",
               height: "700px",
               padding: "20px",
               backgroundColor: "white",
               margin: "auto",
               overflowY: "auto",
+              position: "relative",
+              overflow: "hidden",
             }}>
 
-              <MDBox sx={{
+              <Grid sx={{
+                position: "sticky",
+                top: 0,
+                zIndex: 2,
                 backgroundColor: "white",
-                borderBlockEnd: "1px solid #ccc",
-                height: "90px",
-                display: "flex",
               }}>
-                <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px", }}>{selectedChat.principal}</MDBox>
-                <MDBox sx={{
+                <Grid sx={{
                   backgroundColor: "white",
+                  borderBlockEnd: "1px solid #ccc",
                   height: "90px",
-                  width: "400px",
-                  marginLeft: "200px",
-                  gap: 2,
                   display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center"
                 }}>
-                  <DriveFileRenameOutlineOutlinedIcon />
-                  <StarOutlineIcon />
-                  <MoreVertIcon />
-                </MDBox>
+                  <Grid sx={{ backgroundColor: "white", height: "90px", width: "700px", }}>
+                    {selectedChat.principal}
+                  </Grid>
+                  <Grid sx={{
+                    backgroundColor: "white",
+                    height: "90px",
+                    width: "400px",
+                    marginLeft: "200px",
+                    gap: 2,
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center"
+                  }}>
+                    <DriveFileRenameOutlineOutlinedIcon />
+                    <StarOutlineIcon />
+                    <MoreVertIcon />
+                  </Grid>
+                </Grid>
 
-              </MDBox>
-
-              <MDBox sx={{
-                backgroundColor: "white",
-                borderBlockEnd: "1px solid #ccc",
-                height: "170px",
-              }}>
-                <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px",marginTop:"10PX" ,marginLeft:"170px"}}>{selectedChat.secundary}</MDBox>
-
-              </MDBox>
-
-              {selectedChat.messages.map((message, index) => (
-                <MDBox key={index} style={{ display: "flex", flexDirection: "column", alignItems: index % 2 === 0 ? "flex-end" : "flex-start", marginBottom: "10px" }}>
-
-                  <MDTypography variant="body2" component="p" sx={{ marginBottom: "8px", color: "#25324B" }}>
-                    {index % 2 === 0 ? "You" : selectedChat.name}
-                  </MDTypography>
-
-                  <MDBox
-                    sx={{
-                      padding: "10px",
-                      width: "30%",
-                      borderRadius: "8px",
-                      backgroundColor: index % 2 === 0 ? "#EBF7FA" : "white",
-                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                      fontFamily: "Roboto, sans-serif",
-                      color: "#555",
-                      textAlign: "left",
-                    }}
-                  >
-                    {message}
+                <Grid sx={{
+                  backgroundColor: "white",
+                  borderBlockEnd: "1px solid #ccc",
+                  height: "170px",
+                }}>
+                  <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px", marginTop: "10px", marginLeft: "170px" }}>
+                    {selectedChat.secundary}
                   </MDBox>
-                </MDBox>
-              ))}
+                </Grid>
+              </Grid>
 
-            </MDBox>
+                <Grid sx={{
+                  marginTop: "20px",
+                  overflowY: "auto",
+                  height: "390px",
+                  '&::-webkit-scrollbar': {
+                    width: '8px',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    background: 'transparent',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    background: 'transparent',
+                  },
+                  '&::-webkit-scrollbar-thumb:hover': {
+                    background: 'transparent',
+                  },
+                }} ref={chatContainerRef}>
+                  {selectedChat.messages && selectedChat.messages.map((message, index) => (
+                    <Grid key={index} style={{ display: "flex", flexDirection: "column", alignItems: index % 2 === 0 ? "flex-end" : "flex-start", marginBottom: "10px" }}>
+                      <MDTypography variant="body2" component="p" sx={{ marginBottom: "8px", color: "#25324B" }}>
+                        {index % 2 === 0 ? "You" : selectedChat.name}
+                      </MDTypography>
+                      <Grid
+                        sx={{
+                          padding: "10px",
+                          width: "30%",
+                          borderRadius: "8px",
+                          backgroundColor: index % 2 === 0 ? "#EBF7FA" : "white",
+                          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                          fontFamily: "Roboto, sans-serif",
+                          color: "#555",
+                          textAlign: "left",
+                        }}
+                      >
+                        {message}
+                      </Grid>
+                    </Grid>
+                ))}
+            </Grid>
+            </Grid>
           ) : (
             <MDBox sx={{ textAlign: "center", fontSize: "18px", color: "#888" }}>
               <MDTypography>Select a chat to view the conversation.</MDTypography>
             </MDBox>
           )}
 
-          <MDBox display="flex" justifyContent="center">
+
+
+
+          <Grid display="flex" justifyContent="center">
             {selectedChat && (
               <TextField
                 sx={{
@@ -238,11 +288,20 @@ function DataTable({
                       />
 
                       {emojiPickerVisible && (
-                        <MDBox sx={{ marginBottom: '500px', position: 'relative' }}>
+                        <MDBox
+                          sx={{
+                            marginLeft: '700px',
+                            position: 'absolute',
+                            bottom: '50px',
+                            left: '0',
+                            zIndex: 10,
+                          }}
+                        >
                           <EmojiPicker onEmojiClick={handleEmojiSelect} />
                         </MDBox>
                       )}
                     </MDBox>
+
                   ),
                   style: {
                     height: '50px',
@@ -252,10 +311,10 @@ function DataTable({
                 onChange={(e) => searchFunc(e.target.value)}
               />
             )}
-          </MDBox>
-        </MDBox>
+          </Grid>
+        </Grid>
       </MDBox>
-    </Card>
+    </MDBox>
   );
 }
 

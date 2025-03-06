@@ -4,11 +4,11 @@ import { useState } from "react"
 import { chatDataModel } from "../../../components/AdminLayout/Messages/utils"
 import AdminLayout from "../../../components/AdminLayout"
 import MDBox from "../../../components/MDBox"
-import MDTypography from "../../../components/MDTypography"
+
 
 
 function HomeOwnerMessages() {
-  const [datatable, setDatatable] = useState({...chatDataModel});
+  const [responsive, setResponsive] = useState({...chatDataModel});
   return (
     <AdminLayout
       title={'Messages'}
@@ -20,7 +20,7 @@ function HomeOwnerMessages() {
         width: "100%",
       }}>
         <DataTable
-          table={datatable}
+          data={responsive}
         />
       </MDBox>
 
