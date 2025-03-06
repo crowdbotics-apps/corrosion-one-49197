@@ -1,5 +1,5 @@
 
-import DataTable from "../../../components/AdminLayout/Messages/dataTable"
+import Messages from "../../../components/AdminLayout/Messages/dataTable"
 import { useState } from "react"
 import { chatDataModel } from "../../../components/AdminLayout/Messages/utils"
 import AdminLayout from "../../../components/AdminLayout"
@@ -8,7 +8,6 @@ import MDBox from "../../../components/MDBox"
 
 
 function HomeOwnerMessages() {
-  const [responsive, setResponsive] = useState({...chatDataModel});
   return (
     <AdminLayout
       title={'Messages'}
@@ -19,9 +18,7 @@ function HomeOwnerMessages() {
         flexDirection: { xs: 'column', md: 'row' },
         width: "100%",
       }}>
-        <DataTable
-          data={responsive}
-        />
+        <Messages />
       </MDBox>
 
 

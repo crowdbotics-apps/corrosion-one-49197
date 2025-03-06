@@ -1,9 +1,7 @@
 import MDBox from "../../MDBox"
 import MDAvatar from "../../MDAvatar"
 import React from "react"
-import React from "react";
-import MDBox from "../../MDBox";
-import MDAvatar from "../../MDAvatar";
+import { chatDataModel } from "./utils"
 
 function MessageHeaderThree({ avatarSrc, name, lastMessage }) {
   return (
@@ -130,35 +128,30 @@ function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage }) {
     </MDBox>
   );
 }
-
-const generateChatData = () => {
-
-  return chats.map(chat => ({
-    name: chat.name,
-    principal: (
-      <MessageHeaderTwo
-        avatarSrc={chat.avatarSrc}
-        name={chat.name}
-        lastMessage={chat.description}
-      />
-    ),
-    secundary:(
-      <MessageHeaderThree
-        avatarSrc={chat.avatarSrc}
-        name={chat.name}
-        lastMessage={chat.description}
-      />
-    ),
-    nameDescription: (
-      <MessageHeader
-        avatarSrc={chat.avatarSrc}
-        name={chat.name}
-        lastMessageTime={chat.lastMessageTime}
-        lastMessage={chat.lastMessage}
-      />
-    ),
-    messages: chat.messages,
-  }));
-
-}
+export const generateChatData = chatDataModel.map(chat => ({
+  name: chat.name,
+  principal: (
+    <MessageHeaderTwo
+      avatarSrc={chat.avatarSrc}
+      name={chat.name}
+      lastMessage={chat.description}
+    />
+  ),
+  secundary: (
+    <MessageHeaderThree
+      avatarSrc={chat.avatarSrc}
+      name={chat.name}
+      lastMessage={chat.description}
+    />
+  ),
+  nameDescription: (
+    <MessageHeader
+      avatarSrc={chat.avatarSrc}
+      name={chat.name}
+      lastMessageTime={chat.lastMessageTime}
+      lastMessage={chat.lastMessage}
+    />
+  ),
+  messages: chat.messages,
+}));
 

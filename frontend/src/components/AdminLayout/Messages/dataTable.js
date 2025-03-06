@@ -13,11 +13,9 @@ import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfi
 import EmojiPicker from 'emoji-picker-react';
 import MDInput from "../../MDInput"
 import Grid from "@mui/material/Grid"
+import {generateChatData} from "./models"
 
-function DataTable({
-                     data,
-                     showHeader = true,
-                   }) {
+function Messages() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
@@ -88,20 +86,8 @@ function DataTable({
             />
           </MDBox>
 
-          <Grid container spacing={2}>
-            {showHeader && (
-              <Grid item xs={12}>
-                <Grid container spacing={2}>
-                  {data.columns.map((column, idx) => (
-                    <Grid item key={idx} xs={12} sm={4}>
-                      <MDBox sx={{ fontWeight: 'bold' }}>{column.Header}</MDBox>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Grid>
-            )}
-
-            {data.rows.map((chat, idx) => (
+          <Grid container spacing={2} sx={{marginTop:'10px'}}>
+            {generateChatData.map((chat, idx) => (
               <Grid
                 item
                 key={idx}
@@ -318,4 +304,4 @@ function DataTable({
   );
 }
 
-export default DataTable;
+export default Messages;
