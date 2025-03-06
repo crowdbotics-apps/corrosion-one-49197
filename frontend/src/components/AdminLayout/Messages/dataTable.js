@@ -9,14 +9,39 @@ import MDButton from "../../MDButton";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
+import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
+import  EmojiPicker  from 'emoji-picker-react';
+import MDInput from "../../MDInput"
 
 function DataTable({
                      table,
                      showHeader = true,
-                     searchQuery = "",
-                     searchFunc,
                    }) {
   const [selectedChat, setSelectedChat] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
+  const [fileName, setFileName] = useState('');
+
+  const searchFunc = (value) => {
+    setSearchQuery(value);
+
+    if (value === '') {
+      setFileName('');
+    }
+  };
+
+  const handleEmojiSelect = (emoji) => {
+    setSearchQuery(searchQuery + emoji.emoji);
+    setEmojiPickerVisible(false);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Archivo seleccionado:", file);
+      setFileName(file.name);
+    }
+  };
 
   const handleRowClick = (chat) => {
     setSelectedChat(selectedChat === chat ? null : chat);
@@ -44,8 +69,8 @@ function DataTable({
                   borderRadius: '12px',
                 },
               }}
-              value={searchQuery}
-              onChange={(e) => searchFunc && searchFunc(e.target.value)}
+              // value={searchQuery}
+              // onChange={(e) => searchFunc(e.target.value)}
             />
           </MDBox>
 
@@ -71,7 +96,7 @@ function DataTable({
                     height: "60px",
                   }}
                 >
-                  <TableCell sx={{ height: "60px" }}>
+                  <TableCell sx={{ height: "60px", borderRadius: '12px' }}>
                     {chat.nameDescription}
                   </TableCell>
                 </TableRow>
@@ -119,8 +144,6 @@ function DataTable({
                   <DriveFileRenameOutlineOutlinedIcon />
                   <StarOutlineIcon />
                   <MoreVertIcon />
-
-
                 </MDBox>
 
               </MDBox>
@@ -128,8 +151,9 @@ function DataTable({
               <MDBox sx={{
                 backgroundColor: "white",
                 borderBlockEnd: "1px solid #ccc",
-                height: "150px",
+                height: "170px",
               }}>
+                <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px",marginTop:"10PX" ,marginLeft:"170px"}}>{selectedChat.secundary}</MDBox>
 
               </MDBox>
 
@@ -169,41 +193,67 @@ function DataTable({
               <TextField
                 sx={{
                   width: '80%',
-                  marginTop: "30px",
+                  marginTop: '30px',
                 }}
                 label="Reply message"
                 InputProps={{
                   startAdornment: (
                     <MDBox display="flex" alignItems="center">
-                      <AttachFileOutlinedIcon sx={{ marginRight: 1 }} />
+                      <MDInput
+                        type="file"
+                        id="file-upload"
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                      />
+                      <label htmlFor="file-upload">
+                        <AttachFileOutlinedIcon sx={{ marginRight: 1, cursor: 'pointer' }} />
+                      </label>
                     </MDBox>
                   ),
                   endAdornment: (
-                    <MDButton
-                      sx={{
-                        backgroundColor: '#6DDA43',
-                        '&:hover': {
-                          backgroundColor: '#5cb039',
-                        },
-                        padding: '1px 20px',
-                        minWidth: 'auto',
-                        borderRadius: '20px',
-                      }}
-                      startIcon={<SendIcon />}
-                    />
+                    <MDBox display="flex" alignItems="center">
+                      <MDButton
+                        sx={{
+                          padding: '1px 10px',
+                          minWidth: 'auto',
+                          borderRadius: '12px',
+                        }}
+                        onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}
+                      >
+                        <SentimentSatisfiedOutlinedIcon />
+                      </MDButton>
+
+                      <MDButton
+                        sx={{
+                          backgroundColor: '#6DDA43',
+                          '&:hover': {
+                            backgroundColor: '#5cb039',
+                          },
+                          padding: '1px 10px',
+                          minWidth: 'auto',
+                          borderRadius: '12px',
+                          display: 'flex',
+                        }}
+                        startIcon={<SendIcon sx={{ marginLeft: '10px' }} />}
+                      />
+
+                      {emojiPickerVisible && (
+                        <MDBox sx={{ marginBottom: '500px', position: 'relative' }}>
+                          <EmojiPicker onEmojiClick={handleEmojiSelect} />
+                        </MDBox>
+                      )}
+                    </MDBox>
                   ),
                   style: {
                     height: '50px',
                   },
                 }}
-                value={searchQuery}
-                onChange={(e) => searchFunc && searchFunc(e.target.value)}
+                value={fileName ? `File: ${fileName}` : searchQuery}
+                onChange={(e) => searchFunc(e.target.value)}
               />
             )}
           </MDBox>
-
         </MDBox>
-
       </MDBox>
     </Card>
   );

@@ -2,7 +2,57 @@ import React from "react";
 import MDBox from "../../MDBox";
 import MDAvatar from "../../MDAvatar";
 
-function MessageHeaderTwo({ avatarSrc, name, lastMessageTime, lastMessage }) {
+
+function MessageHeaderThree({ avatarSrc, name, lastMessageTime, lastMessage }) {
+  return (
+    <MDBox sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'center' }}>
+      <MDAvatar
+        src={avatarSrc}
+        variant={"square"}
+        style={{ fontSize: "50px" }}
+      />
+      <MDBox sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <MDBox sx={{
+          fontWeight: 'bold',
+          fontSize: '24px',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}>
+          {name}
+        </MDBox>
+        <MDBox sx={{
+          fontSize: '16px',
+          color: '#515B6F',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          marginTop: '5px'
+        }}>
+          {lastMessage}
+        </MDBox>
+        <MDBox sx={{
+          fontSize: '16px',
+          color: '#515B6F',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          marginTop: '5px',
+          display: 'flex'
+        }}>
+          This is the very beginning of your direct message with
+          <MDBox style={{ fontWeight: 'bold', color: 'black', marginLeft: '7px' }}>
+              {name}
+          </MDBox>
+        </MDBox>
+
+      </MDBox>
+    </MDBox>
+  );
+}
+
+
+function MessageHeaderTwo({ avatarSrc, name, lastMessage }) {
   return (
     <MDBox sx={{ display: 'flex', gap: 2 }}>
       <MDAvatar
@@ -166,6 +216,13 @@ const generateChatData = () => {
     name: chat.name,
     principal: (
       <MessageHeaderTwo
+        avatarSrc={chat.avatarSrc}
+        name={chat.name}
+        lastMessage={chat.description}
+      />
+    ),
+    secundary:(
+      <MessageHeaderThree
         avatarSrc={chat.avatarSrc}
         name={chat.name}
         lastMessage={chat.description}

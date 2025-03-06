@@ -48,7 +48,7 @@ import {
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerDos from "./pages/owner/home2"
-import HomeOwnerMessages from "./pages/owner/home3"
+import HomeOwnerMessages from "./pages/owner/messages"
 
 
 
