@@ -222,8 +222,6 @@ function Messages() {
           )}
 
 
-
-
           <Grid display="flex" justifyContent="center">
             {selectedChat && (
               <TextField

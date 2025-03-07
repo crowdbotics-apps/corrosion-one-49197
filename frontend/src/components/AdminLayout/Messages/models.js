@@ -8,8 +8,8 @@ function MessageHeaderThree({ avatarSrc, name, lastMessage }) {
     <MDBox sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'center' }}>
       <MDAvatar
         src={avatarSrc}
-        variant={"square"}
-        style={{ fontSize: "50px" }}
+        variant={"circular"}
+        style={{ fontSize: "50px", borderRadius: "50%" }}
       />
       <MDBox sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <MDBox sx={{
@@ -57,8 +57,8 @@ function MessageHeaderTwo({ avatarSrc, name, lastMessage }) {
     <MDBox sx={{ display: 'flex', gap: 2 }}>
       <MDAvatar
         src={avatarSrc}
-        variant={"square"}
-        style={{ fontSize: "50px", marginTop: "17px" }}
+        variant={"circular"}
+        style={{ fontSize: "50px", marginTop: "17px" ,borderRadius: "50%"}}
       />
       <MDBox sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '50%' }}>
         <MDBox sx={{
@@ -92,9 +92,10 @@ function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage }) {
     <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
       <MDAvatar
         src={avatarSrc}
-        variant={"square"}
-        style={{ fontSize: "50px" }}
+        variant={"circular"}
+        style={{ fontSize: "80px", borderRadius: "50%" }}
       />
+
       <MDBox sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
         <MDBox sx={{
           fontWeight: 'bold',
