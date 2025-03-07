@@ -87,7 +87,7 @@ function MessageHeaderTwo({ avatarSrc, name, lastMessage }) {
 }
 
 
-function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage }) {
+function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage, isUnread }) {
   return (
     <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
       <MDAvatar
@@ -97,15 +97,27 @@ function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage }) {
       />
 
       <MDBox sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
-        <MDBox sx={{
-          fontWeight: 'bold',
-          fontSize: '16px',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }}>
-          {name}
+        <MDBox sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <MDBox sx={{
+            fontWeight: 'bold',
+            fontSize: '16px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            {name}
+          </MDBox>
+
+          {isUnread && (
+            <MDBox sx={{
+              width: '7px',
+              height: '7px',
+              borderRadius: '50%',
+              backgroundColor: 'lightBlue',
+            }} />
+          )}
         </MDBox>
+
         <MDBox sx={{
           fontSize: '12px',
           color: '#888',
@@ -114,6 +126,7 @@ function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage }) {
         }}>
           {lastMessageTime}
         </MDBox>
+
         <MDBox sx={{
           fontSize: '16px',
           color: '#515B6F',
@@ -124,11 +137,11 @@ function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage }) {
         }}>
           {lastMessage}
         </MDBox>
-
       </MDBox>
     </MDBox>
   );
 }
+
 export const generateChatData = chatDataModel.map(chat => ({
   name: chat.name,
   principal: (
@@ -138,7 +151,7 @@ export const generateChatData = chatDataModel.map(chat => ({
       lastMessage={chat.description}
     />
   ),
-  secundary: (
+  secondary: (
     <MessageHeaderThree
       avatarSrc={chat.avatarSrc}
       name={chat.name}
@@ -151,6 +164,7 @@ export const generateChatData = chatDataModel.map(chat => ({
       name={chat.name}
       lastMessageTime={chat.lastMessageTime}
       lastMessage={chat.lastMessage}
+      isUnread={chat.isUnread}
     />
   ),
   messages: chat.messages,

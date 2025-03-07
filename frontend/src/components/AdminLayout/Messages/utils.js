@@ -7,6 +7,7 @@
       lastMessage: "I'm good, thanks!",
       messages: ["Hey, how's it going?", "I'm good, thanks!"],
       description: "Real State Agent",
+      isUnread: true,
     },
     {
       name: "Joe Bartmann",
