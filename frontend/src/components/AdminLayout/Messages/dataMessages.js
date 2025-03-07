@@ -4,7 +4,6 @@ import MDBox from "components/MDBox";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import MDTypography from "../../MDTypography";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import SendIcon from '@mui/icons-material/Send';
 import MDButton from "../../MDButton";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
@@ -13,6 +12,7 @@ import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfi
 import EmojiPicker from 'emoji-picker-react';
 import MDInput from "../../MDInput"
 import Grid from "@mui/material/Grid"
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import {generateChatData} from "./models"
 
 function Messages() {
@@ -240,7 +240,7 @@ function Messages() {
                         onChange={handleFileChange}
                       />
                       <label htmlFor="file-upload">
-                        <AttachFileOutlinedIcon sx={{ marginRight: 1, cursor: 'pointer' }} />
+                        <AttachFileOutlinedIcon sx={{ marginRight: 1, cursor: 'pointer', color: "gray", width: "20px", height: "20px"  }} />
                       </label>
                     </MDBox>
                   ),
@@ -254,7 +254,7 @@ function Messages() {
                         }}
                         onClick={() => setEmojiPickerVisible(!emojiPickerVisible)}
                       >
-                        <SentimentSatisfiedOutlinedIcon />
+                        <SentimentSatisfiedOutlinedIcon sx={{ color: "gray", width: "25px", height: "25px" }} />
                       </MDButton>
 
                       <MDButton
@@ -268,7 +268,7 @@ function Messages() {
                           borderRadius: '12px',
                           display: 'flex',
                         }}
-                        startIcon={<SendIcon sx={{ marginLeft: '10px' }} />}
+                        startIcon={<SendOutlinedIcon sx={{ color: "white", width: "25px", height: "25px", marginLeft: '10px' }} />}
                       />
 
                       {emojiPickerVisible && (
