@@ -248,7 +248,7 @@ const generateRowData = () => {
         </MDButton>
       ),
       actions_delete: (
-        <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '100px', md: '200px' }, minWidth: 'auto', padding: 0, }}>
+        <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '275px' },  padding: 0, }}>
           <MDButton
             variant="outlined"
             sx={{

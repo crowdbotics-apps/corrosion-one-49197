@@ -14,6 +14,7 @@ function DataTableBodyCell({ noBorder, align, children, odd, width, selected = f
         fontSize: size.sm,
         borderBottom: "none",
         height: "100px",
+        width: "150px",
         backgroundColor: odd ? "#F8FCFD" : "white",
       })}
     >

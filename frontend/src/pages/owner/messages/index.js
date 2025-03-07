@@ -1,7 +1,4 @@
-
-import Messages from "../../../components/AdminLayout/Messages/dataTable"
-import { useState } from "react"
-import { chatDataModel } from "../../../components/AdminLayout/Messages/utils"
+import Messages from "../../../components/AdminLayout/Messages/dataMessages"
 import AdminLayout from "../../../components/AdminLayout"
 import MDBox from "../../../components/MDBox"
 
