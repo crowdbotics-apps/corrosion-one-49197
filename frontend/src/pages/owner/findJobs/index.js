@@ -24,9 +24,7 @@ function HomeOwnerDos() {
     <MDBox sx={{
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' },
-      width: "1700px",
-      height: "990px",
-      marginBottom: '50px',
+      width: "90%",
     }}>
       <Details />
     </MDBox>

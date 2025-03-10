@@ -12,13 +12,13 @@ import Details from "../../../components/AdminLayout/Find-Details"
 function HomeOwnerDetails() {
   return (
     <AdminLayout
-      title={'Details'}
-      showCard
     >
       <MDBox sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
-        width: "100%",
+        width: "1700px",
+        height: "990px",
+        marginBottom: '50px',
       }}>
         <Details />
       </MDBox>

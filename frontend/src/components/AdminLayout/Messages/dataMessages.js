@@ -14,6 +14,7 @@ import MDInput from "../../MDInput"
 import Grid from "@mui/material/Grid"
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import {generateChatData} from "./models"
+import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
 
 function Messages() {
   const [selectedChat, setSelectedChat] = useState(null);
@@ -53,6 +54,10 @@ function Messages() {
     }
   };
 
+  const handleClick = () => {
+    setSelectedChat(false);
+  };
+
   useEffect(() => {
     if (selectedChat && selectedChat.messages) {
       scrollToBottom();
@@ -60,9 +65,9 @@ function Messages() {
   }, [selectedChat]);
 
   return (
-    <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white" }}>
-      <MDBox sx={{ display: "flex", width: "100%", height: "100%" }}>
-        <MDBox sx={{ flex: 1 }}>
+    <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white"}}>
+      <MDBox sx={{  width: "100%", height: "100%", display: "flex" }}>
+        <MDBox sx={{ flex: 1 ,display:{xs: selectedChat ? 'none' : 'block', md:'block' }}}>
           <MDBox>
             <TextField
               label={
@@ -86,7 +91,7 @@ function Messages() {
             />
           </MDBox>
 
-          <Grid container spacing={2} sx={{marginTop:'10px'}}>
+          <Grid container spacing={2} sx={{marginTop:'10px', width:{xs:'650px', md:'100%'}, display: "flex"}}>
             {generateChatData.map((chat, idx) => (
               <Grid
                 item
@@ -114,18 +119,18 @@ function Messages() {
         </MDBox>
 
         <Grid sx={{
-          width: "100%",
+          width: '100%',
           height: "100%",
-          padding: "20px",
-          borderLeft: "1px solid #ccc",
+          padding: {md:"20px"},
+          borderLeft: {md:"1px solid #ccc"},
           backgroundColor: "white",
-          marginLeft: "20px",
+          display: { xs: selectedChat ? 'block' : 'none' , sm: 'block' },
         }}>
           {selectedChat ? (
             <Grid sx={{
-              width: "80%",
-              height: "700px",
-              padding: "20px",
+              width: "95%",
+              height: {md:"700px", xs:"600px"},
+              padding: {md:"20px", xs:'0px'},
               backgroundColor: "white",
               margin: "auto",
               overflowY: "auto",
@@ -139,20 +144,29 @@ function Messages() {
                 zIndex: 2,
                 backgroundColor: "white",
               }}>
+
                 <Grid sx={{
                   backgroundColor: "white",
                   borderBlockEnd: "1px solid #ccc",
                   height: "90px",
                   display: "flex",
                 }}>
-                  <Grid sx={{ backgroundColor: "white", height: "90px", width: "700px", }}>
+                  <KeyboardArrowLeftOutlinedIcon sx={{
+                    marginTop:'30px',
+                    display: {
+                      xs: 'block',
+                      sm: 'none',
+                    }
+                  }} onClick={handleClick}
+                  />
+                  <Grid sx={{marginLeft:"20px", backgroundColor: "white", height: "90px", width: {md:"700px", xs:"600px"}, }}>
                     {selectedChat.principal}
                   </Grid>
                   <Grid sx={{
                     backgroundColor: "white",
                     height: "90px",
-                    width: "400px",
-                    marginLeft: "200px",
+                    width: "300px",
+                    marginLeft: {md:"100px", xs:"10px"},
                     gap: 2,
                     display: "flex",
                     justifyContent: "flex-end",
@@ -164,15 +178,17 @@ function Messages() {
                   </Grid>
                 </Grid>
 
-                <Grid sx={{
-                  backgroundColor: "white",
-                  borderBlockEnd: "1px solid #ccc",
-                  height: "170px",
-                }}>
-                  <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px", marginTop: "10px", marginLeft: "170px" }}>
-                    {selectedChat.secundary}
-                  </MDBox>
-                </Grid>
+
+              </Grid>
+              <Grid sx={{
+                marginLeft: {xs:"-200px", md:"auto"},
+                backgroundColor: "white",
+                borderBlockEnd: "1px solid #ccc",
+                height: {md:"170px", xs:"130px"},
+              }}>
+                <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px", marginTop: "10px", marginLeft: {md:"250px", xs:"10px"} }}>
+                  {selectedChat.secondary}
+                </MDBox>
               </Grid>
 
                 <Grid sx={{
@@ -200,13 +216,14 @@ function Messages() {
                       <Grid
                         sx={{
                           padding: "10px",
-                          width: "30%",
+                          width: {md:"30%", xs:"70%"},
                           borderRadius: "8px",
                           backgroundColor: index % 2 === 0 ? "#EBF7FA" : "white",
                           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                           fontFamily: "Roboto, sans-serif",
                           color: "#555",
                           textAlign: "left",
+                          fontSize: {xs:"14px"},
                         }}
                       >
                         {message}
@@ -226,8 +243,8 @@ function Messages() {
             {selectedChat && (
               <TextField
                 sx={{
-                  width: '80%',
-                  marginTop: '30px',
+                  width: {md:'80%', xs:"95%"},
+                  marginTop: {md:'30px', xs:"10px"},
                 }}
                 label="Reply message"
                 InputProps={{
@@ -268,7 +285,7 @@ function Messages() {
                           borderRadius: '12px',
                           display: 'flex',
                         }}
-                        startIcon={<SendOutlinedIcon sx={{ color: "white", width: "25px", height: "25px", marginLeft: '10px' }} />}
+                        startIcon={<SendOutlinedIcon sx={{ color: "white", width: {md:"25px", xs:"15px"}, height: {md:"25px", xs:"15px"}, marginLeft: '10px' }} />}
                       />
 
                       {emojiPickerVisible && (

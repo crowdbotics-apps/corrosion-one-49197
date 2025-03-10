@@ -12,6 +12,7 @@ function HomeOwnerMessages() {
     >
       <MDBox sx={{
         display: 'flex',
+        height: '100%',
         flexDirection: { xs: 'column', md: 'row' },
         width: "100%",
       }}>

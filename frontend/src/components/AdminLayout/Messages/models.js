@@ -14,7 +14,7 @@ function MessageHeaderThree({ avatarSrc, name, lastMessage }) {
       <MDBox sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <MDBox sx={{
           fontWeight: 'bold',
-          fontSize: '24px',
+          fontSize: {md:'24px', xs: '15px'},
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis'
@@ -22,7 +22,7 @@ function MessageHeaderThree({ avatarSrc, name, lastMessage }) {
           {name}
         </MDBox>
         <MDBox sx={{
-          fontSize: '16px',
+          fontSize: {md:'16px', xs:'10px'},
           color: '#515B6F',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
@@ -32,7 +32,7 @@ function MessageHeaderThree({ avatarSrc, name, lastMessage }) {
           {lastMessage}
         </MDBox>
         <MDBox sx={{
-          fontSize: '16px',
+          fontSize: {md:'16px', xs: '10px'},
           color: '#515B6F',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
@@ -60,10 +60,10 @@ function MessageHeaderTwo({ avatarSrc, name, lastMessage }) {
         variant={"circular"}
         style={{ fontSize: "50px", marginTop: "17px" ,borderRadius: "50%"}}
       />
-      <MDBox sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '50%' }}>
+      <MDBox sx={{ display: 'flex',marginTop:{xs:"17px", md:"-2px"}, flexDirection: 'column', justifyContent: 'center', width: {md:'50%', xs:'60%' }}}>
         <MDBox sx={{
           fontWeight: 'bold',
-          fontSize: '32px',
+          fontSize: { md:"32px", xs:"16px" },
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis'
@@ -71,7 +71,7 @@ function MessageHeaderTwo({ avatarSrc, name, lastMessage }) {
           {name}
         </MDBox>
         <MDBox sx={{
-          fontSize: '16px',
+          fontSize: { md:"16px", xs:"10px" },
           color: '#515B6F',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
@@ -89,7 +89,7 @@ function MessageHeaderTwo({ avatarSrc, name, lastMessage }) {
 
 function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage, isUnread }) {
   return (
-    <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
+    <MDBox sx={{ display: 'flex', flexDirection: { xs: 'row', md: 'row' }, gap: {md : 2, xs: 1} }}>
       <MDAvatar
         src={avatarSrc}
         variant={"circular"}
@@ -97,7 +97,7 @@ function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage, isUnread
       />
 
       <MDBox sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
-        <MDBox sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <MDBox sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <MDBox sx={{
             fontWeight: 'bold',
             fontSize: '16px',
@@ -121,7 +121,7 @@ function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage, isUnread
         <MDBox sx={{
           fontSize: '12px',
           color: '#888',
-          marginLeft: '200px',
+          marginLeft:{ md:'180px', xs:'180px'},
           marginTop: '-21px'
         }}>
           {lastMessageTime}

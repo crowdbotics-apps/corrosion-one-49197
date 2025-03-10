@@ -247,7 +247,7 @@ const generateRowData = () => {
           <BookmarkOutlinedIcon />
         </MDButton>
       ),
-      actions_delete: (
+      actions: (
         <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '275px' },  padding: 0, }}>
           <MDButton
             variant="outlined"
@@ -255,8 +255,8 @@ const generateRowData = () => {
               borderColor: '#006E90',
               color: '#006E90',
               fontSize: '15px',
-
             }}
+
           >
             View Details
           </MDButton>
@@ -288,7 +288,7 @@ export const dataTableModel = {
     { Header: "Aplication Status", accessor: "status" ,width: 170 },
     { Header: "Jobs Status", accessor: "jobStatus", width: 120 },
     { Header: " ",accessor: "actions_edit", disableOrdering: true, width: 7 },
-    { Header: " ",accessor: "actions_delete", disableOrdering: true, width: 50 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 50 },
     { Header: " ",accessor: "actions_details", disableOrdering: true, width: 60 },
   ],
   rows: generateRowData(),

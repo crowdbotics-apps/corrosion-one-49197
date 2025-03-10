@@ -12,6 +12,7 @@ export const ROUTES = {
   MESSAGES: `/messages`,
   SETTINGS: `/settings`,
   SUPPORT: `/support`,
+  DETAILS: `/details`,
 
 }
 
