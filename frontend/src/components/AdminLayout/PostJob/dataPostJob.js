@@ -137,23 +137,23 @@ export function PostJob() {
               rows={6}
               sx={{ width: '700px' }}
               InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <MDBox sx={{ display: 'flex', alignItems: 'center', marginLeft: 0 }}>
-                      <FormatBoldOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px' , color:'#1F4255'}} />
-                      <FormatItalicOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px' , color:'#1F4255'}} />
-                      <FormatUnderlinedOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px' , color:'#1F4255'}} />
-                      <StrikethroughSOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '30px', height: '30px' , color:'#1F4255',borderRight: "1px solid #ccc",paddingRight: '10px'}} />
-                      <InsertLinkOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px' , color:'#1F4255'}} />
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MDBox sx={{ display: 'flex', alignItems: 'center', marginLeft: 2 }}>
+                      <FormatBoldOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px', color:'#1F4255' }} />
+                      <FormatItalicOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px', color:'#1F4255' }} />
+                      <FormatUnderlinedOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px', color:'#1F4255' }} />
+                      <StrikethroughSOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '30px', height: '30px', color:'#1F4255', borderRight: "1px solid #ccc", paddingRight: '10px' }} />
+                      <InsertLinkOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px', color:'#1F4255' }} />
                       <ListOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '30px', height: '30px', color: '#1F4255', borderLeft: '1px solid #ccc', paddingLeft: '10px' }} />
-                      <FormatListNumberedOutlinedIcon sx={{ marginTop: '100px', width: '20px', height: '20px', marginRight:'700px', position: 'right', color:'#1F4255' }} />
+                      <FormatListNumberedOutlinedIcon sx={{ marginTop: '100px', width: '20px', height: '20px', marginRight: '10px', color:'#1F4255' }} />
                     </MDBox>
-
                   </InputAdornment>
                 ),
               }}
-
             />
+
+
           </MDBox>
 
 
