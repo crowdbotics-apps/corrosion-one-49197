@@ -29,18 +29,31 @@ export function PostJob() {
         <MDBox sx={{ with:'100%'}}>
           <MDBox style={{ width: '100%' }}>
             <MDTypography variant="h5" component="div">Job Title</MDTypography>
-            <TextField id="outlined-basic" label="Job title" variant="outlined" sx={{width:'700px'}}/>
+            <TextField
+              id="outlined-basic"
+              label="Job title"
+              variant="outlined"
+              sx={{
+                padding: '0px',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            />
           </MDBox>
-
 
           <MDBox sx={{ with: "120px" , height: "100px" , marginTop: "20px" }}>
             <MDTypography variant="h5" component="div">Job Address</MDTypography>
-            <FormControl fullWidth sx={{ width: '700px'}}>
+            <FormControl fullWidth sx={{ width: '100%'}}>
               <InputLabel id="demo-simple-select-label" sx={{padding:"1px"}}>Select Your Category</InputLabel>
 
               <Select
                 variant='outlined'
-                sx={{height:'45px'}}
+                sx={{
+                  padding: { md: '0px', xs: '10px' },
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  height:'45px',
+                }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={age}
@@ -57,12 +70,17 @@ export function PostJob() {
 
           <MDBox sx={{ with: "120px" , height: "100px"  }}>
             <MDTypography variant="h5" component="div">Category</MDTypography>
-            <FormControl fullWidth sx={{ width: '700px'}}>
+            <FormControl fullWidth sx={{ width: '100%'}}>
               <InputLabel id="demo-simple-select-label" sx={{padding:"1px"}}>Select Your Category</InputLabel>
 
               <Select
                 variant='outlined'
-                sx={{height:'45px'}}
+                sx={{
+                  padding: { md: '0px', xs: '10px' },
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  height:'45px',
+                }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={age}
@@ -135,7 +153,11 @@ export function PostJob() {
               variant="outlined"
               multiline
               rows={6}
-              sx={{ width: '700px' }}
+              sx={{
+                padding: { md: '0px', xs: '10px' },
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -156,14 +178,17 @@ export function PostJob() {
 
           </MDBox>
 
-
-
           <MDBox sx={{ with: "120px" , height: "100px" , marginTop: '20px' }}>
             <MDTypography variant="h5" component="div">Certifications Required</MDTypography>
-            <FormControl fullWidth sx={{ width: '700px'}}>
+            <FormControl fullWidth sx={{ width: '100%'}}>
               <InputLabel id="demo-simple-select-label">Select An Option</InputLabel>
               <Select
-                sx={{height:'45px'}}
+                sx={{
+                  padding: { md: '0px', xs: '10px' },
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  height:'45px'
+                }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={age}
@@ -251,12 +276,7 @@ export function PostJob() {
 
           </MDBox>
 
-
-
-
-
         </MDBox>
-
 
       </MDBox>
     </MDBox>
@@ -277,13 +297,17 @@ export default function PostJobTwo() {
     <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white"}}>
       <MDBox sx={{  width: "100%", height: "100%", display: "flex" }}>
         <MDBox sx={{ with:'100%'}}>
-
-          <MDBox sx={{ with: "120px" , height: "100px" , marginTop: "20px" }}>
+          <MDBox sx={{ with: "100%" }}>
             <MDTypography variant="h5" component="div">How you Pay?</MDTypography>
-            <FormControl fullWidth sx={{ width: '700px'}}>
+            <FormControl fullWidth sx={{ width: '100%'}}>
               <InputLabel id="demo-simple-select-label" sx={{padding:"1px"}}>Age</InputLabel>
               <Select
-                sx={{height:'45px'}}
+                sx={{
+                  padding: { md: '0px', xs: '10px' },
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  height:'45px'
+                }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={age}
@@ -298,14 +322,23 @@ export default function PostJobTwo() {
 
           </MDBox>
 
-          <MDBox style={{ width: '100%' }}>
+          <MDBox style={{ width: '100%', marginTop: '20px' }}>
             <MDTypography variant="h5" component="div">Daily Rate</MDTypography>
-            <TextField id="outlined-basic" label="From 2000 to 3000" variant="outlined" sx={{width:'700px'}}/>
+            <TextField
+              id="outlined-basic"
+              label="From 2000 to 3000"
+              variant="outlined"
+              sx={{
+                padding: '0px',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            />
           </MDBox>
 
           <MDBox style={{ width: '100%' , marginTop: '20px' }}>
             <MDTypography variant="h5" component="div">Time Line</MDTypography>
-            <TextField id="outlined-basic" label="From 2000 to 3000" variant="outlined" sx={{width:'700px'}}/>
+            <TextField id="outlined-basic" label="From 2000 to 3000" variant="outlined" sx={{ padding:'0px', width: '100%', boxSizing: 'border-box', height:'45px' }}/>
           </MDBox>
 
           <MDBox style={{ width: '100%' , marginTop: '20px' }}>
@@ -313,7 +346,7 @@ export default function PostJobTwo() {
             <TextField
               id="outlined-basic"
               variant="outlined"
-              sx={{ width: '700px' }}
+              sx={{ width: '100%' }}
               type="date"
               InputLabelProps={{
                 shrink: true,
@@ -328,7 +361,7 @@ export default function PostJobTwo() {
             <TextField
               id="outlined-basic"
               variant="outlined"
-              sx={{ width: '700px' }}
+              sx={{ width: '100%' }}
               type="date"
               InputLabelProps={{
                 shrink: true,
@@ -336,7 +369,7 @@ export default function PostJobTwo() {
             />
           </MDBox>
 
-          <MDBox style={{  width: '700px' , marginTop: '20px' }}>
+          <MDBox style={{  width: '100%' , marginTop: '20px' }}>
             <MDButton
               variant="outlined"
               sx={{
@@ -352,7 +385,7 @@ export default function PostJobTwo() {
 
           </MDBox>
 
-          <MDBox style={{ width: '100%' , marginTop: '160px', display: 'flex', gap: '10px', paddingLeft: '520px' }}>
+          <MDBox sx={{ width: '100%' , marginTop: {md:'160px', xs:'100px'}, display: 'flex', gap: '10px', paddingLeft: {md:'520px', xs:'90px'}}}>
             <MDButton
               variant="outlined"
               sx={{
@@ -361,7 +394,6 @@ export default function PostJobTwo() {
                 fontSize: '15px',
                 width: '40%',
               }}
-
             >
               Cancel
             </MDButton>

@@ -16,55 +16,75 @@ function HomeOwnerPostJob(showCard,contentCentered = false) {
       <MDBox
         gap={2}
         display={'flex'}
-        flex={1}
-        sx={ contentCentered && {justifyContent: 'flex-start', pl: pxToRem(15)}}
+        flex={5}
+        sx={{
+          ...(contentCentered && {
+            justifyContent: 'flex-start',
+            pl: {
+              xs: 0,
+              sm: pxToRem(15),
+            },
+          }),
+
+          flexDirection: { xs: 'column', md: 'row' },
+          width: '100%',
+          maxWidth: '100%',
+          height: '90px',
+        }}
       >
         {showCard && (
-          <Card sx={{
-            width: "49%",
-            height: "820px",
-            p: 5,
-            overflow: "auto",
-            "&::-webkit-scrollbar": {
-              width: "8px",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
-              borderRadius: "10px",
-            },
-            "&::-webkit-scrollbar-track": {
-              background: "transparent",
-            },
-          }}>
+          <Card
+            sx={{
+              width: { md: "49%", xs: "100%" },
+              height: "auto",
+              minHeight: "820px",
+              p: 5,
+              overflow: "auto",
+              "&::-webkit-scrollbar": {
+                width: "8px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                borderRadius: "10px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "transparent",
+              },
+            }}
+          >
             <PostJob />
           </Card>
         )}
         {!showCard && <PostJob />}
         {showCard && (
-          <Card sx={{
-            width: "49%",
-            height: "820px",
-            p: 5,
-            overflow: "auto",
-            "&::-webkit-scrollbar": {
-              width: "8px",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "rgba(18,18,18,0.3)",
-              borderRadius: "10px",
-            },
-            "&::-webkit-scrollbar-track": {
-              background: "transparent",
-            },
-          }}><PostJobTwo />
-
+          <Card
+            sx={{
+              width: { md: "49%", xs: "100%" },
+              height: "auto",
+              minHeight: "820px",
+              p: 5,
+              overflow: "auto",
+              "&::-webkit-scrollbar": {
+                width: "8px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                borderRadius: "10px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "transparent",
+              },
+            }}
+          >
+            <PostJobTwo />
           </Card>
         )}
         {!showCard && ""}
-
-
-
       </MDBox>
+
+
+
+
 
     </AdminLayout>
   );
