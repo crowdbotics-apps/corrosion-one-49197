@@ -29,7 +29,7 @@ function HomeOwnerPostJob(showCard,contentCentered = false) {
           flexDirection: { xs: 'column', md: 'row' },
           width: '100%',
           maxWidth: '100%',
-          height: '90px',
+          height: {md:'90px', xs:'auto'},
         }}
       >
         {showCard && (
