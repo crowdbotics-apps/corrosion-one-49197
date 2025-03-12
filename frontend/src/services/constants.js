@@ -8,6 +8,7 @@ export const ROUTES = {
   FORGOT_PASSWORD: "/forgot-password",
   SET_NEW_PASSWORD: "/set-new-password/*",
   DASHBOARD: `/dashboard`,
+  BIDS: `/bids`,
   POSTJOB: "/postjob",
   FINDJOBS: `/find-jobs`,
   MESSAGES: `/messages`,

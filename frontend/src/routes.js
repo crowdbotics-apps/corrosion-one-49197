@@ -50,6 +50,7 @@ import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerDos from "./pages/owner/findJobs"
 import HomeOwnerMessages from "./pages/owner/messages"
 import HomeOwnerPostJob from "./pages/owner/PostJob/PostJob"
+import HomeOwnerBids from "./pages/owner/Bids"
 
 
 
@@ -120,8 +121,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Bids",
     key: "bids",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.BIDS,
+    component: <HomeOwnerBids />,
     icon: <Icon fontSize="small">people_all_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
