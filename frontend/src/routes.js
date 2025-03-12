@@ -49,6 +49,7 @@ import {
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerDos from "./pages/owner/findJobs"
 import HomeOwnerMessages from "./pages/owner/messages"
+import HomeOwnerPostJob from "./pages/owner/PostJob/PostJob"
 
 
 
@@ -109,8 +110,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Post a Job",
     key: "post-jobs",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.POSTJOB,
+    component: <HomeOwnerPostJob />,
     icon: <Icon fontSize="small">ballot_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],

@@ -20,11 +20,12 @@ function HomeOwnerDos() {
     //   />
     // </AdminLayout>
   <AdminLayout
+    showCard
   >
     <MDBox sx={{
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' },
-      width: "90%",
+      width: "100%",
     }}>
       <Details />
     </MDBox>

@@ -41,7 +41,7 @@ const select = {
     },
 
     icon: {
-      display: "none",
+      display: "block",
     },
   },
 };

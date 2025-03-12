@@ -89,7 +89,7 @@ function MessageHeaderTwo({ avatarSrc, name, lastMessage }) {
 
 function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage, isUnread }) {
   return (
-    <MDBox sx={{ display: 'flex', flexDirection: { xs: 'row', md: 'row' }, gap: {md : 2, xs: 1} }}>
+    <MDBox sx={{ display: 'flex', flexDirection:'row', gap: {md : 2, xs: 1} }}>
       <MDAvatar
         src={avatarSrc}
         variant={"circular"}
@@ -121,7 +121,7 @@ function MessageHeader({ avatarSrc, name, lastMessageTime, lastMessage, isUnread
         <MDBox sx={{
           fontSize: '12px',
           color: '#888',
-          marginLeft:{ md:'180px', xs:'180px'},
+          marginLeft:{ xl:'800px',md:"700px", xs:'180px', sm:'400px', xxl:"180px"},
           marginTop: '-21px'
         }}>
           {lastMessageTime}

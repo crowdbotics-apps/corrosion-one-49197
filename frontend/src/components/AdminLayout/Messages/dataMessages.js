@@ -67,7 +67,7 @@ function Messages() {
   return (
     <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white"}}>
       <MDBox sx={{  width: "100%", height: "100%", display: "flex" }}>
-        <MDBox sx={{ flex: 1 ,display:{xs: selectedChat ? 'none' : 'block', md:'block' }}}>
+        <MDBox sx={{ width:{xs:"100%", xl:"100%", xxl:"25%"} ,display:{xs: selectedChat ? 'none' : 'block',xxl:'block' }}}>
           <MDBox>
             <TextField
               label={
@@ -91,13 +91,13 @@ function Messages() {
             />
           </MDBox>
 
-          <Grid container spacing={2} sx={{marginTop:'10px', width:{xs:'650px', md:'100%'}, display: "flex"}}>
+          <Grid container spacing={2} sx={{marginTop:'10px', width:{xs:"100%", md:"100%"}, display: "flex"}}>
             {generateChatData.map((chat, idx) => (
               <Grid
                 item
                 key={idx}
                 md={12}
-                xs={6}
+                xs={12}
                 onClick={() => handleRowClick(chat)}
                 sx={{
                   marginLeft: '20px',
@@ -121,16 +121,16 @@ function Messages() {
         <Grid sx={{
           width: '100%',
           height: "100%",
-          padding: {md:"20px"},
-          borderLeft: {md:"1px solid #ccc"},
+          padding: {xxl:"20px"},
+          borderLeft: {xxl:"1px solid #ccc"},
           backgroundColor: "white",
-          display: { xs: selectedChat ? 'block' : 'none' , sm: 'block' },
+          display: { xl: selectedChat ? 'block' : 'none',md: selectedChat ? 'block' : 'none', xs: selectedChat ? 'block' : 'none', xxl: 'block' },
         }}>
           {selectedChat ? (
             <Grid sx={{
               width: "95%",
-              height: {md:"700px", xs:"600px"},
-              padding: {md:"20px", xs:'0px'},
+              height: {xxl:"700px", xs:"600px"},
+              padding: {xxl:"20px", xs:'0px'},
               backgroundColor: "white",
               margin: "auto",
               overflowY: "auto",
@@ -155,11 +155,11 @@ function Messages() {
                     marginTop:'30px',
                     display: {
                       xs: 'block',
-                      sm: 'none',
+                      xxl: 'none',
                     }
                   }} onClick={handleClick}
                   />
-                  <Grid sx={{marginLeft:"20px", backgroundColor: "white", height: "90px", width: {md:"700px", xs:"600px"}, }}>
+                  <Grid sx={{marginLeft:"20px", backgroundColor: "white", height: "90px", width: {xxl:"700px", xs:"300px", xl:"450px", md:"500px"}, }}>
                     {selectedChat.principal}
                   </Grid>
                   <Grid sx={{
@@ -181,7 +181,7 @@ function Messages() {
 
               </Grid>
               <Grid sx={{
-                marginLeft: {xs:"-200px", md:"auto"},
+                marginLeft: {xs:"-200px", sm:"-100px"},
                 backgroundColor: "white",
                 borderBlockEnd: "1px solid #ccc",
                 height: {md:"170px", xs:"130px"},
@@ -233,9 +233,9 @@ function Messages() {
             </Grid>
             </Grid>
           ) : (
-            <MDBox sx={{ textAlign: "center", fontSize: "18px", color: "#888" }}>
+            <Grid sx={{ textAlign: "center",  fontSize: "18px", color: "#888" }}>
               <MDTypography>Select a chat to view the conversation.</MDTypography>
-            </MDBox>
+            </Grid>
           )}
 
 
