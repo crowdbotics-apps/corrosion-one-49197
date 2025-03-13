@@ -10,6 +10,8 @@ import Card from "@mui/material/Card";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Box from "@mui/material/Box";
 import Pagination from '@mui/material/Pagination';
+import MDTypography from "../../MDTypography"
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
 
 function DataTable({
                      table,
@@ -102,25 +104,49 @@ function DataTable({
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox>
-          <TextField
-            label={
-              <Box display="flex" alignItems="center" sx={{ padding: '2.5rem' , fontSize:'20px'}}>
-                <SearchOutlinedIcon sx={{ marginRight: 1 }} />
-                <Box>Search and Filter</Box>
-              </Box>
-            }
-            sx={{
-              width: '599px',
-              padding: '2rem',
-            }}
-            InputProps={{
-              style: {
-                height: '72px',
-                borderRadius:'12px',
-              },
-            }}
-          />
+        <MDBox sx={{display: "flex"}}>
+          <MDBox>
+            <TextField
+              label={
+                <Box display="flex" alignItems="center" sx={{ padding: '2.5rem' , fontSize:'20px'}}>
+                  <SearchOutlinedIcon sx={{ marginRight: 1 }} />
+                  <Box>Search and Filter</Box>
+                </Box>
+              }
+              sx={{
+                width: '599px',
+                padding: '2rem',
+              }}
+              InputProps={{
+                style: {
+                  height: '72px',
+                  borderRadius:'12px',
+                },
+              }}
+            />
+          </MDBox>
+
+          <MDBox sx={{ marginLeft: '750px' }}>
+            <TextField
+              label={
+                <MDBox display="flex" alignItems="center" sx={{marginTop:'40px', fontSize: '20px', marginLeft:'50px' }}>
+                  <MDTypography sx={{fontSize:'16px', marginTop:'3px'}}>Jul 19 - Jul 25</MDTypography>
+                  <CalendarTodayIcon sx={{ marginLeft: '10px', color:'#006E90' }} />
+                </MDBox>
+              }
+              sx={{
+                width: '250px',
+                padding: '2rem',
+              }}
+              InputProps={{
+                style: {
+                  height: '72px',
+                  borderRadius: '12px',
+                },
+              }}
+            />
+          </MDBox>
+
         </MDBox>
 
         <Table {...getTableProps()}>

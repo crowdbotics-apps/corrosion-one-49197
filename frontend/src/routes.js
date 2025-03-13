@@ -52,6 +52,7 @@ import HomeOwnerMessages from "./pages/owner/messages"
 import HomeOwnerPostJob from "./pages/owner/PostJob/PostJob"
 import HomeOwnerBids from "./pages/owner/Bids"
 import HomeOwnerJobs from "./pages/owner/MyJobs"
+import HomeOwnerDetails from "./pages/owner/findJobs/detailsIndex"
 
 
 
@@ -108,6 +109,18 @@ export const protectedRoutes = [
     noCollapse: true,
     role: [ROLES.INSPECTOR],
   },
+  //////////////////////////////////////////
+  {
+    type: "collapse",
+    name: "Find Jobs",
+    key: "find-jobs",
+    route: ROUTES.FIND_J0B_DETAILS,
+    component: <HomeOwnerDetails />,
+    icon: <Icon fontSize="small">search_outlined</Icon>,
+    noCollapse: true,
+    role: [ROLES.INSPECTOR],
+  },
+  //////////////////////////////////////////
   {
     type: "collapse",
     name: "Post a Job",
