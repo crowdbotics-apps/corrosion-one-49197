@@ -24,14 +24,14 @@ const generateRowData = () => {
       fontSize: '16px',
     },
     date:{
-      marginLeft: '20px',
+      marginLeft: '15px',
     }
   };
 
   const users = [
     {
       gender: "male",
-      profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://s3-alpha-sig.figma.com/img/713f/9fde/146f04fcc70654f890768e4ae18425c7?Expires=1742774400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=azo2I58bpeSIXtGy0Spmf1k3AXX6Me5Tfs7LGs5zoFoZNjfsxXHHOsCnkl68hSL8ZbgLVlkpIzpcJYITKaW~bzPyyYNJts2bQ5X171WhHB7GZ4-HrTIEbS4WqE9m3GnTDkYi2uxT7z6aRX6YDzF1k3XdC05wjL3USqqcsPqsyU6af0cZu6i1EBPkmN3D9C8cWIGNXYpcfs0uLKI4xcBhy5Bfr7X6Cz00zMAEHfqcMXFri6htgi2yZ5mhU~42urPgEOZmO3Ia-NJgYjSIQ0iQyJy1CoTaATf4SKRwK9egzn6-EYlVaxzDkldspVhKPiWZLJfs0Iq1veKvmKXcw1ul5A__"} />,
+      profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
       name: (
         <MDBox>
           <MDTypography style={estilo.title}>Benjamin Calt</MDTypography>
@@ -44,14 +44,27 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}} >$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-April-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
+
+
     },
     {
       gender: "female",
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
+      profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
       name: (
         <MDBox>
           <MDTypography style={estilo.title}>Elena Streep</MDTypography>
@@ -64,13 +77,25 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-03-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "female",
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
           <MDTypography style={estilo.title}>Jane Smith</MDTypography>
@@ -84,13 +109,25 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-02-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "female",
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
           <MDTypography style={estilo.title}>Jay ruhe</MDTypography>
@@ -104,13 +141,25 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-09-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "male",
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
           <MDTypography style={estilo.title}>Julian Marck</MDTypography>
@@ -123,13 +172,25 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}} >$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-12-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "female",
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
           <MDTypography style={estilo.title}>Nicole kidman</MDTypography>
@@ -142,13 +203,25 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-10-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "male",
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
           <MDTypography style={estilo.title}>Smith Joe</MDTypography>
@@ -161,16 +234,28 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-08-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "male",
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>AI Specialist</MDTypography>
+          <MDTypography style={estilo.title}>Joe Bartmann</MDTypography>
         </MDBox>
       ),
       bidsJobs: (
@@ -180,16 +265,28 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-April-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "female",
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Game Developer</MDTypography>
+          <MDTypography style={estilo.title}>Lydia Diaz</MDTypography>
         </MDBox>
 
       ),
@@ -200,16 +297,28 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-04-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "male",
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Operations Manager</MDTypography>
+          <MDTypography style={estilo.title}>James Gardner</MDTypography>
         </MDBox>
 
       ),
@@ -220,16 +329,28 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-01-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "male",
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>SEO Expert</MDTypography>
+          <MDTypography style={estilo.title}>Ruben Culhane</MDTypography>
         </MDBox>
       ),
       bidsJobs: (
@@ -239,16 +360,28 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}} >$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-April-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     },
     {
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      gender: "female",
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Content Strategist</MDTypography>
+          <MDTypography style={estilo.title}>Angelina Swann</MDTypography>
         </MDBox>
       ),
       bidsJobs: (
@@ -258,10 +391,21 @@ const generateRowData = () => {
       ),
       bidAmount: (
         <MDBox style={estilo.date}>
-          <MDTypography >$51.95</MDTypography>
+          <MDTypography sx={{fontSize: '16px'}} >$51.95</MDTypography>
         </MDBox>
       ),
-      applicationDate: <MDBox style={estilo.date}>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
+      applicationDate: (
+        <MDBox style={estilo.date}>
+          {(() => {
+            const date = new Date("2025-April-16");
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = date.toLocaleString("en-GB", { month: "short" });
+            const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+            const year = date.getFullYear();
+            return `${day}/${capitalizedMonth}/${year}`;
+          })()}
+        </MDBox>
+      )
     }
 
   ]

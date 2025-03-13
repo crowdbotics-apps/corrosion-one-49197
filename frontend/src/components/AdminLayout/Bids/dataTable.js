@@ -159,9 +159,8 @@ function DataTable({
                   >
                     {row.cells.map((cell, idx2) => (
                       <DataTAbleBodyCell
-                        gender={table.gender}
+                        gender={row.original.gender}
                         key={`tablecell__${idx2}`}
-                        odd={key % 2 === 0}
                         selected={row.original.id === selectedProject?.id}
                         noBorder={noEndBorder && rows.length - 1 === key}
                         width={cell.column.width}

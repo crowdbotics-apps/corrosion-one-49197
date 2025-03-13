@@ -42,7 +42,7 @@ DataTableBodyCell.propTypes = {
   children: PropTypes.node.isRequired,
   noBorder: PropTypes.bool,
   align: PropTypes.oneOf(["left", "right", "center"]),
-  gender: PropTypes.oneOf(["male", "female"]), // El género como propiedad
+  gender: PropTypes.string,
 };
 
 export default DataTableBodyCell;
