@@ -26,6 +26,16 @@ const generateRowData = () => {
     font: {
       color: '#7C8493',
     },
+    button:{
+      paddingTop: '2px',
+      paddingBottom: '2px',
+      paddingRight: '10px',
+      paddingLeft: '10px',
+      borderRadius: '12px',
+      borderColor: '#006E90',
+      color: '#006E90',
+      fontSize: '15px',
+    },
   };
 
   const users = [
@@ -249,28 +259,8 @@ const generateRowData = () => {
       ),
       actions: (
         <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '275px' },  padding: 0, }}>
-          <MDButton
-            variant="outlined"
-            sx={{
-              borderColor: '#006E90',
-              color: '#006E90',
-              fontSize: '15px',
-            }}
-
-          >
-            View Details
-          </MDButton>
-
-          <MDButton
-            variant="outlined"
-            sx={{
-              borderColor: '#E14640',
-              color: '#E14640',
-              fontSize: '15px',
-            }}
-          >
-            Withdraw
-          </MDButton>
+          <MDButton variant="outlined" sx={estilo.button}>View Details</MDButton>
+          <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '12px', paddingLeft: '11px', borderRadius: '12px', borderColor: '#E14640', color: '#E14640', fontSize: '15px',width:{md:'110px'} }}>Withdraw</MDButton>
         </MDBox>
 
 

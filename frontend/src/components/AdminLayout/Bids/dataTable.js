@@ -4,7 +4,7 @@ import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table
 import { Grid, Table, TableBody, TableContainer, TableRow, TextField } from "@mui/material";
 import MDBox from "components/MDBox";
 import DataTableHeadCell from "../DataTableHeadCell";
-import DataTAbleBodyCell from "./DataTAbleBodyCell";
+import DataTAbleBodyCell from "./DataTAbleBodyCell"
 import { EmptyResponseDatatable } from "../EmptyResponseDatatable";
 import Card from "@mui/material/Card";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
@@ -159,8 +159,8 @@ function DataTable({
                   >
                     {row.cells.map((cell, idx2) => (
                       <DataTAbleBodyCell
-                        gender={row.original.gender}
                         key={`tablecell__${idx2}`}
+                        gender={row.original.gender}
                         selected={row.original.id === selectedProject?.id}
                         noBorder={noEndBorder && rows.length - 1 === key}
                         width={cell.column.width}
@@ -168,7 +168,7 @@ function DataTable({
                         {...cell.getCellProps()}
                       >
                         {cell.render("Cell")}
-                      </DataTAbleBodyCell>
+                      </DataTAbleBodyCell >
                     ))}
                   </TableRow>
                 );

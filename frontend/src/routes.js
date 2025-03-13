@@ -51,6 +51,7 @@ import HomeOwnerDos from "./pages/owner/findJobs"
 import HomeOwnerMessages from "./pages/owner/messages"
 import HomeOwnerPostJob from "./pages/owner/PostJob/PostJob"
 import HomeOwnerBids from "./pages/owner/Bids"
+import HomeOwnerJobs from "./pages/owner/MyJobs"
 
 
 
@@ -101,7 +102,7 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Find Jobs",
     key: "find-jobs",
-    route: ROUTES.FINDJOBS,
+    route: ROUTES.FIND_JOBS,
     component: <HomeOwnerDos />,
     icon: <Icon fontSize="small">search_outlined</Icon>,
     noCollapse: true,
@@ -111,7 +112,7 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Post a Job",
     key: "post-jobs",
-    route: ROUTES.POSTJOB,
+    route: ROUTES.POST_JOB,
     component: <HomeOwnerPostJob />,
     icon: <Icon fontSize="small">ballot_outlined</Icon>,
     noCollapse: true,
@@ -131,8 +132,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "My Jobs",
     key: "my-jobs",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.MY_JOBS,
+    component: <HomeOwnerJobs />,
     icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],

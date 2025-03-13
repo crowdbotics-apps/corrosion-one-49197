@@ -5,6 +5,7 @@ import MDButton from "../../../components/MDButton"
 import MDBox from "../../MDBox"
 import MDAvatar from "../../MDAvatar"
 import MDTypography from "../../MDTypography"
+import Button from "@mui/material/Button"
 
 const STATUS_OPTIONS_COLORS = {
   [ENROLMENT_STATUS.INVITED]: "warning",
@@ -24,7 +25,8 @@ const generateRowData = () => {
       fontSize: '16px',
     },
     date:{
-      marginLeft: '15px',
+      display: 'flex',
+      marginLeft: '5px',
     },
     button:{
       paddingTop: '2px',
@@ -36,25 +38,39 @@ const generateRowData = () => {
       color: '#006E90',
       fontSize: '15px',
     },
+    buttonView:{
+      borderColor: '#006E90',
+      color: '#006E90',
+      paddingTop: '2px',
+      paddingBottom: '2px',
+      paddingRight: '8px',
+      paddingLeft: '8px',
+      minWidth: 'auto',
+      minHeight: 'auto',
+      height: 'auto',
+      lineHeight: 1,
+      textTransform: 'none',
+      '&:hover': {
+      borderColor: '#006E90', }
+    }
   };
 
   const users = [
     {
-      gender: "male",
-      profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Benjamin Calt</MDTypography>
-        </MDBox>
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Real State Agent</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}} >$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >25</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
+        </MDBox>
+      ),
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>856</MDTypography>
         </MDBox>
       ),
       applicationDate: (
@@ -68,26 +84,26 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Closed'
 
 
     },
     {
-      gender: "female",
-      profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Elena Streep</MDTypography>
-        </MDBox>
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Manager</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>901</MDTypography>
+        </MDBox>
+      ),
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >26</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
         </MDBox>
       ),
       applicationDate: (
@@ -101,25 +117,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Paused'
     },
     {
-      gender: "female",
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Jane Smith</MDTypography>
-        </MDBox>
-
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Appraiser</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >17</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
+        </MDBox>
+      ),
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>901</MDTypography>
         </MDBox>
       ),
       applicationDate: (
@@ -133,25 +148,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Open'
     },
     {
-      gender: "female",
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Jay ruhe</MDTypography>
-        </MDBox>
-
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Sales Associate</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >15</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
+        </MDBox>
+      ),
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>203</MDTypography>
         </MDBox>
       ),
       applicationDate: (
@@ -165,24 +179,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Paused'
     },
     {
-      gender: "male",
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Julian Marck</MDTypography>
-        </MDBox>
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Realtor</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}} >$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >20</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
+        </MDBox>
+      ),
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>320</MDTypography>
         </MDBox>
       ),
       applicationDate: (
@@ -196,24 +210,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Paused'
     },
     {
-      gender: "female",
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Nicole kidman</MDTypography>
-        </MDBox>
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Listing Agent</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >10</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
+        </MDBox>
+      ),
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>256</MDTypography>
         </MDBox>
       ),
       applicationDate: (
@@ -227,24 +241,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Closed'
     },
     {
-      gender: "male",
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Smith Joe</MDTypography>
-        </MDBox>
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>106</MDTypography>
+        </MDBox>
+      ),
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >22</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
         </MDBox>
       ),
       applicationDate: (
@@ -258,24 +272,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Closed'
     },
     {
-      gender: "male",
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Joe Bartmann</MDTypography>
-        </MDBox>
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>505</MDTypography>
+        </MDBox>
+      ),
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >13</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
         </MDBox>
       ),
       applicationDate: (
@@ -289,25 +303,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Open'
     },
     {
-      gender: "female",
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Lydia Diaz</MDTypography>
-        </MDBox>
-
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>211</MDTypography>
+        </MDBox>
+      ),
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >30</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
         </MDBox>
       ),
       applicationDate: (
@@ -321,25 +334,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Closed'
     },
     {
-      gender: "male",
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>James Gardner</MDTypography>
-        </MDBox>
-
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}}>$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >35</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
+        </MDBox>
+      ),
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>348</MDTypography>
         </MDBox>
       ),
       applicationDate: (
@@ -353,24 +365,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Open'
     },
     {
-      gender: "male",
-      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Ruben Culhane</MDTypography>
-        </MDBox>
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}} >$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >16</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
+        </MDBox>
+      ),
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>806</MDTypography>
         </MDBox>
       ),
       applicationDate: (
@@ -384,24 +396,24 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Open'
     },
     {
-      gender: "female",
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }}/>,
-      name: (
-        <MDBox>
-          <MDTypography style={estilo.title}>Angelina Swann</MDTypography>
-        </MDBox>
-      ),
       bidsJobs: (
         <MDBox>
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      bidAmount: (
+      applicants: (
         <MDBox style={estilo.date}>
-          <MDTypography sx={{fontSize: '16px'}} >$51.95</MDTypography>
+          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >18</MDTypography></MDBox>
+          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
+        </MDBox>
+      ),
+      views:(
+        <MDBox>
+          <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>956</MDTypography>
         </MDBox>
       ),
       applicationDate: (
@@ -415,7 +427,8 @@ const generateRowData = () => {
             return `${day}/${capitalizedMonth}/${year}`;
           })()}
         </MDBox>
-      )
+      ),
+      status:'Paused'
     }
 
   ]
@@ -425,20 +438,17 @@ const generateRowData = () => {
 
   return users.map(user => {
     return {
-      profile_picture: user.profile_picture,
-      name: user.name,
-      email: user.email,
       bidsJobs:user.bidsJobs,
-      bidAmount:user.bidAmount,
-      applicationDate:user.applicationDate,
-      gender: user.gender,
+      applicants:user.applicants,
+      views:user.views,
+      date_posted:user.applicationDate,
+      status:user.status,
       actions: (
-        <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '275px' },  padding: 0, }}>
-          <MDButton variant="outlined" sx={estilo.button}>View Details</MDButton>
-          <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '8px', paddingLeft: '8px', borderRadius: '12px',borderColor: '#E14640', color: '#E14640', fontSize: '15px', width:{md:'110px'}}}>Rejected</MDButton>
+        <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0, }}>
+          <MDButton variant="outlined" sx={estilo.button}>Edit</MDButton>
+          <MDButton variant="outlined" sx={estilo.button}>See Applications</MDButton>
+          <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '8px', paddingLeft: '8px', borderRadius: '12px',borderColor: '#E14640', color: '#E14640', fontSize: '15px',width:{md:'145px'} }}>Close Jobs</MDButton>
         </MDBox>
-
-
       ),
     };
   });
@@ -447,13 +457,12 @@ const generateRowData = () => {
 
 export const dataTableModel = {
   columns: [
-    { Header: " ", accessor: "profile_picture", disableOrdering: true, width: 60 },
-    { Header: "Bidder Name", accessor: 'name', disableOrdering: true, width: 150 },
-    { Header: "Bids Jobs", accessor: "bidsJobs",width: 150},
-    { Header: "Bid Amount", accessor: "bidAmount" ,width: 150 },
-    { Header: "Aplication Date", accessor: "applicationDate", width: 120 },
-    { Header: " ",accessor: "actions", disableOrdering: true, width: 50 },
-    { Header: " ",accessor: "actions_details", disableOrdering: true, width: 60 },
+    { Header: "Job Title", accessor: "bidsJobs",width: 150},
+    { Header: "Applicants", accessor: "applicants",disableOrdering: true ,width: 100 },
+    { Header: "Views", accessor: "views",disableOrdering: true, width: 50 },
+    { Header: "Date Posted", accessor: "date_posted", width: 120 },
+    { Header: "Status", accessor: "status", disableOrdering: true,width: 80 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 300 },
   ],
   rows: generateRowData(),
 };
