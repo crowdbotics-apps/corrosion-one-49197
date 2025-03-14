@@ -180,21 +180,11 @@ function Messages() {
 
 
               </Grid>
-              <Grid sx={{
-                marginLeft: {xs:"-200px", sm:"-100px"},
-                backgroundColor: "white",
-                borderBlockEnd: "1px solid #ccc",
-                height: {md:"170px", xs:"130px"},
-              }}>
-                <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px", marginTop: "10px", marginLeft: {md:"250px", xs:"10px"} }}>
-                  {selectedChat.secondary}
-                </MDBox>
-              </Grid>
 
                 <Grid sx={{
                   marginTop: "20px",
                   overflowY: "auto",
-                  height: "390px",
+                  height: "570px",
                   '&::-webkit-scrollbar': {
                     width: '8px',
                   },
@@ -208,6 +198,16 @@ function Messages() {
                     background: 'transparent',
                   },
                 }} ref={chatContainerRef}>
+                  <Grid sx={{
+                    marginLeft: {xs:"-200px", sm:"-100px"},
+                    backgroundColor: "white",
+                    borderBlockEnd: "1px solid #ccc",
+                    height: {md:"170px", xs:"130px"},
+                  }}>
+                    <MDBox sx={{ backgroundColor: "white", height: "90px", width: "700px", marginTop: "10px", marginLeft: {md:"250px", xs:"10px"} }}>
+                      {selectedChat.secondary}
+                    </MDBox>
+                  </Grid>
                   {selectedChat.messages && selectedChat.messages.map((message, index) => (
                     <Grid key={index} style={{ display: "flex", flexDirection: "column", alignItems: index % 2 === 0 ? "flex-end" : "flex-start", marginBottom: "10px" }}>
                       <MDTypography variant="body2" component="p" sx={{ marginBottom: "8px", color: "#25324B" }}>

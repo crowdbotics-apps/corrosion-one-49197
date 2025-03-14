@@ -19,17 +19,17 @@ function HomeOwnerDos() {
         table={datatable}
       />
     </AdminLayout>
-  // <AdminLayout
-  //   showCard
-  // >
-  //   <MDBox sx={{
-  //     display: 'flex',
-  //     flexDirection: { xs: 'column', md: 'row' },
-  //     width: "100%",
-  //   }}>
-  //     <Details />
-  //   </MDBox>
-  // </AdminLayout>
+   // <AdminLayout
+   //        showCard
+   //      >
+   //        <MDBox sx={{
+   //          display: 'flex',
+   //          flexDirection: { xs: 'column', md: 'row' },
+   //          width: "100%",
+   //        }}>
+   //          <Details />
+   //        </MDBox>
+   //      </AdminLayout>
   );
 }
 

@@ -216,7 +216,7 @@ function DataTable({
         <Grid item container xs={12} justifyContent="center" style={{ padding: '2rem' }}>
           <Pagination
             size="large"
-            count={3}
+            count={ rows.length / 4}
             variant="outlined"
             color="secondary"
             page={currentPage}

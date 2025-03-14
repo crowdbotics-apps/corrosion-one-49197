@@ -3,6 +3,7 @@ import AdminLayout from "../../../components/AdminLayout"
 import DataTable from "../../../components/AdminLayout/Bids/dataTable";
 import { useState } from "react"
 import { dataTableModel } from "../../../components/AdminLayout/Bids/utils"
+import MDBox from "../../../components/MDBox"
 
 
 
@@ -16,6 +17,7 @@ function HomeOwnerBids() {
       <DataTable
         table={datatable}
       />
+
     </AdminLayout>
 
   );

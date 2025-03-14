@@ -110,16 +110,16 @@ export const protectedRoutes = [
     role: [ROLES.INSPECTOR],
   },
   //////////////////////////////////////////
-  {
-    type: "collapse",
-    name: "Find Jobs",
-    key: "find-jobs",
-    route: ROUTES.FIND_J0B_DETAILS,
-    component: <HomeOwnerDetails />,
-    icon: <Icon fontSize="small">search_outlined</Icon>,
-    noCollapse: true,
-    role: [ROLES.INSPECTOR],
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Find Jobs",
+  //   key: "find-jobs",
+  //   route: ROUTES.FIND_J0B_DETAILS,
+  //   component: <HomeOwnerDetails />,
+  //   icon: <Icon fontSize="small">search_outlined</Icon>,
+  //   noCollapse: true,
+  //   role: [ROLES.INSPECTOR],
+  // },
   //////////////////////////////////////////
   {
     type: "collapse",

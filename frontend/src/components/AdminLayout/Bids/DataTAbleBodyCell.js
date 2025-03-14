@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // Componentes de Material Dashboard 2 PRO React
 import MDBox from "components/MDBox";
 
-function DataTableBodyCell({ noBorder, align, children, gender, width, selected = false }) {
+function DataTableBodyCell({ noBorder, align, children, gender, width, selected = false , button}) {
   return (
     <MDBox
       component="td"

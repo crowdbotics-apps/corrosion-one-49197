@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { Grid, Table, TableBody, TableContainer, TableRow, TextField } from "@mui/material";
+import { Grid, Table, TableBody, TableContainer, TableRow, TextField, Button } from "@mui/material";
 import MDBox from "components/MDBox";
 import DataTableHeadCell from "../DataTableHeadCell";
 import DataTAbleBodyCell from "./DataTAbleBodyCell"
@@ -11,7 +11,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Box from "@mui/material/Box";
 import Pagination from '@mui/material/Pagination';
 import MDTypography from "../../MDTypography"
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 function DataTable({
                      table,
@@ -101,14 +101,19 @@ function DataTable({
     gotoPage(newPage - 1);
   };
 
+  const handleReject = (id) => {
+    // Implement your reject logic here
+    console.log(`Rejected row with id: ${id}`);
+  };
+
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox sx={{display: "flex"}}>
+        <MDBox sx={{ display: "flex" }}>
           <MDBox>
             <TextField
               label={
-                <Box display="flex" alignItems="center" sx={{ padding: '2.5rem' , fontSize:'20px'}}>
+                <Box display="flex" alignItems="center" sx={{ padding: '2.5rem', fontSize: '20px' }}>
                   <SearchOutlinedIcon sx={{ marginRight: 1 }} />
                   <Box>Search and Filter</Box>
                 </Box>
@@ -120,7 +125,7 @@ function DataTable({
               InputProps={{
                 style: {
                   height: '72px',
-                  borderRadius:'12px',
+                  borderRadius: '12px',
                 },
               }}
             />
@@ -129,9 +134,9 @@ function DataTable({
           <MDBox sx={{ marginLeft: '750px' }}>
             <TextField
               label={
-                <MDBox display="flex" alignItems="center" sx={{marginTop:'40px', fontSize: '20px', marginLeft:'50px' }}>
-                  <MDTypography sx={{fontSize:'16px', marginTop:'3px'}}>Jul 19 - Jul 25</MDTypography>
-                  <CalendarTodayIcon sx={{ marginLeft: '10px', color:'#006E90' }} />
+                <MDBox display="flex" alignItems="center" sx={{ marginTop: '40px', fontSize: '20px', marginLeft: '50px' }}>
+                  <MDTypography sx={{ fontSize: '16px', marginTop: '3px' }}>Jul 19 - Jul 25</MDTypography>
+                  <CalendarTodayIcon sx={{ marginLeft: '10px', color: '#006E90' }} />
                 </MDBox>
               }
               sx={{
@@ -194,8 +199,18 @@ function DataTable({
                         {...cell.getCellProps()}
                       >
                         {cell.render("Cell")}
-                      </DataTAbleBodyCell >
+                      </DataTAbleBodyCell>
                     ))}
+                    {/* Agregar el botón de rechazo */}
+                    <DataTAbleBodyCell key="reject_button" width="100px" align="center">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleReject(row.original.id)}
+                      >
+                        Rechazar
+                      </Button>
+                    </DataTAbleBodyCell>
                   </TableRow>
                 );
               })}
@@ -215,7 +230,7 @@ function DataTable({
         <Grid item container xs={12} justifyContent="center" style={{ padding: '2rem' }}>
           <Pagination
             size="large"
-            count={3}
+            count={rows.length / 4}
             variant="outlined"
             color="secondary"
             page={currentPage}
@@ -223,7 +238,6 @@ function DataTable({
           />
         </Grid>
       </TableContainer>
-
     </Card>
   );
 }

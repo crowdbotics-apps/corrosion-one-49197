@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Formik, Field, Form } from 'formik';
+import { Formik, Field, Form, useFormik } from "formik"
 import MDButton from "../../MDButton"
 import MDBox from "../../MDBox"
 import MDTypography from "../../MDTypography"
@@ -10,7 +10,7 @@ import {
   Select,
   MenuItem,
   InputAdornment
-} from '@mui/material'; // Asegúrate de tener estos componentes importados
+} from '@mui/material';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import FormatBoldOutlinedIcon from '@mui/icons-material/FormatBoldOutlined';
 import FormatItalicOutlinedIcon from '@mui/icons-material/FormatItalicOutlined';
@@ -20,53 +20,66 @@ import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
 import * as Yup from 'yup';
-
+import FormikInput from "../../Formik/FormikInput"
 
 export function PostJob() {
 
-  const [age, setAge] = React.useState('');
+  const [isVisible, setIsVisible] = useState(true);
+  const [isVisibleTwo, setIsVisibleTwo] = useState(true);
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const handleCancelClick = () => {
+    setIsVisible(false);
+  };
+  const handleCancelClickTwo = () => {
+    setIsVisibleTwo(false);
   };
 
+  const initialValues = {
+    jobTitle: '',
+    jobAddress: 10,
+    category: '',
+    jobDescription: '',
+    certifications: '',
+  };
+
+  const validationSchema = Yup.object().shape({
+    jobTitle: Yup.string().required("Job Title is required"),
+    jobAddress: Yup.string().required("Job Address is required"),
+    category: Yup.string().required("Category is required"),
+    jobDescription: Yup.string().required("Job Description is required"),
+    certifications: Yup.string().required("Certifications are required"),
+  });
+
+  const jobAddressOptions = [
+    { id: 10, name: 'One' },
+    { id: 20, name: 'Tenn' },
+    { id: 30, name: 'Nine' },
+  ];
 
   return (
     <Formik
-      initialValues={{
-        jobTitle: '',
-        jobAddress: '',
-        category: '',
-        jobDescription: '',
-        certifications: '',
-      }}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
       onSubmit={(values) => {
         console.log('Form Values:', values);
       }}
     >
-      {({ values, handleChange }) => (
+      {({ values, handleChange, errors, touched, setFieldValue }) => (
         <Form>
           <MDBox display="flex" flex={1} style={{ border: 'none', backgroundColor: 'white' }}>
             <MDBox sx={{ width: '100%', height: '100%', display: 'flex' }}>
               <MDBox sx={{ width: '100%' }}>
+
                 <MDBox style={{ width: '100%' }}>
                   <MDTypography variant="h5" component="div">
                     Job Title
                   </MDTypography>
-                  <Field
-                    name="jobTitle"
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Job title"
-                        variant="outlined"
-                        sx={{
-                          padding: '0px',
-                          width: '100%',
-                          boxSizing: 'border-box',
-                        }}
-                      />
-                    )}
+                  <FormikInput
+                    name={'jobTitle'}
+                    label={'Job Title'}
+                    type={'text'}
+                    errors={errors}
+                    mb={2}
                   />
                 </MDBox>
 
@@ -74,108 +87,118 @@ export function PostJob() {
                   <MDTypography variant="h5" component="div">
                     Job Address
                   </MDTypography>
-                  <FormControl fullWidth sx={{ width: '100%' }}>
-                    <InputLabel id="demo-simple-select-label" sx={{ padding: '1px' }}>
-                      Select Your Category
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
+                  <MDBox mb={2}>
+                    <FormikInput
+                      type={'autocomplete'}
+                      fieldName="jobAddress"
                       value={values.jobAddress}
-                      onChange={handleChange}
-                      name="jobAddress"
-                      variant="outlined"
-                      sx={{
-                        padding: { md: '0px', xs: '10px' },
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        height: '45px',
-                      }}
-                    >
-                      <MenuItem value={10}>Tenn</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
+                      onChange={(_, newValue) => setFieldValue('jobAddress', newValue)}
+                      options={jobAddressOptions}
+                      getOptionLabel={(option) => option.name}
+                      label="Select Job Address"
+                      // errorText={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
+                      // overrideError={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
+                    />
+
+                  </MDBox>
                 </MDBox>
 
                 <MDBox sx={{ width: '100%', height: '100px' }}>
                   <MDTypography variant="h5" component="div">
                     Category
                   </MDTypography>
-                  <FormControl fullWidth sx={{ width: '100%' }}>
-                    <InputLabel id="demo-simple-select-label" sx={{ padding: '1px' }}>
-                      Select Your Category
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={values.category}
-                      onChange={handleChange}
-                      name="category"
-                      variant="outlined"
-                      sx={{
-                        padding: { md: '0px', xs: '10px' },
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        height: '45px',
+                  <MDBox mb={2}>
+                    <FormikInput
+                      type={'autocomplete'}
+                      fieldName="category"
+                      value={values.jobAddress}
+                      onChange={(_, newValue) => {
+                        console.log(newValue);
+                        setFieldValue('jobAddress', newValue);  // Actualiza Formik con el nuevo valor
                       }}
-                    >
-                      <MenuItem value={10}>Tenn</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
+                      options={jobAddressOptions}
+                      getOptionLabel={(option) => option.name}
+                      label="Select Category"
+                      errorText={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
+                      overrideError={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
+                    />
+                  </MDBox>
                 </MDBox>
 
                 <MDBox sx={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', width: '100%' , gap: '10px' }}>
-                  <MDBox
-                    sx={{
-                      backgroundColor: "white",
-                      border: "1px solid rgba(0, 0, 0, 0.2)",
-                      borderRadius: 5,
-                      width: 'fit-content',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    <MDTypography
-                      sx={{
-                        padding: '2px',
-                        display: "flex",
-                        fontSize: '14px',
-                        margin: '7px',
-                        whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      <CancelOutlinedIcon sx={{margin: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px'}} />
-                      Development
-                    </MDTypography>
-                  </MDBox>
 
-                  <MDBox
-                    sx={{
-                      backgroundColor: "white",
-                      border: "1px solid rgba(0, 0, 0, 0.2)",
-                      borderRadius: 5,
-                      width: 'fit-content',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    <MDTypography
+                  {isVisible && (
+                    <MDBox
                       sx={{
-                        padding: '2px',
-                        display: "flex",
-                        fontSize: '14px',
-                        margin: '7px',
-                        whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                        fontWeight: 'bold',
+                        backgroundColor: 'white',
+                        border: '1px solid rgba(0, 0, 0, 0.2)',
+                        borderRadius: 5,
+                        width: 'fit-content',
+                        marginBottom: '10px',
                       }}
                     >
-                      <CancelOutlinedIcon sx={{marginTop: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px'}} />
-                      Consulting
-                    </MDTypography>
-                  </MDBox>
+                      <MDTypography
+                        sx={{
+                          padding: '2px',
+                          display: 'flex',
+                          fontSize: '14px',
+                          margin: '7px',
+                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        <CancelOutlinedIcon
+                          sx={{
+                            marginTop: '2px',
+                            width: '20px',
+                            height: '20px',
+                            color: 'red',
+                            marginRight: '2px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={handleCancelClick}
+                        />
+                        Development
+                      </MDTypography>
+                    </MDBox>
+                  )}
+
+
+                  {isVisibleTwo && (
+                    <MDBox
+                      sx={{
+                        backgroundColor: 'white',
+                        border: '1px solid rgba(0, 0, 0, 0.2)',
+                        borderRadius: 5,
+                        width: 'fit-content',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <MDTypography
+                        sx={{
+                          padding: '2px',
+                          display: 'flex',
+                          fontSize: '14px',
+                          margin: '7px',
+                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        <CancelOutlinedIcon
+                          sx={{
+                            marginTop: '2px',
+                            width: '20px',
+                            height: '20px',
+                            color: 'red',
+                            marginRight: '2px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={handleCancelClickTwo}
+                        />
+                        Consulting
+                      </MDTypography>
+                    </MDBox>
+                  )}
 
                 </MDBox>
 
@@ -183,138 +206,60 @@ export function PostJob() {
                   <MDTypography variant="h5" component="div">
                     Job Description
                   </MDTypography>
-                  <Field
+
+                  <FormikInput
+                    type="textarea"
+                    label=""
                     name="jobDescription"
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label=""
-                        variant="outlined"
-                        multiline
-                        rows={6}
-                        sx={{
-                          padding: { md: '0px', xs: '10px' },
-                          width: '100%',
-                          boxSizing: 'border-box',
-                        }}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <MDBox sx={{ display: 'flex', alignItems: 'center', marginLeft: 2 }}>
-                                <FormatBoldOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px', color: '#1F4255' }} />
-                                <FormatItalicOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px', color: '#1F4255' }} />
-                                <FormatUnderlinedOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px', color: '#1F4255' }} />
-                                <StrikethroughSOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '30px', height: '30px', color: '#1F4255', borderRight: '1px solid #ccc', paddingRight: '10px' }} />
-                                <InsertLinkOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '20px', height: '20px', color: '#1F4255' }} />
-                                <ListOutlinedIcon sx={{ marginTop: '100px', marginRight: '10px', width: '30px', height: '30px', color: '#1F4255', borderLeft: '1px solid #ccc', paddingLeft: '10px' }} />
-                                <FormatListNumberedOutlinedIcon sx={{ marginTop: '100px', width: '20px', height: '20px', marginRight: '10px', color: '#1F4255' }} />
-                              </MDBox>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    )}
+                    rows={5}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start" sx={{ position: 'absolute', top: '8px', left: '8px', zIndex: 10 }}>
+                          <MDBox
+                            sx={{
+                              marginTop: '190px',
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              gap: '8px',
+                              zIndex: 1,
+                            }}
+                          >
+                            <FormatBoldOutlinedIcon sx={{marginRight: '10px', width: '20px', height: '20px', color: '#1F4255' }} />
+                            <FormatItalicOutlinedIcon sx={{marginRight: '10px', width: '20px', height: '20px', color: '#1F4255' }} />
+                            <FormatUnderlinedOutlinedIcon sx={{ marginRight: '10px', width: '20px', height: '20px', color: '#1F4255' }} />
+                            <StrikethroughSOutlinedIcon sx={{ marginRight: '10px', width: '30px', height: '30px', color: '#1F4255', borderRight: '1px solid #ccc', paddingRight: '10px' }} />
+                            <InsertLinkOutlinedIcon sx={{ marginRight: '10px', width: '20px', height: '20px', color: '#1F4255' }} />
+                            <ListOutlinedIcon sx={{ marginRight: '10px', width: '30px', height: '30px', color: '#1F4255', borderLeft: '1px solid #ccc', paddingLeft: '10px' }} />
+                            <FormatListNumberedOutlinedIcon sx={{ width: '20px', height: '20px', marginRight: '10px', color: '#1F4255' }} />
+                          </MDBox>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
+
+
                 </MDBox>
 
                 <MDBox sx={{ with: '120px', height: '100px', marginTop: '20px' }}>
                   <MDTypography variant="h5" component="div">
                     Certifications Required
                   </MDTypography>
-                  <FormControl fullWidth sx={{ width: '100%' }}>
-                    <InputLabel id="demo-simple-select-label">Select An Option</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
+                  <MDBox mb={2}>
+                    <FormikInput
+                      type={'autocomplete'}
+                      fieldName="certifications"
                       value={values.certifications}
-                      onChange={handleChange}
-                      name="certifications"
-                      sx={{
-                        padding: { md: '0px', xs: '10px' },
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        height: '45px',
-                      }}
-                    >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
-                </MDBox>
+                      onChange={(_, newValue) => setFieldValue('jobAddress', newValue)}
+                      options={jobAddressOptions}
+                      getOptionLabel={(option) => option.name}
+                      label="Select Job Address"
+                      errorText={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
+                      overrideError={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
+                    />
 
-                <MDBox sx={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', width: '100%' , gap: '10px' }}>
-                  <MDBox
-                    sx={{
-                      backgroundColor: "white",
-                      border: "1px solid rgba(0, 0, 0, 0.2)",
-                      borderRadius: 5,
-                      width: 'fit-content',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    <MDTypography
-                      sx={{
-                        padding: '2px',
-                        display: "flex",
-                        fontSize: '14px',
-                        margin: '7px',
-                        whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      <CancelOutlinedIcon sx={{margin: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px'}} />
-                      OSHA Safety Certification
-                    </MDTypography>
                   </MDBox>
-
-                  <MDBox
-                    sx={{
-                      backgroundColor: "white",
-                      border: "1px solid rgba(0, 0, 0, 0.2)",
-                      borderRadius: 5,
-                      width: 'fit-content',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    <MDTypography
-                      sx={{
-                        padding: '2px',
-                        display: "flex",
-                        fontSize: '14px',
-                        margin: '7px',
-                        whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      <CancelOutlinedIcon sx={{marginTop: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px'}} />
-                      Roof Inspection Certification
-                    </MDTypography>
-                  </MDBox>
-                  <MDBox
-                    sx={{
-                      backgroundColor: "white",
-                      border: "1px solid rgba(0, 0, 0, 0.2)",
-                      borderRadius: 5,
-                      width: 'fit-content',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    <MDTypography
-                      sx={{
-                        padding: '2px',
-                        display: "flex",
-                        fontSize: '14px',
-                        margin: '7px',
-                        whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      <CancelOutlinedIcon sx={{marginTop: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px'}} />
-                      Building Safety Inspector Certification
-                    </MDTypography>
-                  </MDBox>
-
                 </MDBox>
 
               </MDBox>
@@ -323,9 +268,9 @@ export function PostJob() {
         </Form>
       )}
     </Formik>
-
   );
 }
+
 
 
 export default function PostJobTwo() {
@@ -336,22 +281,37 @@ export default function PostJobTwo() {
     setAge(event.target.value);
   };
 
+  const initialValues = {
+    paymentMethod: 10,
+    dailyRate: '',
+    timeLine: 'Ends in 6 Months',
+    startDate: '',
+    completionDate: '',
+  }
+
+  const validationSchema = Yup.object().shape({
+    paymentMethod: Yup.string().required('Required'),
+    dailyRate: Yup.number().min(2000).max(3000).required('Required'),
+    startDate: Yup.date().required('Required'),
+    completionDate: Yup.date().required('Required'),
+  });
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values) => {
+      const dataToSend = {
+        ...values,
+      }
+
+    }
+  });
+
 
   return (
     <Formik
-      initialValues={{
-        paymentMethod: 10,
-        dailyRate: '',
-        timeLine: 'Ends in 6 Months',
-        startDate: '',
-        completionDate: '',
-      }}
-      validationSchema={Yup.object({
-        paymentMethod: Yup.string().required('Required'),
-        dailyRate: Yup.number().min(2000).max(3000).required('Required'),
-        startDate: Yup.date().required('Required'),
-        completionDate: Yup.date().required('Required'),
-      })}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
       onSubmit={(values) => {
         console.log('Form values', values);
       }}
@@ -387,66 +347,44 @@ export default function PostJobTwo() {
 
                 <MDBox style={{ width: '100%', marginTop: '20px' }}>
                   <MDTypography variant="h5" component="div">Daily Rate</MDTypography>
-                  <Field
-                    name="dailyRate"
-                    as={TextField}
-                    label="From 2000 to 3000"
-                    variant="outlined"
-                    sx={{
-                      padding: '0px',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                    }}
-                    type="number"
-                    error={touched.dailyRate && Boolean(errors.dailyRate)}
-                    helperText={touched.dailyRate && errors.dailyRate}
+                  <FormikInput
+                    name={'DailyRate'}
+                    label={'From 2000 To 3000'}
+                    type={'text'}
+                    errors={formik.errors}
+                    mb={2}
                   />
                 </MDBox>
-
-                <MDBox style={{ width: '100%' , marginTop: '20px' }}>
+                <MDBox style={{ width: '100%', marginTop: '20px' }}>
                   <MDTypography variant="h5" component="div">Time Line</MDTypography>
-                  <Field
-                    name="timeLine"
-                    as={TextField}
-                    variant="outlined"
-                    sx={{ padding: '0px', width: '100%', boxSizing: 'border-box', height:'45px' }}
-                    value={values.timeLine}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.timeLine && Boolean(errors.timeLine)}
-                    helperText={touched.timeLine && errors.timeLine}
+                  <FormikInput
+                    name={'timeLine'}
+                    label={''}
+                    type={'text'}
+                    errors={formik.errors}
+                    mb={2}
                   />
                 </MDBox>
 
                 <MDBox style={{ width: '100%' , marginTop: '20px' }}>
                   <MDTypography variant="h5" component="div">Expected start date</MDTypography>
-                  <Field
-                    name="startDate"
-                    as={TextField}
-                    variant="outlined"
-                    sx={{ width: '100%' }}
-                    type="date"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    error={touched.startDate && Boolean(errors.startDate)}
-                    helperText={touched.startDate && errors.startDate}
+                  <FormikInput
+                    name={'startDate'}
+                    label={''}
+                    type={'date'}
+                    errors={formik.errors}
+                    mb={2}
                   />
                 </MDBox>
 
                 <MDBox style={{ width: '100%' , marginTop: '20px' }}>
                   <MDTypography variant="h5" component="div">Estimated Completion Date</MDTypography>
-                  <Field
-                    name="completionDate"
-                    as={TextField}
-                    variant="outlined"
-                    sx={{ width: '100%' }}
-                    type="date"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    error={touched.completionDate && Boolean(errors.completionDate)}
-                    helperText={touched.completionDate && errors.completionDate}
+                  <FormikInput
+                    name={'completionDate'}
+                    label={''}
+                    type={'date'}
+                    errors={formik.errors}
+                    mb={2}
                   />
                 </MDBox>
 
@@ -458,10 +396,24 @@ export default function PostJobTwo() {
                       color: '#006E90',
                       fontSize: '15px',
                       width: '100%',
+                      padding: '8px',
+                      position: 'relative',
                     }}
+                    onClick={() => document.getElementById('fileInput').click()}
                   >
                     Add Document
+                    <input
+                      id="fileInput"
+                      type="file"
+                      name="completionDate"
+                      onChange={(event) => formik.setFieldValue("completionDate", event.currentTarget.files[0])}
+                      onBlur={formik.handleBlur}
+                      style={{
+                        display: 'none',
+                      }}
+                    />
                   </MDButton>
+
                 </MDBox>
 
                 <MDBox sx={{ width: '100%' , marginTop: {md:'160px', xs:'100px'}, display: 'flex', gap: '10px', paddingLeft: {md:'520px', xs:'90px'}}}>
