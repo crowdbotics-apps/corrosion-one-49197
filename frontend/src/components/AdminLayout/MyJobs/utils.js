@@ -443,13 +443,6 @@ const generateRowData = () => {
       views:user.views,
       date_posted:user.applicationDate,
       status:user.status,
-      actions: (
-        <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0, }}>
-          <MDButton variant="outlined" sx={estilo.button}>Edit</MDButton>
-          <MDButton variant="outlined" sx={estilo.button}>See Applications</MDButton>
-          <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '8px', paddingLeft: '8px', borderRadius: '12px',borderColor: '#E14640', color: '#E14640', fontSize: '15px',width:{md:'145px'} }}>Close Jobs</MDButton>
-        </MDBox>
-      ),
     };
   });
 };
@@ -462,7 +455,7 @@ export const dataTableModel = {
     { Header: "Views", accessor: "views",disableOrdering: true, width: 50 },
     { Header: "Date Posted", accessor: "date_posted", width: 120 },
     { Header: "Status", accessor: "status", disableOrdering: true,width: 80 },
-    { Header: " ",accessor: "actions", disableOrdering: true, width: 300 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 200 },
   ],
   rows: generateRowData(),
 };

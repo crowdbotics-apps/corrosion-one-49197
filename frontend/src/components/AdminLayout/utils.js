@@ -252,19 +252,6 @@ const generateRowData = () => {
       applicationDate:user.applicationDate,
       status: renderStatusLabel(status),
       jobStatus: renderStatusLabel(jobStatus),
-      actions_edit: (
-        <MDButton variant="text" sx={{ color: '#006E90', minWidth: 'auto', padding: 0 }}>
-          <BookmarkOutlinedIcon />
-        </MDButton>
-      ),
-      actions: (
-        <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '275px' },  padding: 0, }}>
-          <MDButton variant="outlined" sx={estilo.button}>View Details</MDButton>
-          <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '12px', paddingLeft: '11px', borderRadius: '12px', borderColor: '#E14640', color: '#E14640', fontSize: '15px',width:{md:'110px'} }}>Withdraw</MDButton>
-        </MDBox>
-
-
-      ),
     };
   });
 };
@@ -278,8 +265,7 @@ export const dataTableModel = {
     { Header: "Aplication Status", accessor: "status" ,width: 170 },
     { Header: "Jobs Status", accessor: "jobStatus", width: 120 },
     { Header: " ",accessor: "actions_edit", disableOrdering: true, width: 7 },
-    { Header: " ",accessor: "actions", disableOrdering: true, width: 50 },
-    { Header: " ",accessor: "actions_details", disableOrdering: true, width: 60 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 200 },
   ],
   rows: generateRowData(),
 };

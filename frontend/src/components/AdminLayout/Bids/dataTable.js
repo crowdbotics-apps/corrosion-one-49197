@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { Grid, Table, TableBody, TableContainer, TableRow, TextField, Button } from "@mui/material";
+import { Grid, Table, TableBody, TableContainer, TableRow, TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MDBox from "components/MDBox";
 import DataTableHeadCell from "../DataTableHeadCell";
 import DataTAbleBodyCell from "./DataTAbleBodyCell"
@@ -12,6 +12,8 @@ import Box from "@mui/material/Box";
 import Pagination from '@mui/material/Pagination';
 import MDTypography from "../../MDTypography"
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import MDButton from "../../MDButton"
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate de react-router-dom
 
 function DataTable({
                      table,
@@ -27,11 +29,13 @@ function DataTable({
                      emptyLabelText = "No items found",
                      loadingText = "",
                    }) {
-
+  const navigate = useNavigate();
   const [orderedColumn, setOrderedColumn] = useState();
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
   const [sortedByColumn, setSortedByColumn] = useState({ column: "", order: "none" });
+  const [openRejectModal, setOpenRejectModal] = useState(false);
+
   const tableInstance = useTable(
     {
       columns,
@@ -101,9 +105,17 @@ function DataTable({
     gotoPage(newPage - 1);
   };
 
-  const handleReject = (id) => {
-    // Implement your reject logic here
-    console.log(`Rejected row with id: ${id}`);
+  const handleReject = () => {
+    setOpenRejectModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenRejectModal(false);
+  };
+
+  const handleConfirmReject = () => {
+    setOpenRejectModal(false);
+    navigate("/dashboard");
   };
 
   return (
@@ -113,10 +125,10 @@ function DataTable({
           <MDBox>
             <TextField
               label={
-                <Box display="flex" alignItems="center" sx={{ padding: '2.5rem', fontSize: '20px' }}>
+                <MDBox display="flex" alignItems="center" sx={{ padding: '2.5rem', fontSize: '20px' }}>
                   <SearchOutlinedIcon sx={{ marginRight: 1 }} />
                   <Box>Search and Filter</Box>
-                </Box>
+                </MDBox>
               }
               sx={{
                 width: '599px',
@@ -199,18 +211,56 @@ function DataTable({
                         {...cell.getCellProps()}
                       >
                         {cell.render("Cell")}
+
+                        {idx2 === row.cells.length - 1 && (
+                          <MDBox
+                            sx={{
+                              marginLeft: {md:'-60px', xs:'-10px'},
+                              display: 'flex',
+                              width: {md:'210px', xs:'100px'},
+                              flexDirection: { xs: 'column', md: 'row' },
+                              gap: '8px',
+                            }}
+                          >
+                            <MDButton
+                              variant="outlined"
+                              sx={{
+                                paddingTop: '2px',
+                                paddingBottom: '2px',
+                                paddingRight: '5px',
+                                paddingLeft: '5px',
+                                borderRadius: '12px',
+                                borderColor: '#006E90',
+                                color: '#006E90',
+                                fontSize: '15px',
+                                width: '100%'
+                              }}
+                            >
+                              View Details
+                            </MDButton>
+                            <MDButton
+                              variant="outlined"
+                              sx={{
+                                paddingTop: '2px',
+                                paddingBottom: '2px',
+                                paddingRight: '5px',
+                                paddingLeft: '5px',
+                                borderRadius: '12px',
+                                borderColor: '#E14640',
+                                color: '#E14640',
+                                fontSize: '15px',
+                                width: '100%'
+                              }}
+                              onClick={handleReject}
+                            >
+                              Rejected
+                            </MDButton>
+
+                          </MDBox>
+                        )}
+
                       </DataTAbleBodyCell>
                     ))}
-                    {/* Agregar el botón de rechazo */}
-                    <DataTAbleBodyCell key="reject_button" width="100px" align="center">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleReject(row.original.id)}
-                      >
-                        Rechazar
-                      </Button>
-                    </DataTAbleBodyCell>
                   </TableRow>
                 );
               })}
@@ -238,39 +288,19 @@ function DataTable({
           />
         </Grid>
       </TableContainer>
+
+      <Dialog open={openRejectModal} onClose={handleCloseModal}>
+        <DialogTitle>Confirmation</DialogTitle>
+        <DialogContent>
+          <p>Are you sure you want to close?</p>
+        </DialogContent>
+        <DialogActions>
+          <MDButton onClick={handleCloseModal} color="primary">Cancel</MDButton>
+          <MDButton onClick={handleConfirmReject} color="secondary">Reject</MDButton>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 }
-
-DataTable.defaultProps = {
-  entriesPerPage: [4, 25, 50, 100],
-  canSearch: false,
-  showTotalEntries: true,
-  pagination: { variant: "gradient", color: "info" },
-  isSorted: true,
-  noEndBorder: false,
-};
-
-DataTable.propTypes = {
-  entriesPerPage: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.bool]),
-  canSearch: PropTypes.bool,
-  showTotalEntries: PropTypes.bool,
-  table: PropTypes.objectOf(PropTypes.array).isRequired,
-  pagination: PropTypes.shape({
-    variant: PropTypes.oneOf(["contained", "gradient"]),
-    color: PropTypes.oneOf([
-      "primary",
-      "secondary",
-      "info",
-      "success",
-      "warning",
-      "error",
-      "dark",
-      "light",
-    ]),
-  }),
-  isSorted: PropTypes.bool,
-  noEndBorder: PropTypes.bool,
-};
 
 export default DataTable;

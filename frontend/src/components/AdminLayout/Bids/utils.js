@@ -432,14 +432,6 @@ const generateRowData = () => {
       bidAmount:user.bidAmount,
       applicationDate:user.applicationDate,
       gender: user.gender,
-      actions: (
-        <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '275px' },  padding: 0, }}>
-          <MDButton variant="outlined" sx={estilo.button}>View Details</MDButton>
-          <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '8px', paddingLeft: '8px', borderRadius: '12px',borderColor: '#E14640', color: '#E14640', fontSize: '15px', width:{md:'110px'}}}>Rejected</MDButton>
-        </MDBox>
-
-
-      ),
     };
   });
 };
@@ -452,8 +444,7 @@ export const dataTableModel = {
     { Header: "Bids Jobs", accessor: "bidsJobs",width: 150},
     { Header: "Bid Amount", accessor: "bidAmount" ,width: 150 },
     { Header: "Aplication Date", accessor: "applicationDate", width: 120 },
-    { Header: " ",accessor: "actions", disableOrdering: true, width: 50 },
-    { Header: " ",accessor: "actions_details", disableOrdering: true, width: 60 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 100 },
   ],
   rows: generateRowData(),
 };

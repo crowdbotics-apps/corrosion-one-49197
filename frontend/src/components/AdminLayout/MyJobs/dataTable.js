@@ -1,7 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { Grid, Table, TableBody, TableContainer, TableRow, TextField } from "@mui/material";
+import {
+  Dialog, DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Table,
+  TableBody,
+  TableContainer,
+  TableRow,
+  TextField,
+} from "@mui/material"
 import MDBox from "components/MDBox";
 import DataTableHeadCell from "../DataTableHeadCell";
 import DataTableBodyCell from "../DataTableBodyCell";
@@ -12,6 +22,8 @@ import Box from "@mui/material/Box";
 import Pagination from '@mui/material/Pagination';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MDTypography from "../../MDTypography"
+import MDButton from "../../MDButton"
+import { useNavigate } from "react-router-dom"
 
 function DataTable({
                      table,
@@ -29,10 +41,12 @@ function DataTable({
                    }) {
 
   const [orderedColumn, setOrderedColumn] = useState();
+  const navigate = useNavigate();
   const currentDate = new Date().toLocaleDateString();
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
   const [sortedByColumn, setSortedByColumn] = useState({ column: "", order: "none" });
+  const [openRejectModal, setOpenRejectModal] = useState(false);
   const tableInstance = useTable(
     {
       columns,
@@ -100,6 +114,19 @@ function DataTable({
 
   const handlePageChange = (event, newPage) => {
     gotoPage(newPage - 1);
+  };
+
+  const handleReject = () => {
+    setOpenRejectModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenRejectModal(false);
+  };
+
+  const handleConfirmReject = () => {
+    setOpenRejectModal(false);
+    navigate("/dashboard");
   };
 
   return (
@@ -195,6 +222,24 @@ function DataTable({
                         {...cell.getCellProps()}
                       >
                         {cell.render("Cell")}
+                        {idx2 === row.cells.length - 1 && (
+                          <MDBox
+                            sx={{
+                              marginLeft: {md:'-60px', xs:'-10px'},
+                              display: 'flex',
+                              width: '210px',
+                              flexDirection: { xs: 'column', md: 'row' },
+                              gap: '8px',
+                            }}
+                          >
+                            <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
+                              <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '5px', paddingLeft: '5px', borderRadius: '12px', borderColor: '#006E90', color: '#006E90', fontSize: '15px', }}>Edit</MDButton>
+                              <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '5px', paddingLeft: '5px', borderRadius: '12px', borderColor: '#006E90', color: '#006E90', fontSize: '15px', width:'150px'}}>See Applications</MDButton>
+                              <MDButton variant="outlined"  onClick={handleReject} sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '8px', paddingLeft: '8px', borderRadius: '12px',borderColor: '#E14640', color: '#E14640', fontSize: '15px',width:{md:'145px'} }}>Close Jobs</MDButton>
+                            </MDBox>
+
+                          </MDBox>
+                        )}
                       </DataTableBodyCell>
                     ))}
                   </TableRow>
@@ -224,6 +269,17 @@ function DataTable({
           />
         </Grid>
       </TableContainer>
+
+      <Dialog open={openRejectModal} onClose={handleCloseModal}>
+        <DialogTitle>Confirmation</DialogTitle>
+        <DialogContent>
+          <p>Are you sure you want to close?</p>
+        </DialogContent>
+        <DialogActions>
+          <MDButton onClick={handleCloseModal} color="primary">Cancel</MDButton>
+          <MDButton onClick={handleConfirmReject} color="secondary">Close</MDButton>
+        </DialogActions>
+      </Dialog>
 
     </Card>
   );
