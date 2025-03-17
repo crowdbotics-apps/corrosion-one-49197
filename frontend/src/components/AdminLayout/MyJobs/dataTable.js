@@ -68,6 +68,23 @@ function DataTable({
     gotoPage,
   } = tableInstance;
 
+  const getButtonStyles = (color, width) => ({
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    paddingRight: '5px',
+    paddingLeft: '5px',
+    borderRadius: '12px',
+    borderColor: color,
+    color: color,
+    fontSize: '15px',
+    width: {md:width, xs:'100px'} ,
+    '&:hover': {
+      backgroundColor: 'transparent',
+      borderColor: color,
+      color: color,
+    },
+  });
+
   const getDataSortedByColumn = (column) => {
     if (column.disableOrdering) {
       return;
@@ -233,9 +250,9 @@ function DataTable({
                             }}
                           >
                             <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
-                              <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '5px', paddingLeft: '5px', borderRadius: '12px', borderColor: '#006E90', color: '#006E90', fontSize: '15px', }}>Edit</MDButton>
-                              <MDButton variant="outlined" sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '5px', paddingLeft: '5px', borderRadius: '12px', borderColor: '#006E90', color: '#006E90', fontSize: '15px', width:'150px'}}>See Applications</MDButton>
-                              <MDButton variant="outlined"  onClick={handleReject} sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '8px', paddingLeft: '8px', borderRadius: '12px',borderColor: '#E14640', color: '#E14640', fontSize: '15px',width:{md:'145px'} }}>Close Jobs</MDButton>
+                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '20px')}>Edit</MDButton>
+                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '150px')}>See Applications</MDButton>
+                              <MDButton variant="outlined"  onClick={handleReject} sx={getButtonStyles('#E14640', '145px')}>Close Jobs</MDButton>
                             </MDBox>
 
                           </MDBox>

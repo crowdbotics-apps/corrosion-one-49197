@@ -150,6 +150,9 @@ function Details() {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     borderRadius: 5,
+                    '&:hover': {
+                      backgroundColor: '#006E90',
+                    },
                   }}
                 >
                   <MDTypography sx={{color: '#fcfdfd', fontWeight: 'bold', marginLeft:{md:'15px'}, fontSize:{xs:'15px', md:'20px'}}}>Bid</MDTypography>

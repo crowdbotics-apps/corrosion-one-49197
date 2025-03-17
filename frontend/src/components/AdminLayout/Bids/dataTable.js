@@ -79,6 +79,23 @@ function DataTable({
       return "none";
     }
   };
+  const getButtonStyles = (color) => ({
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    paddingRight: '5px',
+    paddingLeft: '5px',
+    borderRadius: '12px',
+    borderColor: color,
+    color: color,
+    fontSize: '15px',
+    width: {md:'180px', xs:'100px'} ,
+    '&:hover': {
+      backgroundColor: 'transparent',
+      borderColor: color,
+      color: color,
+    },
+  });
+
 
   const onColumnOrdering = useCallback(
     (ordering) => {
@@ -222,40 +239,8 @@ function DataTable({
                               gap: '8px',
                             }}
                           >
-                            <MDButton
-                              variant="outlined"
-                              sx={{
-                                paddingTop: '2px',
-                                paddingBottom: '2px',
-                                paddingRight: '5px',
-                                paddingLeft: '5px',
-                                borderRadius: '12px',
-                                borderColor: '#006E90',
-                                color: '#006E90',
-                                fontSize: '15px',
-                                width: '100%'
-                              }}
-                            >
-                              View Details
-                            </MDButton>
-                            <MDButton
-                              variant="outlined"
-                              sx={{
-                                paddingTop: '2px',
-                                paddingBottom: '2px',
-                                paddingRight: '5px',
-                                paddingLeft: '5px',
-                                borderRadius: '12px',
-                                borderColor: '#E14640',
-                                color: '#E14640',
-                                fontSize: '15px',
-                                width: '100%'
-                              }}
-                              onClick={handleReject}
-                            >
-                              Rejected
-                            </MDButton>
-
+                            <MDButton variant="outlined" sx={getButtonStyles('#006E90')}>View Details</MDButton>
+                            <MDButton variant="outlined" sx={getButtonStyles('#E14640')} onClick={handleReject}>Rejected</MDButton>
                           </MDBox>
                         )}
 

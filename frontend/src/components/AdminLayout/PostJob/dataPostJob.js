@@ -25,18 +25,14 @@ import FormikInput from "../../Formik/FormikInput"
 export function PostJob() {
 
   const [isVisible, setIsVisible] = useState(true);
+  const [isVisibleOne, setIsVisibleOne] = useState(true);
+  const [isVisibleTWO, setIsVisibleTWO] = useState(true);
   const [isVisibleTwo, setIsVisibleTwo] = useState(true);
-
-  const handleCancelClick = () => {
-    setIsVisible(false);
-  };
-  const handleCancelClickTwo = () => {
-    setIsVisibleTwo(false);
-  };
+  const [isVisibleThree, setIsVisibleThree] = useState(true);
 
   const initialValues = {
     jobTitle: '',
-    jobAddress: 10,
+    jobAddress: null,
     category: '',
     jobDescription: '',
     certifications: '',
@@ -64,7 +60,7 @@ export function PostJob() {
         console.log('Form Values:', values);
       }}
     >
-      {({ values, handleChange, errors, touched, setFieldValue }) => (
+      {({ values, errors, touched, setFieldValue }) => (
         <Form>
           <MDBox display="flex" flex={1} style={{ border: 'none', backgroundColor: 'white' }}>
             <MDBox sx={{ width: '100%', height: '100%', display: 'flex' }}>
@@ -96,10 +92,7 @@ export function PostJob() {
                       options={jobAddressOptions}
                       getOptionLabel={(option) => option.name}
                       label="Select Job Address"
-                      // errorText={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
-                      // overrideError={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
                     />
-
                   </MDBox>
                 </MDBox>
 
@@ -111,16 +104,11 @@ export function PostJob() {
                     <FormikInput
                       type={'autocomplete'}
                       fieldName="category"
-                      value={values.jobAddress}
-                      onChange={(_, newValue) => {
-                        console.log(newValue);
-                        setFieldValue('jobAddress', newValue);  // Actualiza Formik con el nuevo valor
-                      }}
+                      value={values.category}
+                      onChange={(_, newValue) => setFieldValue('category', newValue)}
                       options={jobAddressOptions}
                       getOptionLabel={(option) => option.name}
                       label="Select Category"
-                      errorText={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
-                      overrideError={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
                     />
                   </MDBox>
                 </MDBox>
@@ -156,7 +144,7 @@ export function PostJob() {
                             marginRight: '2px',
                             cursor: 'pointer',
                           }}
-                          onClick={handleCancelClick}
+                          onClick={() => setIsVisible(false)}
                         />
                         Development
                       </MDTypography>
@@ -164,7 +152,7 @@ export function PostJob() {
                   )}
 
 
-                  {isVisibleTwo && (
+                  {isVisibleTWO && (
                     <MDBox
                       sx={{
                         backgroundColor: 'white',
@@ -193,7 +181,7 @@ export function PostJob() {
                             marginRight: '2px',
                             cursor: 'pointer',
                           }}
-                          onClick={handleCancelClickTwo}
+                          onClick={() => setIsVisibleTWO(false)}
                         />
                         Consulting
                       </MDTypography>
@@ -262,6 +250,120 @@ export function PostJob() {
                   </MDBox>
                 </MDBox>
 
+                <MDBox sx={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', width: '100%' , gap: '10px' }}>
+
+                  {isVisibleOne && (
+                    <MDBox
+                      sx={{
+                        backgroundColor: 'white',
+                        border: '1px solid rgba(0, 0, 0, 0.2)',
+                        borderRadius: 5,
+                        width: 'fit-content',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <MDTypography
+                        sx={{
+                          padding: '2px',
+                          display: 'flex',
+                          fontSize: '14px',
+                          margin: '7px',
+                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        <CancelOutlinedIcon
+                          sx={{
+                            marginTop: '2px',
+                            width: '20px',
+                            height: '20px',
+                            color: 'red',
+                            marginRight: '2px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => setIsVisibleOne(false)}
+                        />
+                        OSHA Safety Certification
+                      </MDTypography>
+                    </MDBox>
+                  )}
+
+
+                  {isVisibleTwo && (
+                    <MDBox
+                      sx={{
+                        backgroundColor: 'white',
+                        border: '1px solid rgba(0, 0, 0, 0.2)',
+                        borderRadius: 5,
+                        width: 'fit-content',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <MDTypography
+                        sx={{
+                          padding: '2px',
+                          display: 'flex',
+                          fontSize: '14px',
+                          margin: '7px',
+                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        <CancelOutlinedIcon
+                          sx={{
+                            marginTop: '2px',
+                            width: '20px',
+                            height: '20px',
+                            color: 'red',
+                            marginRight: '2px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => setIsVisibleTwo(false)}
+                        />
+                        Roof Inspection Certification
+                      </MDTypography>
+                    </MDBox>
+                  )}
+
+
+                  {isVisibleThree && (
+                    <MDBox
+                      sx={{
+                        backgroundColor: 'white',
+                        border: '1px solid rgba(0, 0, 0, 0.2)',
+                        borderRadius: 5,
+                        width: 'fit-content',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <MDTypography
+                        sx={{
+                          padding: '2px',
+                          display: 'flex',
+                          fontSize: '14px',
+                          margin: '7px',
+                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        <CancelOutlinedIcon
+                          sx={{
+                            marginTop: '2px',
+                            width: '20px',
+                            height: '20px',
+                            color: 'red',
+                            marginRight: '2px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => setIsVisibleThree(false)}
+                        />
+                        Building Safety Inspector Certification
+                      </MDTypography>
+                    </MDBox>
+                  )}
+
+                </MDBox>
+
               </MDBox>
             </MDBox>
           </MDBox>
@@ -282,7 +384,7 @@ export default function PostJobTwo() {
   };
 
   const initialValues = {
-    paymentMethod: 10,
+    paymentMethod: '',
     dailyRate: '',
     timeLine: 'Ends in 6 Months',
     startDate: '',
@@ -316,33 +418,20 @@ export default function PostJobTwo() {
         console.log('Form values', values);
       }}
     >
-      {({ handleChange, handleBlur, values, touched, errors }) => (
+      {({  values, touched, errors }) => (
         <Form>
           <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white" }}>
             <MDBox sx={{ width: "100%", height: "100%", display: "flex" }}>
               <MDBox sx={{ width: '100%' }}>
                 <MDBox sx={{ width: "100%" }}>
                   <MDTypography variant="h5" component="div">How you Pay?</MDTypography>
-                  <FormControl fullWidth sx={{ width: '100%' }}>
-                    <Select
-                      labelId="payment-method-label"
-                      id="payment-method"
-                      value={values.paymentMethod}
-                      onChange={handleChange}
-                      name="paymentMethod"
-                      variant="outlined"
-                      sx={{
-                        padding: { md: '0px', xs: '10px' },
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        height: '45px',
-                      }}
-                    >
-                      <MenuItem value={10}>Per Month</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <FormikInput
+                    name={'paymentMethod'}
+                    label={'Per Month'}
+                    type={'text'}
+                    errors={formik.errors}
+                    mb={2}
+                  />
                 </MDBox>
 
                 <MDBox style={{ width: '100%', marginTop: '20px' }}>
@@ -398,6 +487,11 @@ export default function PostJobTwo() {
                       width: '100%',
                       padding: '8px',
                       position: 'relative',
+                      '&:hover': {
+                        backgroundColor: 'transparent',
+                        borderColor: '#006E90',
+                        color: '#006E90',
+                      },
                     }}
                     onClick={() => document.getElementById('fileInput').click()}
                   >
@@ -424,6 +518,11 @@ export default function PostJobTwo() {
                       color: '#006E90',
                       fontSize: '15px',
                       width: '40%',
+                      '&:hover': {
+                        backgroundColor: 'transparent',
+                        borderColor: '#006E90',
+                        color: '#006E90',
+                      },
                     }}
                     type="reset"
                   >
@@ -436,6 +535,10 @@ export default function PostJobTwo() {
                       color: 'white',
                       fontSize: '15px',
                       width: '40%',
+                      '&:hover': {
+                        backgroundColor: '#006E90',
+                        color: 'white',
+                      },
                     }}
                     type="submit"
                   >

@@ -59,6 +59,23 @@ function DataTable({
     usePagination
   );
 
+  const getButtonStyles = (color) => ({
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    paddingRight: '8px',
+    paddingLeft: '8px',
+    borderRadius: '12px',
+    borderColor: color,
+    color: color,
+    fontSize: '15px',
+    width: { md: '120px' },
+    '&:hover': {
+      backgroundColor: 'transparent',
+      borderColor: color,
+      color: color,
+    },
+  });
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -241,8 +258,8 @@ function DataTable({
                               <MDButton variant="text" sx={{ color: '#006E90', minWidth: 'auto', padding: 0 }}>
                                 <BookmarkOutlinedIcon />
                               </MDButton>
-                              <MDButton variant="outlined" onClick={handleRejectDetails} sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '5px', paddingLeft: '5px', borderRadius: '12px', borderColor: '#006E90', color: '#006E90', fontSize: '15px', width:'100px'}}>View Details</MDButton>
-                              <MDButton variant="outlined"  onClick={handleReject} sx={{ paddingTop: '2px', paddingBottom: '2px', paddingRight: '8px', paddingLeft: '8px', borderRadius: '12px',borderColor: '#E14640', color: '#E14640', fontSize: '15px',width:{md:'100px'} }}>Withdraw</MDButton>
+                              <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90')}>View Details</MDButton>
+                              <MDButton variant="outlined" onClick={handleReject} sx={getButtonStyles('#E14640')}>Withdraw</MDButton>
                             </MDBox>
 
                           </MDBox>
