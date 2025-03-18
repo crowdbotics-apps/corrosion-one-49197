@@ -8,7 +8,7 @@ import MDBox from "../../MDBox";
 const AutocompleteFK = React.memo(
   ({
      onChange,
-     value,
+     value ,
      fieldName,
      options,
      label,

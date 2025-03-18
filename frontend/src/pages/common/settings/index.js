@@ -201,7 +201,7 @@ function Settings() {
           p={1}
           px={2}
           sx={{
-            borderBottom: `${selected ? "2px" : "1px"} solid ${selected ? '#3C7092' : 'transparent'}`,
+            borderBottom: `${selected ? "2px" : "1px"} solid ${selected ? '#3C7092' : 'rgba(0, 0, 0, 0)'}`,
             cursor: 'pointer',
             '&:hover': {
               backgroundColor: '#f5f5f5'

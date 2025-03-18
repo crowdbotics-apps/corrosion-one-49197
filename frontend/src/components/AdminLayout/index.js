@@ -90,6 +90,7 @@ function AdminLayout
           {showCard && <Card sx={{width: cardWidth, p:2}}>{children}</Card>}
           {!showCard && children}
         </MDBox>
+
       </DashboardLayout>
     );
   }

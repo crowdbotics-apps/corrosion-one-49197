@@ -44,9 +44,16 @@ import profilePicture from "./assets/imagesExamples/team-3.jpg";
 import {
   SignIn,
   ForgotPassword,
-  SignUp, HomeOwner, SetNewPassword, Logout, Settings
+  SignUp,HomeOwner, SetNewPassword, Logout, Settings
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
+import HomeOwnerDos from "./pages/owner/findJobs"
+import HomeOwnerMessages from "./pages/owner/messages"
+import HomeOwnerPostJob from "./pages/owner/PostJob/PostJob"
+import HomeOwnerBids from "./pages/owner/Bids"
+import HomeOwnerJobs from "./pages/owner/MyJobs"
+import HomeOwnerDetails from "./pages/owner/findJobs/detailsIndex"
+
 
 
 export const unprotectedRoutes = [
@@ -96,18 +103,27 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Find Jobs",
     key: "find-jobs",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.FIND_JOBS,
+    component: <HomeOwnerDos />,
     icon: <Icon fontSize="small">search_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],
   },
+  ////////////////////////////////////////
+  {
+    name: "Find Jobs",
+    key: "find-jobs",
+    route: ROUTES.FIND_J0B_DETAILS,
+    component: <HomeOwnerDetails />,
+    role: [ROLES.INSPECTOR],
+  },
+  ////////////////////////////////////////
   {
     type: "collapse",
     name: "Post a Job",
     key: "post-jobs",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.POST_JOB,
+    component: <HomeOwnerPostJob />,
     icon: <Icon fontSize="small">ballot_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
@@ -116,8 +132,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Bids",
     key: "bids",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.BIDS,
+    component: <HomeOwnerBids />,
     icon: <Icon fontSize="small">people_all_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
@@ -126,8 +142,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "My Jobs",
     key: "my-jobs",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.MY_JOBS,
+    component: <HomeOwnerJobs />,
     icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
@@ -166,8 +182,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Messages",
     key: "messages",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.MESSAGES,
+    component: <HomeOwnerMessages />,
     icon: <Icon fontSize="small">forum_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER, ROLES.INSPECTOR],
