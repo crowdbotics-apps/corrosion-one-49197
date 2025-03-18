@@ -21,6 +21,7 @@ import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
 import * as Yup from 'yup';
 import FormikInput from "../../Formik/FormikInput"
+import Autocomplete from "@mui/material/Autocomplete"
 
 export function PostJob() {
 
@@ -33,9 +34,9 @@ export function PostJob() {
   const initialValues = {
     jobTitle: '',
     jobAddress: null,
-    category: '',
+    category: null,
     jobDescription: '',
-    certifications: '',
+    certifications: null,
   };
 
   const validationSchema = Yup.object().shape({
@@ -47,6 +48,16 @@ export function PostJob() {
   });
 
   const jobAddressOptions = [
+    { id: 10, name: 'One' },
+    { id: 20, name: 'Tenn' },
+    { id: 30, name: 'Nine' },
+  ];
+  const CategoryOptions = [
+    { id: 10, name: 'Two' },
+    { id: 20, name: 'Nine' },
+    { id: 30, name: 'tenn' },
+  ];
+const CertificationsOptions = [
     { id: 10, name: 'One' },
     { id: 20, name: 'Tenn' },
     { id: 30, name: 'Nine' },
@@ -84,14 +95,21 @@ export function PostJob() {
                     Job Address
                   </MDTypography>
                   <MDBox mb={2}>
-                    <FormikInput
-                      type={'autocomplete'}
-                      fieldName="jobAddress"
-                      value={values.jobAddress}
-                      onChange={(_, newValue) => setFieldValue('jobAddress', newValue)}
+                    <Autocomplete
                       options={jobAddressOptions}
                       getOptionLabel={(option) => option.name}
-                      label="Select Job Address"
+                      value={values.jobAddress}
+                      onChange={(_, newValue) => {
+                        setFieldValue('jobAddress', newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Job Address"
+                          error={Boolean(errors.jobAddress && touched.jobAddress)}
+                          helperText={errors.jobAddress && touched.jobAddress && errors.jobAddress?.name}
+                        />
+                      )}
                     />
                   </MDBox>
                 </MDBox>
@@ -101,14 +119,21 @@ export function PostJob() {
                     Category
                   </MDTypography>
                   <MDBox mb={2}>
-                    <FormikInput
-                      type={'autocomplete'}
-                      fieldName="category"
-                      value={values.category}
-                      onChange={(_, newValue) => setFieldValue('category', newValue)}
-                      options={jobAddressOptions}
+                    <Autocomplete
+                      options={CategoryOptions}
                       getOptionLabel={(option) => option.name}
-                      label="Select Category"
+                      value={values.category}
+                      onChange={(_, newValue) => {
+                        setFieldValue('category', newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Category"
+                          error={Boolean(errors.category && touched.category)}
+                          helperText={errors.category && touched.category && errors.category?.name}
+                        />
+                      )}
                     />
                   </MDBox>
                 </MDBox>
@@ -235,18 +260,22 @@ export function PostJob() {
                     Certifications Required
                   </MDTypography>
                   <MDBox mb={2}>
-                    <FormikInput
-                      type={'autocomplete'}
-                      fieldName="certifications"
-                      value={values.certifications}
-                      onChange={(_, newValue) => setFieldValue('jobAddress', newValue)}
-                      options={jobAddressOptions}
+                    <Autocomplete
+                      options={CertificationsOptions}
                       getOptionLabel={(option) => option.name}
-                      label="Select Job Address"
-                      errorText={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
-                      overrideError={errors.jobAddress && touched.jobAddress ? errors.jobAddress : ''}
+                      value={values.certifications}
+                      onChange={(_, newValue) => {
+                        setFieldValue('certification', newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Certification"
+                          error={Boolean(errors.certifications && touched.certifications)}
+                          helperText={errors.certifications && touched.certifications && errors.certifications?.name}
+                        />
+                      )}
                     />
-
                   </MDBox>
                 </MDBox>
 
