@@ -400,7 +400,6 @@ const CertificationsOptions = [
 }
 
 
-
 export default function PostJobTwo() {
   const initialValues = {
     paymentMethod: '',
@@ -414,17 +413,34 @@ export default function PostJobTwo() {
     paymentMethod: Yup.string().required('Required'),
     dailyRate: Yup.number().min(2000).max(3000).required('Required'),
     startDate: Yup.date().required('Required'),
-    completionDate: Yup.date().required('Required'),
+    completionDate: Yup.date()
+      .min(Yup.ref('startDate'), ' ')
+      .required('Required'),
   });
 
   const formikSecondStep = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (values) => {
       const valuesToSend = { ...values };
       console.log('Form Values:', valuesToSend);
     },
   });
+
+  const handleCompletionDateChange = (value) => {
+    const startDate = formikSecondStep.values.startDate;
+    const completionDate = value;
+    if (startDate && completionDate && new Date(completionDate) < new Date(startDate)) {
+      formikSecondStep.setFieldValue('completionDate', '');
+      formikSecondStep.setFieldError('completionDate', '');
+    } else {
+
+      formikSecondStep.setFieldValue('completionDate', completionDate);
+      formikSecondStep.setFieldError('completionDate', '');
+    }
+  };
 
   return (
     <FormikProvider value={formikSecondStep}>
@@ -454,6 +470,7 @@ export default function PostJobTwo() {
             mb={2}
           />
         </MDBox>
+
         <MDBox style={{ width: '100%', marginTop: '20px' }}>
           <MDTypography variant="h5" component="div">
             Time Line
@@ -472,14 +489,15 @@ export default function PostJobTwo() {
             Expected start date
           </MDTypography>
           <FormikInput
+            type={'date'}
             name={'startDate'}
             label={''}
-            type={'date'}
-            onChange={(value) => {
-              formikSecondStep.setFieldValue('startDate', value)
-            }}
+            onChange={(value) => formikSecondStep.setFieldValue('startDate', value)}
             errors={formikSecondStep.errors}
-            mb={2}
+            touched={formikSecondStep.touched}
+            setFieldValue={formikSecondStep.setFieldValue}
+            containerStyle={{ mb: 2 }}
+            extraParams={{}}
           />
         </MDBox>
 
@@ -488,47 +506,31 @@ export default function PostJobTwo() {
             Estimated Completion Date
           </MDTypography>
           <FormikInput
+            style={{
+              borderColor: formikSecondStep.errors.completionDate && formikSecondStep.touched.completionDate ? 'red' : '',
+            }}
+            type={'date'}
             name={'completionDate'}
             label={''}
-            type={'date'}
+            onChange={(e) => handleCompletionDateChange(e.target.value)}
             errors={formikSecondStep.errors}
-            mb={2}
+            touched={formikSecondStep.touched}
+            setFieldValue={formikSecondStep.setFieldValue}
+            containerStyle={{ mb: 2 }}
+            extraParams={{}}
           />
+          {new Date(formikSecondStep.values.startDate) > new Date(formikSecondStep.values.completionDate) && (
+            <MDBox>
+              <MDTypography variant="body2" color="error">
+                Completion date cannot be before the start date please change
+              </MDTypography>
+            </MDBox>
+          )}
+
+
         </MDBox>
 
-        <MDBox style={{ width: '100%', marginTop: '20px' }}>
-          <MDButton
-            variant="outlined"
-            sx={{
-              borderColor: '#006E90',
-              color: '#006E90',
-              fontSize: '15px',
-              width: '100%',
-              padding: '8px',
-              position: 'relative',
-              '&:hover': {
-                backgroundColor: 'transparent',
-                borderColor: '#006E90',
-                color: '#006E90',
-              },
-            }}
-            onClick={() => document.getElementById('fileInput').click()}
-          >
-            Add Document
-            <input
-              id="fileInput"
-              type="file"
-              name="completionDate"
-              onChange={(event) => formikSecondStep.setFieldValue('completionDate', event.currentTarget.files[0])}
-              onBlur={formikSecondStep.handleBlur}
-              style={{
-                display: 'none',
-              }}
-            />
-          </MDButton>
-        </MDBox>
-
-        <MDBox sx={{ width: '100%' , marginTop: {md:'160px', xs:'100px'}, display: 'flex', gap: '10px', paddingLeft: {md:'520px', xs:'90px'}}}>
+        <MDBox sx={{ width: '100%', marginTop: { md: '160px', xs: '100px' }, display: 'flex', gap: '10px', paddingLeft: { md: '520px', xs: '90px' } }}>
           <MDButton
             variant="outlined"
             sx={{
@@ -547,17 +549,13 @@ export default function PostJobTwo() {
             Cancel
           </MDButton>
           <MDButton
-            variant="outlined"
+            color={'secondary'}
             sx={{
               backgroundColor: '#006E90',
               color: 'white',
-              fontSize: '15px',
-              width: '40%',
-              '&:hover': {
-                backgroundColor: '#006E90',
-                color: 'white',
-              },
+              '&:hover': { backgroundColor: '#006E90' },
             }}
+
             type="submit"
           >
             Publish
@@ -567,4 +565,3 @@ export default function PostJobTwo() {
     </FormikProvider>
   );
 }
-
