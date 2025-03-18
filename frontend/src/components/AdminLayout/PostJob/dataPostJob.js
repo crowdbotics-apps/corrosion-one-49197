@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Formik, Field, Form, useFormik } from "formik"
+import { Formik, Field, Form, useFormik, FormikProvider } from "formik"
 import MDButton from "../../MDButton"
 import MDBox from "../../MDBox"
 import MDTypography from "../../MDTypography"
@@ -63,15 +63,18 @@ const CertificationsOptions = [
     { id: 30, name: 'Nine' },
   ];
 
+  const formikSecondStep = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      const valuesToSend = { ...values };
+      console.log('Form Values:', valuesToSend);
+    },
+  });
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={(values) => {
-        console.log('Form Values:', values);
-      }}
-    >
-      {({ values, errors, touched, setFieldValue }) => (
+    <FormikProvider value={formikSecondStep}>
+
         <Form>
           <MDBox display="flex" flex={1} style={{ border: 'none', backgroundColor: 'white' }}>
             <MDBox sx={{ width: '100%', height: '100%', display: 'flex' }}>
@@ -85,7 +88,7 @@ const CertificationsOptions = [
                     name={'jobTitle'}
                     label={'Job Title'}
                     type={'text'}
-                    errors={errors}
+                    errors={formikSecondStep.errors}
                     mb={2}
                   />
                 </MDBox>
@@ -95,21 +98,19 @@ const CertificationsOptions = [
                     Job Address
                   </MDTypography>
                   <MDBox mb={2}>
-                    <Autocomplete
+                    <FormikInput
+                      type={"autocomplete"}
+                      placeholder={"job Address"}
+                      value={formikSecondStep.values.jobAddress}
+                      fieldName={"jobAddress"}
+                      label={"jobAddress"}
                       options={jobAddressOptions}
-                      getOptionLabel={(option) => option.name}
-                      value={values.jobAddress}
-                      onChange={(_, newValue) => {
-                        setFieldValue('jobAddress', newValue);
+                      accessKey={"name"}
+                      onChange={(value) => {
+                        formikSecondStep.setFieldValue('jobAddress', value)
                       }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Select Job Address"
-                          error={Boolean(errors.jobAddress && touched.jobAddress)}
-                          helperText={errors.jobAddress && touched.jobAddress && errors.jobAddress?.name}
-                        />
-                      )}
+                      disableClearable
+                      styleContainer={{mb: 2}}
                     />
                   </MDBox>
                 </MDBox>
@@ -119,22 +120,21 @@ const CertificationsOptions = [
                     Category
                   </MDTypography>
                   <MDBox mb={2}>
-                    <Autocomplete
+                    <FormikInput
+                      type={"autocomplete"}
+                      placeholder={"category"}
+                      value={formikSecondStep.values.category}
+                      fieldName={"category"}
+                      label={"category"}
                       options={CategoryOptions}
-                      getOptionLabel={(option) => option.name}
-                      value={values.category}
-                      onChange={(_, newValue) => {
-                        setFieldValue('category', newValue);
+                      accessKey={"name"}
+                      onChange={(value) => {
+                        formikSecondStep.setFieldValue('category', value)
                       }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Select Category"
-                          error={Boolean(errors.category && touched.category)}
-                          helperText={errors.category && touched.category && errors.category?.name}
-                        />
-                      )}
+                      disableClearable
+                      styleContainer={{mb: 2}}
                     />
+
                   </MDBox>
                 </MDBox>
 
@@ -260,21 +260,19 @@ const CertificationsOptions = [
                     Certifications Required
                   </MDTypography>
                   <MDBox mb={2}>
-                    <Autocomplete
+                    <FormikInput
+                      type={"autocomplete"}
+                      placeholder={"certifications"}
+                      value={formikSecondStep.values.certifications}
+                      fieldName={"certifications"}
+                      label={"certifications"}
                       options={CertificationsOptions}
-                      getOptionLabel={(option) => option.name}
-                      value={values.certifications}
-                      onChange={(_, newValue) => {
-                        setFieldValue('certification', newValue);
+                      accessKey={"name"}
+                      onChange={(value) => {
+                        formikSecondStep.setFieldValue('certifications', value)
                       }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Select Certification"
-                          error={Boolean(errors.certifications && touched.certifications)}
-                          helperText={errors.certifications && touched.certifications && errors.certifications?.name}
-                        />
-                      )}
+                      disableClearable
+                      styleContainer={{mb: 2}}
                     />
                   </MDBox>
                 </MDBox>
@@ -397,28 +395,20 @@ const CertificationsOptions = [
             </MDBox>
           </MDBox>
         </Form>
-      )}
-    </Formik>
+      </FormikProvider>
   );
 }
 
 
 
 export default function PostJobTwo() {
-
-  const [age, setAge] = React.useState(10);
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
   const initialValues = {
     paymentMethod: '',
     dailyRate: '',
     timeLine: 'Ends in 6 Months',
     startDate: '',
     completionDate: '',
-  }
+  };
 
   const validationSchema = Yup.object().shape({
     paymentMethod: Yup.string().required('Required'),
@@ -427,159 +417,154 @@ export default function PostJobTwo() {
     completionDate: Yup.date().required('Required'),
   });
 
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
+  const formikSecondStep = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
-      const dataToSend = {
-        ...values,
-      }
-
-    }
+      const valuesToSend = { ...values };
+      console.log('Form Values:', valuesToSend);
+    },
   });
 
-
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={(values) => {
-        console.log('Form values', values);
-      }}
-    >
-      {({  values, touched, errors }) => (
-        <Form>
-          <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white" }}>
-            <MDBox sx={{ width: "100%", height: "100%", display: "flex" }}>
-              <MDBox sx={{ width: '100%' }}>
-                <MDBox sx={{ width: "100%" }}>
-                  <MDTypography variant="h5" component="div">How you Pay?</MDTypography>
-                  <FormikInput
-                    name={'paymentMethod'}
-                    label={'Per Month'}
-                    type={'text'}
-                    errors={formik.errors}
-                    mb={2}
-                  />
-                </MDBox>
+    <FormikProvider value={formikSecondStep}>
+      <Form style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <MDBox sx={{ width: '100%' }}>
+          <MDTypography variant="h5" component="div">
+            How you Pay?
+          </MDTypography>
+          <FormikInput
+            name={'paymentMethod'}
+            label={'Per Month'}
+            type={'text'}
+            errors={formikSecondStep.errors}
+            mb={2}
+          />
+        </MDBox>
 
-                <MDBox style={{ width: '100%', marginTop: '20px' }}>
-                  <MDTypography variant="h5" component="div">Daily Rate</MDTypography>
-                  <FormikInput
-                    name={'DailyRate'}
-                    label={'From 2000 To 3000'}
-                    type={'text'}
-                    errors={formik.errors}
-                    mb={2}
-                  />
-                </MDBox>
-                <MDBox style={{ width: '100%', marginTop: '20px' }}>
-                  <MDTypography variant="h5" component="div">Time Line</MDTypography>
-                  <FormikInput
-                    name={'timeLine'}
-                    label={''}
-                    type={'text'}
-                    errors={formik.errors}
-                    mb={2}
-                  />
-                </MDBox>
+        <MDBox style={{ width: '100%', marginTop: '20px' }}>
+          <MDTypography variant="h5" component="div">
+            Daily Rate
+          </MDTypography>
+          <FormikInput
+            name={'dailyRate'}
+            label={'From 2000 To 3000'}
+            type={'text'}
+            errors={formikSecondStep.errors}
+            mb={2}
+          />
+        </MDBox>
+        <MDBox style={{ width: '100%', marginTop: '20px' }}>
+          <MDTypography variant="h5" component="div">
+            Time Line
+          </MDTypography>
+          <FormikInput
+            name={'timeLine'}
+            label={''}
+            type={'text'}
+            errors={formikSecondStep.errors}
+            mb={2}
+          />
+        </MDBox>
 
-                <MDBox style={{ width: '100%' , marginTop: '20px' }}>
-                  <MDTypography variant="h5" component="div">Expected start date</MDTypography>
-                  <FormikInput
-                    name={'startDate'}
-                    label={''}
-                    type={'date'}
-                    errors={formik.errors}
-                    mb={2}
-                  />
-                </MDBox>
+        <MDBox style={{ width: '100%', marginTop: '20px' }}>
+          <MDTypography variant="h5" component="div">
+            Expected start date
+          </MDTypography>
+          <FormikInput
+            name={'startDate'}
+            label={''}
+            type={'date'}
+            onChange={(value) => {
+              formikSecondStep.setFieldValue('startDate', value)
+            }}
+            errors={formikSecondStep.errors}
+            mb={2}
+          />
+        </MDBox>
 
-                <MDBox style={{ width: '100%' , marginTop: '20px' }}>
-                  <MDTypography variant="h5" component="div">Estimated Completion Date</MDTypography>
-                  <FormikInput
-                    name={'completionDate'}
-                    label={''}
-                    type={'date'}
-                    errors={formik.errors}
-                    mb={2}
-                  />
-                </MDBox>
+        <MDBox style={{ width: '100%', marginTop: '20px' }}>
+          <MDTypography variant="h5" component="div">
+            Estimated Completion Date
+          </MDTypography>
+          <FormikInput
+            name={'completionDate'}
+            label={''}
+            type={'date'}
+            errors={formikSecondStep.errors}
+            mb={2}
+          />
+        </MDBox>
 
-                <MDBox style={{  width: '100%' , marginTop: '20px' }}>
-                  <MDButton
-                    variant="outlined"
-                    sx={{
-                      borderColor: '#006E90',
-                      color: '#006E90',
-                      fontSize: '15px',
-                      width: '100%',
-                      padding: '8px',
-                      position: 'relative',
-                      '&:hover': {
-                        backgroundColor: 'transparent',
-                        borderColor: '#006E90',
-                        color: '#006E90',
-                      },
-                    }}
-                    onClick={() => document.getElementById('fileInput').click()}
-                  >
-                    Add Document
-                    <input
-                      id="fileInput"
-                      type="file"
-                      name="completionDate"
-                      onChange={(event) => formik.setFieldValue("completionDate", event.currentTarget.files[0])}
-                      onBlur={formik.handleBlur}
-                      style={{
-                        display: 'none',
-                      }}
-                    />
-                  </MDButton>
+        <MDBox style={{ width: '100%', marginTop: '20px' }}>
+          <MDButton
+            variant="outlined"
+            sx={{
+              borderColor: '#006E90',
+              color: '#006E90',
+              fontSize: '15px',
+              width: '100%',
+              padding: '8px',
+              position: 'relative',
+              '&:hover': {
+                backgroundColor: 'transparent',
+                borderColor: '#006E90',
+                color: '#006E90',
+              },
+            }}
+            onClick={() => document.getElementById('fileInput').click()}
+          >
+            Add Document
+            <input
+              id="fileInput"
+              type="file"
+              name="completionDate"
+              onChange={(event) => formikSecondStep.setFieldValue('completionDate', event.currentTarget.files[0])}
+              onBlur={formikSecondStep.handleBlur}
+              style={{
+                display: 'none',
+              }}
+            />
+          </MDButton>
+        </MDBox>
 
-                </MDBox>
-
-                <MDBox sx={{ width: '100%' , marginTop: {md:'160px', xs:'100px'}, display: 'flex', gap: '10px', paddingLeft: {md:'520px', xs:'90px'}}}>
-                  <MDButton
-                    variant="outlined"
-                    sx={{
-                      borderColor: '#006E90',
-                      color: '#006E90',
-                      fontSize: '15px',
-                      width: '40%',
-                      '&:hover': {
-                        backgroundColor: 'transparent',
-                        borderColor: '#006E90',
-                        color: '#006E90',
-                      },
-                    }}
-                    type="reset"
-                  >
-                    Cancel
-                  </MDButton>
-                  <MDButton
-                    variant="outlined"
-                    sx={{
-                      backgroundColor: '#006E90',
-                      color: 'white',
-                      fontSize: '15px',
-                      width: '40%',
-                      '&:hover': {
-                        backgroundColor: '#006E90',
-                        color: 'white',
-                      },
-                    }}
-                    type="submit"
-                  >
-                    Publish
-                  </MDButton>
-                </MDBox>
-              </MDBox>
-            </MDBox>
-          </MDBox>
-        </Form>
-      )}
-    </Formik>
+        <MDBox sx={{ width: '100%' , marginTop: {md:'160px', xs:'100px'}, display: 'flex', gap: '10px', paddingLeft: {md:'520px', xs:'90px'}}}>
+          <MDButton
+            variant="outlined"
+            sx={{
+              borderColor: '#006E90',
+              color: '#006E90',
+              fontSize: '15px',
+              width: '40%',
+              '&:hover': {
+                backgroundColor: 'transparent',
+                borderColor: '#006E90',
+                color: '#006E90',
+              },
+            }}
+            type="reset"
+          >
+            Cancel
+          </MDButton>
+          <MDButton
+            variant="outlined"
+            sx={{
+              backgroundColor: '#006E90',
+              color: 'white',
+              fontSize: '15px',
+              width: '40%',
+              '&:hover': {
+                backgroundColor: '#006E90',
+                color: 'white',
+              },
+            }}
+            type="submit"
+          >
+            Publish
+          </MDButton>
+        </MDBox>
+      </Form>
+    </FormikProvider>
   );
 }
 

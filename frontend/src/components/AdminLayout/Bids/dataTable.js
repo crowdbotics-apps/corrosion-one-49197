@@ -279,9 +279,39 @@ function DataTable({
         <DialogContent>
           <p>Are you sure you want to close?</p>
         </DialogContent>
-        <DialogActions>
-          <MDButton onClick={handleCloseModal} color="primary">Cancel</MDButton>
-          <MDButton onClick={handleConfirmReject} color="secondary">Reject</MDButton>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexGrow: 1 }}>
+            <MDButton
+              variant="outlined"
+              onClick={handleCloseModal}
+              sx={{
+                padding: '2px',
+                borderRadius: '10px',
+                borderColor: '#006E90',
+                color: '#006E90',
+                fontSize: '15px',
+                width: { md: '90px', xs: '100px' },
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                  borderColor: '#006E90',
+                  color: '#006E90',
+                },
+              }}
+            >
+              Cancel
+            </MDButton>
+          </Box>
+          <MDButton
+            onClick={handleCloseModal}
+            color={'secondary'}
+            sx={{
+              backgroundColor: '#E14640',
+              color: 'white',
+              '&:hover': { backgroundColor: '#E14640' },
+            }}
+          >
+            Reject
+          </MDButton>
         </DialogActions>
       </Dialog>
     </Card>
