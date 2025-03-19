@@ -4,7 +4,7 @@ import { Formik, Field, Form, useFormik, FormikProvider } from "formik";
 import MDButton from "../../MDButton";
 import MDBox from "../../MDBox";
 import MDTypography from "../../MDTypography";
-import { InputAdornment } from '@mui/material';
+import { Input, InputAdornment } from "@mui/material"
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import FormatBoldOutlinedIcon from '@mui/icons-material/FormatBoldOutlined';
 import FormatItalicOutlinedIcon from '@mui/icons-material/FormatItalicOutlined';
@@ -21,6 +21,15 @@ import pxToRem from "../../../assets/theme/functions/pxToRem";
 export function PostJob() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCertifications, setSelectedCertifications] = useState([]);
+  const [fileName, setFileName] = useState('');
+
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFileName(file.name);
+    }
+  };
 
   const CategoryOptions = [
     { id: 1, name: 'Development' },
@@ -31,6 +40,13 @@ export function PostJob() {
     { id: 6, name: 'Finance' },
     { id: 7, name: 'HR' },
     { id: 8, name: 'Legal' },
+  ];
+
+  const PerMonthOptions = [
+    { id: 1, name: 'Daily Rate' },
+    { id: 2, name: 'Per Diem' },
+    { id: 3, name: 'Mileage' },
+    { id: 4, name: 'Misc/Other' },
   ];
 
   const jobAddressOptions = [
@@ -50,6 +66,11 @@ export function PostJob() {
       setSelectedCategories([...selectedCategories, value]);
     }
   };
+  const handlePerMonthChange = (value) => {
+    if (!selectedPaymentMethod.some(paymentMethod => paymentMethod.id === value.id)) {
+      setSelectedPaymentMethod([...selectedPaymentMethod, value]);
+    }
+  };
   const handleCertificationsChange = (value) => {
     if (!selectedCertifications.some(certifications => certifications.id === value.id)) {
       setSelectedCertifications([...selectedCertifications, value]);
@@ -58,6 +79,9 @@ export function PostJob() {
 
   const removeCategory = (category) => {
     setSelectedCategories(selectedCategories.filter((cat) => cat !== category));
+  };
+  const removePaymentMethod = (paymentMethod) => {
+    setSelectedPaymentMethod(selectedPaymentMethod.filter((cat) => cat !== paymentMethod));
   };
   const removeCertifications = (certifications) => {
     setSelectedCertifications(selectedCertifications.filter((cat) => cat !== certifications));
@@ -69,20 +93,19 @@ export function PostJob() {
     category: '',
     jobDescription: '',
     certifications: null,
-    paymentMethod: '',
+    paymentMethod: { id: 1, name: 'Daily Rate' },
     dailyRate: '',
     timeLine: 'Ends in 6 Months',
     startDate: '',
     completionDate: '',
   };
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState([initialValues.paymentMethod]);
 
   const validationSchema = Yup.object().shape({
     jobTitle: Yup.string().required('Job Title is required'),
-    jobAddress: Yup.string().required('Job Address is required'),
 
     jobDescription: Yup.string().required('Job Description is required'),
 
-    paymentMethod: Yup.string().required('Required'),
     dailyRate: Yup.number().min(2000).max(3000).required('Required'),
     startDate: Yup.date().required('Required'),
     completionDate: Yup.date()
@@ -178,9 +201,8 @@ export function PostJob() {
                     </MDBox>
                   </MDBox>
 
-                  <MDBox >
-
-                  <MDTypography variant="h5" component="div">Job Description</MDTypography>
+                  <MDBox>
+                    <MDTypography variant="h5" component="div">Job Description</MDTypography>
 
                     <FormikInput
                       type="textarea"
@@ -276,29 +298,75 @@ export function PostJob() {
       <Card sx={{ width: { md: "49%", xs: "100%" }, height: "auto", minHeight: "820px", p: 5, overflow: "auto", "&::-webkit-scrollbar": { width: "8px" }, "&::-webkit-scrollbar-thumb": { backgroundColor: "rgba(0, 0, 0, 0.3)", borderRadius: "10px" }, "&::-webkit-scrollbar-track": { background: "transparent" } }}>
         <FormikProvider value={formik}>
           <Form>
-
-            <MDBox sx={{ marginTop: '20px' }}>
+            <MDBox sx={{ width: '100%', height: '100px' }}>
               <MDTypography variant="h5" component="div">How you Pay?</MDTypography>
-              <FormikInput name="paymentMethod" label="Per Month" type="text" errors={formik.errors} mb={2} />
+              <MDBox mb={2}>
+                <FormikInput
+                  type="autocomplete"
+                  placeholder="paymentMethod"
+                  value={formik.values.paymentMethod}
+                  fieldName="paymentMethod"
+                  label="Per Month"
+                  options={PerMonthOptions}
+                  accessKey="name"
+                  onChange={(value) => {
+                    formik.setFieldValue('paymentMethod', value);
+                    handlePerMonthChange(value);
+                  }}
+                  disableClearable
+                  styleContainer={{ mb: 2 }}
+                />
+              </MDBox>
             </MDBox>
 
+            <MDBox sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>
+                {selectedPaymentMethod.map((paymentMethod, index) => (
+                  <MDBox key={index} sx={{ backgroundColor: 'white', border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 5, width: 'fit-content', marginBottom: '10px' }}>
+                    <MDTypography sx={{ padding: '2px', display: 'flex', fontSize: '14px', margin: '7px', whiteSpace: { xs: 'normal', sm: 'nowrap' }, fontWeight: 'bold' }}>
+                      {paymentMethod.name !== 'Daily Rate' && (
+                        <CancelOutlinedIcon
+                          sx={{ marginTop: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px', cursor: 'pointer' }}
+                          onClick={() => removePaymentMethod(paymentMethod)}
+                        />
+                      )}
+                      {paymentMethod.name === 'Daily Rate' && (
+                        <CancelOutlinedIcon
+                          sx={{ marginTop: '2px', width: '20px', height: '20px', color: 'gray', marginRight: '2px', cursor: 'not-allowed' }}
+                          onClick={() => alert('This payment method is required and cannot be removed.')} />
+                      )}
+                      {paymentMethod.name}
+                    </MDTypography>
+                  </MDBox>
+                ))}
+              </MDBox>
+            </MDBox>
 
+            {selectedPaymentMethod.some(paymentMethod => paymentMethod.name === 'Daily Rate') && (
             <MDBox sx={{ marginTop: '20px' }}>
               <MDTypography variant="h5" component="div">Daily Rate</MDTypography>
               <FormikInput name="dailyRate" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
-            </MDBox>
-            <MDBox style={{ width: '100%', marginTop: '20px' }}>
-              <MDTypography variant="h5" component="div">
-                Time Line
-              </MDTypography>
-              <FormikInput
-                name={'timeLine'}
-                label={''}
-                type={'text'}
-                errors={formik.errors}
-                mb={2}
-              />
-            </MDBox>
+            </MDBox>)}
+
+            {selectedPaymentMethod.some(paymentMethod => paymentMethod.name === 'Per Diem') && (
+            <MDBox sx={{ marginTop: '20px' }}>
+              <MDTypography variant="h5" component="div">Per Diem</MDTypography>
+              <FormikInput name="dailyRate" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
+            </MDBox>)}
+
+            {selectedPaymentMethod.some(paymentMethod => paymentMethod.name === 'Mileage') && (
+            <MDBox sx={{ marginTop: '20px' }}>
+              <MDTypography variant="h5" component="div">Mileage</MDTypography>
+              <FormikInput name="dailyRate" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
+            </MDBox>)}
+
+            {selectedPaymentMethod.some(paymentMethod => paymentMethod.name === 'Misc/Other') && (
+            <MDBox sx={{ marginTop: '20px' }}>
+              <MDTypography variant="h5" component="div">Misc/Other</MDTypography>
+              <FormikInput name="dailyRate" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
+            </MDBox>)}
+
+
 
             <MDBox sx={{ marginTop: '20px' }}>
               <MDTypography variant="h5" component="div">Expected start date</MDTypography>
@@ -326,6 +394,44 @@ export function PostJob() {
                 setFieldValue={formik.setFieldValue}
                 containerStyle={{ mb: 2 }}
               />
+            </MDBox>
+
+            <MDBox sx={{ marginTop: '20px' }}>
+              <MDButton
+                variant="outlined"
+                sx={{
+                  borderColor: '#006E90',
+                  color: '#006E90',
+                  fontSize: '15px',
+                  width: '100%',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    borderColor: '#006E90',
+                    color: '#006E90',
+                  },
+                }}
+                component="label"
+              >
+                Add Document
+
+                <input
+                  type="file"
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+              </MDButton>
+
+              {fileName && (
+                <Input
+                  label="Selected Document"
+                  variant="outlined"
+                  value={fileName}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  sx={{ marginTop: '10px', width: '100%' }}
+                />
+              )}
             </MDBox>
 
             <MDBox sx={{ width: '100%', marginTop: '180px', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
