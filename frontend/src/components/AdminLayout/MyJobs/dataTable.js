@@ -99,6 +99,12 @@ function DataTable({
     }
   };
 
+  const handleRejectDetails = () => {
+    const data = { someKey: false };
+    navigate("/find-jobs-details", { state: data });
+  }
+
+
   const setSortedValue = (column) => {
     const sortedColum = { ...orderedColumn };
     if (column.id === sortedColum.column) {
@@ -242,16 +248,16 @@ function DataTable({
                         {idx2 === row.cells.length - 1 && (
                           <MDBox
                             sx={{
-                              marginLeft: {md:'-60px', xs:'-10px'},
+                              marginLeft: {md:'-80px', xs:'-10px'},
                               display: 'flex',
-                              width: '210px',
+                              width: '230px',
                               flexDirection: { xs: 'column', md: 'row' },
                               gap: '8px',
                             }}
                           >
                             <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
-                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '20px')}>Edit</MDButton>
-                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '150px')}>See Applications</MDButton>
+                              <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90', '150px')}>View Details</MDButton>
+                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '170px')}>See Applications</MDButton>
                               <MDButton variant="outlined"  onClick={handleReject} sx={getButtonStyles('#E14640', '145px')}>Close Jobs</MDButton>
                             </MDBox>
 

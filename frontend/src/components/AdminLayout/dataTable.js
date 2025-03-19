@@ -141,8 +141,9 @@ function DataTable({
   const handleCloseModal = () => {
     setOpenRejectModal(false);
   };
-  const handleRejectDetails=()=>{
-    navigate("/find-jobs-details");
+  const handleRejectDetails = () => {
+    const data = { someKey: true };
+    navigate("/find-jobs-details", { state: data });
   }
 
   const handleConfirmReject = () => {

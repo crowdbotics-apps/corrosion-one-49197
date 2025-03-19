@@ -13,8 +13,12 @@ import LanguageIcon from '@mui/icons-material/Language';
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import MDInput from "../MDInput"
+import { useLocation } from 'react-router-dom';
 
 function Details() {
+  const location = useLocation();
+  const data = location.state;
+  console.log(data);
 
   // const [fileName, setFileName] = useState('');
   //
@@ -114,87 +118,89 @@ function Details() {
               top: { xs:'350px', lg:'250px'},
               right: {lg:170, xs:60},
             }}>
-              <MDBox sx={{display: "flex", gap:{xs:2}}}>
-                <MDButton
-                  sx={{
-                    marginLeft:"5px",
-                    display:{xs: 'flex',xxl:'none' },
-                    width: {md:'70%',xs:"150px"},
-                    marginTop: "20px",
-                    border: '2px solid #006E90',
-                    backgroundColor: 'white',
-                    height:{ md:'60px', xs:'20px'},
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                  }}
-                >
-                  <MDTypography sx={{color: '#006E90', fontWeight: 'bold', fontSize:{xs:'15px', md:'20px'}}}>Message</MDTypography>
-                  <SmsOutlinedIcon  sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
-                </MDButton>
-                <MDButton variant="text" sx={{display:{xs: 'none',xxl:'block' },marginTop:{ md:"20px"}, marginRight: "30px"}} >
-                  <BookmarkOutlinedIcon  sx={{ color: "#006E90",width: '30px', height: '30px' }} />
-                </MDButton>
+              {data && data.someKey && (
+                <>
+                  <MDBox sx={{display: "flex", gap:{xs:2}}}>
+                    <MDButton
+                      sx={{
+                        marginLeft:"5px",
+                        display:{xs: 'flex',xxl:'none' },
+                        width: {md:'70%',xs:"150px"},
+                        marginTop: "20px",
+                        border: '2px solid #006E90',
+                        backgroundColor: 'white',
+                        height:{ md:'60px', xs:'20px'},
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                      }}
+                    >
+                      <MDTypography sx={{color: '#006E90', fontWeight: 'bold', fontSize:{xs:'15px', md:'20px'}}}>Message</MDTypography>
+                      <SmsOutlinedIcon  sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
+                    </MDButton>
+                    <MDButton variant="text" sx={{display:{xs: 'none',xxl:'block' },marginTop:{ md:"20px"}, marginRight: "30px"}} >
+                      <BookmarkOutlinedIcon  sx={{ color: "#006E90",width: '30px', height: '30px' }} />
+                    </MDButton>
 
+                    <MDButton
+                      sx={{
+                        marginLeft:{xl:"50px"},
+                        paddingLeft:{xxl: '4%',xs:'10%', sm:"4%"},
+                        marginTop: '20px',
+                        backgroundColor: '#006E90',
+                        color: 'white',
+                        height: {md:'60px', xs:'20px'},
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        '&:hover': {
+                          backgroundColor: '#006E90',
+                        },
+                      }}
+                    >
+                      <MDTypography sx={{color: '#fcfdfd', fontWeight: 'bold', marginLeft:{md:'15px'}, fontSize:{xs:'15px', md:'20px'}}}>Bid</MDTypography>
+                    </MDButton>
+                  </MDBox>
 
+                  <MDBox sx={{display: "flex",gap:{xs:10, md:1}}}>
+                    <MDButton
+                      sx={{
+                        display:{xs: 'none',xxl:'flex' },
+                        width: {md:'70%',xs:"150px"},
+                        marginTop: {md:'20px', xs:'10px'},
+                        border: '2px solid #006E90',
+                        backgroundColor: 'white',
+                        height:{ md:'60px', xs:'20px'},
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                      }}
+                    >
+                      <MDTypography sx={{color: '#006E90', fontWeight: 'bold', fontSize:{xs:'15px', md:'20px'}}}>Message</MDTypography>
+                      <SmsOutlinedIcon  sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
+                    </MDButton>
 
-                <MDButton
-                  sx={{
-                    marginLeft:{xl:"50px"},
-                    paddingLeft:{xxl: '4%',xs:'10%', sm:"4%"},
-                    marginTop: '20px',
-                    backgroundColor: '#006E90',
-                    color: 'white',
-                    height: {md:'60px', xs:'20px'},
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    '&:hover': {
-                      backgroundColor: '#006E90',
-                    },
-                  }}
-                >
-                  <MDTypography sx={{color: '#fcfdfd', fontWeight: 'bold', marginLeft:{md:'15px'}, fontSize:{xs:'15px', md:'20px'}}}>Bid</MDTypography>
-                </MDButton>
-              </MDBox>
-
-              <MDBox sx={{display: "flex",gap:{xs:10, md:1}}}>
-                <MDButton
-                  sx={{
-                    display:{xs: 'none',xxl:'flex' },
-                    width: {md:'70%',xs:"150px"},
-                    marginTop: {md:'20px', xs:'10px'},
-                    border: '2px solid #006E90',
-                    backgroundColor: 'white',
-                    height:{ md:'60px', xs:'20px'},
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                  }}
-                >
-                  <MDTypography sx={{color: '#006E90', fontWeight: 'bold', fontSize:{xs:'15px', md:'20px'}}}>Message</MDTypography>
-                  <SmsOutlinedIcon  sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
-                </MDButton>
-
-                <MDButton
-                  sx={{
-                    marginLeft:{ md:'5px', xs:'10px'},
-                    width: {md:'20%', xs:'10px'} ,
-                    marginTop: {md:'20px', xs:'10px'},
-                    backgroundColor: '#1F425526',
-                    height: {md:'60px', xs:'20px'},
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <MDTypography sx={{ color: '#006E90', fontWeight: 'bold', fontSize: {md:'30px', xs:'20px'} }}>in</MDTypography>
-                </MDButton>
-                <MDButton variant="text" sx={{display:{xs: 'block',xxl:'none' },marginTop:{ md:"20px"}, marginRight: "25px" }} >
-                  <BookmarkOutlinedIcon  sx={{ color: "#006E90",width: '30px', height: '30px' }} />
-                </MDButton>
-              </MDBox>
+                    <MDButton
+                      sx={{
+                        marginLeft:{ md:'5px', xs:'10px'},
+                        width: {md:'20%', xs:'10px'} ,
+                        marginTop: {md:'20px', xs:'10px'},
+                        backgroundColor: '#1F425526',
+                        height: {md:'60px', xs:'20px'},
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <MDTypography sx={{ color: '#006E90', fontWeight: 'bold', fontSize: {md:'30px', xs:'20px'} }}>in</MDTypography>
+                    </MDButton>
+                    <MDButton variant="text" sx={{display:{xs: 'block',xxl:'none' },marginTop:{ md:"20px"}, marginRight: "25px" }} >
+                      <BookmarkOutlinedIcon  sx={{ color: "#006E90",width: '30px', height: '30px' }} />
+                    </MDButton>
+                  </MDBox>
+                </>
+              )}
             </MDBox>
 
           </Grid>
