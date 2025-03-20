@@ -5,7 +5,7 @@ from urllib import request as urequest
 import jwt
 import requests
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -21,6 +21,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, \
     HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 from rest_framework.viewsets import GenericViewSet
 
+from jobs.models import MagicLinkToken
 from users.models import User, UserVerificationCode
 from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserCreateSerializer, \
     UserLoginResponseSerializer, UserDetailSerializer
@@ -523,4 +524,30 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         user.is_active = False
         user.save()
         return Response()
+
+
+    @action(detail=False, methods=['post'], url_path="login-with-token")
+    def login_with_token(self, request):
+        token = request.data.get('token')
+        if not token:
+            return Response( "Token is required", status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            magic_token = MagicLinkToken.objects.get(token=token)
+        except MagicLinkToken.DoesNotExist:
+            return Response("Invalid token", status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if token is valid
+        if not magic_token.is_valid():
+            return Response("Token is invalid or expired", status=status.HTTP_400_BAD_REQUEST)
+
+        # Mark token as used
+        magic_token.is_used = True
+        magic_token.save()
+
+        # Log user in with Django’s login() if you’re using session-based authentication
+        user = magic_token.user
+        login(request, user)
+
+        return Response(UserLoginResponseSerializer(user).data)
 

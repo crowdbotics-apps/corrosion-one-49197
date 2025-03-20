@@ -11,6 +11,7 @@ from rest_framework import parsers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import UpdateAPIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
@@ -309,33 +310,72 @@ class ActionHelperMixin:
         return request
 
 
+
+def or_permission_factory(permissions):
+    """
+    Returns a new permission *class* (not an instance!) that applies an OR logic
+    across the given list of DRF permission classes.
+    """
+    class OrCombinedPermission(BasePermission):
+        """
+        Dynamically combines multiple permission classes into an 'OR' check.
+        """
+
+        def has_permission(self, request, view):
+            return any(
+                perm().has_permission(request, view)
+                for perm in permissions
+            )
+
+        def has_object_permission(self, request, view, obj):
+            return any(
+                perm().has_object_permission(request, view, obj)
+                for perm in permissions
+            )
+
+    return OrCombinedPermission
+
 class PermissionClassByActionMixin:
     """
     Mixin that allows to define different permissions for each action in a ViewSet.
-        action_permissions = {
+
+    Usage example:
+    action_permissions = {
         'create': [IsAdmin],
-        'retrieve': [IsAdmin],
-        'update': [IsAdmin],
-        'partial_update': [IsAdmin],
-        'destroy': [IsAdmin],
-        'list': [IsAdmin],
-        'reactivate': [IsAdmin],
+        'retrieve': [IsInspector, IsOwner],   # This will now do OR logic
+        'update': [IsInspector, IsOwner],
+        # ...
     }
     """
+
     def get_permissions(self):
         default = getattr(self, 'permission_classes', None)
-        if hasattr(self, 'action_permissions'):
-            if self.action in self.action_permissions:
-                self.permission_classes = self.action_permissions[self.action]
-                return super().get_permissions()
-            else:
-                for k, v in self.action_permissions.items():
-                    if isinstance(k, tuple) and self.action in k:
-                        self.permission_classes = v
-                        return super().get_permissions()
-            self.permission_classes = default
-            return super().get_permissions()
 
-        raise ImproperlyConfigured(
-            "PermissionByActionMixin requires a definition of 'action_permissions'"
-        )
+        if not hasattr(self, 'action_permissions'):
+            raise ImproperlyConfigured(
+                "PermissionByActionMixin requires a definition of 'action_permissions'."
+            )
+
+        # 1) Figure out what permission classes apply for this action.
+        if self.action in self.action_permissions:
+            self.permission_classes = self.action_permissions[self.action]
+        else:
+            # Maybe it's in a tuple key, e.g. ('partial_update', 'update')
+            for k, v in self.action_permissions.items():
+                if isinstance(k, tuple) and self.action in k:
+                    self.permission_classes = v
+                    break
+            else:
+                # fallback to default
+                self.permission_classes = default
+
+        # 2) If more than one permission class is listed, combine them with OR.
+        if (
+            isinstance(self.permission_classes, (list, tuple)) and
+            len(self.permission_classes) > 1
+        ):
+            # Use the factory to produce a *class* that DRF can instantiate
+            or_class = or_permission_factory(self.permission_classes)
+            self.permission_classes = [or_class]
+
+        return super().get_permissions()

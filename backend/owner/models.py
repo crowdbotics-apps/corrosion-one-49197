@@ -36,3 +36,6 @@ class Owner(models.Model):
         if self.company_name:
             return 2
         return 1
+
+    def __str__(self):
+        return f'{self.user.first_name} {self.user.last_name} - {self.company_name}'

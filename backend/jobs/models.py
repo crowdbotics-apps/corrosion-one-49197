@@ -1,8 +1,13 @@
 from django.db import models
+import uuid
+from django.db import models
+from django.utils import timezone
+from datetime import timedelta
 from model_utils.models import TimeStampedModel
 
 from inspector.models import Credential, Inspector
 from owner.models import Owner
+from users.models import User
 
 
 # Create your models here.
@@ -10,6 +15,14 @@ from owner.models import Owner
 class JobCategory(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
+
+    class Meta:
+        verbose_name = 'Job Category'
+        verbose_name_plural = 'Job Categories'
+
+    def __str__(self):
+        return self.name
+
 
 
 class Job(TimeStampedModel):
@@ -22,6 +35,7 @@ class Job(TimeStampedModel):
     description = models.TextField()
     categories = models.ManyToManyField(JobCategory)
     created_by = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='jobs')
+    inspector = models.ForeignKey(Inspector, on_delete=models.CASCADE, related_name='jobs', null=True, blank=True)
     certifications = models.ManyToManyField(Credential)
     active = models.BooleanField(default=True)
     start_date = models.DateField()
@@ -48,3 +62,29 @@ class Bid(TimeStampedModel):
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     status = models.CharField(max_length=10, choices=StatusChoices.choices, default=StatusChoices.PENDING)
     note = models.TextField()
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return f'{self.job.title} - {self.inspector.user.name}'
+
+
+
+class MagicLinkToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+    expires_at = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = str(uuid.uuid4())
+        if not self.expires_at:
+            # Token expires in 30 minutes (example)
+            self.expires_at = timezone.now() + timedelta(minutes=30)
+        super().save(*args, **kwargs)
+
+    def is_valid(self):
+        return (not self.is_used) and (timezone.now() < self.expires_at)
