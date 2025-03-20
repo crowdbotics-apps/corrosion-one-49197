@@ -95,6 +95,9 @@ export function PostJob() {
     certifications: null,
     paymentMethod: { id: 1, name: 'Daily Rate' },
     dailyRate: '',
+    PerDiem: '',
+    Mileage: '',
+    Misc: '',
     timeLine: 'Ends in 6 Months',
     startDate: '',
     completionDate: '',
@@ -351,19 +354,19 @@ export function PostJob() {
             {selectedPaymentMethod.some(paymentMethod => paymentMethod.name === 'Per Diem') && (
             <MDBox sx={{ marginTop: '20px' }}>
               <MDTypography variant="h5" component="div">Per Diem</MDTypography>
-              <FormikInput name="dailyRate" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
+              <FormikInput name="PerDiem" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
             </MDBox>)}
 
             {selectedPaymentMethod.some(paymentMethod => paymentMethod.name === 'Mileage') && (
             <MDBox sx={{ marginTop: '20px' }}>
               <MDTypography variant="h5" component="div">Mileage</MDTypography>
-              <FormikInput name="dailyRate" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
+              <FormikInput name="Mileage" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
             </MDBox>)}
 
             {selectedPaymentMethod.some(paymentMethod => paymentMethod.name === 'Misc/Other') && (
             <MDBox sx={{ marginTop: '20px' }}>
               <MDTypography variant="h5" component="div">Misc/Other</MDTypography>
-              <FormikInput name="dailyRate" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
+              <FormikInput name="Misc" label="From 2000 To 3000" type="text" errors={formik.errors} mb={2} />
             </MDBox>)}
 
 

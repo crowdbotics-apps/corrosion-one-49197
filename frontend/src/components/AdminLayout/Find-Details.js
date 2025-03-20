@@ -18,7 +18,6 @@ import { useLocation } from 'react-router-dom';
 function Details() {
   const location = useLocation();
   const data = location.state;
-  console.log(data);
 
   // const [fileName, setFileName] = useState('');
   //
@@ -68,12 +67,12 @@ function Details() {
                 src={"https://media.istockphoto.com/id/1300845620/es/vector/icono-de-usuario-plano-aislado-sobre-fondo-blanco-s%C3%ADmbolo-de-usuario-ilustraci%C3%B3n-vectorial.jpg?s=612x612&w=0&k=20&c=grBa1KTwfoWBOqu1n0ewyRXQnx59bNHtHjvbsFc82gk="}
                 variant={"circular"}
                 sx={{
-                  marginLeft:{xs:'90px'},
+                  marginLeft:{xs:'90px', md:'20px'},
                   fontSize: "100px",
                   marginTop: "17px",
                   borderRadius: "50%",
-                  width: "80px",
-                  height: "80px"
+                  width: "90px",
+                  height: "90px"
                 }}
               />
               <MDTypography sx={{color: '#006E90', fontSize: {md:'32px', xs:'20px'}, fontWeight: 'bold', marginTop: {md:'50px', xs:'10px'}, marginLeft: {md:'10px', xs:`80px`}}}>
@@ -246,6 +245,7 @@ function Details() {
               </MDTypography>
 
               <MDButton
+                color={'primary'}
                 sx={{
                   width: '100%',
                   marginTop: '20px',
@@ -256,8 +256,8 @@ function Details() {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   '&:hover': {
-                    backgroundColor: '#5aab3f',
-                  }
+                    backgroundColor: '#6DDA434D',
+                  },
                 }}
                 // onClick={handleButtonClick}
               >
@@ -279,6 +279,7 @@ function Details() {
               </MDButton>
 
               <MDButton
+                color={'primary'}
                 sx={{
                   width: '100%',
                   marginTop: '20px',
@@ -289,8 +290,8 @@ function Details() {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   '&:hover': {
-                    backgroundColor: '#5aab3f',
-                  }
+                    backgroundColor: '#6DDA434D',
+                  },
                 }}
                 // onClick={handleButtonClick}
               >
@@ -318,7 +319,7 @@ function Details() {
               {/*  onChange={handleFileChange}*/}
               {/*/>*/}
 
-              <MDBox sx={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', width: '100%' }}>
+              <MDBox sx={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', width: '100%' , gap: 2}}>
                 <MDBox
                   sx={{
                     backgroundColor: "white",
