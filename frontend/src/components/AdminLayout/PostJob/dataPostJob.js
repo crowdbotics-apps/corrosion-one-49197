@@ -24,11 +24,15 @@ export function PostJob() {
   const [fileName, setFileName] = useState('');
 
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
     if (file) {
       setFileName(file.name);
     }
+  };
+
+  const removeFile = () => {
+    setFileName(null);
   };
 
   const CategoryOptions = [
@@ -415,7 +419,27 @@ export function PostJob() {
                 }}
                 component="label"
               >
-                Add Document
+                {fileName ? (
+                  <>
+                    {`Document: ${fileName}`}
+                    <CancelOutlinedIcon
+                      sx={{
+                        marginTop: '2px',
+                        width: '20px',
+                        height: '20px',
+                        color: 'red',
+                        marginLeft: '8px',
+                        cursor: 'pointer',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Evita que el click en el icono active el input file
+                        removeFile(); // Función para quitar el archivo
+                      }}
+                    />
+                  </>
+                ) : (
+                  'Add Document'
+                )}
 
                 <input
                   type="file"
@@ -423,19 +447,8 @@ export function PostJob() {
                   onChange={handleFileChange}
                 />
               </MDButton>
-
-              {fileName && (
-                <Input
-                  label="Selected Document"
-                  variant="outlined"
-                  value={fileName}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  sx={{ marginTop: '10px', width: '100%' }}
-                />
-              )}
             </MDBox>
+
 
             <MDBox sx={{ width: '100%', marginTop: '180px', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
               <MDButton
