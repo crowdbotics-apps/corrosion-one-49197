@@ -528,12 +528,14 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
     @action(detail=False, methods=['post'], url_path="login-with-token")
     def login_with_token(self, request):
-        token = request.data.get('token')
+        r_token = request.data.get('token')
+        job_id = r_token.split('-')[-1]
+        token = r_token.rsplit('-', 1)[0]
         if not token:
             return Response( "Token is required", status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            magic_token = MagicLinkToken.objects.get(token=token)
+            magic_token = MagicLinkToken.objects.get(token=r_token)
         except MagicLinkToken.DoesNotExist:
             return Response("Invalid token", status=status.HTTP_400_BAD_REQUEST)
 
@@ -549,5 +551,10 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         user = magic_token.user
         login(request, user)
 
-        return Response(UserLoginResponseSerializer(user).data)
+        data = {
+            "job": job_id,
+            "user": UserLoginResponseSerializer(user).data
+        }
+
+        return Response(data)
 

@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
@@ -45,6 +47,7 @@ class JobManagementSerializer(serializers.ModelSerializer):
             data['created_by'] = user.owner
             certifications = self.validated_data['certifications']
             request = self.context.get('request')
+            self.instance = super().save(**kwargs)
             inspector_ids =  []
             for certification in certifications:
                 inspector_ids_credential = list(certification.documents.values_list('inspector_id', flat=True))
@@ -53,7 +56,10 @@ class JobManagementSerializer(serializers.ModelSerializer):
             for inspector_id in inspector_ids_to_send:
                 user = Inspector.objects.get(id=inspector_id).user
 
-                magic_token = MagicLinkToken.objects.create(user=user)
+                magic_token = MagicLinkToken.objects.create(
+                    user=user,
+                    token=str(uuid.uuid4()) + '-' + str(self.instance.id)
+                )
                 url = f"{request.scheme}://{request.get_host()}/#/jtv/{magic_token.token}"
                 send_email_with_template(
                     subject=f'New Job Created - {settings.PROJECT_NAME}',
@@ -68,4 +74,4 @@ class JobManagementSerializer(serializers.ModelSerializer):
 
 
 
-        return super().save(**kwargs)
+        return self.instance
