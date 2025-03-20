@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 import {
-  Dialog, DialogActions,
+  Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
@@ -20,10 +21,11 @@ import Card from "@mui/material/Card";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Box from "@mui/material/Box";
 import Pagination from '@mui/material/Pagination';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import MDTypography from "../../MDTypography"
+import MDTypography from "@mui/material/Typography";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
 import MDButton from "../../MDButton"
 import { useNavigate } from "react-router-dom"
+import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
 
 function DataTable({
                      table,
@@ -34,7 +36,7 @@ function DataTable({
                      showRecords = true,
                      currentPage,
                      selectedProject = null,
-                     pageSize = 4,
+                     pageSize = 6,
                      loading = false,
                      emptyLabelText = "No items found",
                      loadingText = "",
@@ -42,11 +44,10 @@ function DataTable({
 
   const [orderedColumn, setOrderedColumn] = useState();
   const navigate = useNavigate();
-  const currentDate = new Date().toLocaleDateString();
   const columns = useMemo(() => table.columns, [table]);
+  const [openRejectModal, setOpenRejectModal] = useState(false);
   const data = useMemo(() => table.rows, [table]);
   const [sortedByColumn, setSortedByColumn] = useState({ column: "", order: "none" });
-  const [openRejectModal, setOpenRejectModal] = useState(false);
   const tableInstance = useTable(
     {
       columns,
@@ -58,6 +59,23 @@ function DataTable({
     usePagination
   );
 
+  const getButtonStyles = (color) => ({
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    paddingRight: '8px',
+    paddingLeft: '8px',
+    borderRadius: '12px',
+    borderColor: color,
+    color: color,
+    fontSize: '15px',
+    width: { md: '120px' },
+    '&:hover': {
+      backgroundColor: 'transparent',
+      borderColor: color,
+      color: color,
+    },
+  });
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -67,23 +85,6 @@ function DataTable({
     page,
     gotoPage,
   } = tableInstance;
-
-  const getButtonStyles = (color, width) => ({
-    paddingTop: '2px',
-    paddingBottom: '2px',
-    paddingRight: '5px',
-    paddingLeft: '5px',
-    borderRadius: '12px',
-    borderColor: color,
-    color: color,
-    fontSize: '15px',
-    width: {md:width, xs:'100px'} ,
-    '&:hover': {
-      backgroundColor: 'transparent',
-      borderColor: color,
-      color: color,
-    },
-  });
 
   const getDataSortedByColumn = (column) => {
     if (column.disableOrdering) {
@@ -98,12 +99,6 @@ function DataTable({
       setSortedByColumn({ column: "", order: "none" });
     }
   };
-
-  const handleRejectDetails = () => {
-    const data = { someKey: false };
-    navigate("/find-jobs-details", { state: data });
-  }
-
 
   const setSortedValue = (column) => {
     const sortedColum = { ...orderedColumn };
@@ -146,59 +141,20 @@ function DataTable({
   const handleCloseModal = () => {
     setOpenRejectModal(false);
   };
+  const handleRejectDetails = () => {
+    const data = { someKey: true };
+    navigate("/find-jobs-details", { state: data });
+  }
 
   const handleConfirmReject = () => {
     setOpenRejectModal(false);
     navigate("/dashboard");
   };
 
+
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox sx={{display: "flex"}}>
-          <MDBox>
-            <TextField
-              label={
-                <Box display="flex" alignItems="center" sx={{ padding: '2.5rem' , fontSize:'20px'}}>
-                  <SearchOutlinedIcon sx={{ marginRight: 1 }} />
-                  <Box>Search and Filter</Box>
-                </Box>
-              }
-              sx={{
-                width: '599px',
-                padding: '2rem',
-              }}
-              InputProps={{
-                style: {
-                  height: '72px',
-                  borderRadius:'12px',
-                },
-              }}
-            />
-          </MDBox>
-
-          <MDBox sx={{ marginLeft: '750px' }}>
-            <TextField
-              label={
-                <MDBox display="flex" alignItems="center" sx={{marginTop:'40px', fontSize: '20px', marginLeft:'50px' }}>
-                  <MDTypography sx={{fontSize:'16px', marginTop:'3px'}}>Jul 19 - Jul 25</MDTypography>
-                  <CalendarTodayIcon sx={{ marginLeft: '10px', color:'#006E90' }} />
-                </MDBox>
-              }
-              sx={{
-                width: '250px',
-                padding: '2rem',
-              }}
-              InputProps={{
-                style: {
-                  height: '72px',
-                  borderRadius: '12px',
-                },
-              }}
-            />
-          </MDBox>
-
-        </MDBox>
 
         <Table {...getTableProps()}>
           {showHeader && (
@@ -248,17 +204,18 @@ function DataTable({
                         {idx2 === row.cells.length - 1 && (
                           <MDBox
                             sx={{
-                              marginLeft: {md:'-80px', xs:'-10px'},
+                              marginLeft: {md:'-100px', xs:'-10px'},
                               display: 'flex',
-                              width: '230px',
+                              width: '210px',
                               flexDirection: { xs: 'column', md: 'row' },
                               gap: '8px',
                             }}
                           >
                             <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
-                              <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90', '150px')}>View Details</MDButton>
-                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '170px')}>See Applications</MDButton>
-                              <MDButton variant="outlined"  onClick={handleReject} sx={getButtonStyles('#E14640', '145px')}>Close</MDButton>
+                              <MDButton variant="text" sx={{ color: '#006E90', minWidth: 'auto', padding: 0 }}>
+                                <BookmarkOutlinedIcon />
+                              </MDButton>
+                              <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90')}>View Details</MDButton>
                             </MDBox>
 
                           </MDBox>
@@ -284,7 +241,7 @@ function DataTable({
         <Grid item container xs={12} justifyContent="center" style={{ padding: '2rem' }}>
           <Pagination
             size="large"
-            count={ rows.length / 4}
+            count={rows.length / 6}
             variant="outlined"
             color="secondary"
             page={currentPage}
@@ -292,7 +249,6 @@ function DataTable({
           />
         </Grid>
       </TableContainer>
-
       <Dialog open={openRejectModal} onClose={handleCloseModal}>
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
@@ -339,7 +295,7 @@ function DataTable({
 }
 
 DataTable.defaultProps = {
-  entriesPerPage: [4, 25, 50, 100],
+  entriesPerPage: [6, 25, 50, 100],
   canSearch: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },

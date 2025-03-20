@@ -5,7 +5,6 @@ import MDButton from "../../MDButton";
 import MDBox from "../../MDBox";
 import MDTypography from "../../MDTypography";
 import { Input, InputAdornment } from "@mui/material"
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import FormatBoldOutlinedIcon from '@mui/icons-material/FormatBoldOutlined';
 import FormatItalicOutlinedIcon from '@mui/icons-material/FormatItalicOutlined';
 import FormatUnderlinedOutlinedIcon from '@mui/icons-material/FormatUnderlinedOutlined';
@@ -16,7 +15,9 @@ import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumber
 import * as Yup from 'yup';
 import FormikInput from "../../Formik/FormikInput";
 import Card from "@mui/material/Card";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import pxToRem from "../../../assets/theme/functions/pxToRem";
+
 
 export function PostJob() {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -200,7 +201,7 @@ export function PostJob() {
                       {selectedCategories.map((category, index) => (
                         <MDBox key={index} sx={{ backgroundColor: 'white', border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 5, width: 'fit-content', marginBottom: '10px' }}>
                           <MDTypography sx={{ padding: '2px', display: 'flex', fontSize: '14px', margin: '7px', whiteSpace: { xs: 'normal', sm: 'nowrap' }, fontWeight: 'bold' }}>
-                            <CancelOutlinedIcon sx={{ marginTop: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px', cursor: 'pointer' }} onClick={() => removeCategory(category)} />
+                            <HighlightOffIcon sx={{ marginTop: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px', cursor: 'pointer' }} onClick={() => removeCategory(category)} />
                             {category.name}
                           </MDTypography>
                         </MDBox>
@@ -279,7 +280,7 @@ export function PostJob() {
                             fontWeight: 'bold',
                           }}
                         >
-                          <CancelOutlinedIcon
+                          <HighlightOffIcon
                             sx={{
                               marginTop: '2px',
                               width: '20px',
@@ -332,13 +333,13 @@ export function PostJob() {
                   <MDBox key={index} sx={{ backgroundColor: 'white', border: '1px solid rgba(0, 0, 0, 0.2)', borderRadius: 5, width: 'fit-content', marginBottom: '10px' }}>
                     <MDTypography sx={{ padding: '2px', display: 'flex', fontSize: '14px', margin: '7px', whiteSpace: { xs: 'normal', sm: 'nowrap' }, fontWeight: 'bold' }}>
                       {paymentMethod.name !== 'Daily Rate' && (
-                        <CancelOutlinedIcon
+                        <HighlightOffIcon
                           sx={{ marginTop: '2px', width: '20px', height: '20px', color: 'red', marginRight: '2px', cursor: 'pointer' }}
                           onClick={() => removePaymentMethod(paymentMethod)}
                         />
                       )}
                       {paymentMethod.name === 'Daily Rate' && (
-                        <CancelOutlinedIcon
+                        <HighlightOffIcon
                           sx={{ marginTop: '2px', width: '20px', height: '20px', color: 'gray', marginRight: '2px', cursor: 'not-allowed' }}
                           onClick={() => alert('This payment method is required and cannot be removed.')} />
                       )}
@@ -422,7 +423,7 @@ export function PostJob() {
                 {fileName ? (
                   <>
                     {`Document: ${fileName}`}
-                    <CancelOutlinedIcon
+                    <HighlightOffIcon
                       sx={{
                         marginTop: '2px',
                         width: '20px',
@@ -432,8 +433,8 @@ export function PostJob() {
                         cursor: 'pointer',
                       }}
                       onClick={(e) => {
-                        e.stopPropagation(); // Evita que el click en el icono active el input file
-                        removeFile(); // Función para quitar el archivo
+                        e.stopPropagation();
+                        removeFile();
                       }}
                     />
                   </>

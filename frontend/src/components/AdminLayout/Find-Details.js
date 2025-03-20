@@ -9,11 +9,16 @@ import MDAvatar from "../MDAvatar"
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import PinDropOutlinedIcon from '@mui/icons-material/PinDropOutlined';
-import LanguageIcon from '@mui/icons-material/Language';
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
-import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
+import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 import MDInput from "../MDInput"
 import { useLocation } from 'react-router-dom';
+import IconButton from '@mui/material/IconButton';
+import CheckIcon from '@mui/icons-material/Check';
+import FormikInput from "../Formik/FormikInput"
+import { Form, FormikProvider, useFormik } from "formik"
+import * as Yup from "yup"
 
 function Details() {
   const location = useLocation();
@@ -31,21 +36,51 @@ function Details() {
   // const handleButtonClick = () => {
   //   document.getElementById('fileInput').click();
   // };
+  const initialValues = {
+    Notes: '',
+    selectedItems: []
+  };
 
 
+  const validationSchema = Yup.object().shape({
+    Notes: Yup.string().required('Notes is required'),
+  });
+
+
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log('Form Values:', values);
+    },
+  });
+
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const handleSelect = (item) => {
+    if (selectedItems.includes(item)) {
+      setSelectedItems(selectedItems.filter((selectedItem) => selectedItem !== item));
+    } else {
+      setSelectedItems([...selectedItems, item]);
+    }
+  };
 
   return (
     <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white" }}>
       <MDBox
         sx={{
-          backgroundColor: "white",
-          width: {md:"90%", xs:"90%"},
-          margin:{md:"70px", xs:"20px"},
-          border: "1px solid rgba(0, 0, 0, 0.1)",
+          height: {md:"150vh", xs:'295vh'},
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: 'white',
+          width: { md: '90%', xs: '90%' },
+          margin: { md: '70px', xs: '20px' },
+          border: '1px solid rgba(0, 0, 0, 0.1)',
           borderRadius: 5,
+          gap:{md:5, xs:30},
         }}
       >
-        <Grid sx={{ width:{ md:"95%", xs:"85%"},height:"50%", margin: {md:"33px", xs:"20px"} }}>
+        <MDBox sx={{ width:{ md:"95%", xs:"85%"}, margin: {md:"33px", xs:"20px"} }}>
           <Grid
             container
             sx={{
@@ -104,7 +139,7 @@ function Details() {
                   <MDTypography sx={{fontSize:"14px", marginLeft:"10px"}}>Porto, Portugal</MDTypography>
                 </MDBox>
                 <MDBox sx={{display:'flex', marginLeft:{xl:"85px"}}}>
-                  <LanguageIcon sx={{ color: "#006E90", width: "30px", height: "30px" }} />
+                  <InsertLinkOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px", marginTop: "-3px" }} />
                   <MDTypography sx={{fontSize:"14px", marginLeft:"10px"}}>www.buildings.com</MDTypography>
                 </MDBox>
               </MDBox>
@@ -135,13 +170,14 @@ function Details() {
                       }}
                     >
                       <MDTypography sx={{color: '#006E90', fontWeight: 'bold', fontSize:{xs:'15px', md:'20px'}}}>Message</MDTypography>
-                      <SmsOutlinedIcon  sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
+                      <QuestionAnswerOutlinedIcon  sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
                     </MDButton>
                     <MDButton variant="text" sx={{display:{xs: 'none',xxl:'block' },marginTop:{ md:"20px"}, marginRight: "30px"}} >
                       <BookmarkOutlinedIcon  sx={{ color: "#006E90",width: '30px', height: '30px' }} />
                     </MDButton>
 
                     <MDButton
+                      color={'secondary'}
                       sx={{
                         marginLeft:{xl:"50px"},
                         paddingLeft:{xxl: '4%',xs:'10%', sm:"4%"},
@@ -177,7 +213,7 @@ function Details() {
                       }}
                     >
                       <MDTypography sx={{color: '#006E90', fontWeight: 'bold', fontSize:{xs:'15px', md:'20px'}}}>Message</MDTypography>
-                      <SmsOutlinedIcon  sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
+                      <QuestionAnswerOutlinedIcon   sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
                     </MDButton>
 
                     <MDButton
@@ -216,7 +252,7 @@ function Details() {
               width: '100%',
             }}
           >
-            <Grid sx={{ width: {md:"100%", xs:"100%", sm:"100%", xl:"100%",xxl:"48%"}, borderRight: {xxl:"1px solid #ccc"},marginTop:{md:"40px", xs:"10px"}, marginBottom:"20px"}}>
+            <MDBox sx={{ width: {md:"100%", xs:"100%", sm:"100%",height:'500px', xl:"100%",xxl:"48%"}, borderRight: {xxl:"1px solid #ccc"},marginTop:{md:"40px", xs:"10px"}, marginBottom:"20px"}}>
               <MDTypography sx={{color: '#006E90', fontSize: '20px', fontWeight: 'bold', marginTop: '20px'}}>
                 Job Description
               </MDTypography>
@@ -231,15 +267,15 @@ function Details() {
               <li>Lectus aliquet convallis</li>
               <li>Cras maximus</li>
               </ul>
-              <MDTypography sx={{fontSize: '14px', marginTop: '20px', marginRight: '20px'}}>
-               Duis consequat elementum enim at ullamcorper. Cras maximus.<br/>
+              <MDTypography sx={{fontSize: '14px', marginRight: '20px'}}>
+                Duis consequat elementum enim at ullamcorper. Cras maximus.<br/>
                 Lorem  ipsum dolor sit amet, consectetur adipiscing elit, sed diam.
               </MDTypography>
 
-            </Grid>
 
+            </MDBox>
 
-            <Grid sx={{ width: { xs: "100%", md: "100%%" , xxl:"48%"}, marginTop: {md:"40px", xs:"10px"}, marginBottom: "20px", marginLeft: {xxl:"30px", xs:"5px"}, overflow: "hidden" }}>
+            <MDBox sx={{ width: { xs: "100%", md: "100%%" , xxl:"48%"}, marginBottom: "20px", marginLeft: {xxl:"30px", xs:"5px"}, overflow: "hidden" }}>
               <MDTypography sx={{ color: '#006E90', fontSize: '20px', fontWeight: 'bold', marginTop: '20px' , marginBottom: '20px'}}>
                 Requirement
               </MDTypography>
@@ -399,16 +435,146 @@ function Details() {
                 Budget: $600 - $800 Per/Month (Terms Are Not Negotiable).
               </MDTypography>
 
-            </Grid>
+            </MDBox>
 
           </Grid>
 
-        </Grid>
+        </MDBox>
 
 
+        {data && data.someKey && (
+        <MDBox sx={{ width:{ md:"95%", xs:"85%"},height:"50%",borderTop: {xxl:"1px solid #ccc"},marginLeft:{md:"33px", xs:"20px"}, marginRight:{md:"33px", xs:"20px"} }}>
+          <FormikProvider value={formik}>
+            <Form>
+              <MDBox sx={{ position: 'relative' }}>
+                <MDTypography sx={{ fontSize: '16px', fontWeight: 'bold', marginTop: '20px' , marginBottom: '10px' }}>
+                  Notes for the Owner
+                </MDTypography>
+                <FormikInput
+                  type="textarea"
+                  label=""
+                  name="Notes"
+                  rows={7}
+                />
 
 
+                <MDBox sx={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+                  <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>
+                    <MDBox
+                      sx={{
+                        backgroundColor: 'white',
+                        border: '1px solid rgba(0, 0, 0, 0.2)',
+                        borderRadius: 5,
+                        width: 'fit-content',
+                        marginBottom: '10px',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => handleSelect('item1')}
+                    >
+                      <MDTypography
+                        sx={{
+                          padding: '5px',
+                          display: 'flex',
+                          fontSize: '14px',
+                          margin: '7px',
+                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                          fontWeight: 'bold',
+                        }}
+                      >
+                          <IconButton
+                            sx={{
+                              width: {md:'30px', xs:'30px'}, height: {md:'30px', xs:'30px'},
+                              backgroundColor: 'grey.300',
+                              borderRadius: '50%',
+                              marginRight: '8px',
+                              '&:hover': {
+                                backgroundColor: 'grey.400',
+                              },
+                            }}
+                            aria-label="check"
+                          >
+                            {selectedItems.includes('item1') && (
+                            <CheckIcon sx={{ color: '#006E90',  width: {md:'20px', xs:'30px'}, height: {md:'20px', xs:'30px'} }} /> )}
+                          </IconButton>
+                        <MDTypography sx={{fontSize:'15px',fontWeight: 'bold', padding:'3px' }}>Provide The Owner With The Attached Documents</MDTypography>
+                      </MDTypography>
+                    </MDBox>
+                  </MDBox>
 
+
+                  <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>
+                    <MDBox
+                      sx={{
+                        backgroundColor: 'white',
+                        border: '1px solid rgba(0, 0, 0, 0.2)',
+                        borderRadius: 5,
+                        width: 'fit-content',
+                        marginBottom: '10px',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => handleSelect('item2')}
+                    >
+                      <MDTypography
+                        sx={{
+                          padding: '5px',
+                          display: 'flex',
+                          fontSize: '14px',
+                          margin: '7px',
+                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                          fontWeight: 'bold',
+                        }}
+                      >
+
+                          <IconButton
+                            sx={{
+                              width: {md:'30px', xs:'30px'}, height: {md:'30px', xs:'30px'},
+                              backgroundColor: 'grey.300',
+                              borderRadius: '50%',
+                              marginRight: '8px',
+                              '&:hover': {
+                                backgroundColor: 'grey.400',
+                              },
+                            }}
+                            aria-label="check"
+                          >
+                            {selectedItems.includes('item2') && (
+                            <CheckIcon sx={{ color: '#006E90', width: {md:'20px', xs:'30px'}, height: {md:'20px', xs:'30px'}}} />  )}
+                          </IconButton>
+
+                        <MDTypography sx={{fontSize:'15px',fontWeight: 'bold', padding:'3px' }}> Confirm That I Meet The Qualification For This Project</MDTypography>
+
+                      </MDTypography>
+                    </MDBox>
+                  </MDBox>
+                </MDBox>
+
+                <MDButton
+                  color={'secondary'}
+                  sx={{
+                    position: 'absolute',
+                    marginTop: '10px',
+                    right: '20px',
+                    backgroundColor: '#006E90',
+                    color: 'white',
+                    height: { md: '60px', xs: '40px' },
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 5,
+                    '&:hover': {
+                      backgroundColor: '#006E90',
+                    },
+                  }}
+                  type="submit"
+                >
+                  <MDTypography sx={{color: '#fcfdfd', fontWeight: 'bold',  fontSize:{xs:'15px', md:'16px'}}}>Apply For The Job</MDTypography>
+                </MDButton>
+
+              </MDBox>
+            </Form>
+          </FormikProvider>
+        </MDBox>
+          )}
       </MDBox>
     </MDBox>
 
