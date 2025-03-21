@@ -5,7 +5,7 @@ import {
   Dialog, DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
+  Grid, InputAdornment,
   Table,
   TableBody,
   TableContainer,
@@ -24,6 +24,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MDTypography from "../../MDTypography"
 import MDButton from "../../MDButton"
 import { useNavigate } from "react-router-dom"
+import SearchIcon from "@mui/icons-material/Search"
 
 function DataTable({
                      table,
@@ -99,6 +100,12 @@ function DataTable({
     }
   };
 
+  const handleRejectDetails = () => {
+    const data = { someKey: false };
+    navigate("/find-jobs-details", { state: data });
+  }
+
+
   const setSortedValue = (column) => {
     const sortedColum = { ...orderedColumn };
     if (column.id === sortedColum.column) {
@@ -149,26 +156,29 @@ function DataTable({
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox sx={{display: "flex"}}>
-          <MDBox>
+        <MDBox sx={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}}>
+          <MDBox sx={{padding:'10px'}}>
             <TextField
-              label={
-                <Box display="flex" alignItems="center" sx={{ padding: '2.5rem' , fontSize:'20px'}}>
-                  <SearchOutlinedIcon sx={{ marginRight: 1 }} />
-                  <Box>Search and Filter</Box>
-                </Box>
-              }
-              sx={{
-                width: '599px',
-                padding: '2rem',
-              }}
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
                 style: {
-                  height: '72px',
-                  borderRadius:'12px',
+                  borderRadius: '12px',
+                },
+              }}
+              placeholder="Search and Filter"
+              sx={{
+                width: '300px',
+                '& .MuiInputBase-input': {
+                  height: '40px',
+                  fontSize: '18px',
                 },
               }}
             />
+
           </MDBox>
 
           <MDBox sx={{ marginLeft: '750px' }}>
@@ -242,17 +252,17 @@ function DataTable({
                         {idx2 === row.cells.length - 1 && (
                           <MDBox
                             sx={{
-                              marginLeft: {md:'-60px', xs:'-10px'},
+                              marginLeft: {md:'-80px', xs:'-10px'},
                               display: 'flex',
-                              width: '210px',
+                              width: '230px',
                               flexDirection: { xs: 'column', md: 'row' },
                               gap: '8px',
                             }}
                           >
                             <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
-                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '20px')}>Edit</MDButton>
-                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '150px')}>See Applications</MDButton>
-                              <MDButton variant="outlined"  onClick={handleReject} sx={getButtonStyles('#E14640', '145px')}>Close Jobs</MDButton>
+                              <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90', '150px')}>View Details</MDButton>
+                              <MDButton variant="outlined" sx={getButtonStyles('#006E90', '170px')}>See Applications</MDButton>
+                              <MDButton variant="outlined"  onClick={handleReject} sx={getButtonStyles('#E14640', '145px')}>Close</MDButton>
                             </MDBox>
 
                           </MDBox>
@@ -292,9 +302,39 @@ function DataTable({
         <DialogContent>
           <p>Are you sure you want to close?</p>
         </DialogContent>
-        <DialogActions>
-          <MDButton onClick={handleCloseModal} color="primary">Cancel</MDButton>
-          <MDButton onClick={handleConfirmReject} color="secondary">Close</MDButton>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexGrow: 1 }}>
+            <MDButton
+              variant="outlined"
+              onClick={handleCloseModal}
+              sx={{
+                padding: '2px',
+                borderRadius: '10px',
+                borderColor: '#006E90',
+                color: '#006E90',
+                fontSize: '15px',
+                width: { md: '90px', xs: '100px' },
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                  borderColor: '#006E90',
+                  color: '#006E90',
+                },
+              }}
+            >
+              Cancel
+            </MDButton>
+          </Box>
+          <MDButton
+            onClick={handleCloseModal}
+            color={'secondary'}
+            sx={{
+              backgroundColor: '#E14640',
+              color: 'white',
+              '&:hover': { backgroundColor: '#E14640' },
+            }}
+          >
+            Close
+          </MDButton>
         </DialogActions>
       </Dialog>
 

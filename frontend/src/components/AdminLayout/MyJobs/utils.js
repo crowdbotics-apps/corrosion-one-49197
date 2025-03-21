@@ -62,12 +62,7 @@ const generateRowData = () => {
           <MDTypography style={estilo.title}>Real State Agent</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >25</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >25</MDTypography></MDBox>),
       views:(
         <MDBox>
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>856</MDTypography>
@@ -100,12 +95,7 @@ const generateRowData = () => {
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>901</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >26</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >26</MDTypography></MDBox>),
       applicationDate: (
         <MDBox style={estilo.date}>
           {(() => {
@@ -126,12 +116,7 @@ const generateRowData = () => {
           <MDTypography style={estilo.title}>Appraiser</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >17</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >17</MDTypography></MDBox>),
       views:(
         <MDBox>
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>901</MDTypography>
@@ -157,12 +142,7 @@ const generateRowData = () => {
           <MDTypography style={estilo.title}>Sales Associate</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >15</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >15</MDTypography></MDBox>),
       views:(
         <MDBox>
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>203</MDTypography>
@@ -188,12 +168,7 @@ const generateRowData = () => {
           <MDTypography style={estilo.title}>Realtor</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >20</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >20</MDTypography></MDBox>),
       views:(
         <MDBox>
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>320</MDTypography>
@@ -219,12 +194,7 @@ const generateRowData = () => {
           <MDTypography style={estilo.title}>Listing Agent</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >10</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >10</MDTypography></MDBox>),
       views:(
         <MDBox>
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>256</MDTypography>
@@ -255,12 +225,7 @@ const generateRowData = () => {
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>106</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >22</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >22</MDTypography></MDBox>),
       applicationDate: (
         <MDBox style={estilo.date}>
           {(() => {
@@ -286,12 +251,7 @@ const generateRowData = () => {
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>505</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >13</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >13</MDTypography></MDBox>),
       applicationDate: (
         <MDBox style={estilo.date}>
           {(() => {
@@ -317,12 +277,7 @@ const generateRowData = () => {
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>211</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >30</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >30</MDTypography></MDBox>),
       applicationDate: (
         <MDBox style={estilo.date}>
           {(() => {
@@ -343,12 +298,7 @@ const generateRowData = () => {
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >35</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >35</MDTypography></MDBox>),
       views:(
         <MDBox>
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>348</MDTypography>
@@ -374,12 +324,7 @@ const generateRowData = () => {
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >16</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >16</MDTypography></MDBox>),
       views:(
         <MDBox>
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>806</MDTypography>
@@ -405,12 +350,7 @@ const generateRowData = () => {
           <MDTypography style={estilo.title}>Developer</MDTypography>
         </MDBox>
       ),
-      applicants: (
-        <MDBox style={estilo.date}>
-          <MDBox sx={{marginTop:'5px'}}><MDTypography sx={{fontSize: '16px'}} >18</MDTypography></MDBox>
-          <MDBox sx={{marginLeft: '10px', marginTop:'7px'}}><MDButton variant="outlined" sx={estilo.buttonView}>View</MDButton></MDBox>
-        </MDBox>
-      ),
+      applicants: (<MDBox sx={{marginTop:'5px', marginLeft: '30px'}}><MDTypography sx={{fontSize: '16px'}} >18</MDTypography></MDBox>),
       views:(
         <MDBox>
           <MDTypography sx={{marginLeft: '10px', fontSize :'16px'}}>956</MDTypography>

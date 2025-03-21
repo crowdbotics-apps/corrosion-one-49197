@@ -6,7 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid, InputAdornment,
+  Grid,
   Table,
   TableBody,
   TableContainer,
@@ -14,22 +14,18 @@ import {
   TextField,
 } from "@mui/material"
 import MDBox from "components/MDBox";
-import DataTableHeadCell from "./DataTableHeadCell";
-import DataTableBodyCell from "./DataTableBodyCell";
-import { EmptyResponseDatatable } from "./EmptyResponseDatatable";
+import DataTableHeadCell from "../DataTableHeadCell";
+import DataTableBodyCell from "../DataTableBodyCell";
+import { EmptyResponseDatatable } from "../EmptyResponseDatatable";
 import Card from "@mui/material/Card";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Box from "@mui/material/Box";
 import Pagination from '@mui/material/Pagination';
-import MDTypography from "../MDTypography"
+import MDTypography from "@mui/material/Typography";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
-import MDButton from "../MDButton"
+import MDButton from "../../MDButton"
 import { useNavigate } from "react-router-dom"
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
-import SearchIcon from '@mui/icons-material/Search';
-import { LocalizationProvider } from "@mui/x-date-pickers"
-import { DatePicker } from "@mui/x-date-pickers/DatePicker"
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
 
 function DataTable({
                      table,
@@ -40,7 +36,7 @@ function DataTable({
                      showRecords = true,
                      currentPage,
                      selectedProject = null,
-                     pageSize = 4,
+                     pageSize = 6,
                      loading = false,
                      emptyLabelText = "No items found",
                      loadingText = "",
@@ -155,117 +151,10 @@ function DataTable({
     navigate("/dashboard");
   };
 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState(null);
-
-  const formatDateRange = () => {
-    if (!startDate || !endDate) return 'Select Dates';
-    return `${startDate.format('MMM DD')} - ${endDate.format('MMM DD')}`;
-  };
-
-  const handleDateChange = (newStartDate, newEndDate) => {
-
-    if (newEndDate && newStartDate && newEndDate.isBefore(newStartDate)) {
-      setError('End date cannot be before start date');
-    } else {
-      setError(null);
-      setStartDate(newStartDate);
-      setEndDate(newEndDate);
-      if (newStartDate && newEndDate) {
-        setOpen(false);
-      }
-    }
-  };
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
-
-
 
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
-      <TableContainer sx={{ boxShadow: "none", backgroundColor: "white", width: "100%" }}>
-        <MDBox sx={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}}>
-          <MDBox sx={{padding:'10px'}}>
-            <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-                style: {
-                  borderRadius: '12px',
-                },
-              }}
-              placeholder="Search and Filter"
-              sx={{
-                width: '300px',
-                '& .MuiInputBase-input': {
-                  height: '40px',
-                  fontSize: '18px',
-                },
-              }}
-            />
-          </MDBox>
-
-          <LocalizationProvider dateAdapter={AdapterMoment}>
-            <MDBox
-              display="flex"
-              alignItems="center"
-              sx={{
-                fontSize: '20px',
-                border: '1px solid #D3D3D3',
-                borderRadius: '12px',
-                padding: '20px',
-                cursor: 'pointer',
-                position: 'relative',
-              }}
-              onClick={handleClick}
-            >
-              <MDTypography sx={{ fontSize: '16px', marginRight: '10px' }}>
-                {formatDateRange()}
-              </MDTypography>
-              <CalendarTodayIcon sx={{ color: '#006E90' }} />
-            </MDBox>
-
-            {open && (
-              <div
-                style={{
-                  gap: 5,
-                  position: 'absolute',
-                  right: '200px',
-                  zIndex: 999,
-                  backgroundColor: '#fff',
-                  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  width: '200PX',
-                  marginTop: '8px',
-                }}
-              >
-                <DatePicker
-                  label="Start Date"
-                  value={startDate}
-                  onChange={(newValue) => handleDateChange(newValue, endDate)}
-                  renderInput={(params) => <input {...params} />}
-                />
-                <DatePicker
-                  label="End Date"
-                  value={endDate}
-                  onChange={(newValue) => handleDateChange(startDate, newValue)}
-                  renderInput={(params) => <input {...params} />}
-                />
-                {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
-              </div>
-            )}
-          </LocalizationProvider>
-
-        </MDBox>
+      <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
 
         <Table {...getTableProps()}>
           {showHeader && (
@@ -317,17 +206,16 @@ function DataTable({
                             sx={{
                               marginLeft: {md:'-100px', xs:'-10px'},
                               display: 'flex',
-                              width: '210px',
+                              width: '100px',
                               flexDirection: { xs: 'column', md: 'row' },
                               gap: '8px',
                             }}
                           >
-                            <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
+                            <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '300px' },  padding: 0 }}>
                               <MDButton variant="text" sx={{ color: '#006E90', minWidth: 'auto', padding: 0 }}>
                                 <BookmarkOutlinedIcon />
                               </MDButton>
                               <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90')}>View Details</MDButton>
-                              <MDButton variant="outlined" onClick={handleReject} sx={getButtonStyles('#E14640')}>Withdraw</MDButton>
                             </MDBox>
 
                           </MDBox>
@@ -353,7 +241,7 @@ function DataTable({
         <Grid item container xs={12} justifyContent="center" style={{ padding: '2rem' }}>
           <Pagination
             size="large"
-            count={rows.length / 4}
+            count={rows.length / 6}
             variant="outlined"
             color="secondary"
             page={currentPage}
@@ -407,7 +295,7 @@ function DataTable({
 }
 
 DataTable.defaultProps = {
-  entriesPerPage: [4, 25, 50, 100],
+  entriesPerPage: [6, 25, 50, 100],
   canSearch: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },

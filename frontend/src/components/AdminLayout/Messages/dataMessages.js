@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { TextField} from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material"
 import MDBox from "components/MDBox";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import MDTypography from "../../MDTypography";
@@ -15,6 +15,7 @@ import Grid from "@mui/material/Grid"
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import {generateChatData} from "./models"
 import KeyboardArrowLeftOutlinedIcon from '@mui/icons-material/KeyboardArrowLeftOutlined';
+import SearchIcon from "@mui/icons-material/Search"
 
 function Messages() {
   const [selectedChat, setSelectedChat] = useState(null);
@@ -70,25 +71,28 @@ function Messages() {
         <MDBox sx={{ width:{xs:"100%", xl:"100%", xxl:"25%"} ,display:{xs: selectedChat ? 'none' : 'block',xxl:'block' }}}>
           <MDBox>
             <TextField
-              label={
-                <MDBox display="flex" alignItems="center" sx={{ padding: '2rem', fontSize: '16px' }}>
-                  <SearchOutlinedIcon sx={{ marginRight: 1 }} />
-                  <MDBox>Search messages</MDBox>
-                </MDBox>
-              }
-              sx={{
-                width: '352px',
-                padding: '2rem',
-              }}
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
                 style: {
                   height: '50px',
                   borderRadius: '12px',
                 },
               }}
-              value={searchQuery}
-              onChange={(e) => searchFunc(e.target.value)}
+              placeholder="Search messages"
+              sx={{
+                width: '352px',
+                padding: '2rem',
+                '& .MuiInputBase-input': {
+                  height: '40px',
+                  fontSize: '18px',
+                },
+              }}
             />
+
           </MDBox>
 
           <Grid container spacing={2} sx={{marginTop:'10px', width:{xs:"100%", md:"100%"}, display: "flex"}}>
