@@ -230,7 +230,7 @@ export const dataTableModel = {
     { Header: "Aplication Date", accessor: "applicationDate",width: 200},
     { Header: "Status", accessor: "status", width: 200 },
     { Header: " ",accessor: "actions_edit", disableOrdering: true, width: 7 },
-    { Header: " ",accessor: "actions", disableOrdering: true, width: 200 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 50 },
   ],
   rows: generateRowData(),
 };

@@ -206,12 +206,12 @@ function DataTable({
                             sx={{
                               marginLeft: {md:'-100px', xs:'-10px'},
                               display: 'flex',
-                              width: '210px',
+                              width: '100px',
                               flexDirection: { xs: 'column', md: 'row' },
                               gap: '8px',
                             }}
                           >
-                            <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
+                            <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '300px' },  padding: 0 }}>
                               <MDButton variant="text" sx={{ color: '#006E90', minWidth: 'auto', padding: 0 }}>
                                 <BookmarkOutlinedIcon />
                               </MDButton>

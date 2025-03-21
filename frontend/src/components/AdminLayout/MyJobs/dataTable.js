@@ -5,7 +5,7 @@ import {
   Dialog, DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
+  Grid, InputAdornment,
   Table,
   TableBody,
   TableContainer,
@@ -24,6 +24,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MDTypography from "../../MDTypography"
 import MDButton from "../../MDButton"
 import { useNavigate } from "react-router-dom"
+import SearchIcon from "@mui/icons-material/Search"
 
 function DataTable({
                      table,
@@ -155,26 +156,29 @@ function DataTable({
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox sx={{display: "flex"}}>
-          <MDBox>
+        <MDBox sx={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}}>
+          <MDBox sx={{padding:'10px'}}>
             <TextField
-              label={
-                <Box display="flex" alignItems="center" sx={{ padding: '2.5rem' , fontSize:'20px'}}>
-                  <SearchOutlinedIcon sx={{ marginRight: 1 }} />
-                  <Box>Search and Filter</Box>
-                </Box>
-              }
-              sx={{
-                width: '599px',
-                padding: '2rem',
-              }}
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
                 style: {
-                  height: '72px',
-                  borderRadius:'12px',
+                  borderRadius: '12px',
+                },
+              }}
+              placeholder="Search and Filter"
+              sx={{
+                width: '300px',
+                '& .MuiInputBase-input': {
+                  height: '40px',
+                  fontSize: '18px',
                 },
               }}
             />
+
           </MDBox>
 
           <MDBox sx={{ marginLeft: '750px' }}>

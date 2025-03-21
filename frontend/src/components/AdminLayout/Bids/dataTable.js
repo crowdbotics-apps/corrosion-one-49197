@@ -1,7 +1,20 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { Grid, Table, TableBody, TableContainer, TableRow, TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Grid,
+  Table,
+  TableBody,
+  TableContainer,
+  TableRow,
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputAdornment,
+} from "@mui/material"
 import MDBox from "components/MDBox";
 import DataTableHeadCell from "../DataTableHeadCell";
 import DataTAbleBodyCell from "./DataTAbleBodyCell"
@@ -13,7 +26,8 @@ import Pagination from '@mui/material/Pagination';
 import MDTypography from "../../MDTypography"
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MDButton from "../../MDButton"
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate de react-router-dom
+import { useNavigate } from 'react-router-dom';
+import SearchIcon from "@mui/icons-material/Search" // Importa useNavigate de react-router-dom
 
 function DataTable({
                      table,
@@ -138,46 +152,35 @@ function DataTable({
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox sx={{ display: "flex" }}>
-          <MDBox>
+        <MDBox sx={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}}>
+          <MDBox sx={{padding:'10px'}}>
             <TextField
-              label={
-                <MDBox display="flex" alignItems="center" sx={{ padding: '2.5rem', fontSize: '20px' }}>
-                  <SearchOutlinedIcon sx={{ marginRight: 1 }} />
-                  <Box>Search and Filter</Box>
-                </MDBox>
-              }
-              sx={{
-                width: '599px',
-                padding: '2rem',
-              }}
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
                 style: {
-                  height: '72px',
                   borderRadius: '12px',
+                },
+              }}
+              placeholder="Search and Filter"
+              sx={{
+                width: '300px',
+                '& .MuiInputBase-input': {
+                  height: '40px',
+                  fontSize: '18px',
                 },
               }}
             />
-          </MDBox>
 
-          <MDBox sx={{ marginLeft: '750px' }}>
-            <TextField
-              label={
-                <MDBox display="flex" alignItems="center" sx={{ marginTop: '40px', fontSize: '20px', marginLeft: '50px' }}>
-                  <MDTypography sx={{ fontSize: '16px', marginTop: '3px' }}>Jul 19 - Jul 25</MDTypography>
-                  <CalendarTodayIcon sx={{ marginLeft: '10px', color: '#006E90' }} />
-                </MDBox>
-              }
-              sx={{
-                width: '250px',
-                padding: '2rem',
-              }}
-              InputProps={{
-                style: {
-                  height: '72px',
-                  borderRadius: '12px',
-                },
-              }}
+          </MDBox>
+          <MDBox>
+            <MDBox display="flex" alignItems="center" sx={{ marginTop: '40px', fontSize: '20px', marginLeft: '50px' }}>
+              <MDTypography sx={{ fontSize: '16px', marginTop: '3px' }}>Jul 19 - Jul 25</MDTypography>
+              <CalendarTodayIcon sx={{ marginLeft: '10px', color: '#006E90' }} />
+            </MDBox>
             />
           </MDBox>
 
