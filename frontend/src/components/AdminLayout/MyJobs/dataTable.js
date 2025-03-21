@@ -25,6 +25,9 @@ import MDTypography from "../../MDTypography"
 import MDButton from "../../MDButton"
 import { useNavigate } from "react-router-dom"
 import SearchIcon from "@mui/icons-material/Search"
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
+import { DatePicker } from "@mui/x-date-pickers/DatePicker"
+import { LocalizationProvider } from "@mui/x-date-pickers"
 
 function DataTable({
                      table,
@@ -153,10 +156,38 @@ function DataTable({
     navigate("/dashboard");
   };
 
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(null);
+
+  const formatDateRange = () => {
+    if (!startDate || !endDate) return 'Select Dates';
+    return `${startDate.format('MMM DD')} - ${endDate.format('MMM DD')}`;
+  };
+
+  const handleDateChange = (newStartDate, newEndDate) => {
+
+    if (newEndDate && newStartDate && newEndDate.isBefore(newStartDate)) {
+      setError('End date cannot be before start date');
+    } else {
+      setError(null);
+      setStartDate(newStartDate);
+      setEndDate(newEndDate);
+      if (newStartDate && newEndDate) {
+        setOpen(false);
+      }
+    }
+  };
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox sx={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}}>
+        <MDBox sx={{display:"flex", justifyContent: "space-between", alignItems: "flex-start",  flexDirection: {xs:'column', md:'row'}}}>
           <MDBox sx={{padding:'10px'}}>
             <TextField
               InputProps={{
@@ -181,26 +212,57 @@ function DataTable({
 
           </MDBox>
 
-          <MDBox sx={{ marginLeft: '750px' }}>
-            <TextField
-              label={
-                <MDBox display="flex" alignItems="center" sx={{marginTop:'40px', fontSize: '20px', marginLeft:'50px' }}>
-                  <MDTypography sx={{fontSize:'16px', marginTop:'3px'}}>Jul 19 - Jul 25</MDTypography>
-                  <CalendarTodayIcon sx={{ marginLeft: '10px', color:'#006E90' }} />
-                </MDBox>
-              }
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <MDBox
+              display="flex"
+              alignItems="center"
               sx={{
-                width: '250px',
-                padding: '2rem',
+                fontSize: '20px',
+                border: '1px solid #D3D3D3',
+                borderRadius: '12px',
+                padding: '20px',
+                cursor: 'pointer',
+                position: 'relative',
               }}
-              InputProps={{
-                style: {
-                  height: '72px',
-                  borderRadius: '12px',
-                },
-              }}
-            />
-          </MDBox>
+              onClick={handleClick}
+            >
+              <MDTypography sx={{ fontSize: '16px', marginRight: '10px' }}>
+                {formatDateRange()}
+              </MDTypography>
+              <CalendarTodayIcon sx={{ color: '#006E90' }} />
+            </MDBox>
+
+            {open && (
+              <div
+                style={{
+                  gap: 5,
+                  position: 'absolute',
+                  right: '200px',
+                  zIndex: 999,
+                  backgroundColor: '#fff',
+                  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  width: '200PX',
+                  marginTop: '8px',
+                }}
+              >
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  onChange={(newValue) => handleDateChange(newValue, endDate)}
+                  renderInput={(params) => <input {...params} />}
+                />
+                <DatePicker
+                  label="End Date"
+                  value={endDate}
+                  onChange={(newValue) => handleDateChange(startDate, newValue)}
+                  renderInput={(params) => <input {...params} />}
+                />
+                {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
+              </div>
+            )}
+          </LocalizationProvider>
 
         </MDBox>
 
