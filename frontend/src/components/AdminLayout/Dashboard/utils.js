@@ -49,7 +49,7 @@ const generateRowData = () => {
       applicationDate: <MDBox>{new Date("2025-02-20").toLocaleDateString()}</MDBox>,
     },
     {
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
           <MDTypography style={estilo.title}>Niactic Media</MDTypography>
@@ -168,7 +168,73 @@ const generateRowData = () => {
       ),
       status: "Active",
       applicationDate: <MDBox>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
-    }
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Reject",
+      applicationDate: <MDBox>{new Date("2025-02-20").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Active",
+      applicationDate: <MDBox>{new Date("2025-02-19").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Reject",
+      applicationDate: <MDBox>{new Date("2025-02-18").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Active",
+      applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Reject",
+      applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Active",
+      applicationDate: <MDBox>{new Date("2025-10-16").toLocaleDateString()}</MDBox>,
+    },
 
   ]
 
@@ -229,7 +295,6 @@ export const dataTableModel = {
     { Header: "Jobs", accessor: 'name', disableOrdering: true, width: 300 },
     { Header: "Aplication Date", accessor: "applicationDate",width: 200},
     { Header: "Status", accessor: "status", width: 200 },
-    { Header: " ",accessor: "actions_edit", disableOrdering: true, width: 7 },
     { Header: " ",accessor: "actions", disableOrdering: true, width: 50 },
   ],
   rows: generateRowData(),

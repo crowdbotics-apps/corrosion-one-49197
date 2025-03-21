@@ -189,7 +189,7 @@ function DataTable({
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
       <TableContainer sx={{ boxShadow: "none", backgroundColor: "white", width: "100%" }}>
-        <MDBox sx={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}}>
+        <MDBox sx={{display:"flex", justifyContent: "space-between", alignItems: "flex-start", flexDirection: {xs:'column', md:'row'}}}>
           <MDBox sx={{padding:'10px'}}>
             <TextField
               InputProps={{
@@ -323,7 +323,7 @@ function DataTable({
                             }}
                           >
                             <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
-                              <MDButton variant="text" sx={{ color: '#006E90', minWidth: 'auto', padding: 0 }}>
+                              <MDButton variant="text" color={'secondary'} sx={{ color: '#006E90', minWidth: 'auto', padding: 0 }}>
                                 <BookmarkOutlinedIcon />
                               </MDButton>
                               <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90')}>View Details</MDButton>
