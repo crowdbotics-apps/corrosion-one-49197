@@ -558,3 +558,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
         return Response(data)
 
+    @action(detail=False, methods=['get'], url_path='user-detail')
+    def user_detail(self, request):
+        user = request.user
+        return Response(UserDetailSerializer(user).data)

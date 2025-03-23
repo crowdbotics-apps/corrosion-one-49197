@@ -57,6 +57,14 @@ function Settings() {
     })
   }
 
+  const getUserDetail = () => {
+    api.userDetail().handle({
+      onSuccess: (result) => {
+        loginStore.setUser(result.response)
+      }
+    })
+  }
+
   const updateProfile = (data) => {
     setLoading(true)
     api.updateInspectorData(data).handle({
@@ -185,6 +193,7 @@ function Settings() {
     getCountries()
     getCredentialOptions()
     getIndustries()
+    getUserDetail()
   }, [])
 
 
