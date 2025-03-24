@@ -40,8 +40,8 @@ function DataTableHeadCell({ width = 'auto', children, sorted = 'none', align = 
       >
         <MDTypography
           variant='tableHead'
-          sx={({palette: {black}}) => ({
-            color: black.light,
+          sx={({palette: {primary}}) => ({
+            color: '#006E90',
             fontWeight: 600,
             fontSize: '17px',
             paddingBlock: '9px',
@@ -63,7 +63,7 @@ function DataTableHeadCell({ width = 'auto', children, sorted = 'none', align = 
             <MDBox
               position="absolute"
               top={-6}
-              color={sorted === "asce" ? "text" : "secondary"}
+              color={sorted === "asce" ? "#ffffff" : "#006E90"}
               opacity={1}
             >
               <Icon>arrow_drop_up</Icon>
@@ -71,7 +71,7 @@ function DataTableHeadCell({ width = 'auto', children, sorted = 'none', align = 
             <MDBox
               position="absolute"
               top={0}
-              color={sorted === "desc" ? "text" : "secondary"}
+              color={sorted === "desc" ? "#ffffff" : "#006E90"}
               opacity={1}
             >
               <Icon>arrow_drop_down</Icon>

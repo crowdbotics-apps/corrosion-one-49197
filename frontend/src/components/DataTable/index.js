@@ -28,7 +28,6 @@ function DataTable(
   {
     entriesPerPage = [10, 25, 50, 100],
     table,
-    noEndBorder,
     searchFunc,
     searchQuery = '',
     showHeader = true,
@@ -36,7 +35,6 @@ function DataTable(
     currentPage,
     setSelectedProject = () => {
     },
-    selectedProject = null,
     numberOfItems,
     numberOfItemsPage,
     pageSize = 10,
@@ -122,7 +120,7 @@ function DataTable(
   }, [sortedByColumn])
 
   return (
-    <Card sx={{display: 'flex', flex: 1, border: `1px solid #dbdadb`}}>
+    <MDBox>
       <TableContainer sx={{boxShadow: "none"}}>
         <Table {...getTableProps()}>
           {showHeader && (<MDBox key={`tablehead__1`} component="thead">
@@ -165,7 +163,7 @@ function DataTable(
                     const {key: cellKey, ...restCellProps} = cellProps;
 
                     return (
-                      <DataTableBodyCell key={cellKey} {...restCellProps}>
+                      <DataTableBodyCell odd={key % 2 === 0} key={cellKey} {...restCellProps}>
                         {cell.render("Cell")}
                       </DataTableBodyCell>
                     );
@@ -194,7 +192,7 @@ function DataTable(
           />
         </Grid>
       </Grid>}
-    </Card>
+    </MDBox>
   );
 }
 
