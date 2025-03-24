@@ -135,7 +135,7 @@ function PostJob() {
   }, []);
 
   return (
-    <AdminLayout title={'Post Jobs'}>
+    <AdminLayout title={'Post a Job'}>
       <FormikProvider value={formik}>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
