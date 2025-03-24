@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from "react"
-import MDBox from "components/MDBox";
+import MDBox from "../../../../components/MDBox";
 import Grid from "@mui/material/Grid"
-import MDTypography from "../MDTypography"
-import MDButton from "../MDButton"
+import MDTypography from "../../../../components/MDTypography"
+import MDButton from "../../../../components/MDButton"
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import MDAvatar from "../MDAvatar"
+import MDAvatar from "../../../../components/MDAvatar"
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import PinDropOutlinedIcon from '@mui/icons-material/PinDropOutlined';
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
-import MDInput from "../MDInput"
+import MDInput from "../../../../components/MDInput"
 import { useLocation } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import CheckIcon from '@mui/icons-material/Check';
-import FormikInput from "../Formik/FormikInput"
+import FormikInput from "../../../../components/Formik/FormikInput"
 import { Form, FormikProvider, useFormik } from "formik"
 import * as Yup from "yup"
 
@@ -554,16 +554,12 @@ function Details() {
                     position: 'absolute',
                     marginTop: '10px',
                     right: '20px',
-                    backgroundColor: '#006E90',
                     color: 'white',
                     height: { md: '60px', xs: '40px' },
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 5,
-                    '&:hover': {
-                      backgroundColor: '#006E90',
-                    },
                   }}
                   type="submit"
                 >

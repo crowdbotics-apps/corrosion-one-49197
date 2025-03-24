@@ -36,6 +36,7 @@ function AdminLayout
    header,
    title,
    children,
+   width,
    showCard,
    cardWidth = '98%',
    hasNavigationBack = false,
@@ -88,7 +89,7 @@ function AdminLayout
           sx={contentCentered && {justifyContent: 'flex-start', pl: pxToRem(160)}}
         >
           {showCard && <Card sx={{width: cardWidth, p:2}}>{children}</Card>}
-          {!showCard && <MDBox p={2} display={'flex'} flex={1}>{children}</MDBox>}
+          {!showCard && <MDBox p={2} display={'flex'} flex={1} sx={{width: width}} >{children}  </MDBox>}
         </MDBox>
 
       </DashboardLayout>

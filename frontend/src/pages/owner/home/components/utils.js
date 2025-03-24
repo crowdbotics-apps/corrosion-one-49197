@@ -1,5 +1,5 @@
 
-import { ENROLMENT_STATUS } from "../helpers";
+import { ENROLMENT_STATUS } from "../../../../components/AdminLayout/helpers";
 import React from "react";
 import MDBox from "@mui/material/Box";
 import MDAvatar from "@mui/material/Avatar";

@@ -1,11 +1,7 @@
 import AdminLayout from "components/AdminLayout";
-import DataTable from "../../../components/AdminLayout/Dashboard/index"
+import DataTable from "./components"
 import React, { useState } from "react"
-import { dataTableModel } from "../../../components/AdminLayout/Dashboard/utils"
-import MDBox from "../../../components/MDBox"
-import Card from "@mui/material/Card"
-import MDTypography from "@mui/material/Typography"
-import MDButton from "../../../components/MDButton"
+import { dataTableModel } from "./components/utils"
 
 
 function HomeOwner() {
@@ -13,6 +9,7 @@ function HomeOwner() {
   return (
     <AdminLayout
       title={'Dashboard'}
+      width={'100%'}
     >
          <DataTable
            table={datatable}

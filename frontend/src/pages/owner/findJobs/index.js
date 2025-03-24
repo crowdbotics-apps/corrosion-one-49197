@@ -1,10 +1,10 @@
 
 import AdminLayout from "../../../components/AdminLayout"
-import DataTable from "../../../components/AdminLayout/dataTable"
+import DataTable from "./components/dataTable"
 import { useState } from "react"
-import { dataTableModel } from "../../../components/AdminLayout/utils"
+import { dataTableModel } from "./components/utils"
 import MDBox from "../../../components/MDBox"
-import Details from "../../../components/AdminLayout/Find-Details"
+import Details from "./components/Find-Details"
 
 
 

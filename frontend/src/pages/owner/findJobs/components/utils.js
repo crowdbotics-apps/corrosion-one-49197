@@ -1,11 +1,11 @@
 
-import { ENROLMENT_STATUS } from "./helpers";
+import { ENROLMENT_STATUS } from "../../../../components/AdminLayout/helpers";
 import React from "react";
-import MDButton from "../../components/MDButton"
+import MDButton from "../../../../components/MDButton"
 import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
-import MDBox from "../MDBox"
-import MDAvatar from "../MDAvatar"
-import MDTypography from "../MDTypography"
+import MDBox from "../../../../components/MDBox"
+import MDAvatar from "../../../../components/MDAvatar"
+import MDTypography from "../../../../components/MDTypography"
 
 const STATUS_OPTIONS_COLORS = {
   [ENROLMENT_STATUS.INVITED]: "warning",

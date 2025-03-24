@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react"
 import { InputAdornment, TextField } from "@mui/material"
-import MDBox from "components/MDBox";
+import MDBox from "../../../../components/MDBox";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import MDTypography from "../../MDTypography";
+import MDTypography from "../../../../components/MDTypography";
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import MDButton from "../../MDButton";
+import MDButton from "../../../../components/MDButton";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
 import EmojiPicker from 'emoji-picker-react';
-import MDInput from "../../MDInput"
+import MDInput from "../../../../components/MDInput"
 import Grid from "@mui/material/Grid"
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import {generateChatData} from "./models"
