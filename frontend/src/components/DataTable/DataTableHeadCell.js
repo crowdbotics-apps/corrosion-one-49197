@@ -24,7 +24,7 @@ import MDBox from "components/MDBox";
 
 import MDTypography from "../MDTypography";
 
-function DataTableHeadCell({ width, children, sorted, align, disableOrdering, ...rest }) {
+function DataTableHeadCell({ width = 'auto', children, sorted = 'none', align = 'left', disableOrdering, ...rest }) {
 
   return (
     <MDBox width={width} component="th" py={1.5} px={3} sx={{borderBottom: `1px solid #dbdadb`}}>
@@ -82,13 +82,6 @@ function DataTableHeadCell({ width, children, sorted, align, disableOrdering, ..
     </MDBox>
   );
 }
-
-// Setting default values for the props of DataTableHeadCell
-DataTableHeadCell.defaultProps = {
-  width: "auto",
-  sorted: "none",
-  align: "left",
-};
 
 // Typechecking props for the DataTableHeadCell
 DataTableHeadCell.propTypes = {

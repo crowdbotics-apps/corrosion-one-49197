@@ -26,7 +26,7 @@ import Card from "@mui/material/Card";
 
 function DataTable(
   {
-    entriesPerPage,
+    entriesPerPage = [10, 25, 50, 100],
     table,
     noEndBorder,
     searchFunc,
@@ -34,7 +34,8 @@ function DataTable(
     showHeader = true,
     showRecords = true,
     currentPage,
-    setSelectedProject = () => {},
+    setSelectedProject = () => {
+    },
     selectedProject = null,
     numberOfItems,
     numberOfItemsPage,
@@ -102,15 +103,15 @@ function DataTable(
   }
 
   const handleRowSelected = (row) => {
-      setSelectedProject(()=> {
-        // if (projectStore.id === row.original.id) {
-        //   projectStore.reset()
-        //   return null
-        // } else {
-        //   projectStore.setData(row.original)
-          return row.original
-        // }
-      })
+    setSelectedProject(() => {
+      // if (projectStore.id === row.original.id) {
+      //   projectStore.reset()
+      //   return null
+      // } else {
+      //   projectStore.setData(row.original)
+      return row.original
+      // }
+    })
   }
 
   useEffect(() => {
@@ -125,48 +126,57 @@ function DataTable(
       <TableContainer sx={{boxShadow: "none"}}>
         <Table {...getTableProps()}>
           {showHeader && (<MDBox key={`tablehead__1`} component="thead">
-            {headerGroups.map((headerGroup, idx) => (
-              <TableRow key={`tablerow__${idx}`} {...headerGroup.getHeaderGroupProps()} >
-                {headerGroup.headers.map((column, idx3) => {
-                  return (
-                    <DataTableHeadCell
-                      key={`tablecell__${idx3}`}
-                      onClick={() => getDataSortedByColumn(column)}
-                      width={column.width ? column.width : "50px"}
-                      align={column.align ? column.align : "left"}
-                      sorted={setSortedValue(column)}
-                      disableOrdering={column?.disableOrdering}
-                    >
-                      {column.render("Header")}
-                    </DataTableHeadCell>
-                  )
-                })}
-              </TableRow>
-            ))}
+            {headerGroups.map((headerGroup, idx) => {
+              const headerGroupProps = headerGroup.getHeaderGroupProps();
+              // separate out the 'key' so we don't spread it
+              const {key: headerGroupKey, ...restHeaderGroupProps} = headerGroupProps;
+              return (
+                <TableRow key={headerGroupKey} {...restHeaderGroupProps}>
+                  {headerGroup.headers.map((column, idx3) => {
+                    return (
+                      <DataTableHeadCell
+                        key={`tablecell__${idx3}`}
+                        onClick={() => getDataSortedByColumn(column)}
+                        width={column.width ? column.width : "50px"}
+                        align={column.align ? column.align : "left"}
+                        sorted={setSortedValue(column)}
+                        disableOrdering={column?.disableOrdering}
+                      >
+                        {column.render("Header")}
+                      </DataTableHeadCell>
+                    )
+                  })}
+                </TableRow>
+              )
+            })}
           </MDBox>)}
           {showRecords && <TableBody key={`tablebody__2`} {...getTableBodyProps()}>
             {page.map((row, key) => {
               prepareRow(row);
+// get the row props object
+              const rowProps = row.getRowProps();
+// separate out the "key" so we don’t spread it
+              const {key: rowKey, ...restRowProps} = rowProps;
               return (
-                <TableRow key={`tablerow2__${key}`} {...row.getRowProps()} sx={{ cursor: 'pointer' }} onClick={() => handleRowSelected(row)}>
-                  {row.cells.map((cell, idx2) => (
-                    <DataTableBodyCell
-                      key={`tablecell__${idx2}`}
-                      odd={key % 2 === 0}
-                      selected={row.original.id === selectedProject?.id}
-                      noBorder={noEndBorder && rows.length - 1 === key}
-                      width={cell.column.width}
-                      align={cell.column.align ? cell.column.align : "left"}
-                      {...cell.getCellProps()}
-                    >
-                      {cell.render("Cell")}
-                    </DataTableBodyCell>
-                  ))}
+                <TableRow key={rowKey} {...restRowProps} sx={{cursor: 'pointer'}}
+                          onClick={() => handleRowSelected(row)}>
+                  {row.cells.map((cell) => {
+                    const cellProps = cell.getCellProps();
+                    const {key: cellKey, ...restCellProps} = cellProps;
+
+                    return (
+                      <DataTableBodyCell key={cellKey} {...restCellProps}>
+                        {cell.render("Cell")}
+                      </DataTableBodyCell>
+                    );
+                  })}
                 </TableRow>
               );
             })}
           </TableBody>}
-          {rows?.length === 0 && <EmptyResponseDatatable loadingText={loadingText} loading={loading} text={emptyLabelText} colSpan={table.columns.length}/>}
+          {rows?.length === 0 &&
+            <EmptyResponseDatatable loadingText={loadingText} loading={loading} text={emptyLabelText}
+                                    colSpan={table.columns.length}/>}
         </Table>
       </TableContainer>
       {showTotalEntries && rows?.length > 0 && <Grid container mt={5}>
@@ -188,15 +198,7 @@ function DataTable(
   );
 }
 
-// Setting default values for the props of DataTable
-DataTable.defaultProps = {
-  entriesPerPage: [10, 25, 50, 100],
-  canSearch: false,
-  showTotalEntries: true,
-  pagination: {variant: "gradient", color: "info"},
-  isSorted: true,
-  noEndBorder: false,
-};
+
 // Typechecking props for the DataTable
 DataTable.propTypes = {
   entriesPerPage: PropTypes.oneOfType([
