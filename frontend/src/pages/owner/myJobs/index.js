@@ -1,7 +1,7 @@
 import AdminLayout from "../../../components/AdminLayout"
 import DataTable from "../../../components/DataTable/index";
 import {useEffect, useState} from "react"
-import { dataTableModel } from "./utils"
+import {dataTableModel, renderTableRow} from "./utils"
 import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
 import {useLocation, useNavigate} from "react-router-dom";
 
@@ -24,7 +24,7 @@ function HomeOwnerJobs() {
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
-        // tmp.rows = results.map(e => renderTableRow(e, setAnchorEl, setOpenPopover, setSelectedItem))
+        tmp.rows = results.map(e => renderTableRow(e))
         setDatatable(tmp)
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)

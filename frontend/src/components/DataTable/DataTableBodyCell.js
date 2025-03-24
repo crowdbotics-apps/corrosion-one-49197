@@ -29,7 +29,7 @@ function DataTableBodyCell({ noBorder, align, children, odd, width, selected = f
       sx={({ palette: { light, table }, typography: { size }, borders: { borderWidth } }) => ({
         fontSize: size.sm,
         borderBottom: noBorder ? "none" : `${borderWidth[1]} solid ${light.main}`,
-        background: selected ? '#BEF183' : odd && table.odd,
+        // background: selected ? '#BEF183' : odd && table.odd,
       })}
     >
       <MDBox

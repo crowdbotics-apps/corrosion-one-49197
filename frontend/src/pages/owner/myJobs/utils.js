@@ -389,20 +389,20 @@ const generateRowData = () => {
 export const dataTableModel = {
   columns: [
     { Header: "Job Title", accessor: "title",width: 150},
-    { Header: "Applicants", accessor: "applicants",disableOrdering: true ,width: 100 },
-    { Header: "Views", accessor: "views",disableOrdering: true, width: 50 },
-    { Header: "Date Posted", accessor: "date_posted", width: 120 },
-    { Header: "Status", accessor: "status", disableOrdering: true,width: 80 },
+    // { Header: "Applicants", accessor: "applicants",disableOrdering: true ,width: 100 },
+    // { Header: "Views", accessor: "views",disableOrdering: true, width: 50 },
+    // { Header: "Date Posted", accessor: "date_posted", width: 120 },
+    // { Header: "Status", accessor: "status", disableOrdering: true,width: 80 },
     { Header: " ",accessor: "actions", disableOrdering: true, width: 200 },
   ],
-  rows: generateRowData(),
+  rows: [],
 };
 
-// export const renderTableRow = (item, setAnchorEl, setOpenPopover, setSelectedItem) => {
-//   item.name_raw = item.name
-//   item.name_table = renderProfilePicture(item)
-//   item.actions = (popOver(item, setAnchorEl, setOpenPopover, setSelectedItem))
-//   return item
-// }
+export const renderTableRow = (item) => {
+  // item.name_raw = item.name
+  // item.name_table = renderProfilePicture(item)
+  // item.actions = (popOver(item, setAnchorEl, setOpenPopover, setSelectedItem))
+  return item
+}
 
 
