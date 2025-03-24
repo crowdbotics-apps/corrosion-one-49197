@@ -67,13 +67,6 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
   const loginStore = useLoginStore()
-
-  const logout = () => {
-    loginStore.reset()
-    window.location.href = '/'
-
-  }
-
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -163,7 +156,7 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
           <IconButton
             sx={{
               ...navbarMobileMenu,
-              display: miniSidenav ? "none" : "flex",
+              display: {xs: 'none', xl: 'flex' },
             }}
             size="small"
             disableRipple
@@ -215,11 +208,6 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
                 width: '100%',
               }}
             >
-              <Link to="/authentication/sign-in/basic">
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  {/*<Icon sx={iconsStyle}>account_circle</Icon>*/}
-                </IconButton>
-              </Link>
               <IconButton
                 size="small"
                 disableRipple
@@ -228,9 +216,7 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
                   ...navbarMobileMenu,
                   ml: { xs: "auto", sm: "auto" },
                   mr: 0,
-                  display: miniSidenav
-                    ? { xs: 'flex', md: 'flex' }
-                    : { xs: 'flex', md: 'none' },
+                  display: { xs: 'flex', xl: 'none' },
 
                 }}
                 onClick={handleMiniSidenav}
@@ -248,7 +234,6 @@ function DashboardNavbar({absolute = false, light = false, isMini = false}) {
                 fontSize: 16,
                 ml: { xs: 0, sm: 1 },
               }}
-              onClick={() => logout()}
             >
               {ACCOUNT_TYPES.find((type) => type.value === loginStore.user_type)?.name}
             </MDTypography>

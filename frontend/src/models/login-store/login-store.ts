@@ -19,7 +19,6 @@ export const CredentialModel = types.model("CredentialModel").props({
   document: types.maybeNull(types.string),
   document_name: types.maybeNull(types.string),
   size: types.maybeNull(types.number),
-
 })
 
 export const SupportDocumentModel = types.model("SupportDocumentModel").props({
@@ -129,7 +128,7 @@ export const LoginStoreModel = types
 
       if (user.hasOwnProperty('inspector') && user.inspector) {
         ALLOWED_KEYS_INSPECTOR.forEach((key) => {
-          if (user.inspector.hasOwnProperty(key)) { // @ts-ignore
+          if (user.inspector.hasOwnProperty(key)) {
             // @ts-ignore
             self[key] = user.inspector[key]
           }

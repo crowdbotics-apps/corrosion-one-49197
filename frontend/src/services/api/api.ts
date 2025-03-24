@@ -22,6 +22,10 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/users/`, data);
   }
 
+  userDetail() {
+    return this.simple_get(`${API_VERSION_PREFIX}/users/user-detail/`);
+  }
+
   resendVerificationEmail(data: any): ApiReturnType<Types.GenericResponse> {
     return this.simple_post(`${API_VERSION_PREFIX}/users/resend_verification_email/`, data);
   }
@@ -91,7 +95,7 @@ export class Api extends ApiBase {
   }
 
   updateCredentials(data: any) {
-    return this.simple_post(`${API_VERSION_PREFIX}/inspector/credentials/`, data);
+    return this.post_collected_multipart_form_data(`${API_VERSION_PREFIX}/inspector/credentials/`, data);
   }
 
   updateOwnerData(data: any) {
@@ -108,6 +112,18 @@ export class Api extends ApiBase {
 
   verifyCode(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/users/verify_phone_code/`, data);
+  }
+
+  getJobCategories() {
+    return this.simple_get(`${API_VERSION_PREFIX}/jobs/categories/`);
+  }
+
+  createJob(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/`, data);
+  }
+
+  getJobs(data: any) {
+    return this.simple_get(`${API_VERSION_PREFIX}/jobs/`, data);
   }
 
   getOrdersStatusAdmin(data: any) {

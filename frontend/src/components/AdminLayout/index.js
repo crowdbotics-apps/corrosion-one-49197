@@ -88,7 +88,7 @@ function AdminLayout
           sx={contentCentered && {justifyContent: 'flex-start', pl: pxToRem(160)}}
         >
           {showCard && <Card sx={{width: cardWidth, p:2}}>{children}</Card>}
-          {!showCard && children}
+          {!showCard && <MDBox p={2} display={'flex'} flex={1}>{children}</MDBox>}
         </MDBox>
 
       </DashboardLayout>

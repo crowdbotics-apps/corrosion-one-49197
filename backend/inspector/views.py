@@ -103,7 +103,18 @@ class InspectorViewSet(
             if credential_id:
                 credential_document = CredentialDcoument.objects.filter(credential_id=credential_id, inspector=inspector)
                 if not credential_document:
-                    CredentialDcoument.objects.create(credential_id=credential_id, inspector=inspector)
+                    credential_document = CredentialDcoument.objects.create(credential_id=credential_id, inspector=inspector)
+                    if credential['document'] and hasattr(credential['document'], 'file'):
+                        credential_document = CredentialDcoument.objects.get(id=credential['id'])
+                        credential_document.document = credential['document']
+                        credential_document.save()
+
+            else:
+                if credential['document'] and hasattr(credential['document'], 'file'):
+                    credential_document = CredentialDcoument.objects.get(id=credential['id'])
+                    credential_document.document = credential['document']
+                    credential_document.save()
+
         return Response(UserDetailSerializer(user).data)
 
 class CountryViewSet(viewsets.GenericViewSet, GetViewsetMixin):

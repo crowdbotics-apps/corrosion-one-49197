@@ -49,9 +49,9 @@ import {
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerDos from "./pages/owner/findJobs"
 import HomeOwnerMessages from "./pages/owner/messages"
-import HomeOwnerPostJob from "./pages/owner/PostJob/PostJob"
-import HomeOwnerBids from "./pages/owner/Bids"
-import HomeOwnerJobs from "./pages/owner/MyJobs"
+import HomeOwnerPostJob from "./pages/owner/postJob"
+import HomeOwnerBids from "./pages/owner/bids"
+import HomeOwnerJobs from "./pages/owner/myJobs"
 import HomeOwnerDetails from "./pages/owner/findJobs/detailsIndex"
 
 

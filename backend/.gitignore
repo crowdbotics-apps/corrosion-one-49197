@@ -89,7 +89,8 @@ celerybeat-schedule
 venv/
 ENV/
 myvenv/
-/mediafiles/profile-picture/*
-/mediafiles/support-documents/*
-/mediafiles/owner-banner/*
-/mediafiles/owner-logo/*
+/mediafiles/profile-picture/
+/mediafiles/support-documents/
+/mediafiles/owner-banner/
+/mediafiles/owner-logo/
+/mediafiles/credential-documents/

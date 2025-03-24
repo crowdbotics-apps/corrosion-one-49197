@@ -162,3 +162,6 @@ def file_size(value):
     limit = 5 * 1024 * 1024
     if value.size > limit:
         raise ValidationError('File too large. Size should not exceed 20 MiB.')
+
+def user_is_inspector(user):
+    return hasattr(user, 'inspector')
