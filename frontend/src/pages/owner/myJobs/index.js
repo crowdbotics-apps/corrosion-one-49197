@@ -1,7 +1,9 @@
 import AdminLayout from "../../../components/AdminLayout"
 import DataTable from "../../../components/DataTable/index";
+// import DataTable from "../../../components/AdminLayout/MyJobs/dataTable";
 import {useEffect, useState} from "react"
 import {dataTableModel, renderTableRow} from "./utils"
+// import {dataTableModel} from "../../../components/AdminLayout/MyJobs/utils";
 import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
 import {useLocation, useNavigate} from "react-router-dom";
 
@@ -20,7 +22,7 @@ function HomeOwnerJobs() {
 
   const getJobs = (search = '', page = 1, ordering = order) => {
     setLoading(true)
-    api.getJobs({search, page, ordering, page_size: 25}).then((result) => {
+    api.getJobs({search, page, ordering, page_size: 10}).then((result) => {
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -44,6 +46,7 @@ function HomeOwnerJobs() {
       title={'My Jobs'}
       showCard
     >
+      {/*<DataTable table={datatable}/>*/}
       <DataTable
         loading={loading}
         loadingText={'Loading...'}
@@ -53,6 +56,7 @@ function HomeOwnerJobs() {
         numberOfItemsPage={numberOfItemsPage}
         searchFunc={getJobs}
         searchQuery={searchQuery}
+        pageSize={10}
         onPageChange={page => {
           getJobs(searchQuery , page)
           setCurrentPage(page)

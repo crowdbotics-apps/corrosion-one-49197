@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
+from jobs.filters import CustomOrderingFilterJobs
 from jobs.models import Job, JobCategory
 from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer
 from users.permissions import IsOwner, IsInspector
@@ -28,8 +29,9 @@ class JobViewSet(
 ):
     queryset = Job.objects.all()
     pagination_class = CustomPageSizePagination
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, OrderingFilter, CustomOrderingFilterJobs]
     search_fields = ['name', 'description']
+    ordering_fields = ['title', 'created', 'status', 'views', 'bids']
     action_permissions = {
         'retrieve': [IsInspector, IsOwner],
         'list': [IsInspector, IsOwner],

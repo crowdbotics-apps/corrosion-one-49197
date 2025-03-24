@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 import uuid
 from django.db import models
@@ -31,6 +32,13 @@ class Job(TimeStampedModel):
         STARTED = 'started', 'Started'
         FINISHED = 'finished', 'Finished'
         CANCELED = 'canceled', 'Canceled'
+
+    class PaymentMode(models.TextChoices):
+        DAILY = 'daily', 'Daily'
+        PER_DIEM = 'per_diem', 'Per Diem'
+        MILEAGE = 'mileage', 'Mileage'
+        MISC_OTHER = 'misc_other', 'Misc/Other'
+
     title = models.CharField(max_length=255)
     description = models.TextField()
     categories = models.ManyToManyField(JobCategory)
@@ -41,8 +49,19 @@ class Job(TimeStampedModel):
     start_date = models.DateField()
     end_date = models.DateField()
     status = models.CharField(max_length=10, choices=JobStatus.choices, default=JobStatus.PENDING)
+    daily_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    per_diem_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    mileage_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    misc_other_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
 
-
+    payment_modes = ArrayField(
+        base_field=models.CharField(
+            max_length=20,
+            choices=PaymentMode.choices
+        ),
+        default=list,
+        blank=True,
+    )
 
 
     class Meta:
@@ -50,6 +69,10 @@ class Job(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+    @property
+    def views(self):
+        return 1
 
 
 class Bid(TimeStampedModel):
