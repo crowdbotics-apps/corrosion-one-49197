@@ -46,9 +46,6 @@ function HomeInspector() {
   const [endDate, setEndDate] = useState(null);
   const navigate = useNavigate();
 
-  const [showManageCredentials, setShowManageCredentials] = useState(true);
-  const [showLocationPreference, setShowLocationPreference] = useState(true);
-
 
   const handleIconClick = () => {
     const data = { someKey: true };
@@ -282,8 +279,6 @@ function HomeInspector() {
               <DataTable
                 loading={loading}
                 loadingText={'Loading...'}
-                showHeader={false}
-                showTotalEntries={false}
                 table={datatable}
                 currentPage={currentPage}
                 numberOfItems={numberOfItems}
