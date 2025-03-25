@@ -30,7 +30,8 @@ import { useNavigate } from 'react-router-dom';
 import SearchIcon from "@mui/icons-material/Search"
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
-import { LocalizationProvider } from "@mui/x-date-pickers" // Importa useNavigate de react-router-dom
+import { LocalizationProvider } from "@mui/x-date-pickers"
+import DateBar from "../../../../components/DateBar" // Importa useNavigate de react-router-dom
 
 function DataTable({
                      table,
@@ -201,57 +202,7 @@ function DataTable({
             />
 
           </MDBox>
-          <LocalizationProvider dateAdapter={AdapterMoment}>
-            <MDBox
-              display="flex"
-              alignItems="center"
-              sx={{
-                fontSize: '20px',
-                border: '1px solid #D3D3D3',
-                borderRadius: '12px',
-                padding: '20px',
-                cursor: 'pointer',
-                position: 'relative',
-              }}
-              onClick={handleClick}
-            >
-              <MDTypography sx={{ fontSize: '16px', marginRight: '10px' }}>
-                {formatDateRange()}
-              </MDTypography>
-              <CalendarTodayIcon sx={{ color: '#006E90' }} />
-            </MDBox>
-
-            {open && (
-              <div
-                style={{
-                  gap: 5,
-                  position: 'absolute',
-                  right: '200px',
-                  zIndex: 999,
-                  backgroundColor: '#fff',
-                  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  width: '200PX',
-                  marginTop: '8px',
-                }}
-              >
-                <DatePicker
-                  label="Start Date"
-                  value={startDate}
-                  onChange={(newValue) => handleDateChange(newValue, endDate)}
-                  renderInput={(params) => <input {...params} />}
-                />
-                <DatePicker
-                  label="End Date"
-                  value={endDate}
-                  onChange={(newValue) => handleDateChange(startDate, newValue)}
-                  renderInput={(params) => <input {...params} />}
-                />
-                {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
-              </div>
-            )}
-          </LocalizationProvider>
+          <DateBar/>
 
         </MDBox>
 

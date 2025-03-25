@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { dataTableModel } from "./components/utils"
 
 
-function HomeOwner() {
+function HomeInspector() {
   const [datatable, setDatatable] = useState({...dataTableModel});
   return (
     <AdminLayout
@@ -19,4 +19,4 @@ function HomeOwner() {
   );
 }
 
-export default HomeOwner;
+export default HomeInspector;

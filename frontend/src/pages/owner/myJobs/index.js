@@ -19,6 +19,7 @@ import Box from "@mui/material/Box";
 import MDButton from "../../../components/MDButton";
 import {runInAction} from "mobx";
 import {ROUTES} from "../../../services/constants";
+import DateBar from "../../../components/DateBar"
 
 
 function HomeOwnerJobs() {
@@ -70,10 +71,6 @@ function HomeOwnerJobs() {
     )
   }
 
-  const formatDateRange = () => {
-    if (!startDate || !endDate) return 'Select Dates';
-    return `${startDate.format('MMM DD')} - ${endDate.format('MMM DD')}`;
-  };
 
   const handleDateChange = (newStartDate, newEndDate) => {
 
@@ -111,58 +108,7 @@ function HomeOwnerJobs() {
 
         <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery}/>
         {/*TODO: COnvertir a componente y agregar opciones de limpiar fecha*/}
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-          <MDBox
-            display="flex"
-            alignItems="center"
-            sx={{
-              fontSize: '20px',
-              border: '1px solid #D3D3D3',
-              borderRadius: '12px',
-              padding: '20px',
-              cursor: 'pointer',
-              position: 'relative',
-            }}
-            onClick={() => setOpen(!open)}
-          >
-            <MDTypography sx={{fontSize: '16px', marginRight: '10px'}}>
-              {formatDateRange()}
-            </MDTypography>
-            <CalendarTodayIcon sx={{color: '#006E90'}}/>
-          </MDBox>
-
-          {open && (
-            <div
-              style={{
-                gap: 5,
-                position: 'absolute',
-                right: '200px',
-                zIndex: 999,
-                backgroundColor: '#fff',
-                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-                borderRadius: '8px',
-                padding: '15px',
-                width: '200PX',
-                marginTop: '8px',
-              }}
-            >
-              <DatePicker
-                label="Start Date"
-                value={startDate}
-                onChange={(newValue) => handleDateChange(newValue, endDate)}
-                renderInput={(params) => <input {...params} />}
-                sx={{mb: 2}}
-              />
-              <DatePicker
-                label="End Date"
-                value={endDate}
-                onChange={(newValue) => handleDateChange(startDate, newValue)}
-                renderInput={(params) => <input {...params} />}
-              />
-              {/*{error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}*/}
-            </div>
-          )}
-        </LocalizationProvider>
+        <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
 
       </MDBox>
       <DataTable
