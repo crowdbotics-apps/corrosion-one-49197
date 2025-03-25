@@ -17,6 +17,7 @@ export const ROUTES = {
   SETTINGS: `/settings`,
   SUPPORT: `/support`,
   DETAILS: `/details`,
+  JOB_REDIRECT: `/jtv/*`,
 
 }
 

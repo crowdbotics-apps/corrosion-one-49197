@@ -5,6 +5,7 @@ import HomeOwner from './owner/home';
 import SetNewPassword from "./auth/setNewPassword";
 import Logout from "./auth/logout";
 import Settings from "./common/settings";
+import JobRedirect from "./inspector/jobRedirect";
 
 export {
   SignIn,
@@ -13,5 +14,7 @@ export {
   HomeOwner,
   SetNewPassword,
   Logout,
-  Settings
+  Settings,
+  JobRedirect
+
 };
