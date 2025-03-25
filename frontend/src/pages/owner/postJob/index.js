@@ -18,7 +18,7 @@ import MDTypography from "@mui/material/Typography";
 import FormikInput from "../../../components/Formik/FormikInput";
 import MDButton from "../../../components/MDButton";
 import Grid from "@mui/material/Grid";
-import {useApi, useLoginStore} from "../../../services/helpers";
+import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
 import RenderWorkArea from "../../../components/RenderListOption";
 
 
@@ -51,7 +51,7 @@ function PostJob() {
     setLoading(true);
     api.createJob(values).handle({
       onSuccess: (result) => {
-        console.log('Job Created:', result)
+        formik.resetForm()
       },
       successMessage: 'Job Created',
       onError: (error) => {
@@ -75,11 +75,11 @@ function PostJob() {
     setFileName(null);
   };
 
-  const PerMonthOptions = [
-    {id: 1, name: 'Daily Rate'},
-    {id: 2, name: 'Per Diem'},
-    {id: 3, name: 'Mileage'},
-    {id: 4, name: 'Misc/Other'},
+  const PaymentOptions = [
+    {id: 1, name: 'Daily', value: 'daily'},
+    {id: 2, name: 'Per Diem', value: 'per_diem'},
+    {id: 3, name: 'Mileage', value: 'mileage'},
+    {id: 4, name: 'Misc/Other', value: 'misc_other'},
   ];
 
 
@@ -95,6 +95,16 @@ function PostJob() {
     formik.setFieldValue('certifications', newValues)
   }
 
+  const removePaymentMethod = (id) => {
+    if (id === 1) {
+      showMessage('Daily is required and cannot be removed.')
+      return
+    }
+    const currentValues = [...formik.values.payment_modes]
+    const newValues = currentValues.filter((item) => item.id !== id)
+    formik.setFieldValue('payment_modes', newValues)
+  }
+
   const initialValues = {
     title: '',
     address: '',
@@ -103,6 +113,11 @@ function PostJob() {
     certifications: [],
     start_date: '',
     end_date: '',
+    daily_rate: 0,
+    per_diem_rate: 0,
+    mileage_rate: 0,
+    misc_other_rate: 0,
+    payment_modes: [PaymentOptions[0]]
   };
 
   const validationSchema = Yup.object().shape({
@@ -114,17 +129,37 @@ function PostJob() {
     end_date: Yup.date()
       .min(Yup.ref('start_date'), 'Completion date cannot be before the start date')
       .required('Required'),
+    daily_rate: Yup.number().required('Daily rate is required').min(1, 'Daily rate must be greater than 0'),
+    per_diem_rate: Yup.number().when('payment_modes', {
+      is: (value) => value.find((item) => item.value === 'per_diem'),
+      then: schema => schema.required('Per Diem rate is required').min(1, 'Per Diem rate must be greater than 0'),
+      otherwise: schema => schema.nullable(),
+    }),
+    mileage_rate: Yup.number().when('payment_modes', {
+      is: (value) => value.find((item) => item.value === 'mileage'),
+      then: schema => schema.required('Mileage rate is required').min(1, 'Mileage rate must be greater than 0'),
+      otherwise: schema => schema.nullable(),
+    }),
+    misc_other_rate: Yup.number().when('payment_modes', {
+      is: (value) => value.find((item) => item.value === 'misc_other'),
+      then: schema => schema.required('Misc/Other rate is required').min(1, 'Misc/Other rate must be greater than 0'),
+      otherwise: schema => schema.nullable(),
+    })
   });
 
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: (values) => {
       const dataToSend = {
         ...values,
         categories: values.categories.map((category) => category.id),
         certifications: values.certifications.map((certification) => certification.id),
+        payment_modes: values.payment_modes.map((payment_mode) => payment_mode.value),
       }
+      // console.log('data to send', dataToSend)
       createJob(dataToSend);
     },
   });
@@ -139,7 +174,7 @@ function PostJob() {
       <FormikProvider value={formik}>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
-            <Card sx={{p: 3, height: '100%' }} >
+            <Card sx={{p: 3, height: '100%'}}>
               {/*{JSON.stringify(formik.errors, null, 2)}*/}
               <FormikInput name="title" label="Job Title" type="text" errors={formik.errors} mb={2}/>
               <FormikInput name="address" label="Job Address" type="text" errors={formik.errors} mb={2}/>
@@ -161,7 +196,8 @@ function PostJob() {
                 multiple
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-              {formik.values.categories.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={removeCategory}/>)}
+                {formik.values.categories.map((item) => <RenderWorkArea key={item.id} item={item}
+                                                                        handleRemove={removeCategory}/>)}
               </MDBox>
 
               <FormikInput
@@ -171,22 +207,6 @@ function PostJob() {
                 rows={5}
                 mb={2}
               />
-
-              {/*<FormikInput*/}
-              {/*  type={"autocomplete"}*/}
-              {/*  placeholder={"Select your certifications"}*/}
-              {/*  value={[]}*/}
-              {/*  fieldName={"certifications"}*/}
-              {/*  label={"Required Certifications"}*/}
-              {/*  options={CertificationsOptions}*/}
-              {/*  accessKey={"name"}*/}
-              {/*  onChange={(value) => {*/}
-              {/*    formik.setFieldValue('certifications', value);*/}
-              {/*    handleCertificationsChange(value);*/}
-              {/*  }}*/}
-              {/*  disableClearable*/}
-              {/*  styleContainer={{mb: 2}}*/}
-              {/*/>*/}
               <FormikInput
                 type={"autocomplete"}
                 placeholder={"Credentials"}
@@ -205,86 +225,70 @@ function PostJob() {
                 styleContainer={{mb: 2}}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-              {formik.values.certifications.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={removeCertifications}/>)}
+                {formik.values.certifications.map((item) => <RenderWorkArea key={item.id} item={item}
+                                                                            handleRemove={removeCertifications}/>)}
               </MDBox>
             </Card>
           </Grid>
 
           <Grid item xs={12} lg={6}>
-            <Card sx={{p: 3, height: '100%' }} >
-              {/*<FormikInput*/}
-              {/*  type="autocomplete"*/}
-              {/*  placeholder="paymentMethod"*/}
-              {/*  value={formik.values.paymentMethod}*/}
-              {/*  fieldName="paymentMethod"*/}
-              {/*  label="How do you want to pay?"*/}
-              {/*  options={PerMonthOptions}*/}
-              {/*  accessKey="name"*/}
-              {/*  onChange={(value) => {*/}
-              {/*    formik.setFieldValue('paymentMethod', value);*/}
-              {/*    handlePerMonthChange(value);*/}
-              {/*  }}*/}
-              {/*  disableClearable*/}
-              {/*  styleContainer={{mb: 2}}*/}
-              {/*/>*/}
-
-              {/*<MDBox sx={{display: 'flex', flexDirection: 'column', gap: '10px'}}>*/}
-              {/*  <MDBox sx={{display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px'}}>*/}
-              {/*    {selectedPaymentMethod.map((paymentMethod, index) => (*/}
-              {/*      <MDBox key={index} sx={{*/}
-              {/*        backgroundColor: 'white',*/}
-              {/*        border: '1px solid rgba(0, 0, 0, 0.2)',*/}
-              {/*        borderRadius: 5,*/}
-              {/*        width: 'fit-content',*/}
-              {/*        marginBottom: '10px'*/}
-              {/*      }}>*/}
-              {/*        <MDTypography sx={{*/}
-              {/*          padding: '2px',*/}
-              {/*          display: 'flex',*/}
-              {/*          fontSize: '14px',*/}
-              {/*          margin: '7px',*/}
-              {/*          whiteSpace: {xs: 'normal', sm: 'nowrap'},*/}
-              {/*          fontWeight: 'bold'*/}
-              {/*        }}>*/}
-              {/*          {paymentMethod.name !== 'Daily Rate' && (*/}
-              {/*            <HighlightOffIcon*/}
-              {/*              sx={{*/}
-              {/*                marginTop: '2px',*/}
-              {/*                width: '20px',*/}
-              {/*                height: '20px',*/}
-              {/*                color: 'red',*/}
-              {/*                marginRight: '2px',*/}
-              {/*                cursor: 'pointer'*/}
-              {/*              }}*/}
-              {/*              onClick={() => removePaymentMethod(paymentMethod)}*/}
-              {/*            />*/}
-              {/*          )}*/}
-              {/*          {paymentMethod.name === 'Daily Rate' && (*/}
-              {/*            <HighlightOffIcon*/}
-              {/*              sx={{*/}
-              {/*                marginTop: '2px',*/}
-              {/*                width: '20px',*/}
-              {/*                height: '20px',*/}
-              {/*                color: 'gray',*/}
-              {/*                marginRight: '2px',*/}
-              {/*                cursor: 'not-allowed'*/}
-              {/*              }}*/}
-              {/*              onClick={() => alert('This payment method is required and cannot be removed.')}/>*/}
-              {/*          )}*/}
-              {/*          {paymentMethod.name}*/}
-              {/*        </MDTypography>*/}
-              {/*      </MDBox>*/}
-              {/*    ))}*/}
-              {/*  </MDBox>*/}
-              {/*</MDBox>*/}
+            <Card sx={{p: 3, height: '100%'}}>
+              <FormikInput
+                type="autocomplete"
+                placeholder="paymentMethod"
+                value={[]}
+                fieldName="payment_modes"
+                label="How do you want to pay?"
+                options={PaymentOptions}
+                accessKey="name"
+                multiple
+                onChange={(value) => {
+                  const currentValues = [...formik.values.payment_modes]
+                  if (currentValues.find((item) => item.id === value?.[0]?.id)) return
+                  currentValues.push(value[0])
+                  formik.setFieldValue('payment_modes', currentValues)
+                }}
+                styleContainer={{mb: 2}}
+              />
+              <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
+                {formik.values.payment_modes.map((item) => <RenderWorkArea key={item.id} item={item}
+                                                                           handleRemove={removePaymentMethod}/>)}
+              </MDBox>
 
               <FormikInput
-                name="rate"
-                label="Rate"
-                type="text"
+                name="daily_rate"
+                label="Daily Rate"
+                type="number"
                 errors={formik.errors}
                 mb={2}
               />
+              {formik.values.payment_modes.find((item) => item.value === 'per_diem') && (
+                <FormikInput
+                  name="per_diem_rate"
+                  label="Per Diem Rate"
+                  type="number"
+                  errors={formik.errors}
+                  mb={2}
+                />
+              )}
+              {formik.values.payment_modes.find((item) => item.value === 'mileage') && (
+                <FormikInput
+                  name="mileage_rate"
+                  label="Mileage Rate"
+                  type="number"
+                  errors={formik.errors}
+                  mb={2}
+                />
+              )}
+              {formik.values.payment_modes.find((item) => item.value === 'misc_other') && (
+                <FormikInput
+                  name="misc_other_rate"
+                  label="Misc/Other Rate"
+                  type="number"
+                  errors={formik.errors}
+                  mb={2}
+                />
+              )}
               <FormikInput
                 type="date"
                 name="start_date"

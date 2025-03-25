@@ -17,7 +17,7 @@ admin.site.register(UserVerificationCode, UserVerificationCodeAdmin)
 
 
 @admin.register(User)
-class UserAdmin(auth_admin.UserAdmin):
+class UserAdmin(admin.ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     fieldsets = (("User", {"fields": ("phone_number", "phone_verified")}),) + auth_admin.UserAdmin.fieldsets

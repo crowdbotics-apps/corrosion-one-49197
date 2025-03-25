@@ -38,6 +38,10 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/users/set-new-password/`, data);
   }
 
+  loginWithToken(data: any): ApiReturnType<Types.SimplePostResult> {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/login-with-token/`, data);
+  }
+
   getTermsConditions(): ApiReturnType<Types.SimpleGetResult> {
     return this.simple_get(`${API_VERSION_PREFIX}/terms_and_conditions/`);
   }
@@ -124,6 +128,10 @@ export class Api extends ApiBase {
 
   getJobs(data: any) {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/`, data);
+  }
+
+  cancelJob(id: number | string) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/${id}/cancel/`);
   }
 
   getOrdersStatusAdmin(data: any) {

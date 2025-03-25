@@ -44,7 +44,11 @@ import profilePicture from "./assets/imagesExamples/team-3.jpg";
 import {
   SignIn,
   ForgotPassword,
-  SignUp,HomeOwner, SetNewPassword, Logout, Settings
+  SignUp,HomeOwner,
+  SetNewPassword,
+  Logout,
+  Settings,
+  JobRedirect
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerDos from "./pages/owner/findJobs"
@@ -84,6 +88,13 @@ export const unprotectedRoutes = [
     key: "set-new-password",
     route: ROUTES.SET_NEW_PASSWORD,
     component: <SetNewPassword />,
+  },
+  {
+    type: "fixed",
+    name: "Job redirect",
+    key: "job-redirect",
+    route: ROUTES.JOB_REDIRECT,
+    component: <JobRedirect />,
   }
 ]
 
