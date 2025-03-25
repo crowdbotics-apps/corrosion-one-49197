@@ -13,7 +13,7 @@ const statusMap = {
 export const dataTableModel = {
   columns: [
     { Header: " ", accessor: "profile_picture", disableOrdering: true, width: 60 },
-    { Header: "Jobs", accessor: 'name', disableOrdering: true, width: 300 },
+    { Header: "Jobs", accessor: 'name', disableOrdering: true, width: 250 },
     { Header: "Aplication Date", accessor: "applicationDate",width: 200},
     { Header: "Status", accessor: "status", width: 200 },
     { Header: " ",accessor: "actions", disableOrdering: true, width: 50 },
@@ -34,13 +34,7 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
       <MDButton variant="text" color={'secondary'}>
         <BookmarkOutlinedIcon />
       </MDButton>
-      <MDButton
-        onClick={handleRejectDetails}
-        color={'secondary'}
-        variant={'outlined'}
-        size={'small'}
-      >
-        View Details
+      <MDButton onClick={handleRejectDetails} color={'secondary'} variant={'outlined'} size={'small'}>View Details
       </MDButton>
     </MDBox>
   );

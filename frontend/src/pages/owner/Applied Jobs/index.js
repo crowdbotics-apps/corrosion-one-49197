@@ -133,7 +133,7 @@ function HomeOwnerAppliedJobs() {
 
   return (
     <AdminLayout title={'Applied Jobs'} showCard>
-      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" ,gap:{xs:'20px'}, flexDirection:{md:'row',xs:'column'}}}>
         <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery} />
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
       </MDBox>

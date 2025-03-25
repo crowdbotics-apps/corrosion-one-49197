@@ -71,7 +71,7 @@ function HomeOwnerDos() {
         count: 25,
         results: [
           {
-            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "50px" }}/>,
             name: (
               <MDBox>
                 <MDTypography style={estilo.title}>Niactic Media</MDTypography>
@@ -82,7 +82,7 @@ function HomeOwnerDos() {
             applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
           },
           {
-            profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+            profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "50px" }}/>,
             name: (
               <MDBox>
                 <MDTypography style={estilo.title}>Niactic Media</MDTypography>
@@ -93,7 +93,7 @@ function HomeOwnerDos() {
             applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
           },
           {
-            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "50px" }}/>,
             name: (
               <MDBox>
                 <MDTypography style={estilo.title}>Niactic Media</MDTypography>
@@ -129,7 +129,7 @@ function HomeOwnerDos() {
 
   return (
     <AdminLayout title={'Find Jobs'} showCard>
-      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" ,gap:{xs:'20px'}, flexDirection:{md:'row',xs:'column'}}}>
         <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery} />
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
       </MDBox>

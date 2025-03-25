@@ -59,15 +59,6 @@ function HomeInspector() {
     navigate('/settings', { state: { defaultTab: data} });
   };
 
-  const getButtonStyles = () => ({
-    paddingTop: '2px',
-    paddingBottom: '2px',
-    paddingRight: '8px',
-    paddingLeft: '8px',
-    borderRadius: '12px',
-    fontSize: '15px',
-    width: { md: '120px' },
-  });
 
   const getButtonStylesS = () => ({
     borderRadius: '24px',
@@ -119,7 +110,7 @@ function HomeInspector() {
         count: 25,
         results: [
           {
-            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "50px" }}/>,
             name: (
               <MDBox>
                 <MDTypography style={estilo.title}>Niactic Media</MDTypography>
@@ -130,7 +121,7 @@ function HomeInspector() {
             applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
           },
           {
-            profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+            profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "50px" }}/>,
             name: (
               <MDBox>
                 <MDTypography style={estilo.title}>Niactic Media</MDTypography>
@@ -141,7 +132,7 @@ function HomeInspector() {
             applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
           },
           {
-            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "50px" }}/>,
             name: (
               <MDBox>
                 <MDTypography style={estilo.title}>Niactic Media</MDTypography>
@@ -214,8 +205,8 @@ function HomeInspector() {
         )}
 
         <Card container spacing={2} >
-          <Grid display={'flex'} padding={'30px'} md={12} xs={4}>
-            <TableContainer sx={{ boxShadow: "none"}}>
+          <Grid display={'flex'} padding={'30px'} md={12} xs={4} direction={'column'}>
+
               <Grid spacing={2}>
                 <MDTypography sx={{fontWeight: 'bold', padding:'10px'}}>Recent Activities</MDTypography>
                 <Grid item container display={'flex'} rowGap={2} justifyContent={'space-between'} alignItems={'flex-start'} padding={'20px'} borderTop={'2px solid #e0e0e0'} borderBottom={'2px solid #e0e0e0'}>
@@ -306,7 +297,6 @@ function HomeInspector() {
                   More
                 </MDButton>
               </MDBox>
-            </TableContainer>
           </Grid>
         </Card>
       </Grid>

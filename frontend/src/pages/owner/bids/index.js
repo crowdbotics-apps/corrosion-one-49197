@@ -83,9 +83,7 @@ function HomeOwnerJobs() {
 
     const { count, results } = result.data;
     const tmp = { ...dataTableModel };
-
     tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal));
-
     setDatatable(tmp);
     setNumberOfItems(count);
     setNumberOfItemsPage(results.length);
@@ -102,7 +100,7 @@ function HomeOwnerJobs() {
 
   return (
     <AdminLayout title={'Bids'} showCard>
-      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" ,gap:{xs:'20px'}, flexDirection:{md:'row',xs:'column'}}}>
         <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery} />
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
       </MDBox>
