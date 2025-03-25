@@ -25,6 +25,8 @@ import MDTypography from "@mui/material/Typography";
 import { ArrowDropDownIcon } from "@mui/x-date-pickers";
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
+import { API_VERSION_PREFIX } from "../../../../services/constants"
+
 
 function DataTable({
                      table,
@@ -42,6 +44,8 @@ function DataTable({
   const navigate = useNavigate();
   const columns = useMemo(() => table.columns, [table]);
   const [openRejectModal, setOpenRejectModal] = useState(false);
+  const [showManageCredentials, setShowManageCredentials] = useState(true);
+  const [showLocationPreference, setShowLocationPreference] = useState(true);
   const data = useMemo(() => table.rows, [table]);
   const [sortedByColumn, setSortedByColumn] = useState({ column: "", order: "none" });
 
@@ -49,6 +53,11 @@ function DataTable({
     const data = { someKey: true };
     navigate("/my-jobs", { state: data });
   };
+
+  const handleClick = (data) => {
+    navigate('/settings', { state: { defaultTab: data} });
+  };
+
 
 
   const tableInstance = useTable(
@@ -119,6 +128,7 @@ function DataTable({
   return (
     <Grid flex={1} display="flex" direction="column" gap={2} xs={12} sx={{width:'100%',flexDirection: 'column', justifyContent: 'space-between'}}>
 
+      {showManageCredentials && (
         <Card sx={{ p: 2, border: '1px solid #FB8C00', display:"flex", flex:1, justifyContent: "space-between", alignItems: "flex-start", flexDirection: {xs:'column', md:'row'}, borderRadius:'12px' }}>
           <Grid>
             <MDTypography sx={{fontSize:'20px', fontWeight: 'bold'}}>
@@ -132,24 +142,25 @@ function DataTable({
             </MDTypography>
           </Grid>
           <Grid padding="20px">
-          <MDButton  variant="outlined" color={'warning'} sx={getButtonStylesS}>Manage Credentials</MDButton>
+            <MDButton onClick={() => handleClick("Credentials")} variant="outlined" color={'warning'} sx={getButtonStylesS}>Manage Credentials</MDButton>
           </Grid>
         </Card>
-
-
-      <Card sx={{ p: 2, border: '1px solid #FB8C00', display:"flex", justifyContent: "space-between", alignItems: "flex-start",  flexDirection: {xs:'column', md:'row'}, borderRadius:'12px' }}>
-        <MDBox>
-          <MDTypography sx={{fontSize:'20px', fontWeight: 'bold'}}>
-            Location not selected
-          </MDTypography>
-          <MDTypography sx={{fontSize:'14px',  color:'#7B809A'}}>
-            You haven't selected a location. You must choose one to complete your profile
-          </MDTypography>
-        </MDBox>
-        <Grid padding="20px">
-          <MDButton variant="outlined" color={'warning'} sx={getButtonStylesS}>Location Preference</MDButton>
-        </Grid>
-      </Card>
+      )}
+      {showLocationPreference && (
+        <Card sx={{ p: 2, border: '1px solid #FB8C00', display:"flex", justifyContent: "space-between", alignItems: "flex-start",  flexDirection: {xs:'column', md:'row'}, borderRadius:'12px' }}>
+          <MDBox>
+            <MDTypography sx={{fontSize:'20px', fontWeight: 'bold'}}>
+              Location not selected
+            </MDTypography>
+            <MDTypography sx={{fontSize:'14px',  color:'#7B809A'}}>
+              You haven't selected a location. You must choose one to complete your profile
+            </MDTypography>
+          </MDBox>
+          <Grid padding="20px">
+            <MDButton   onClick={() => handleClick("Location Preferences")} variant="outlined" color={'warning'} sx={getButtonStylesS}>Location Preference</MDButton>
+          </Grid>
+        </Card>
+      )}
 
       <Card container spacing={2} >
         <Grid display={'flex'} padding={'30px'} md={12} xs={4}>
@@ -265,7 +276,7 @@ function DataTable({
           )}
         </Table>
 
-        <MDBox sx={{ display: "flex",justifyContent: "center"}}>
+        <MDBox sx={{ display: "flex",justifyContent: "center", marginTop: '30px' }}>
           <MDButton
             variant="outlined"
             color="secondary"
