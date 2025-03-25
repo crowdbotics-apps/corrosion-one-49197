@@ -34,10 +34,14 @@ function HomeOwnerJobs() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
   const [openCancelModal, setOpenCancelModal] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState(null);
 
-  const getJobs = (search = '', page = 1, ordering = order) => {
+  const getJobs = (search = '', page = 1, ordering = order, dates = null) => {
     setLoading(true)
-    api.getJobs({search, page, ordering, page_size: 10}).handle({
+    api.getJobs({search, page, ordering, page_size: 10, dates}).handle({
       onSuccess: (result) => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -66,6 +70,25 @@ function HomeOwnerJobs() {
     )
   }
 
+  const formatDateRange = () => {
+    if (!startDate || !endDate) return 'Select Dates';
+    return `${startDate.format('MMM DD')} - ${endDate.format('MMM DD')}`;
+  };
+
+  const handleDateChange = (newStartDate, newEndDate) => {
+
+    if (newEndDate && newStartDate && newEndDate.isBefore(newStartDate)) {
+      setError('End date cannot be before start date');
+    } else {
+      setError(null);
+      setStartDate(newStartDate);
+      setEndDate(newEndDate);
+      if (newStartDate && newEndDate) {
+        setOpen(false);
+      }
+    }
+  };
+
   const handleCloseModal = () => {
     setOpenCancelModal(false);
     setSelectedItem(null);
@@ -75,6 +98,10 @@ function HomeOwnerJobs() {
     getJobs(searchQuery)
   }, [searchQuery])
 
+  useEffect(() => {
+    if (startDate && endDate) getJobs(searchQuery, 1, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`)
+  }, [startDate, endDate])
+
   return (
     <AdminLayout
       title={'My Jobs'}
@@ -83,60 +110,61 @@ function HomeOwnerJobs() {
       <MDBox sx={{display: "flex", justifyContent: "space-between", alignItems: "flex-start"}}>
 
         <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery}/>
+        {/*TODO: COnvertir a componente y agregar opciones de limpiar fecha*/}
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+          <MDBox
+            display="flex"
+            alignItems="center"
+            sx={{
+              fontSize: '20px',
+              border: '1px solid #D3D3D3',
+              borderRadius: '12px',
+              padding: '20px',
+              cursor: 'pointer',
+              position: 'relative',
+            }}
+            onClick={() => setOpen(!open)}
+          >
+            <MDTypography sx={{fontSize: '16px', marginRight: '10px'}}>
+              {formatDateRange()}
+            </MDTypography>
+            <CalendarTodayIcon sx={{color: '#006E90'}}/>
+          </MDBox>
 
-      {/*<LocalizationProvider dateAdapter={AdapterMoment}>*/}
-      {/*  <MDBox*/}
-      {/*    display="flex"*/}
-      {/*    alignItems="center"*/}
-      {/*    sx={{*/}
-      {/*      fontSize: '20px',*/}
-      {/*      border: '1px solid #D3D3D3',*/}
-      {/*      borderRadius: '12px',*/}
-      {/*      padding: '20px',*/}
-      {/*      cursor: 'pointer',*/}
-      {/*      position: 'relative',*/}
-      {/*    }}*/}
-      {/*    onClick={handleClick}*/}
-      {/*  >*/}
-      {/*    <MDTypography sx={{ fontSize: '16px', marginRight: '10px' }}>*/}
-      {/*      {formatDateRange()}*/}
-      {/*    </MDTypography>*/}
-      {/*    <CalendarTodayIcon sx={{ color: '#006E90' }} />*/}
-      {/*  </MDBox>*/}
+          {open && (
+            <div
+              style={{
+                gap: 5,
+                position: 'absolute',
+                right: '200px',
+                zIndex: 999,
+                backgroundColor: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+                borderRadius: '8px',
+                padding: '15px',
+                width: '200PX',
+                marginTop: '8px',
+              }}
+            >
+              <DatePicker
+                label="Start Date"
+                value={startDate}
+                onChange={(newValue) => handleDateChange(newValue, endDate)}
+                renderInput={(params) => <input {...params} />}
+                sx={{mb: 2}}
+              />
+              <DatePicker
+                label="End Date"
+                value={endDate}
+                onChange={(newValue) => handleDateChange(startDate, newValue)}
+                renderInput={(params) => <input {...params} />}
+              />
+              {/*{error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}*/}
+            </div>
+          )}
+        </LocalizationProvider>
 
-      {/*  {open && (*/}
-      {/*    <div*/}
-      {/*      style={{*/}
-      {/*        gap: 5,*/}
-      {/*        position: 'absolute',*/}
-      {/*        right: '200px',*/}
-      {/*        zIndex: 999,*/}
-      {/*        backgroundColor: '#fff',*/}
-      {/*        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',*/}
-      {/*        borderRadius: '8px',*/}
-      {/*        padding: '15px',*/}
-      {/*        width: '200PX',*/}
-      {/*        marginTop: '8px',*/}
-      {/*      }}*/}
-      {/*    >*/}
-      {/*      <DatePicker*/}
-      {/*        label="Start Date"*/}
-      {/*        value={startDate}*/}
-      {/*        onChange={(newValue) => handleDateChange(newValue, endDate)}*/}
-      {/*        renderInput={(params) => <input {...params} />}*/}
-      {/*      />*/}
-      {/*      <DatePicker*/}
-      {/*        label="End Date"*/}
-      {/*        value={endDate}*/}
-      {/*        onChange={(newValue) => handleDateChange(startDate, newValue)}*/}
-      {/*        renderInput={(params) => <input {...params} />}*/}
-      {/*      />*/}
-      {/*      {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}*/}
-      {/*    </div>*/}
-      {/*  )}*/}
-      {/*</LocalizationProvider>*/}
-
-    </MDBox>
+      </MDBox>
       <DataTable
         loading={loading}
         loadingText={'Loading...'}
@@ -148,7 +176,7 @@ function HomeOwnerJobs() {
         searchQuery={searchQuery}
         pageSize={10}
         onPageChange={page => {
-          getJobs(searchQuery , page)
+          getJobs(searchQuery, page)
           setCurrentPage(page)
         }}
       />
@@ -157,8 +185,8 @@ function HomeOwnerJobs() {
         <DialogContent>
           <p>Do you want to cancel this job?</p>
         </DialogContent>
-        <DialogActions sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexGrow: 1 }}>
+        <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>
             <MDButton
               variant="outlined"
               onClick={handleCloseModal}

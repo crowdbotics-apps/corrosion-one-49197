@@ -49,9 +49,15 @@ class JobViewSet(
     def get_queryset(self):
         user = self.request.user
         jobs = super().get_queryset()
+        query_params = self.request.query_params
+        if query_params.get('dates', None):
+            start_date, end_date = query_params.get('dates').split(',')
+            # TODO: que fecha se va a filtrar?
+            jobs = jobs.filter(start_date__range=[start_date, end_date])
         if user_is_inspector(user):
             active_jobs = jobs.filter(active=True)
             return active_jobs
+
         return jobs.filter(created_by=user.owner)
 
     @action(detail=True, methods=['post'])
