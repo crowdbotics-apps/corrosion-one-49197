@@ -51,7 +51,7 @@ function DataTable({
 
   const handleIconClick = () => {
     const data = { someKey: true };
-    navigate("/my-jobs", { state: data });
+    navigate(`/find-jobs`, { state: data });
   };
 
   const handleClick = (data) => {

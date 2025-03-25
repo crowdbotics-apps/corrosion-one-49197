@@ -7,7 +7,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import IconButton from '@mui/material/IconButton';
 import Grid from "@mui/material/Grid"
-import CancelIcon from "@mui/icons-material/Cancel";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 
 const DateBar = ({ start, end, onDateChange }) => {
   const [startDate, setStartDate] = useState(start);
@@ -47,8 +47,8 @@ const DateBar = ({ start, end, onDateChange }) => {
       <Grid display={'flex'} direction={'row'} alignItems={'center'}>
         <MDBox>
           {(startDate && endDate) && (
-            <IconButton onClick={handleClearDates} color={'error'}>
-              <CancelIcon />
+            <IconButton onClick={handleClearDates} >
+              <HighlightOffIcon sx={{color: "#E14640", fontSize:19}}/>
             </IconButton>
           )}
         </MDBox>
@@ -59,7 +59,7 @@ const DateBar = ({ start, end, onDateChange }) => {
             fontSize: '20px',
             border: '1px solid #D3D3D3',
             borderRadius: '12px',
-            padding: '20px',
+            padding: '16px',
             cursor: 'pointer',
             position: 'relative',
           }}

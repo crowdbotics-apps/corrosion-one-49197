@@ -1,11 +1,9 @@
 
 import { ENROLMENT_STATUS } from "../../../../components/AdminLayout/helpers";
 import React from "react";
-import MDButton from "../../../../components/MDButton"
-import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
-import MDBox from "../../../../components/MDBox"
-import MDAvatar from "../../../../components/MDAvatar"
-import MDTypography from "../../../../components/MDTypography"
+import MDBox from "@mui/material/Box";
+import MDAvatar from "@mui/material/Avatar";
+import MDTypography from "@mui/material/Typography";
 
 const STATUS_OPTIONS_COLORS = {
   [ENROLMENT_STATUS.INVITED]: "warning",
@@ -43,150 +41,200 @@ const generateRowData = () => {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Software Engineer</MDTypography>
-          <MDTypography style={estilo.font}>Building innovative software solutions.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
       ),
-      status: "Pending",
-      jobStatus: "Active",
+      status: "Reject",
       applicationDate: <MDBox>{new Date("2025-02-20").toLocaleDateString()}</MDBox>,
     },
     {
-      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Data Scientist</MDTypography>
-          <MDTypography style={estilo.font}>Specializing in analyzing complex data to drive business insights.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
       ),
-      status: "Selected",
-      jobStatus: "Not Available",
+      status: "Active",
       applicationDate: <MDBox>{new Date("2025-02-19").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>UX/UI Designer</MDTypography>
-          <MDTypography style={estilo.font}>Crafting user-friendly interfaces and seamless experiences.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
-
       ),
-      status: "Accepted",
-      jobStatus: "Closed",
+      status: "Reject",
       applicationDate: <MDBox>{new Date("2025-02-18").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Product Manager</MDTypography>
-          <MDTypography style={estilo.font}>Leading product development and driving business success.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
-
       ),
-      status: "Pending",
-      jobStatus: "Active",
+      status: "Active",
       applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Marketing Specialist</MDTypography>
-          <MDTypography style={estilo.font}>Creating marketing strategies to boost brand awareness.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
       ),
-      status: "Pending",
-      jobStatus: "Active",
+      status: "Reject",
       applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Marketing Specialist</MDTypography>
-          <MDTypography style={estilo.font}>Creating marketing strategies to boost brand awareness.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
       ),
-      status: "Selected",
-      jobStatus: "Not Available",
+      status: "Active",
       applicationDate: <MDBox>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Cloud Architect</MDTypography>
-          <MDTypography style={estilo.font}>Creating scalable and secure cloud infrastructure solutions.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
       ),
-      status: "Pending",
-      jobStatus: "Active",
+      status: "Reject",
       applicationDate: <MDBox>{new Date("2025-02-20").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>AI Specialist</MDTypography>
-          <MDTypography style={estilo.font}>Using advanced AI algorithms for business optimization.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
       ),
-      status: "Selected",
-      jobStatus: "Not Available",
+      status: "Active",
       applicationDate: <MDBox>{new Date("2025-02-19").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Game Developer</MDTypography>
-          <MDTypography style={estilo.font}>Creating immersive, interactive gaming experiences with advanced technology.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
-
       ),
-      status: "Accepted",
-      jobStatus: "Closed",
+      status: "Reject",
       applicationDate: <MDBox>{new Date("2025-02-18").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Operations Manager</MDTypography>
-          <MDTypography style={estilo.font}>Optimizing business processes to improve efficiency and profitability.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
-
       ),
-      status: "Pending",
-      jobStatus: "Active",
+      status: "Active",
       applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>SEO Expert</MDTypography>
-          <MDTypography style={estilo.font}>Enhancing website visibility and driving traffic through SEO.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
       ),
-      status: "Pending",
-      jobStatus: "Active",
+      status: "Reject",
       applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
     },
     {
       profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
       name: (
         <MDBox>
-          <MDTypography style={estilo.title}>Content Strategist</MDTypography>
-          <MDTypography style={estilo.font}>Developing content plans to drive engagement and brand storytelling.</MDTypography>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
         </MDBox>
       ),
-      status: "Selected",
-      jobStatus: "Not Available",
+      status: "Active",
       applicationDate: <MDBox>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
-    }
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Reject",
+      applicationDate: <MDBox>{new Date("2025-02-20").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Active",
+      applicationDate: <MDBox>{new Date("2025-02-19").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Reject",
+      applicationDate: <MDBox>{new Date("2025-02-18").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Active",
+      applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Reject",
+      applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
+    },
+    {
+      profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"square"} style={{ fontSize: "50px" }}/>,
+      name: (
+        <MDBox>
+          <MDTypography style={estilo.title}>Niactic Media</MDTypography>
+          <MDTypography style={estilo.font}>Nomad - Paris,France - Full-Time</MDTypography>
+        </MDBox>
+      ),
+      status: "Active",
+      applicationDate: <MDBox>{new Date("2025-10-16").toLocaleDateString()}</MDBox>,
+    },
 
   ]
 
@@ -222,36 +270,20 @@ const generateRowData = () => {
       label: 'Unknown',
       labelColor: 'black',
     };
-    let jobStatus = {
-      color: 'gray',
-      label: 'Unknown',
-      labelColor: 'black',
-    };
 
     const statusMap = {
-      Accepted: { color: '#D0FFE480', label: 'Accepted', labelColor: '#00AD42' },
-      Selected: { color: '#FFD7D080', label: 'Not Selected',  labelColor: '#FF5F57'},
-      Pending: { color: '#FFBD2E33', label: 'Pending', labelColor: '#FFBD2E'  },
+      Active: { color: '#D0FFE480', label: 'Active', labelColor: '#00AD42' },
+      Reject: { color: '#FFD7D080', label: 'Reject',  labelColor: '#FF5F57'},
     };
     if (statusMap[user.status]) {
       status = statusMap[user.status];
     }
-    const jobStatusMap = {
-      Active: { color: '#D0FFE480', label: 'Active', labelColor: '#00AD42' },
-      'Not Available': { color: '#FFD7D080', label: 'Not Available', labelColor: '#FF5F57'},
-      Closed: { color: '#FFD7D080',  label: 'Closed', labelColor: '#FF5F57'},
-    };
-    if (jobStatusMap[user.jobStatus]) {
-      jobStatus = jobStatusMap[user.jobStatus];
-    }
-
     return {
       profile_picture: user.profile_picture,
       name: user.name,
       email: user.email,
       applicationDate:user.applicationDate,
       status: renderStatusLabel(status),
-      jobStatus: renderStatusLabel(jobStatus),
     };
   });
 };
@@ -261,11 +293,9 @@ export const dataTableModel = {
   columns: [
     { Header: " ", accessor: "profile_picture", disableOrdering: true, width: 60 },
     { Header: "Jobs", accessor: 'name', disableOrdering: true, width: 300 },
-    { Header: "Aplication Date", accessor: "applicationDate",width: 150},
-    { Header: "Aplication Status", accessor: "status" ,width: 170 },
-    { Header: "Jobs Status", accessor: "jobStatus", width: 120 },
-    { Header: " ",accessor: "actions_edit", disableOrdering: true, width: 7 },
-    { Header: " ",accessor: "actions", disableOrdering: true, width: 200 },
+    { Header: "Aplication Date", accessor: "applicationDate",width: 200},
+    { Header: "Status", accessor: "status", width: 200 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 50 },
   ],
   rows: generateRowData(),
 };

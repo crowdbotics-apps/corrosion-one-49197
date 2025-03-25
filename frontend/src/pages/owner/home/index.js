@@ -1,7 +1,7 @@
 import AdminLayout from "components/AdminLayout";
 import DataTable from "./components"
 import React, { useState } from "react"
-import { dataTableModel } from "./components/utils"
+import {dataTableModel} from "../findJobs/components/utils"
 
 
 function HomeInspector() {

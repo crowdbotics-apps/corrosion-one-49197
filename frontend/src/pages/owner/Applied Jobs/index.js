@@ -6,11 +6,11 @@ import { dataTableModel } from "./components/utils"
 
 
 
-function HomeOwnerDos() {
+function HomeOwnerAppliedJobs() {
   const [datatable, setDatatable] = useState({...dataTableModel});
   return (
     <AdminLayout
-      title={'Find Jobs'}
+      title={'Applied Jobs'}
       showCard
     >
       <DataTable
@@ -20,4 +20,4 @@ function HomeOwnerDos() {
   );
 }
 
-export default HomeOwnerDos;
+export default HomeOwnerAppliedJobs;

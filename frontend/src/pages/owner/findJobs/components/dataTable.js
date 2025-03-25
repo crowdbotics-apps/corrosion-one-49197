@@ -40,7 +40,7 @@ function DataTable({
                      showRecords = true,
                      currentPage,
                      selectedProject = null,
-                     pageSize = 4,
+                     pageSize = 6,
                      loading = false,
                      emptyLabelText = "No items found",
                      loadingText = "",
@@ -327,7 +327,6 @@ function DataTable({
                                 <BookmarkOutlinedIcon />
                               </MDButton>
                               <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90')}>View Details</MDButton>
-                              <MDButton variant="outlined" onClick={handleReject} sx={getButtonStyles('#E14640')}>Withdraw</MDButton>
                             </MDBox>
 
                           </MDBox>
@@ -353,7 +352,7 @@ function DataTable({
         <Grid item container xs={12} justifyContent="center" style={{ padding: '2rem' }}>
           <Pagination
             size="large"
-            count={rows.length / 4}
+            count={rows.length / 6}
             variant="outlined"
             color="secondary"
             page={currentPage}

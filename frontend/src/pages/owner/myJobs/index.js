@@ -109,7 +109,6 @@ function HomeOwnerJobs() {
         <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery}/>
         {/*TODO: COnvertir a componente y agregar opciones de limpiar fecha*/}
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
-
       </MDBox>
       <DataTable
         loading={loading}

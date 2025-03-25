@@ -74,8 +74,11 @@ function SignIn() {
             loginStore.setApiToken(access)
           })
           if (loginStore.status !== 4) {
+
             navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})
-          } else {
+          } else if (loginStore.user_type === 'OWNER') {
+            navigate(ROUTES.DASHBOARD_OWNER)
+          } else{
             navigate(ROUTES.DASHBOARD)
           }
         },

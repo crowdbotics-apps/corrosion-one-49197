@@ -2,35 +2,34 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 import {
-  Grid,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid, InputAdornment,
   Table,
   TableBody,
   TableContainer,
   TableRow,
   TextField,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  InputAdornment,
 } from "@mui/material"
 import MDBox from "../../../../components/MDBox";
 import DataTableHeadCell from "../../../../components/AdminLayout/DataTableHeadCell";
-import DataTAbleBodyCell from "./DataTAbleBodyCell"
+import DataTableBodyCell from "../../../../components/AdminLayout/DataTableBodyCell";
 import { EmptyResponseDatatable } from "../../../../components/AdminLayout/EmptyResponseDatatable";
 import Card from "@mui/material/Card";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import Box from "@mui/material/Box";
 import Pagination from '@mui/material/Pagination';
 import MDTypography from "../../../../components/MDTypography"
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday"
 import MDButton from "../../../../components/MDButton"
-import { useNavigate } from 'react-router-dom';
-import SearchIcon from "@mui/icons-material/Search"
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
+import { useNavigate } from "react-router-dom"
+import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
+import SearchIcon from '@mui/icons-material/Search';
+import { LocalizationProvider } from "@mui/x-date-pickers"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
-import { LocalizationProvider } from "@mui/x-date-pickers" // Importa useNavigate de react-router-dom
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
 
 function DataTable({
                      table,
@@ -46,13 +45,13 @@ function DataTable({
                      emptyLabelText = "No items found",
                      loadingText = "",
                    }) {
-  const navigate = useNavigate();
+
   const [orderedColumn, setOrderedColumn] = useState();
+  const navigate = useNavigate();
   const columns = useMemo(() => table.columns, [table]);
+  const [openRejectModal, setOpenRejectModal] = useState(false);
   const data = useMemo(() => table.rows, [table]);
   const [sortedByColumn, setSortedByColumn] = useState({ column: "", order: "none" });
-  const [openRejectModal, setOpenRejectModal] = useState(false);
-
   const tableInstance = useTable(
     {
       columns,
@@ -63,6 +62,23 @@ function DataTable({
     useSortBy,
     usePagination
   );
+
+  const getButtonStyles = (color) => ({
+    paddingTop: '2px',
+    paddingBottom: '2px',
+    paddingRight: '8px',
+    paddingLeft: '8px',
+    borderRadius: '12px',
+    borderColor: color,
+    color: color,
+    fontSize: '15px',
+    width: { md: '120px' },
+    '&:hover': {
+      backgroundColor: 'transparent',
+      borderColor: color,
+      color: color,
+    },
+  });
 
   const {
     getTableProps,
@@ -96,17 +112,6 @@ function DataTable({
       return "none";
     }
   };
-  const getButtonStyles = () => ({
-    paddingTop: '2px',
-    paddingBottom: '2px',
-    paddingRight: '5px',
-    paddingLeft: '5px',
-    borderRadius: '12px',
-    fontSize: '15px',
-    width: {md:'180px', xs:'100px'} ,
-
-  });
-
 
   const onColumnOrdering = useCallback(
     (ordering) => {
@@ -140,6 +145,10 @@ function DataTable({
   const handleCloseModal = () => {
     setOpenRejectModal(false);
   };
+  const handleRejectDetails = () => {
+    const data = { someKey: true };
+    navigate("/find-jobs-details", { state: data });
+  }
 
   const handleConfirmReject = () => {
     setOpenRejectModal(false);
@@ -174,10 +183,13 @@ function DataTable({
     setOpen(!open);
   };
 
+
+
+
   return (
     <Card sx={{ display: "flex", flex: 1, border: `none`, backgroundColor: "white" }}>
-      <TableContainer sx={{ boxShadow: "none", backgroundColor: "white" }}>
-        <MDBox sx={{display:"flex", justifyContent: "space-between", alignItems: "flex-start",  flexDirection: {xs:'column', md:'row'}}}>
+      <TableContainer sx={{ boxShadow: "none", backgroundColor: "white", width: "100%" }}>
+        <MDBox sx={{display:"flex", justifyContent: "space-between", alignItems: "flex-start", flexDirection: {xs:'column', md:'row'}}}>
           <MDBox sx={{padding:'10px'}}>
             <TextField
               InputProps={{
@@ -199,8 +211,8 @@ function DataTable({
                 },
               }}
             />
-
           </MDBox>
+
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <MDBox
               display="flex"
@@ -290,9 +302,9 @@ function DataTable({
                     sx={{ cursor: "pointer" }}
                   >
                     {row.cells.map((cell, idx2) => (
-                      <DataTAbleBodyCell
+                      <DataTableBodyCell
                         key={`tablecell__${idx2}`}
-                        gender={row.original.gender}
+                        odd={key % 2 === 0}
                         selected={row.original.id === selectedProject?.id}
                         noBorder={noEndBorder && rows.length - 1 === key}
                         width={cell.column.width}
@@ -300,23 +312,27 @@ function DataTable({
                         {...cell.getCellProps()}
                       >
                         {cell.render("Cell")}
-
                         {idx2 === row.cells.length - 1 && (
                           <MDBox
                             sx={{
-                              marginLeft: {md:'-60px', xs:'-10px'},
+                              marginLeft: {md:'-100px', xs:'-10px'},
                               display: 'flex',
-                              width: {md:'210px', xs:'100px'},
+                              width: '210px',
                               flexDirection: { xs: 'column', md: 'row' },
                               gap: '8px',
                             }}
                           >
-                            <MDButton variant="outlined" color={'secondary'} sx={getButtonStyles()}>View Details</MDButton>
-                            <MDButton variant="outlined" color={'error'} sx={getButtonStyles()} onClick={handleReject}>Rejected</MDButton>
+                            <MDBox sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2,  width: { xs: '150px', md: '420px' },  padding: 0 }}>
+                              <MDButton variant="text" color={'secondary'}>
+                                <BookmarkOutlinedIcon />
+                              </MDButton>
+                              <MDButton variant="outlined" onClick={handleRejectDetails} sx={getButtonStyles('#006E90')}>View Details</MDButton>
+                              <MDButton variant="outlined" onClick={handleReject} sx={getButtonStyles('#E14640')}>Withdraw</MDButton>
+                            </MDBox>
+
                           </MDBox>
                         )}
-
-                      </DataTAbleBodyCell>
+                      </DataTableBodyCell>
                     ))}
                   </TableRow>
                 );
@@ -345,7 +361,6 @@ function DataTable({
           />
         </Grid>
       </TableContainer>
-
       <Dialog open={openRejectModal} onClose={handleCloseModal}>
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
@@ -366,12 +381,44 @@ function DataTable({
             onClick={handleCloseModal}
             color={'error'}
           >
-            Reject
+            Close
           </MDButton>
         </DialogActions>
       </Dialog>
+
     </Card>
   );
 }
+
+DataTable.defaultProps = {
+  entriesPerPage: [4, 25, 50, 100],
+  canSearch: false,
+  showTotalEntries: true,
+  pagination: { variant: "gradient", color: "info" },
+  isSorted: true,
+  noEndBorder: false,
+};
+
+DataTable.propTypes = {
+  entriesPerPage: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.bool]),
+  canSearch: PropTypes.bool,
+  showTotalEntries: PropTypes.bool,
+  table: PropTypes.objectOf(PropTypes.array).isRequired,
+  pagination: PropTypes.shape({
+    variant: PropTypes.oneOf(["contained", "gradient"]),
+    color: PropTypes.oneOf([
+      "primary",
+      "secondary",
+      "info",
+      "success",
+      "warning",
+      "error",
+      "dark",
+      "light",
+    ]),
+  }),
+  isSorted: PropTypes.bool,
+  noEndBorder: PropTypes.bool,
+};
 
 export default DataTable;

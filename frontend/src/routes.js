@@ -59,6 +59,7 @@ import HomeOwnerJobs from "./pages/owner/myJobs"
 import HomeOwnerDetails from "./pages/owner/findJobs/detailsIndex"
 import HomeInspector from "./pages/owner/home"
 import HomeOwner from "./pages/owner/HomeOwner"
+import HomeOwnerAppliedJobs from "./pages/owner/Applied Jobs"
 
 
 
@@ -185,8 +186,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Applied Jobs",
     key: "applied-jobs",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.APPLIED_JOBS,
+    component: <HomeOwnerAppliedJobs />,
     icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],
