@@ -9,7 +9,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from jobs.filters import CustomOrderingFilterJobs
 from jobs.models import Job, JobCategory
-from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer
+from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer, JobDetailSerializer
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
     CollectedMultipartJsonViewMixin
@@ -44,7 +44,7 @@ class JobViewSet(
     }
     action_serializers = {
         'list': JobListSerializer,
-        'retrieve': JobListSerializer,
+        'retrieve': JobDetailSerializer,
         'create': JobManagementSerializer,
     }
 

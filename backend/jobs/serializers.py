@@ -17,7 +17,10 @@ class JobCategorySerializer(serializers.ModelSerializer):
         model = JobCategory
         fields = ['id', 'name', 'description']
 
-
+class JobDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobDocument
+        fields = ['id', 'document']
 
 class JobListSerializer(serializers.ModelSerializer):
 
@@ -29,6 +32,17 @@ class JobListSerializer(serializers.ModelSerializer):
 
     def get_bids(self, obj):
         return obj.bids.count()
+
+class JobDetailSerializer(serializers.ModelSerializer):
+    categories = JobCategorySerializer(many=True)
+    certifications = CredentialSerializer(many=True)
+    documents = JobDocumentSerializer(many=True)
+
+    class Meta:
+        model = Job
+        fields = ['id', 'title', 'description', 'categories', 'certifications', 'start_date',
+                  'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
+                  'misc_other_rate', 'payment_modes']
 
 
 class JobManagementSerializer(serializers.ModelSerializer):
