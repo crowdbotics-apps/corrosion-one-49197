@@ -28,7 +28,7 @@ function JobRedirect() {
             loginStore.setUser(user.user)
             loginStore.setApiToken(user.access)
           })
-
+          // TODO: ADD REAL ROUTE
           navigate(ROUTES.DASHBOARD)
 
         },

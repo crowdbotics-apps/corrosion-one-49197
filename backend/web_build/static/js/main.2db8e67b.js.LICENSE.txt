@@ -16,6 +16,13 @@ object-assign
   All rights reserved.
 */
 
+/*!
+ * Quill Editor v1.3.7
+ * https://quilljs.com/
+ * Copyright (c) 2014, Jason Chen
+ * Copyright (c) 2013, salesforce.com
+ */
+
 /*! @preserve
  * numeral.js
  * version : 2.0.6

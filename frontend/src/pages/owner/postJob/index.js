@@ -1,25 +1,17 @@
 import AdminLayout from "../../../components/AdminLayout"
 import MDBox from "../../../components/MDBox"
 import Card from "@mui/material/Card"
-import pxToRem from "assets/theme/functions/pxToRem";
 import {Form, FormikProvider, useFormik} from "formik";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import {InputAdornment} from "@mui/material";
-import FormatBoldOutlinedIcon from "@mui/icons-material/FormatBoldOutlined";
-import FormatItalicOutlinedIcon from "@mui/icons-material/FormatItalicOutlined";
-import FormatUnderlinedOutlinedIcon from "@mui/icons-material/FormatUnderlinedOutlined";
-import StrikethroughSOutlinedIcon from "@mui/icons-material/StrikethroughSOutlined";
-import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
-import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
-import FormatListNumberedOutlinedIcon from "@mui/icons-material/FormatListNumberedOutlined";
 import React, {useEffect, useState} from "react";
 import * as Yup from "yup";
-import MDTypography from "@mui/material/Typography";
 import FormikInput from "../../../components/Formik/FormikInput";
 import MDButton from "../../../components/MDButton";
 import Grid from "@mui/material/Grid";
-import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
+import {checkUrl, showMessage, truncateFilename, useApi, useLoginStore} from "../../../services/helpers";
 import RenderWorkArea from "../../../components/RenderListOption";
+import DocumentItem from "../../common/settings/documentItem";
+import AddDocumentBox from "../../common/settings/addDocumentBox";
 
 
 function PostJob() {
@@ -105,11 +97,27 @@ function PostJob() {
     formik.setFieldValue('payment_modes', newValues)
   }
 
+  const handleOpenDownload = (doc) => {
+    window.open(checkUrl(doc.document), '_blank');
+  };
+
+  const handleDelete = (item) => {
+    formik.setFieldValue('documents', formik.values.documents.filter((doc) => doc.id !== item.id))
+  };
+
+  const handleAddDocument = (e) => {
+    const file = e.target.files[0];
+    const filename = truncateFilename(file.name);
+    const newFile = new File([file], filename, {type: file.type});
+    formik.setFieldValue('documents', [...formik.values.documents, {id: Math.random(), name: filename, file: newFile}])
+  };
+
+
   const initialValues = {
     title: '',
     address: '',
     categories: [],
-    description: '',
+    description: null,
     certifications: [],
     start_date: '',
     end_date: '',
@@ -117,7 +125,8 @@ function PostJob() {
     per_diem_rate: 0,
     mileage_rate: 0,
     misc_other_rate: 0,
-    payment_modes: [PaymentOptions[0]]
+    payment_modes: [PaymentOptions[0]],
+    documents: [],
   };
 
   const validationSchema = Yup.object().shape({
@@ -201,12 +210,13 @@ function PostJob() {
               </MDBox>
 
               <FormikInput
-                type="textarea"
+                type="rich_text"
                 label="Job Description"
                 name="description"
-                rows={5}
+                setFieldValue={formik.setFieldValue}
                 mb={2}
               />
+
               <FormikInput
                 type={"autocomplete"}
                 placeholder={"Credentials"}
@@ -315,36 +325,30 @@ function PostJob() {
                   fullWidth
                   variant="outlined"
                   color="secondary"
+                  onClick={() => document.getElementById('input_file').click()}
                 >
-                  {fileName ? (
-                    <>
-                      {`Document: ${fileName}`}
-                      <HighlightOffIcon
-                        sx={{
-                          marginTop: '2px',
-                          width: '20px',
-                          height: '20px',
-                          color: 'red',
-                          marginLeft: '8px',
-                          cursor: 'pointer',
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeFile();
-                        }}
-                      />
-                    </>
-                  ) : (
-                    'Add Document'
-                  )}
-
-                  <input
-                    type="file"
-                    style={{display: 'none'}}
-                    onChange={handleFileChange}
-                  />
+                  Add Document
                 </MDButton>
+                <input
+                  id={'input_file'}
+                  hidden
+                  accept="*"
+                  type="file"
+                  onChange={handleAddDocument}
+                />
               </MDBox>
+              <Grid container spacing={2} mb={1}>
+                {formik.values.documents.map((doc) => (
+                  <Grid item key={doc.id}>
+                    <DocumentItem
+                      key={doc.id}
+                      doc={doc}
+                      onOpenDownload={handleOpenDownload}
+                      onDelete={handleDelete}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
               <MDBox display="flex" justifyContent="flex-end" mr={1} mt={'auto'}>
                 <MDButton
                   color={'secondary'}
@@ -355,7 +359,6 @@ function PostJob() {
               </MDBox>
             </Card>
           </Grid>
-
         </Grid>
       </FormikProvider>
     </AdminLayout>

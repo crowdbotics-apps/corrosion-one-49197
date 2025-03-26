@@ -123,11 +123,15 @@ export class Api extends ApiBase {
   }
 
   createJob(data: any) {
-    return this.simple_post(`${API_VERSION_PREFIX}/jobs/`, data);
+    return this.post_collected_multipart_form_data(`${API_VERSION_PREFIX}/jobs/`, data);
   }
 
   getJobs(data: any) {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/`, data);
+  }
+
+  getJob(id: number | string) {
+    return this.simple_get(`${API_VERSION_PREFIX}/jobs/${id}/`);
   }
 
   cancelJob(id: number | string) {
