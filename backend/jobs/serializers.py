@@ -9,6 +9,7 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from inspector.models import Credential, Inspector
 from inspector.serializers import CredentialSerializer
 from jobs.models import Job, JobCategory, MagicLinkToken, JobDocument
+from owner.serializers import OwnerDetailSerializer
 from utils.utils.email import send_email_with_template
 
 
@@ -37,12 +38,13 @@ class JobDetailSerializer(serializers.ModelSerializer):
     categories = JobCategorySerializer(many=True)
     certifications = CredentialSerializer(many=True)
     documents = JobDocumentSerializer(many=True)
+    created_by = OwnerDetailSerializer()
 
     class Meta:
         model = Job
         fields = ['id', 'title', 'description', 'categories', 'certifications', 'start_date',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
-                  'misc_other_rate', 'payment_modes']
+                  'misc_other_rate', 'payment_modes', 'created_by']
 
 
 class JobManagementSerializer(serializers.ModelSerializer):
