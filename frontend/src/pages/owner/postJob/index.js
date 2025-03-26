@@ -1,20 +1,10 @@
 import AdminLayout from "../../../components/AdminLayout"
 import MDBox from "../../../components/MDBox"
 import Card from "@mui/material/Card"
-import pxToRem from "assets/theme/functions/pxToRem";
 import {Form, FormikProvider, useFormik} from "formik";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import {InputAdornment} from "@mui/material";
-import FormatBoldOutlinedIcon from "@mui/icons-material/FormatBoldOutlined";
-import FormatItalicOutlinedIcon from "@mui/icons-material/FormatItalicOutlined";
-import FormatUnderlinedOutlinedIcon from "@mui/icons-material/FormatUnderlinedOutlined";
-import StrikethroughSOutlinedIcon from "@mui/icons-material/StrikethroughSOutlined";
-import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined";
-import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
-import FormatListNumberedOutlinedIcon from "@mui/icons-material/FormatListNumberedOutlined";
 import React, {useEffect, useState} from "react";
 import * as Yup from "yup";
-import MDTypography from "@mui/material/Typography";
 import FormikInput from "../../../components/Formik/FormikInput";
 import MDButton from "../../../components/MDButton";
 import Grid from "@mui/material/Grid";
@@ -109,7 +99,7 @@ function PostJob() {
     title: '',
     address: '',
     categories: [],
-    description: '',
+    description: null,
     certifications: [],
     start_date: '',
     end_date: '',
@@ -201,12 +191,13 @@ function PostJob() {
               </MDBox>
 
               <FormikInput
-                type="textarea"
+                type="rich_text"
                 label="Job Description"
                 name="description"
-                rows={5}
+                setFieldValue={formik.setFieldValue}
                 mb={2}
               />
+
               <FormikInput
                 type={"autocomplete"}
                 placeholder={"Credentials"}

@@ -13,5 +13,6 @@ export const FieldTypes = {
   email: "email",
   datetime: "datetime",
   date_year: "date_year",
+  rich_text: "rich_text"
 }
 

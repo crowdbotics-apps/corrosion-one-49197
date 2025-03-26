@@ -21,6 +21,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import {InputAdornment, Select, TextField} from "@mui/material";
 import MDInput from "../../MDInput";
+import {FormikRichTextInput} from "./FormikRichTextInput";
 
 const FormikFileInput = (props) => {
   const [field, meta] = useField(props);
@@ -309,6 +310,9 @@ const FormikInput = (props) => {
     case FieldTypes.textarea:
       component = <FormikTextInput rows={props.rows} multiline {...props} />
       break;
+    case FieldTypes.rich_text:
+      component = <FormikRichTextInput {...props} />
+      break;
     case FieldTypes.select:
       component = <FormikSelectInput {...props} />
       break;
@@ -366,7 +370,8 @@ FormikInput.propTypes = {
     "number",
     "checkbox",
     "datetime",
-    "date_year"
+    "date_year",
+    "rich_text",
   ]),
 };
 
