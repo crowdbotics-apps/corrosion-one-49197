@@ -44,7 +44,7 @@ import profilePicture from "./assets/imagesExamples/team-3.jpg";
 import {
   SignIn,
   ForgotPassword,
-  SignUp,HomeOwner,
+  SignUp,
   SetNewPassword,
   Logout,
   Settings,
@@ -57,6 +57,9 @@ import HomeOwnerPostJob from "./pages/owner/postJob"
 import HomeOwnerBids from "./pages/owner/bids"
 import HomeOwnerJobs from "./pages/owner/myJobs"
 import HomeOwnerDetails from "./pages/owner/findJobs/detailsIndex"
+import HomeInspector from "./pages/owner/home"
+import HomeOwner from "./pages/owner/HomeOwner"
+import HomeOwnerAppliedJobs from "./pages/owner/Applied Jobs"
 
 
 
@@ -104,11 +107,21 @@ export const protectedRoutes = [
     name: "Dashboard",
     key: "dashboard",
     route: ROUTES.DASHBOARD,
+    component: <HomeInspector />,
+    noCollapse: true,
+    icon: <Icon fontSize="small">home_outlined</Icon>,
+    role: [ROLES.INSPECTOR],
+
+  },
+  {
+    type: "collapse",
+    name: "Dashboard",
+    key: "dashboardOwner",
+    route: ROUTES.DASHBOARD_OWNER,
     component: <HomeOwner />,
     noCollapse: true,
     icon: <Icon fontSize="small">home_outlined</Icon>,
-    role: [ROLES.OWNER, ROLES.INSPECTOR],
-
+    role: [ROLES.OWNER],
   },
   {
     type: "collapse",
@@ -173,8 +186,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Applied Jobs",
     key: "applied-jobs",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.APPLIED_JOBS,
+    component: <HomeOwnerAppliedJobs />,
     icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],

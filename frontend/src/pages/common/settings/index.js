@@ -16,6 +16,9 @@ import AccountSettings from "./accountSettings";
 import {ROLES} from "../../../services/constants";
 import ProfileOwner from "./profileOwner";
 import ConfirmDialogModal from "../../../components/ConfirmDialogModal";
+import { useLocation } from "react-router-dom"
+
+import { useNavigate } from "react-router-dom";
 
 
 const BUTTONS_INSPECTOR = [
@@ -43,6 +46,23 @@ function Settings() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [credentials, setCredentials] = useState([]);
   const [industries, setIndustries] = useState([]);
+  const location = useLocation();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getLanguages();
+    getCountries();
+    getCredentialOptions();
+    getIndustries();
+    getUserDetail();
+
+    // Verifica si hay un estado en la ubicación que indique una pestaña predeterminada
+    if (location.state?.defaultTab) {
+      setSelectedTab(location.state.defaultTab);
+    }
+  }, [location.state]);
+
 
 
   const getLanguages = () => {

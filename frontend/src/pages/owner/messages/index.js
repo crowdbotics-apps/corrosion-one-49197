@@ -1,4 +1,4 @@
-import Messages from "../../../components/AdminLayout/Messages/dataMessages"
+import Messages from "./components/dataMessages"
 import AdminLayout from "../../../components/AdminLayout"
 import MDBox from "../../../components/MDBox"
 

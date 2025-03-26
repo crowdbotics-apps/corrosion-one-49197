@@ -2,6 +2,7 @@ import moment from "moment";
 import {capitalize} from "../../../services/helpers";
 import MDBox from "../../../components/MDBox";
 import MDButton from "../../../components/MDButton";
+import React from "react"
 
 
 export const dataTableModel = {
@@ -38,10 +39,11 @@ const renderActions = (item, setSelectedItem, setShowModal) => {
 }
 
 
+
 export const renderTableRow = (item, setSelectedItem, setShowModal) => {
   item.created = moment(item.created).format('MM/DD/YYYY')
   item.raw_status = item.status
-  item.status = capitalize(item.status)
+  item.status =capitalize(item.status)
   item.actions = (renderActions(item, setSelectedItem, setShowModal))
   return item
 }

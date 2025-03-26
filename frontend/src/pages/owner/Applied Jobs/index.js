@@ -3,7 +3,6 @@ import DataTable from "../../../components/DataTable/index";
 import React, { useEffect, useState } from "react";
 import { dataTableModel } from "./utils";
 import { useApi, useLoginStore } from "../../../services/helpers";
-import { useNavigate } from "react-router-dom";
 import MDBox from "../../../components/MDBox";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import SearchBar from "../../../components/SearchBar";
@@ -11,9 +10,10 @@ import Box from "@mui/material/Box";
 import MDButton from "../../../components/MDButton";
 import DateBar from "../../../components/DateBar";
 import { renderTableRow } from "./utils";
-import MDAvatar from "../../../components/MDAvatar" // Importar la función que renderiza las filas
+import MDAvatar from "../../../components/MDAvatar"
+import MDTypography from "@mui/material/Typography"
 
-function HomeOwnerJobs() {
+function HomeOwnerAppliedJobs() {
   const loginStore = useLoginStore();
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(null);
@@ -46,6 +46,24 @@ function HomeOwnerJobs() {
 
   const getJobs = (search = '', page = 1, ordering = order, dates = null) => {
     setLoading(true);
+    const estilo = {
+      title:{
+        fontWeight: 'bold'
+      },
+      font: {
+        color: '#7C8493',
+      },
+      button:{
+        paddingTop: '2px',
+        paddingBottom: '2px',
+        paddingRight: '10px',
+        paddingLeft: '10px',
+        borderRadius: '12px',
+        borderColor: '#006E90',
+        color: '#006E90',
+        fontSize: '15px',
+      },
+    };
 
     // Datos estáticos simulando la respuesta de la API
     const result = {
@@ -53,28 +71,41 @@ function HomeOwnerJobs() {
         count: 25,
         results: [
           {
-            profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
-            name: 'John Doe',
-            bidsJobs: 5,
-            bidAmount: 100,
-            applicationDate: '2025-03-25',
-            status: 'pending',
+            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circulsr"} style={{ fontSize: "50px" }}/>,
+            name: (
+              <MDBox>
+                <MDTypography style={estilo.title}>Operations Manager</MDTypography>
+                <MDTypography style={estilo.font}>Optimizing business processes to improve efficiency and profitability.</MDTypography>
+              </MDBox>
+
+            ),
+            status: "Pending",
+            jobStatus: "Active",
+            applicationDate: <MDBox>{new Date("2025-02-17").toLocaleDateString()}</MDBox>,
           },
           {
-            profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
-            name: 'Jane Smith',
-            bidsJobs: 3,
-            bidAmount: 150,
-            applicationDate: '2025-03-24',
-            status: 'approved',
+            profile_picture: <MDAvatar src={"https://i.pinimg.com/564x/3f/9f/5b/3f9f5b8c9f31ce16c79d48b9eeda4de0.jpg"} variant={"circular"} style={{ fontSize: "50px" }}/>,
+            name: (
+              <MDBox>
+                <MDTypography style={estilo.title}>SEO Expert</MDTypography>
+                <MDTypography style={estilo.font}>Enhancing website visibility and driving traffic through SEO.</MDTypography>
+              </MDBox>
+            ),
+            status: "Pending",
+            jobStatus: "Active",
+            applicationDate: <MDBox>{new Date("2025-02-15").toLocaleDateString()}</MDBox>,
           },
           {
-            profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
-            name: 'Robert Brown',
-            bidsJobs: 7,
-            bidAmount: 120,
-            applicationDate: '2025-03-22',
-            status: 'rejected',
+            profile_picture: <MDAvatar src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} variant={"circular"} style={{ fontSize: "50px" }}/>,
+            name: (
+              <MDBox>
+                <MDTypography style={estilo.title}>Content Strategist</MDTypography>
+                <MDTypography style={estilo.font}>Developing content plans to drive engagement and brand storytelling.</MDTypography>
+              </MDBox>
+            ),
+            status: "Selected",
+            jobStatus: "Not Available",
+            applicationDate: <MDBox>{new Date("2025-02-16").toLocaleDateString()}</MDBox>,
           }
         ]
       }
@@ -83,7 +114,9 @@ function HomeOwnerJobs() {
 
     const { count, results } = result.data;
     const tmp = { ...dataTableModel };
+
     tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal));
+
     setDatatable(tmp);
     setNumberOfItems(count);
     setNumberOfItemsPage(results.length);
@@ -99,7 +132,7 @@ function HomeOwnerJobs() {
   }, [startDate, endDate]);
 
   return (
-    <AdminLayout title={'Bids'} showCard>
+    <AdminLayout title={'Applied Jobs'} showCard>
       <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" ,gap:{xs:'20px'}, flexDirection:{md:'row',xs:'column'}}}>
         <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery} />
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
@@ -139,4 +172,4 @@ function HomeOwnerJobs() {
   );
 }
 
-export default HomeOwnerJobs;
+export default HomeOwnerAppliedJobs;

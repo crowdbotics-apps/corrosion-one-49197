@@ -1,5 +1,5 @@
-import MDBox from "../../MDBox"
-import MDAvatar from "../../MDAvatar"
+import MDBox from "../../../../components/MDBox"
+import MDAvatar from "../../../../components/MDAvatar"
 import React from "react"
 import { chatDataModel } from "./utils"
 
