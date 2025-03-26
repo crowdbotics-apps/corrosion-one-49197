@@ -130,6 +130,10 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/`, data);
   }
 
+  getJob(id: number | string) {
+    return this.simple_get(`${API_VERSION_PREFIX}/jobs/${id}/`);
+  }
+
   cancelJob(id: number | string) {
     return this.simple_post(`${API_VERSION_PREFIX}/jobs/${id}/cancel/`);
   }
