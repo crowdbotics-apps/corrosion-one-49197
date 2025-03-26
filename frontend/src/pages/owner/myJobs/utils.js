@@ -1,9 +1,10 @@
 import moment from "moment";
-import {capitalize} from "../../../services/helpers";
+import { capitalize, useApi } from "../../../services/helpers"
 import MDBox from "../../../components/MDBox";
 import MDButton from "../../../components/MDButton";
-import React from "react"
+import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
+
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
 
 
@@ -24,11 +25,32 @@ export const dataTableModel = {
 
 const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const api = useApi()
 
   const handleRejectDetails = () => {
-    const data = { someKey: true };
-    navigate("/find-jobs-details", { state: data });
+    setLoading(true);
+
+    const jobId = item.id;
+
+    api.getJob(jobId).handle({
+      onSuccess: (result) => {
+        console.log("Resultado completo:", result);
+        const jobDetails = result.data;
+        console.log("Detalles del trabajo:", jobDetails);
+
+        navigate("/find-jobs-details", {
+          state: { jobDetails, isJobActive: true }
+        });
+
+      },
+      errorMessage: 'Error getting job details',
+      onFinally: () => setLoading(false)
+
+    });
   };
+
+
 
   return (
     <MDBox>
@@ -62,5 +84,3 @@ export const renderTableRow = (item, setSelectedItem, setShowModal) => {
   item.actions = <ActionButtons item={item} setSelectedItem={setSelectedItem} setShowModal={setShowModal} />;
   return item
 }
-
-

@@ -19,23 +19,20 @@ import CheckIcon from '@mui/icons-material/Check';
 import FormikInput from "../../../../components/Formik/FormikInput"
 import { Form, FormikProvider, useFormik } from "formik"
 import * as Yup from "yup"
+import { useApi } from "../../../../services/helpers"
+import { formatDate, CustomTypography, DocumentList, CredentialsList } from "./utils"
 
 function Details() {
-  const location = useLocation();
-  const data = location.state;
+  const { state } = useLocation();
+  console.log("State recibido:", state);
+  const { jobDetails, isJobActive } = state || {};
+  const [loading, setLoading] = useState(false);
+  const api = useApi()
+  console.log('wiiiiiiiiiiiiiii', jobDetails);
+  console.log('HBVDGVF', isJobActive);
 
-  // const [fileName, setFileName] = useState('');
-  //
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     setFileName(file.name);
-  //   }
-  // };
-  //
-  // const handleButtonClick = () => {
-  //   document.getElementById('fileInput').click();
-  // };
+
+
   const initialValues = {
     Notes: '',
     selectedItems: []
@@ -67,19 +64,7 @@ function Details() {
 
   return (
     <MDBox display="flex" flex={1} style={{ border: "none", backgroundColor: "white" }}>
-      <MDBox
-        sx={{
-          height: {md:"150vh", xs:'295vh'},
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: 'white',
-          width: { md: '90%', xs: '90%' },
-          margin: { md: '70px', xs: '20px' },
-          border: '1px solid rgba(0, 0, 0, 0.1)',
-          borderRadius: 5,
-          gap:{md:5, xs:30},
-        }}
-      >
+      <MDBox sx={{ height: {md:"125vh", xs:'295vh'}, display: 'flex', flexDirection: 'column', backgroundColor: 'white', width: { md: '90%', xs: '90%' }, margin: { md: '70px', xs: '20px' }, border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: 5, gap:{md:5, xs:30}, }}>
         <MDBox sx={{ width:{ md:"95%", xs:"85%"}, margin: {md:"33px", xs:"20px"} }}>
           <Grid
             container
@@ -152,7 +137,7 @@ function Details() {
               top: { xs:'350px', lg:'250px'},
               right: {lg:170, xs:60},
             }}>
-              {data && data.someKey && (
+              {isJobActive && (
                 <>
                   <MDBox sx={{display: "flex", gap:{xs:2}}}>
                     <MDButton
@@ -164,8 +149,6 @@ function Details() {
                         border: '2px solid #006E90',
                         backgroundColor: 'white',
                         height:{ md:'60px', xs:'20px'},
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
                         borderRadius: 5,
                       }}
                     >
@@ -185,13 +168,7 @@ function Details() {
                         backgroundColor: '#006E90',
                         color: 'white',
                         height: {md:'60px', xs:'20px'},
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
                         borderRadius: 5,
-                        '&:hover': {
-                          backgroundColor: '#006E90',
-                        },
                       }}
                     >
                       <MDTypography sx={{color: '#fcfdfd', fontWeight: 'bold', marginLeft:{md:'15px'}, fontSize:{xs:'15px', md:'20px'}}}>Bid</MDTypography>
@@ -240,8 +217,6 @@ function Details() {
 
           </Grid>
 
-
-
           <Grid
             container
             style={{
@@ -252,183 +227,40 @@ function Details() {
               width: '100%',
             }}
           >
-            <MDBox sx={{ width: {md:"100%", xs:"100%", sm:"100%",height:'500px', xl:"100%",xxl:"48%"}, borderRight: {xxl:"1px solid #ccc"},marginTop:{md:"40px", xs:"10px"}, marginBottom:"20px"}}>
-              <MDTypography sx={{color: '#006E90', fontSize: '20px', fontWeight: 'bold', marginTop: '20px'}}>
-                Job Description
-              </MDTypography>
+            <MDBox sx={{ width: {md:"100%", xs:"100%", sm:"100%",height:'300px', xl:"100%",xxl:"48%"}, borderRight: {xxl:"1px solid #ccc"},marginTop:{md:"40px", xs:"10px"}, marginBottom:"20px"}}>
+              <CustomTypography text="Job Description" />
               <MDTypography sx={{fontSize: '14px', marginTop: '20px', marginRight: '20px'}}>
-                Technology has become an integral part of our daily lives, shaping the way we communicate, work, and entertain ourselves. Advancements in fields like artificial intelligence, automation, and machine learning have brought about both exciting opportunities and challenges. While these innovations increase productivity and connectivity, they also raise important questions about privacy, security, and their impact on society. As we move forward, it is essential to balance progress with responsibility, ensuring that technological growth benefits everyone.
+                <div dangerouslySetInnerHTML={{ __html: jobDetails?.description }} />
               </MDTypography>
-              <MDTypography sx={{fontSize: '14px', marginTop: '20px', fontWeight: 'bold'}}>
-                Quisque at lacus nec est facilisis faucibus.
-              </MDTypography>
-              <ul style={{paddingLeft: '30px', fontSize: '14px', marginTop: '10px'}}>
-              <li>Duis vitae lectus</li>
-              <li>Lectus aliquet convallis</li>
-              <li>Cras maximus</li>
-              </ul>
-              <MDTypography sx={{fontSize: '14px', marginRight: '20px'}}>
-                Duis consequat elementum enim at ullamcorper. Cras maximus.<br/>
-                Lorem  ipsum dolor sit amet, consectetur adipiscing elit, sed diam.
-              </MDTypography>
-
+              {/*<MDTypography sx={{fontSize: '14px', marginTop: '20px', fontWeight: 'bold'}}>*/}
+              {/*  Quisque at lacus nec est facilisis faucibus.*/}
+              {/*</MDTypography>*/}
+              {/*<ul style={{paddingLeft: '30px', fontSize: '14px', marginTop: '10px'}}>*/}
+              {/*<li>Duis vitae lectus</li>*/}
+              {/*<li>Lectus aliquet convallis</li>*/}
+              {/*<li>Cras maximus</li>*/}
+              {/*</ul>*/}
+              {/*<MDTypography sx={{fontSize: '14px', marginRight: '20px'}}>*/}
+              {/*  Duis consequat elementum enim at ullamcorper. Cras maximus.<br/>*/}
+              {/*  Lorem  ipsum dolor sit amet, consectetur adipiscing elit, sed diam.*/}
+              {/*</MDTypography>*/}
 
             </MDBox>
 
-            <MDBox sx={{ width: { xs: "100%", md: "100%%" , xxl:"48%"}, marginBottom: "20px", marginLeft: {xxl:"30px", xs:"5px"}, overflow: "hidden" }}>
-              <MDTypography sx={{ color: '#006E90', fontSize: '20px', fontWeight: 'bold', marginTop: '20px' , marginBottom: '20px'}}>
-                Requirement
-              </MDTypography>
+            <MDBox sx={{ width: { xs: "100%", md: "100%%" , xxl:"48%"}, marginBottom: "20px", marginLeft: {xxl:"30px", xs:"5px"}, overflow: "hidden", marginTop:'20px' }}>
+              <CustomTypography text="Requirement" />
 
-              <MDButton
-                color={'primary'}
-                sx={{
-                  width: '100%',
-                  marginTop: '20px',
-                  backgroundColor: '#6DDA434D',
-                  color: 'white',
-                  height: '60px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  '&:hover': {
-                    backgroundColor: '#6DDA434D',
-                  },
-                }}
-                // onClick={handleButtonClick}
-              >
-                <MDBox sx={{ display: 'flex', alignItems: 'center' }}>
-                  <DescriptionOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px", marginRight: '8px' }} />
-                  <MDBox sx={{ marginLeft: {md:'20px', xs:'10px'}, overflow: 'hidden' }}>
-                    <MDTypography sx={{ fontWeight: 'bold', fontSize:{md: '14px', xs:'12px'}, marginTop: '2px' }}>
-                      Requirement Doc
-                      {/*{fileName ? fileName : 'No file selected'}*/}
-                    </MDTypography>
+              <DocumentList documents={jobDetails?.document} />
 
-                    <MDTypography sx={{ color: 'gray', fontSize: '14px', marginTop: {md:'2px', xs: '-1px'} }}>
-                      3.5 MB
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
+              <CredentialsList documents={jobDetails?.certifications} />
 
-                <FileDownloadOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px"}} />
-              </MDButton>
-
-              <MDButton
-                color={'primary'}
-                sx={{
-                  width: '100%',
-                  marginTop: '20px',
-                  backgroundColor: '#6DDA434D',
-                  color: 'white',
-                  height: '60px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  '&:hover': {
-                    backgroundColor: '#6DDA434D',
-                  },
-                }}
-                // onClick={handleButtonClick}
-              >
-                <MDBox sx={{ display: 'flex', alignItems: 'center' }}>
-                  <DescriptionOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px", marginRight: '8px' }} />
-                  <MDBox sx={{ marginLeft: {md:'20px', xs:'10px'}, overflow: 'hidden' }}>
-                    <MDTypography sx={{ fontWeight: 'bold',fontSize:{md: '14px', xs:'12px'}, marginTop: '2px' }}>
-                      Requirement Doc
-                      {/*{fileName ? fileName : 'No file selected'}*/}
-                    </MDTypography>
-
-                    <MDTypography sx={{ color: 'gray', fontSize: '14px', marginTop: '2px' }}>
-                      3.5 MB
-                    </MDTypography>
-                  </MDBox>
-                </MDBox>
-
-                <FileDownloadOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px"}} />
-              </MDButton>
-
-              {/*<MDInput*/}
-              {/*  type="file"*/}
-              {/*  id="fileInput"*/}
-              {/*  style={{ display: 'none' }}*/}
-              {/*  onChange={handleFileChange}*/}
-              {/*/>*/}
-
-              <MDBox sx={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', width: '100%' , gap: 2}}>
-                <MDBox
-                  sx={{
-                    backgroundColor: "white",
-                    border: "1px solid rgba(0, 0, 0, 0.2)",
-                    borderRadius: 5,
-                    width: 'fit-content',
-                    marginBottom: '10px',
-                  }}
-                >
-                  <MDTypography
-                    sx={{
-                      fontSize: '14px',
-                      margin: '7px',
-                      whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    OSHA Safety Certification
-                  </MDTypography>
-                </MDBox>
-
-                <MDBox
-                  sx={{
-                    backgroundColor: "white",
-                    border: "1px solid rgba(0, 0, 0, 0.2)",
-                    borderRadius: 5,
-                    width: 'fit-content',
-                    marginBottom: '10px',
-                  }}
-                >
-                  <MDTypography
-                    sx={{
-                      fontSize: '14px',
-                      margin: '7px',
-                      whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Roof Inspection Certification
-                  </MDTypography>
-                </MDBox>
-
-                <MDBox
-                  sx={{
-                    backgroundColor: "white",
-                    border: "1px solid rgba(0, 0, 0, 0.2)",
-                    borderRadius: 5,
-                    width: 'fit-content',
-                    marginBottom: '10px',
-                  }}
-                >
-                  <MDTypography
-                    sx={{
-                      fontSize: '14px',
-                      margin: '7px',
-                      whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Building Safety Inspector Certification
-                  </MDTypography>
-                </MDBox>
-
-              </MDBox>
-              <MDTypography sx={{ color: '#006E90', fontSize: '20px', fontWeight: 'bold', marginTop: '20px' }}>
-                Payment
-              </MDTypography>
+              <CustomTypography text="Payment" />
               <MDBox sx={{display: {xxl:'flex', xs:'column', md:'flex'}}}>
                 <MDTypography sx={{ fontSize: '16px', fontWeight: 'bold', marginTop: '20px' }}>
-                  Start Date: January 15, 2025.
+                  Start Date: {formatDate(jobDetails?.start_date)}
                 </MDTypography>
                 <MDTypography sx={{ fontSize: '16px', fontWeight: 'bold', marginTop: '20px', marginLeft: {xxl:'100px', md:'350px'} }}>
-                  End Date: July 20, 2025.
+                  End Date: {formatDate(jobDetails?.end_date)}
                 </MDTypography>
               </MDBox>
               <MDTypography sx={{ fontSize: '16px', marginTop: '15px'}}>
@@ -442,7 +274,7 @@ function Details() {
         </MDBox>
 
 
-        {data && data.someKey && (
+        {isJobActive && (
         <MDBox sx={{ width:{ md:"95%", xs:"85%"},height:"50%",borderTop: {xxl:"1px solid #ccc"},marginLeft:{md:"33px", xs:"20px"}, marginRight:{md:"33px", xs:"20px"} }}>
           <FormikProvider value={formik}>
             <Form>
