@@ -25,6 +25,16 @@ class JobCategory(models.Model):
         return self.name
 
 
+class JobDocument(TimeStampedModel):
+    job = models.ForeignKey('Job', on_delete=models.CASCADE, related_name='documents')
+    document = models.FileField(upload_to='job_documents/')
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return f'{self.job.title} - {self.document}'
+
 
 class Job(TimeStampedModel):
     class JobStatus(models.TextChoices):

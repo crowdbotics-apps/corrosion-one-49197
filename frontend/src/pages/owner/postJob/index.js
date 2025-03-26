@@ -8,8 +8,10 @@ import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
 import MDButton from "../../../components/MDButton";
 import Grid from "@mui/material/Grid";
-import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
+import {checkUrl, showMessage, truncateFilename, useApi, useLoginStore} from "../../../services/helpers";
 import RenderWorkArea from "../../../components/RenderListOption";
+import DocumentItem from "../../common/settings/documentItem";
+import AddDocumentBox from "../../common/settings/addDocumentBox";
 
 
 function PostJob() {
@@ -95,6 +97,22 @@ function PostJob() {
     formik.setFieldValue('payment_modes', newValues)
   }
 
+  const handleOpenDownload = (doc) => {
+    window.open(checkUrl(doc.document), '_blank');
+  };
+
+  const handleDelete = (item) => {
+    formik.setFieldValue('documents', formik.values.documents.filter((doc) => doc.id !== item.id))
+  };
+
+  const handleAddDocument = (e) => {
+    const file = e.target.files[0];
+    const filename = truncateFilename(file.name);
+    const newFile = new File([file], filename, {type: file.type});
+    formik.setFieldValue('documents', [...formik.values.documents, {id: Math.random(), name: filename, file: newFile}])
+  };
+
+
   const initialValues = {
     title: '',
     address: '',
@@ -107,7 +125,8 @@ function PostJob() {
     per_diem_rate: 0,
     mileage_rate: 0,
     misc_other_rate: 0,
-    payment_modes: [PaymentOptions[0]]
+    payment_modes: [PaymentOptions[0]],
+    documents: [],
   };
 
   const validationSchema = Yup.object().shape({
@@ -306,36 +325,30 @@ function PostJob() {
                   fullWidth
                   variant="outlined"
                   color="secondary"
+                  onClick={() => document.getElementById('input_file').click()}
                 >
-                  {fileName ? (
-                    <>
-                      {`Document: ${fileName}`}
-                      <HighlightOffIcon
-                        sx={{
-                          marginTop: '2px',
-                          width: '20px',
-                          height: '20px',
-                          color: 'red',
-                          marginLeft: '8px',
-                          cursor: 'pointer',
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeFile();
-                        }}
-                      />
-                    </>
-                  ) : (
-                    'Add Document'
-                  )}
-
-                  <input
-                    type="file"
-                    style={{display: 'none'}}
-                    onChange={handleFileChange}
-                  />
+                  Add Document
                 </MDButton>
+                <input
+                  id={'input_file'}
+                  hidden
+                  accept="*"
+                  type="file"
+                  onChange={handleAddDocument}
+                />
               </MDBox>
+              <Grid container spacing={2} mb={1}>
+                {formik.values.documents.map((doc) => (
+                  <Grid item key={doc.id}>
+                    <DocumentItem
+                      key={doc.id}
+                      doc={doc}
+                      onOpenDownload={handleOpenDownload}
+                      onDelete={handleDelete}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
               <MDBox display="flex" justifyContent="flex-end" mr={1} mt={'auto'}>
                 <MDButton
                   color={'secondary'}
@@ -346,7 +359,6 @@ function PostJob() {
               </MDBox>
             </Card>
           </Grid>
-
         </Grid>
       </FormikProvider>
     </AdminLayout>

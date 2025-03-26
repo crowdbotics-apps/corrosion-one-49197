@@ -11,7 +11,8 @@ from jobs.filters import CustomOrderingFilterJobs
 from jobs.models import Job, JobCategory
 from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer
 from users.permissions import IsOwner, IsInspector
-from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector
+from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
+    CollectedMultipartJsonViewMixin
 from utils.utils.pagination import CustomPageSizePagination
 
 
@@ -26,6 +27,7 @@ class JobCategoryListViewSet(GenericViewSet, ListModelMixin):
 
 
 class JobViewSet(
+    CollectedMultipartJsonViewMixin,
     PermissionClassByActionMixin,
     SerializerClassByActionMixin,
     ModelViewSet

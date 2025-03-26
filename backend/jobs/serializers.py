@@ -8,7 +8,7 @@ from rest_framework.relations import PrimaryKeyRelatedField
 
 from inspector.models import Credential, Inspector
 from inspector.serializers import CredentialSerializer
-from jobs.models import Job, JobCategory, MagicLinkToken
+from jobs.models import Job, JobCategory, MagicLinkToken, JobDocument
 from utils.utils.email import send_email_with_template
 
 
@@ -55,7 +55,12 @@ class JobManagementSerializer(serializers.ModelSerializer):
             if mode in payment_modes and attrs.get(rate_field, 0) == 0:
                 raise serializers.ValidationError(
                     f'{rate_field.replace("_", " ").title()} cannot be 0 if {mode.replace("_", " ")} payment mode is selected')
-
+        documents = self.initial_data.get('documents')
+        if documents:
+            for document in documents:
+                if 'file' in document and document['file'].size > 20 * 1024 * 1024:
+                    raise serializers.ValidationError('Document size should not exceed 20MB')
+            attrs['documents'] = documents
         return attrs
 
     def save(self, **kwargs):
@@ -65,7 +70,14 @@ class JobManagementSerializer(serializers.ModelSerializer):
             data['created_by'] = user.owner
             certifications = self.validated_data['certifications']
             request = self.context.get('request')
+            documents = self.validated_data.get('documents', [])
+            if documents:
+                data.pop('documents')
             self.instance = super().save(**kwargs)
+            if documents:
+                for support_document in documents:
+                    if 'file' in support_document:
+                        JobDocument.objects.create(job=self.instance, document=support_document['file'])
             inspector_ids =  []
             for certification in certifications:
                 inspector_ids_credential = list(certification.documents.values_list('inspector_id', flat=True))
@@ -88,6 +100,19 @@ class JobManagementSerializer(serializers.ModelSerializer):
                         "link": url,
                     }
                 )
+
+            # current_documents_ids = self.instance.support_documents.all().values_list('id', flat=True)
+            # for document in current_documents_ids:
+            #     if document not in [doc['id'] for doc in support_documents]:
+            #         SupportDocument.objects.get(id=document).delete()
+            #
+            # if support_documents:
+            #     for support_document in support_documents:
+            #         if 'file' in support_document:
+            #             SupportDocument.objects.create(inspector=self.instance, document=support_document['file'])
+            #     data.pop('support_documents')
+
+            self.instance.save()
 
 
 
