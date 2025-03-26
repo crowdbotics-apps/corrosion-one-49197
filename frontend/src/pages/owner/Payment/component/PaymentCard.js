@@ -5,10 +5,10 @@ import MDTypography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined"
 import MDAvatar from "../../../../components/MDAvatar"
-import React, { useState } from "react"
+import React from "react"
+import Switch from "@mui/material/Switch"
 
-const PaymentCard = ({ nameOnCard, expireDate, cardNumber }) => {
-
+const PaymentCard = ({ nameOnCard, expireDate, cardNumber, cardId, isActive, onToggle }) => {
 
   const maskCard = (number) => {
     const first4 = number.slice(0, 4);
@@ -19,7 +19,7 @@ const PaymentCard = ({ nameOnCard, expireDate, cardNumber }) => {
     return blocked;
   };
 
-  return(
+  return (
     <Card sx={{ p: 2, display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderRadius: '12px', width: '30%' }}>
       <Grid container display="flex" alignItems="center" justifyContent="space-between">
         <MDBox>
@@ -52,8 +52,16 @@ const PaymentCard = ({ nameOnCard, expireDate, cardNumber }) => {
         </MDBox>
       </Grid>
 
-      <Grid borderTop={"2px solid #E4E5E8"} width={'100%'}>
-        <MDTypography sx={{ fontSize: '24px', marginTop: '10px' }}>{maskCard(cardNumber)}</MDTypography>
+      <Grid borderTop={"2px solid #E4E5E8"} width={'100%'} display={'flex'} alignItems="center" justifyContent="space-between">
+        <MDTypography sx={{ fontSize: '24px', marginTop: '10px' }}>
+          {maskCard(cardNumber)}
+        </MDTypography>
+        <Switch
+          checked={isActive}
+          onChange={() => onToggle(cardId)}
+          color="primary"
+          inputProps={{ 'aria-label': 'toggle card visibility' }}
+        />
       </Grid>
     </Card>
   );

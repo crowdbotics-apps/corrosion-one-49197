@@ -3,6 +3,8 @@ import {capitalize} from "../../../services/helpers";
 import MDBox from "../../../components/MDBox";
 import MDButton from "../../../components/MDButton";
 import React from "react"
+import { useNavigate } from "react-router-dom"
+import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
 
 
 export const dataTableModel = {
@@ -18,12 +20,20 @@ export const dataTableModel = {
 };
 
 
-const renderActions = (item, setSelectedItem, setShowModal) => {
+
+
+const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
+  const navigate = useNavigate();
+
+  const handleRejectDetails = () => {
+    const data = { someKey: true };
+    navigate("/find-jobs-details", { state: data });
+  };
 
   return (
     <MDBox>
       <MDButton color={'primary'} variant={'outlined'} size={'small'}>Bids</MDButton>
-      {item.raw_status === 'pending' &&<MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Edit</MDButton>}
+      {item.raw_status === 'pending' &&<MDButton onClick={handleRejectDetails} color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Edit</MDButton>}
       {item.raw_status === 'pending' && <MDButton
         color={'error'}
         variant={'outlined'}
@@ -36,8 +46,12 @@ const renderActions = (item, setSelectedItem, setShowModal) => {
         Cancel
       </MDButton>}
     </MDBox>
-  )
-}
+
+  );
+};
+
+
+
 
 
 
@@ -45,7 +59,7 @@ export const renderTableRow = (item, setSelectedItem, setShowModal) => {
   item.created = moment(item.created).format('MM/DD/YYYY')
   item.raw_status = item.status
   item.status =capitalize(item.status)
-  item.actions = (renderActions(item, setSelectedItem, setShowModal))
+  item.actions = <ActionButtons item={item} setSelectedItem={setSelectedItem} setShowModal={setShowModal} />;
   return item
 }
 

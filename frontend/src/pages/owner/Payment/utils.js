@@ -31,7 +31,7 @@ const renderActions = (item, setSelectedItem, setShowModal) => {
 
 
 export const renderTableRow = (item, setSelectedItem, setShowModal) => {
-  item.status =capitalize(item.status);
+  item.applicationDate = moment(item.applicationDate).format('MMM D, YYYY HH:mm');
   item.actions = renderActions(item, setSelectedItem, setShowModal);
   return item;
 };

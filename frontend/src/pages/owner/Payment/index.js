@@ -30,8 +30,12 @@ function Payment() {
   const [openCancelModal, setOpenCancelModal] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [activeCard, setActiveCard] = useState(null);
 
-
+  const cards = [
+    { cardId: 1, nameOnCard: "John Doe", expireDate: "12/25", cardNumber: "1234567812345678" },
+    { cardId: 2, nameOnCard: "Jane Doe", expireDate: "11/24", cardNumber: "9876543298765432" },
+  ];
 
   const getJobs = (search = '', page = 1, ordering = order, dates = null) => {
     setLoading(true);
@@ -44,31 +48,33 @@ function Payment() {
           {
             name: "#487441",
             status: "$999 USD",
-            applicationDate: "Dec 7, 2019 23:26",
+            applicationDate: "9 7, 2019 23:26",
           },
           {
             name: "#487441",
             status: "$999 USD",
-            applicationDate: "Dec 7, 2019 23:26",
+            applicationDate: "12 7, 2019 23:26",
           },
           {
             name: "#487441",
             status: "$999 USD",
-            applicationDate: "Dec 7, 2019 23:26",
+            applicationDate: "12 7, 2019 23:26",
           },
           {
             name: "#487441",
             status: "$999 USD",
-            applicationDate: "Dec 7, 2019 23:26",
+            applicationDate: "12 7, 2019 23:26",
           },
           {
             name: "#487441",
             status: "$999 USD",
-            applicationDate: "Dec 7, 2019 23:26",
+            applicationDate: "12 7, 2019 23:26",
           },
         ]
       }
     };
+
+
 
 
     const { count, results } = result.data;
@@ -90,20 +96,26 @@ function Payment() {
     if (startDate && endDate) getJobs(searchQuery, 1, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`);
   }, [startDate, endDate]);
 
+
+
+  const handleToggle = (cardId) => {
+    setActiveCard(prevCard => (prevCard === cardId ? null : cardId));
+  };
   return (
     <AdminLayout title={'Payment'} width={'100%'}>
       <Grid flex={1} display="flex" direction="column" gap={2} xs={12} sx={{width:'100%',flexDirection: 'column', justifyContent: 'space-between'}}>
-        <Grid display="flex" alignItems="center" width={'100%'} gap={2}>
-          <PaymentCard
-            nameOnCard="Esther Howard"
-            expireDate="12/29"
-            cardNumber="6714567812345678"
-          />
-          <PaymentCard
-            nameOnCard="Rene Howard"
-            expireDate="12/27"
-            cardNumber="1234567812345678"
-          />
+        <Grid display="flex" alignItems="center" width={'100%'} gap={2}  sx={{ flexDirection: 'row', overflowX: 'auto', paddingBottom: '10px' }}>
+          {cards.map((card) => (
+            <PaymentCard
+              key={card.cardId}
+              cardId={card.cardId}
+              nameOnCard={card.nameOnCard}
+              expireDate={card.expireDate}
+              cardNumber={card.cardNumber}
+              isActive={activeCard === card.cardId}
+              onToggle={handleToggle}
+            />
+          ))}
         </Grid>
 
       <Card>
