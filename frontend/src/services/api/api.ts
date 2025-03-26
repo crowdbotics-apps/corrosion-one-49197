@@ -135,7 +135,7 @@ export class Api extends ApiBase {
   }
 
   cancelJob(id: number | string) {
-    return this.simple_post(`${API_VERSION_PREFIX}/jobs/${id}/cancel/`);
+    return this.simple_delete(`${API_VERSION_PREFIX}/jobs/${id}/`);
   }
 
   getOrdersStatusAdmin(data: any) {

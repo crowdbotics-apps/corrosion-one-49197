@@ -73,17 +73,14 @@ class Job(TimeStampedModel):
         blank=True,
     )
 
+    views = models.IntegerField(default=0)
+
 
     class Meta:
         ordering = ['-id']
 
     def __str__(self):
         return self.title
-
-    @property
-    def views(self):
-        return 1
-
 
 class Bid(TimeStampedModel):
     class StatusChoices(models.TextChoices):

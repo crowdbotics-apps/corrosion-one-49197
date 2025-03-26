@@ -18,7 +18,6 @@ export const dataTableModel = {
 
 
 const renderActions = (item, setSelectedItem, setShowModal) => {
-
   return (
     <MDBox>
       <MDButton color={'primary'} variant={'outlined'} size={'small'}>Bids</MDButton>
@@ -32,8 +31,8 @@ const renderActions = (item, setSelectedItem, setShowModal) => {
           setShowModal(true)
         }}
       >
-        Cancel
-      </MDButton>}
+        {item.bids === 0 ? 'Delete' : 'Cancel'}
+        </MDButton>}
     </MDBox>
   )
 }

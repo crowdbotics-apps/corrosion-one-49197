@@ -1,3 +1,4 @@
+from django.db.models import ProtectedError, ObjectDoesNotExist
 from django.shortcuts import render
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -12,7 +13,7 @@ from jobs.models import Job, JobCategory
 from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer, JobDetailSerializer
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
-    CollectedMultipartJsonViewMixin
+    CollectedMultipartJsonViewMixin, may_fail
 from utils.utils.pagination import CustomPageSizePagination
 
 
@@ -61,18 +62,46 @@ class JobViewSet(
 
         return jobs.filter(created_by=user.owner)
 
+
+
+
+    @may_fail(Job.DoesNotExist, 'Job not found')
     @action(detail=True, methods=['post'])
     def cancel(self, request, pk=None):
         user = self.request.user
         if user_is_inspector(user):
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
-        job = Job.objects.filter(pk=pk, created_by=user.owner).first()
-        if not job:
-            return Response(status=HTTP_404_NOT_FOUND)
+        job = Job.objects.get(pk=pk, created_by=user.owner)
         if job.status == Job.JobStatus.CANCELED:
             return Response('Job already canceled', status=HTTP_400_BAD_REQUEST)
         job.status = Job.JobStatus.CANCELED
         job.active = False
+        job.save()
+        return Response()
+
+    @may_fail(Job.DoesNotExist, 'Job not found')
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        user = self.request.user
+        if user_is_inspector(user):
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        job = instance
+        if instance.bids.count() > 0:
+            if job.status == Job.JobStatus.CANCELED:
+                return Response('Job already canceled', status=HTTP_400_BAD_REQUEST)
+            job.status = Job.JobStatus.CANCELED
+            job.active = False
+            job.save()
+        else:
+            self.perform_destroy(instance)
+        return Response()
+
+
+    @may_fail(Job.DoesNotExist, 'Job not found')
+    @action(detail=True, methods=['post'])
+    def viewed(self, request, pk=None):
+        job = Job.objects.get(pk=pk)
+        job.views += 1
         job.save()
         return Response()
 
