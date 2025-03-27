@@ -22,14 +22,14 @@ export const CustomTypography = ({ text }) => {
   );
 };
 
-// Función para mostrar los documentos
+
 export const DocumentList = ({ documents }) => {
   return (
     <MDBox sx={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', width: '100%', gap: 2 }}>
       {Array.isArray(documents) && documents.length > 0 ? (
-        documents.map((cert, index) => (
+        documents.map((doc) => (
           <MDButton
-            key={index}
+            key={doc}
             color={'primary'}
             sx={{
               width: '100%',
@@ -44,16 +44,18 @@ export const DocumentList = ({ documents }) => {
                 backgroundColor: '#6DDA434D',
               },
             }}
+            component="a"
+            href={doc.document}
+            download
           >
             <MDBox sx={{ display: 'flex', alignItems: 'center' }}>
               <DescriptionOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px", marginRight: '8px' }} />
               <MDBox sx={{ marginLeft: { md: '20px', xs: '10px' }, overflow: 'hidden' }}>
                 <MDTypography sx={{ fontWeight: 'bold', fontSize: { md: '14px', xs: '12px' }, marginTop: '2px' }}>
-                  {cert.name || 'Requirement Doc'}
+                  {doc.name || 'Requirement Doc'}
                 </MDTypography>
-
                 <MDTypography sx={{ color: 'gray', fontSize: '14px', marginTop: { md: '2px', xs: '-1px' } }}>
-                  {cert.size} MB
+                  {'File Size Info'}
                 </MDTypography>
               </MDBox>
             </MDBox>
@@ -67,6 +69,9 @@ export const DocumentList = ({ documents }) => {
     </MDBox>
   );
 };
+
+
+
 
 export const CredentialsList = ({ documents }) => {
   return (

@@ -12,6 +12,7 @@ import DateBar from "../../../components/DateBar";
 import { renderTableRow } from "./utils";
 import MDAvatar from "../../../components/MDAvatar"
 import MDTypography from "@mui/material/Typography"
+import Grid from "@mui/material/Grid"
 
 function HomeOwnerDos() {
   const loginStore = useLoginStore();
@@ -129,10 +130,10 @@ function HomeOwnerDos() {
 
   return (
     <AdminLayout title={'Find Jobs'} showCard>
-      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" ,gap:{xs:'20px'}, flexDirection:{md:'row',xs:'column'}}}>
-        <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery} />
+      <Grid display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2} flexDirection={{ xs: 'column', sm: 'row' }}>
+        <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery}/>
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
-      </MDBox>
+      </Grid>
       <DataTable
         loading={loading}
         loadingText={'Loading...'}

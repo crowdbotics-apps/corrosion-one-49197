@@ -29,7 +29,7 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
   const api = useApi()
 
   const handleRejectDetails = () => {
-    setLoading(true);
+    setLoading(false);
 
     const jobId = item.id;
 
@@ -39,8 +39,8 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
         const jobDetails = result.data;
         console.log("Detalles del trabajo:", jobDetails);
 
-        navigate("/find-jobs-details", {
-          state: { jobDetails, isJobActive: true }
+        navigate("/job-details", {
+          state: { jobDetails, isJobActive: false }
         });
 
       },

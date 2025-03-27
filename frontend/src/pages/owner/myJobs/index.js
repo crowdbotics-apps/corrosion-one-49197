@@ -20,6 +20,7 @@ import MDButton from "../../../components/MDButton";
 import {runInAction} from "mobx";
 import {ROUTES} from "../../../services/constants";
 import DateBar from "../../../components/DateBar"
+import Grid from "@mui/material/Grid"
 
 
 function HomeOwnerJobs() {
@@ -104,12 +105,10 @@ function HomeOwnerJobs() {
       title={'My Jobs'}
       showCard
     >
-      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" ,gap:{xs:'20px'}, flexDirection:{md:'row',xs:'column'}}}>
-
+      <Grid display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2} flexDirection={{ xs: 'column', sm: 'row' }}>
         <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery}/>
-        {/*TODO: COnvertir a componente y agregar opciones de limpiar fecha*/}
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
-      </MDBox>
+      </Grid>
       <DataTable
         loading={loading}
         loadingText={'Loading...'}
