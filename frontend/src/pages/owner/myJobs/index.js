@@ -51,7 +51,6 @@ function HomeOwnerJobs() {
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)
         setOrder(ordering)
-        console.log('result', results)
       },
       errorMessage: 'Error getting jobs',
       onFinally: () => setLoading(false)

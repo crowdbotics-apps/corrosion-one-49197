@@ -9,8 +9,9 @@ from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from jobs.filters import CustomOrderingFilterJobs
-from jobs.models import Job, JobCategory
-from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer, JobDetailSerializer
+from jobs.models import Job, JobCategory, Bid
+from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer, JobDetailSerializer, \
+    BidListSerializer, BidCreateSerializer
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
     CollectedMultipartJsonViewMixin, may_fail
@@ -62,9 +63,6 @@ class JobViewSet(
 
         return jobs.filter(created_by=user.owner)
 
-
-
-
     @may_fail(Job.DoesNotExist, 'Job not found')
     @action(detail=True, methods=['post'])
     def cancel(self, request, pk=None):
@@ -105,6 +103,69 @@ class JobViewSet(
         job.save()
         return Response()
 
+
+class BidViewSet(
+    PermissionClassByActionMixin,
+    SerializerClassByActionMixin,
+    ModelViewSet
+):
+    queryset = Bid.objects.all()
+    serializer_class = BidListSerializer
+    action_permissions = {
+        'list': [IsInspector, IsOwner],
+        'create': [IsInspector],
+        'accept': [IsOwner],
+    }
+    action_serializers = {
+        'list': BidListSerializer,
+        'create': BidCreateSerializer,
+    }
+
+    def get_queryset(self):
+        user = self.request.user
+        bids = super().get_queryset()
+        query_params = self.request.query_params
+        job_id = query_params.get('job_id', None)
+        if job_id:
+            bids = bids.filter(job_id=job_id)
+        if user_is_inspector(user):
+            dates = query_params.get('dates', None)
+            if dates:
+                start_date, end_date = dates.split(',')
+                bids = bids.filter(created__range=[start_date, end_date])
+            return bids.filter(inspector=user.inspector)
+        return bids.filter(job__created_by=user.owner)
+
+    @may_fail(Bid.DoesNotExist, 'Bid not found')
+    @action(detail=False, methods=['post'])
+    def accept(self, request):
+        user = self.request.user
+        bid_id = request.data.get('bid_id')
+        bid = Bid.objects.get(pk=bid_id)
+        if bid.job.created_by != user.owner:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        job = bid.job
+        if job.status != Job.JobStatus.PENDING:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        other_bids = bid.bids.filter(job=job).exclude(id=bid.id)
+        for other_bid in other_bids:
+            other_bid.status = Bid.StatusChoices.REJECTED
+            other_bid.save()
+        bid.status = Bid.StatusChoices.ACCEPTED
+        bid.save()
+        return Response()
+
+    @may_fail(Bid.DoesNotExist, 'Bid not found')
+    @action(detail=False, methods=['post'])
+    def reject(self, request):
+        user = self.request.user
+        bid_id = request.data.get('bid_id')
+        bid = Bid.objects.get(pk=bid_id)
+        if bid.job.created_by != user.owner:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        bid.status = Bid.StatusChoices.REJECTED
+        bid.save()
+        return Response()
 
 
 
