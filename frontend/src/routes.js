@@ -60,6 +60,8 @@ import HomeOwnerDetails from "./pages/owner/findJobs/detailsIndex"
 import HomeInspector from "./pages/owner/home"
 import HomeOwner from "./pages/owner/HomeOwner"
 import HomeOwnerAppliedJobs from "./pages/owner/Applied Jobs"
+import Support from "./pages/common/Support"
+import Payment from "./pages/owner/Payment"
 
 
 
@@ -216,8 +218,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Payment",
     key: "payment",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.PAYMENT,
+    component: <Payment />,
     icon: <Icon fontSize="small">account_balance_wallet_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER, ROLES.INSPECTOR],
@@ -248,6 +250,16 @@ export const protectedRoutes = [
     key: "settings",
     route: ROUTES.SETTINGS,
     component: <Settings />,
+    icon: null,
+    noCollapse: true,
+    role: [],
+  },
+  {
+    type: "collapse",
+    name: "Support",
+    key: "support",
+    route: ROUTES.SUPPORT,
+    component: <Support />,
     icon: null,
     noCollapse: true,
     role: [],

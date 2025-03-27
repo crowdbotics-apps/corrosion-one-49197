@@ -11,7 +11,8 @@ import Box from "@mui/material/Box";
 import MDButton from "../../../components/MDButton";
 import DateBar from "../../../components/DateBar";
 import { renderTableRow } from "./utils";
-import MDAvatar from "../../../components/MDAvatar" // Importar la función que renderiza las filas
+import MDAvatar from "../../../components/MDAvatar"
+import Grid from "@mui/material/Grid" // Importar la función que renderiza las filas
 
 function HomeOwnerJobs() {
   const loginStore = useLoginStore();
@@ -71,10 +72,10 @@ function HomeOwnerJobs() {
 
   return (
     <AdminLayout title={'Bids'} showCard>
-      <MDBox sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" ,gap:{xs:'20px'}, flexDirection:{md:'row',xs:'column'}}}>
-        <SearchBar loading={loading} search={getBids} setSearchQuery={setSearchQuery} />
+      <Grid display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2} flexDirection={{ xs: 'column', sm: 'row' }}>
+        <SearchBar loading={loading} search={getBids} setSearchQuery={setSearchQuery}/>
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
-      </MDBox>
+      </Grid>
       <DataTable
         loading={loading}
         loadingText={'Loading...'}

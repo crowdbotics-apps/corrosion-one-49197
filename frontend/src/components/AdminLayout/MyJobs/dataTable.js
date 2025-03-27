@@ -105,7 +105,7 @@ function DataTable({
 
   const handleRejectDetails = () => {
     const data = { someKey: false };
-    navigate("/find-jobs-details", { state: data });
+    navigate("/find-job-details", { state: data });
   }
 
 

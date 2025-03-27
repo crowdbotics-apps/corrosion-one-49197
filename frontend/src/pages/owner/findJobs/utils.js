@@ -26,7 +26,7 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
 
   const handleRejectDetails = () => {
     const data = { someKey: true };
-    navigate("/find-jobs-details", { state: data });
+    navigate("/find-job-details", { state: data });
   };
 
   return (
