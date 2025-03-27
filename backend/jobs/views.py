@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from jobs.filters import CustomOrderingFilterJobs
+from jobs.filters import CustomOrderingFilterJobs, CustomOrderingFilterBids
 from jobs.models import Job, JobCategory, Bid
 from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
@@ -115,9 +115,9 @@ class BidViewSet(
 ):
     queryset = Bid.objects.all()
     pagination_class = CustomPageSizePagination
-    filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['title']
-    ordering_fields = ['title']
+    filter_backends = [SearchFilter, OrderingFilter, CustomOrderingFilterBids]
+    search_fields = ['status', 'job__title', 'inspector__user__first_name', 'inspector__user__last_name']
+    ordering_fields = ['status', 'created', 'job', 'inspector', 'created']
     action_permissions = {
         'list': [IsInspector, IsOwner],
         'create': [IsInspector],

@@ -28,7 +28,7 @@ const renderActions = (item, setSelectedItem, setShowModal) => {
           setShowModal(true);
         }}
       >
-        Rejected
+        Reject
       </MDButton>
     </MDBox>
   );

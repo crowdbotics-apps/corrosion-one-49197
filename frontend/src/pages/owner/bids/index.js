@@ -59,48 +59,6 @@ function HomeOwnerJobs() {
       errorMessage: 'Error getting jobs',
       onFinally: () => setLoading(false)
     })
-
-    // // Datos estáticos simulando la respuesta de la API
-    // const result = {
-    //   data: {
-    //     count: 25,
-    //     results: [
-    //       {
-    //         profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
-    //         name: 'John Doe',
-    //         bidsJobs: 5,
-    //         bidAmount: 100,
-    //         applicationDate: '2025-03-25',
-    //         status: 'pending',
-    //       },
-    //       {
-    //         profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
-    //         name: 'Jane Smith',
-    //         bidsJobs: 3,
-    //         bidAmount: 150,
-    //         applicationDate: '2025-03-24',
-    //         status: 'approved',
-    //       },
-    //       {
-    //         profile_picture: <MDAvatar variant={"circular"} style={{ fontSize: "80px", borderRadius: "50%" }} src={"https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"} />,
-    //         name: 'Robert Brown',
-    //         bidsJobs: 7,
-    //         bidAmount: 120,
-    //         applicationDate: '2025-03-22',
-    //         status: 'rejected',
-    //       }
-    //     ]
-    //   }
-    // };
-    //
-    //
-    // const { count, results } = result.data;
-    // const tmp = { ...dataTableModel };
-    // tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal));
-    // setDatatable(tmp);
-    // setNumberOfItems(count);
-    // setNumberOfItemsPage(results.length);
-    // setLoading(false);
   };
 
   useEffect(() => {
