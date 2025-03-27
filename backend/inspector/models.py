@@ -42,6 +42,10 @@ class Inspector(models.Model):
             return 2
         return 1
 
+    @property
+    def name(self):
+        return f'{self.user.first_name} {self.user.last_name}'
+
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
 

@@ -17,6 +17,6 @@ class JobCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Bid)
 class BidAdmin(admin.ModelAdmin):
-    list_display = ['job', 'inspector', 'amount', 'status', 'note']
-    search_fields = ['job__title', 'inspector__user__name', 'amount', 'status', 'note']
+    list_display = ['job', 'inspector', 'status', 'note']
+    search_fields = ['job__title', 'inspector__user__name', 'status', 'note']
     list_filter = ['status']

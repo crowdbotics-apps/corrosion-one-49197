@@ -51,7 +51,6 @@ function HomeOwnerJobs() {
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)
         setOrder(ordering)
-        console.log('result', results)
       },
       errorMessage: 'Error getting jobs',
       onFinally: () => setLoading(false)
@@ -61,9 +60,9 @@ function HomeOwnerJobs() {
   const cancelJob = () => {
     setLoading(true)
     api.cancelJob(selectedItem?.id).handle({
-        onSuccess: () => {
+        onSuccess: (res) => {
           getJobs()
-          selectedItem(null)
+          setSelectedItem(null)
           setOpenCancelModal(false)
         },
         errorMessage: 'Error cancelling job',
@@ -127,9 +126,9 @@ function HomeOwnerJobs() {
         }}
       />
       <Dialog open={openCancelModal} onClose={handleCloseModal}>
-        <DialogTitle>Confirmation</DialogTitle>
+        <DialogTitle>{selectedItem?.bids === 0 ? 'Delete Job' : 'Cancel Job'}</DialogTitle>
         <DialogContent>
-          <p>Do you want to cancel this job?</p>
+          <p>Do you want to {selectedItem?.bids === 0 ? 'delete' : 'cancel' } this job?</p>
         </DialogContent>
         <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
           <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>

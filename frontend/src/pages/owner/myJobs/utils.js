@@ -65,15 +65,11 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
           setShowModal(true)
         }}
       >
-        Cancel
-      </MDButton>}
+        {item.bids === 0 ? 'Delete' : 'Cancel'}
+        </MDButton>}
     </MDBox>
-
-  );
-};
-
-
-
+  )
+}
 
 
 
@@ -84,3 +80,5 @@ export const renderTableRow = (item, setSelectedItem, setShowModal) => {
   item.actions = <ActionButtons item={item} setSelectedItem={setSelectedItem} setShowModal={setShowModal} />;
   return item
 }
+
+

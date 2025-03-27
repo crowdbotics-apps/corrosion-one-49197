@@ -7,8 +7,9 @@ from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from inspector.models import Credential, Inspector
-from inspector.serializers import CredentialSerializer
-from jobs.models import Job, JobCategory, MagicLinkToken, JobDocument
+from inspector.serializers import CredentialSerializer, InspectorDetailSerializer
+from jobs.models import Job, JobCategory, MagicLinkToken, JobDocument, Bid
+from owner.serializers import OwnerDetailSerializer
 from utils.utils.email import send_email_with_template
 
 
@@ -37,12 +38,13 @@ class JobDetailSerializer(serializers.ModelSerializer):
     categories = JobCategorySerializer(many=True)
     certifications = CredentialSerializer(many=True)
     documents = JobDocumentSerializer(many=True)
+    created_by = OwnerDetailSerializer()
 
     class Meta:
         model = Job
         fields = ['id', 'title', 'description', 'categories', 'certifications', 'start_date',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
-                  'misc_other_rate', 'payment_modes']
+                  'misc_other_rate', 'payment_modes', 'created_by']
 
 
 class JobManagementSerializer(serializers.ModelSerializer):
@@ -127,8 +129,42 @@ class JobManagementSerializer(serializers.ModelSerializer):
             #     data.pop('support_documents')
 
             self.instance.save()
-
-
-
-
         return self.instance
+
+
+class BidListSerializer(serializers.ModelSerializer):
+    job = serializers.CharField(source='job.title')
+    inspector = serializers.CharField(source='inspector.name')
+
+    class Meta:
+        model = Bid
+        fields = ['job', 'inspector', 'status', 'note']
+
+
+class BidCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bid
+        fields = ['job', 'note']
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        if not hasattr(user, 'inspector'):
+            raise serializers.ValidationError('User is not an inspector')
+        attrs['inspector'] = user.inspector
+        job = attrs['job']
+        if job.status != Job.JobStatus.PENDING:
+            raise serializers.ValidationError('Job is not available for bidding')
+        return attrs
+
+    def save(self, **kwargs):
+        data = self.validated_data
+        return super().save(**kwargs)
+
+
+class BidDetailSerializer(serializers.ModelSerializer):
+    job = JobListSerializer()
+    inspector = InspectorDetailSerializer()
+
+    class Meta:
+        model = Bid
+        fields = ['job', 'inspector', 'status', 'note']

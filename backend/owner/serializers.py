@@ -66,11 +66,15 @@ class OwnerDetailSerializer(serializers.ModelSerializer):
     logo_name = serializers.SerializerMethodField()
     banner_size = serializers.SerializerMethodField()
     logo_size = serializers.SerializerMethodField()
+    phone_number = serializers.SerializerMethodField()
+    email = serializers.CharField(source='user.email')
+    linkedin = serializers.CharField(source='user.linkedin')
+    website = serializers.CharField(source='user.website')
 
     class Meta:
         model = Owner
         fields = ['industry', 'company_name', 'address', 'banner', 'logo', 'banner_name', 'logo_name', 'banner_size',
-                  'logo_size']
+                  'logo_size', 'phone_number', 'email', 'linkedin', 'website']
 
     def get_banner_name(self, obj):
         if not obj.banner:
@@ -91,6 +95,9 @@ class OwnerDetailSerializer(serializers.ModelSerializer):
         if not obj.logo:
             return None
         return obj.logo.size
+
+    def get_phone_number(self, obj):
+        return obj.user.phone_number.as_e164
 
 
 class OwnerUpdateSerializer(serializers.ModelSerializer):
