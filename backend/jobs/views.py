@@ -2,7 +2,7 @@ from django.db.models import ProtectedError, ObjectDoesNotExist
 from django.shortcuts import render
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
@@ -11,7 +11,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from jobs.filters import CustomOrderingFilterJobs
 from jobs.models import Job, JobCategory, Bid
 from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer, JobDetailSerializer, \
-    BidListSerializer, BidCreateSerializer
+    BidListSerializer, BidCreateSerializer, BidDetailSerializer
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
     CollectedMultipartJsonViewMixin, may_fail
@@ -107,7 +107,11 @@ class JobViewSet(
 class BidViewSet(
     PermissionClassByActionMixin,
     SerializerClassByActionMixin,
-    ModelViewSet
+    GenericViewSet,
+    ListModelMixin,
+    CreateModelMixin,
+    DestroyModelMixin,
+    RetrieveModelMixin,
 ):
     queryset = Bid.objects.all()
     serializer_class = BidListSerializer
@@ -115,10 +119,13 @@ class BidViewSet(
         'list': [IsInspector, IsOwner],
         'create': [IsInspector],
         'accept': [IsOwner],
+        'retrieve': [IsInspector, IsOwner],
+        'destroy': [IsInspector],
     }
     action_serializers = {
         'list': BidListSerializer,
         'create': BidCreateSerializer,
+        'retrieve': BidDetailSerializer,
     }
 
     def get_queryset(self):
@@ -168,5 +175,12 @@ class BidViewSet(
         return Response()
 
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        user = self.request.user
+        if instance.status != Bid.StatusChoices.PENDING or instance.inspector != user.inspector:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        self.perform_destroy(instance)
+        return Response()
 
 

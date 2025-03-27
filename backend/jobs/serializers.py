@@ -7,7 +7,7 @@ from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from inspector.models import Credential, Inspector
-from inspector.serializers import CredentialSerializer
+from inspector.serializers import CredentialSerializer, InspectorDetailSerializer
 from jobs.models import Job, JobCategory, MagicLinkToken, JobDocument, Bid
 from owner.serializers import OwnerDetailSerializer
 from utils.utils.email import send_email_with_template
@@ -160,3 +160,11 @@ class BidCreateSerializer(serializers.ModelSerializer):
         data = self.validated_data
         return super().save(**kwargs)
 
+
+class BidDetailSerializer(serializers.ModelSerializer):
+    job = JobListSerializer()
+    inspector = InspectorDetailSerializer()
+
+    class Meta:
+        model = Bid
+        fields = ['job', 'inspector', 'status', 'note']
