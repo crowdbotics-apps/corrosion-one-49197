@@ -105,9 +105,19 @@ function HomeOwnerJobs() {
       title={'My Jobs'}
       showCard
     >
-      <Grid display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2} flexDirection={{ xs: 'column', sm: 'row' }}>
-        <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery}/>
-        <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <SearchBar loading={loading} search={getJobs} setSearchQuery={setSearchQuery}/>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <MDBox display="flex" justifyContent={{xs: 'flex-start', md: 'flex-end'}}>
+            <DateBar
+              startDate={startDate}
+              endDate={endDate}
+              onDateChange={handleDateChange}
+            />
+          </MDBox>
+        </Grid>
       </Grid>
       <DataTable
         loading={loading}
@@ -127,7 +137,7 @@ function HomeOwnerJobs() {
       <Dialog open={openCancelModal} onClose={handleCloseModal}>
         <DialogTitle>{selectedItem?.bids === 0 ? 'Delete Job' : 'Cancel Job'}</DialogTitle>
         <DialogContent>
-          <p>Do you want to {selectedItem?.bids === 0 ? 'delete' : 'cancel' } this job?</p>
+          <p>Do you want to {selectedItem?.bids === 0 ? 'delete' : 'cancel'} this job?</p>
         </DialogContent>
         <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
           <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>
