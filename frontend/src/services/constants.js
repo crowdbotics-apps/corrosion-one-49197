@@ -21,6 +21,7 @@ export const ROUTES = {
   SUPPORT: `/support`,
   DETAILS: `/details`,
   JOB_REDIRECT: `/jtv/*`,
+  JOB_BIDS: (jobId) => `/job-bids/${jobId}`,
 
 }
 

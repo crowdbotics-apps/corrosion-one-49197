@@ -161,8 +161,9 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
   const renderRoutes = routes.map(
-    ({ type, name, icon, title, collapse, noCollapse, key, href, route, role }) => {
+    ({ type, name, icon, title, collapse, noCollapse, key, href, route, role, sidenav }) => {
       let returnValue;
+      if (!sidenav) return;
       if (!role.includes(loginStore.user_type)) return
 
       if (type === "collapse") {

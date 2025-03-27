@@ -113,7 +113,7 @@ export const protectedRoutes = [
     noCollapse: true,
     icon: <Icon fontSize="small">home_outlined</Icon>,
     role: [ROLES.INSPECTOR],
-
+    sidenav: true
   },
   {
     type: "collapse",
@@ -124,6 +124,7 @@ export const protectedRoutes = [
     noCollapse: true,
     icon: <Icon fontSize="small">home_outlined</Icon>,
     role: [ROLES.OWNER],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -134,6 +135,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">search_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],
+    sidenav: true
   },
   ////////////////////////////////////////
   {
@@ -142,6 +144,7 @@ export const protectedRoutes = [
     route: ROUTES.FIND_J0B_DETAILS,
     component: <HomeOwnerDetails />,
     role: [ROLES.INSPECTOR],
+    sidenav: true
   },
   ////////////////////////////////////////
   {
@@ -153,6 +156,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">ballot_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -163,6 +167,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">people_all_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -173,6 +178,18 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
+    sidenav: true
+  },
+  {
+    type: "collapse",
+    name: "Job Bids",
+    key: "job-bids",
+    route: ROUTES.JOB_BIDS(':jobId'),
+    component: <HomeOwnerBids />,
+    icon: null,
+    noCollapse: true,
+    role: [ROLES.OWNER],
+    sidenav: false
   },
   {
     type: "collapse",
@@ -183,6 +200,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">history_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -193,6 +211,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -203,6 +222,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">bookmarks_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -213,6 +233,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">forum_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER, ROLES.INSPECTOR],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -223,6 +244,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">account_balance_wallet_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER, ROLES.INSPECTOR],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -233,6 +255,7 @@ export const protectedRoutes = [
     icon: <Icon fontSize="small">notifications_active_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER, ROLES.INSPECTOR],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -243,6 +266,7 @@ export const protectedRoutes = [
     icon: null,
     noCollapse: true,
     role: [],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -253,6 +277,7 @@ export const protectedRoutes = [
     icon: null,
     noCollapse: true,
     role: [],
+    sidenav: true
   },
   {
     type: "collapse",
@@ -263,6 +288,7 @@ export const protectedRoutes = [
     icon: null,
     noCollapse: true,
     role: [],
-  }
+    sidenav: true
+  },
 
   ];

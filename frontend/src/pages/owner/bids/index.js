@@ -3,7 +3,7 @@ import DataTable from "../../../components/DataTable/index";
 import React, { useEffect, useState } from "react";
 import { dataTableModel } from "./utils";
 import { useApi, useLoginStore } from "../../../services/helpers";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import MDBox from "../../../components/MDBox";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import SearchBar from "../../../components/SearchBar";
@@ -16,6 +16,7 @@ import Grid from "@mui/material/Grid" // Importar la función que renderiza las 
 
 function HomeOwnerJobs() {
   const loginStore = useLoginStore();
+  const {jobId = null} = useParams();
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(null);
   const api = useApi();
@@ -47,7 +48,7 @@ function HomeOwnerJobs() {
 
   const getBids = (search = '', page = 1, ordering = order, dates = null) => {
     setLoading(true);
-    api.getBids({search, page, ordering, page_size: 10, dates}).handle({
+    api.getBids({search, page, ordering, page_size: 10, dates, job_id: jobId}).handle({
       onSuccess: (result) => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -71,7 +72,7 @@ function HomeOwnerJobs() {
   }, [startDate, endDate]);
 
   return (
-    <AdminLayout title={'Bids'} showCard>
+    <AdminLayout title={jobId ? 'Job bids' : 'Bids'} showCard>
       <Grid display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2} flexDirection={{ xs: 'column', sm: 'row' }}>
         <SearchBar loading={loading} search={getBids} setSearchQuery={setSearchQuery}/>
         <DateBar startDate={startDate} endDate={endDate} onDateChange={handleDateChange} />

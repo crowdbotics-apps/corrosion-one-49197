@@ -6,6 +6,7 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
+import {ROUTES} from "../../../services/constants";
 
 
 export const dataTableModel = {
@@ -54,7 +55,7 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
 
   return (
     <MDBox>
-      <MDButton color={'primary'} variant={'outlined'} size={'small'}>Bids</MDButton>
+      <MDButton color={'primary'} variant={'outlined'} size={'small'} onClick={() => navigate(ROUTES.JOB_BIDS(item.id))}>Bids</MDButton>
       {item.raw_status === 'pending' &&<MDButton onClick={handleRejectDetails} color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Edit</MDButton>}
       {item.raw_status === 'pending' && <MDButton
         color={'error'}
