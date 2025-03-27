@@ -138,6 +138,10 @@ export class Api extends ApiBase {
     return this.simple_delete(`${API_VERSION_PREFIX}/jobs/${id}/`);
   }
 
+  getBids(data: any) {
+    return this.simple_get(`${API_VERSION_PREFIX}/jobs/bids/`, data);
+  }
+
   getOrdersStatusAdmin(data: any) {
     return this.simple_get(`${API_VERSION_PREFIX}/order/list_status/`, data);
   }

@@ -114,7 +114,10 @@ class BidViewSet(
     RetrieveModelMixin,
 ):
     queryset = Bid.objects.all()
-    serializer_class = BidListSerializer
+    pagination_class = CustomPageSizePagination
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title']
+    ordering_fields = ['title']
     action_permissions = {
         'list': [IsInspector, IsOwner],
         'create': [IsInspector],
