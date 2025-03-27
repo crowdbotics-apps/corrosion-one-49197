@@ -26,35 +26,14 @@ export const dataTableModel = {
 
 const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const api = useApi()
-
-  const handleRejectDetails = () => {
-    setLoading(false);
-
-    const jobId = item.id;
-
-    api.getJob(jobId).handle({
-      onSuccess: (result) => {
-        const jobDetails = result.data;
-
-        navigate(ROUTES.J0B_DETAILS, {
-          state: { jobDetails, isJobActive: false }
-        });
-
-      },
-      errorMessage: 'Error getting job details',
-      onFinally: () => setLoading(false)
-
-    });
-  };
 
 
 
   return (
     <MDBox>
       <MDButton color={'primary'} variant={'outlined'} size={'small'}>Bids</MDButton>
-      {item.raw_status === 'pending' &&<MDButton onClick={handleRejectDetails} color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Edit</MDButton>}
+      {item.raw_status === 'pending' &&<MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Edit</MDButton>}
+      {item.raw_status === 'pending' &&<MDButton  onClick={() => navigate(ROUTES.J0B_DETAILS, { state: { jobId: item.id } })}  color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>View Details</MDButton>}
       {item.raw_status === 'pending' && <MDButton
         color={'error'}
         variant={'outlined'}

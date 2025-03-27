@@ -62,6 +62,7 @@ import HomeOwner from "./pages/owner/HomeOwner"
 import HomeOwnerAppliedJobs from "./pages/owner/Applied Jobs"
 import Support from "./pages/common/Support"
 import Payment from "./pages/owner/Payment"
+import EditJob from "./pages/owner/editJob"
 
 
 
@@ -141,6 +142,13 @@ export const protectedRoutes = [
     key: "find-jobs",
     route: ROUTES.J0B_DETAILS,
     component: <HomeOwnerDetails />,
+    role: [ROLES.INSPECTOR],
+  },
+  {
+    name: "Edit Jobs",
+    key: "edit-jobs",
+    route: ROUTES.EDIT_JOB,
+    component: <EditJob />,
     role: [ROLES.INSPECTOR],
   },
   ////////////////////////////////////////

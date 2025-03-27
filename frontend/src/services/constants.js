@@ -22,6 +22,7 @@ export const ROUTES = {
   DETAILS: `/details`,
   JOB_REDIRECT: `/jtv/*`,
   FIND_JOB_DETAILS: `/find-job-details`,
+  EDIT_JOB: `/edit-job`,
 
 }
 
