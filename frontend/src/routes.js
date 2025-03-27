@@ -139,7 +139,7 @@ export const protectedRoutes = [
   {
     name: "Find Jobs",
     key: "find-jobs",
-    route: ROUTES.FIND_J0B_DETAILS,
+    route: ROUTES.J0B_DETAILS,
     component: <HomeOwnerDetails />,
     role: [ROLES.INSPECTOR],
   },

@@ -67,7 +67,6 @@ function Details() {
           <Grid container display={'flex'} height={'auto'} justifyContent={'space-between'} alignItems={'center'}
             sx={{
               background: `linear-gradient(to bottom, rgba(60, 112, 146, 0.13), rgba(60, 112, 146, 0.13)), url(${jobDetails?.created_by?.banner})`,
-
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               borderRadius: 8,
@@ -111,9 +110,10 @@ function Details() {
                 </Grid>
               </Grid>
             </Grid>
+
+
             {isJobActive && (
             <Grid marginRight={'10px'}>
-
                 <>
                   <Grid display={'flex'} alignItems={'center'} justifyContent={'space-between'} gap={2}>
                     <MDButton

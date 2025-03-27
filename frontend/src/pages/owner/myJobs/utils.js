@@ -6,6 +6,7 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
+import { ROUTES } from "../../../services/constants"
 
 
 export const dataTableModel = {
@@ -35,11 +36,9 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
 
     api.getJob(jobId).handle({
       onSuccess: (result) => {
-        console.log("Resultado completo:", result);
         const jobDetails = result.data;
-        console.log("Detalles del trabajo:", jobDetails);
 
-        navigate("/job-details", {
+        navigate(ROUTES.J0B_DETAILS, {
           state: { jobDetails, isJobActive: false }
         });
 
