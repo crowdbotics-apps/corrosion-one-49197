@@ -79,7 +79,8 @@ function PostJob() {
     setLoading(true);
     api.getJob(jobId).handle({
       onSuccess: (result) => {
-        formik.setValues(result?.data)
+        console.log(result?.data)
+        // formik.setValues(result?.data)
       },
       errorMessage: 'Error getting job details',
       onFinally: () => setLoading(false)
