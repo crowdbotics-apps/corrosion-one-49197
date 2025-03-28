@@ -126,6 +126,10 @@ export class Api extends ApiBase {
     return this.post_collected_multipart_form_data(`${API_VERSION_PREFIX}/jobs/`, data);
   }
 
+  editJob(data: any) {
+    return this.patch_collected_multipart_form_data(`${API_VERSION_PREFIX}/jobs/`, data);
+  }
+
   getJobs(data: any) {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/`, data);
   }

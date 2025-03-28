@@ -12,16 +12,16 @@ import {checkUrl, showMessage, truncateFilename, useApi, useLoginStore} from "..
 import RenderWorkArea from "../../../components/RenderListOption";
 import DocumentItem from "../../common/settings/documentItem";
 import AddDocumentBox from "../../common/settings/addDocumentBox";
+import {useNavigate, useParams} from "react-router-dom";
 
 
 function PostJob() {
-  const loginStore = useLoginStore();
   const api = useApi()
+  const {jobId = null} = useParams()
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const [fileName, setFileName] = useState('');
 
   const getCredentialOptions = () => {
     api.getCredentialsAvailable().handle({
@@ -55,16 +55,35 @@ function PostJob() {
       }
     })
   }
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFileName(file.name);
+  const editJob = (values) => {
+    const dataToSend = {
+      ...values,
+      id: jobId,
     }
-  };
+    setLoading(true);
+    api.editJob(dataToSend).handle({
+      onSuccess: (result) => {
+        showMessage('Job Updated')
+      },
+      onError: (error) => {
+        formik.setErrors(error?.response?.data)
+      },
+      errorMessage: 'Error updating job',
+      onFinally: () => {
+        setLoading(false);
+      }
+    })
+  }
 
-  const removeFile = () => {
-    setFileName(null);
+  const getJob = () => {
+    setLoading(true);
+    api.getJob(jobId).handle({
+      onSuccess: (result) => {
+        formik.setValues(result?.data)
+      },
+      errorMessage: 'Error getting job details',
+      onFinally: () => setLoading(false)
+    });
   };
 
   const PaymentOptions = [
@@ -169,17 +188,24 @@ function PostJob() {
         payment_modes: values.payment_modes.map((payment_mode) => payment_mode.value),
       }
       // console.log('data to send', dataToSend)
-      createJob(dataToSend);
+      if (jobId) {
+        editJob(dataToSend);
+      } else {
+        createJob(dataToSend);
+      }
     },
   });
 
   useEffect(() => {
     getCredentialOptions()
     getJobCategories()
+    if (jobId) {
+      getJob()
+    }
   }, []);
 
   return (
-    <AdminLayout title={'Post a Job'}>
+    <AdminLayout title={jobId ? `Edit Job - ${jobId}` : 'Post a Job'}>
       <FormikProvider value={formik}>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
@@ -350,12 +376,22 @@ function PostJob() {
                 ))}
               </Grid>
               <MDBox display="flex" justifyContent="flex-end" mr={1} mt={'auto'}>
+                {jobId && <MDButton
+                  color={'secondary'}
+                  variant={'outlined'}
+                  onClick={() => navigate(-1)}
+                  sx={{mr: 2}}
+                >
+                  Cancel
+                </MDButton>}
                 <MDButton
                   color={'secondary'}
                   onClick={formik.handleSubmit}
                   loading={loading}
                   disabled={loading}
-                >Publish</MDButton>
+                >
+                  {jobId ? 'Update' : 'Publish'}
+                </MDButton>
               </MDBox>
             </Card>
           </Grid>
