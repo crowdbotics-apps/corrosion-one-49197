@@ -21,14 +21,35 @@ import { Form, FormikProvider, useFormik } from "formik"
 import * as Yup from "yup"
 import { useApi } from "../../../services/helpers"
 import { formatDate, CustomTypography, DocumentList, CredentialsList } from "../findJobs/components/utils"
+import { ROUTES } from "../../../services/constants"
 
 function Details() {
   const { state } = useLocation();
-  const { jobDetails, isJobActive } = state || {};
+  const { jobId } = state || {};
+  console.log('id',jobId);
   const [loading, setLoading] = useState(false);
-  const api = useApi()
-  console.log('datos', jobDetails);
+  const [jobDetails, setJobDetails] = useState(null);
+  const api = useApi();
 
+  useEffect(() => {
+    if (jobId) {
+      getJob();
+    }
+  }, [jobId]);
+
+  const getJob = () => {
+    setLoading(true);
+
+    api.getJob(jobId).handle({
+      onSuccess: (result) => {
+        setJobDetails(result.data);
+      },
+      errorMessage: 'Error getting job details',
+      onFinally: () => setLoading(false)
+    });
+  };
+
+  console.log('datos',jobDetails);
 
 
 
@@ -67,7 +88,6 @@ function Details() {
           <Grid container display={'flex'} height={'auto'} justifyContent={'space-between'} alignItems={'center'}
             sx={{
               background: `linear-gradient(to bottom, rgba(60, 112, 146, 0.13), rgba(60, 112, 146, 0.13)), url(${jobDetails?.created_by?.banner})`,
-
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               borderRadius: 8,
@@ -89,19 +109,19 @@ function Details() {
                 </MDTypography>
               </Grid>
               <Grid display={'flex'} flexDirection={'column'} alignItems={'center'} padding={'20px'} >
-                <Grid display={'flex'} alignItems={'center'}  justifyContent={'space-between'} gap={2} sx={{flexDirection:{md:'row', xs:'column'}}}>
-                  <MDBox display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+                <Grid display={'flex'} width={'100%'} gap={2}  justifyContent={'space-between'} sx={{flexDirection:{md:'row', xs:'column'}}}>
+                  <MDBox display={'flex'} justifyContent={'space-between'} >
                   <EmailOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px" }} />
                   <MDTypography sx={{ fontSize: "14px", marginLeft: "10px" }}>
                     {jobDetails?.created_by?.email}
                   </MDTypography>
                   </MDBox>
-                  <MDBox display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+                  <MDBox display={'flex'} justifyContent={'space-between'}>
                   <PhoneOutlinedIcon sx={{ color: "#006E90",width: "30px", height: "30px" }} />
-                  <MDTypography sx={{fontSize:"14px", marginLeft:"10px"}}>{jobDetails?.created_by?.phone_number}</MDTypography>
+                  <MDTypography sx={{fontSize:"14px", marginLeft:"5px"}}>{jobDetails?.created_by?.phone_number}</MDTypography>
                   </MDBox>
                 </Grid>
-                <Grid display={'flex'} width={'100%'}  justifyContent={'space-between'} sx={{flexDirection:{md:'row', xs:'column'}}}>
+                <Grid display={'flex'} width={'100%'} gap={2} justifyContent={'space-between'} sx={{flexDirection:{md:'row', xs:'column'}}}>
                   <MDBox display={'flex'} justifyContent={'space-between'} >
                     < PinDropOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px" }} />
                     <MDTypography sx={{fontSize:"14px", marginLeft:"10px"}}>{jobDetails?.created_by?.address}</MDTypography></MDBox>
@@ -111,22 +131,13 @@ function Details() {
                 </Grid>
               </Grid>
             </Grid>
-            {isJobActive && (
-            <Grid marginRight={'10px'}>
 
+
+            {/*{isJobActive && (*/}
+            <Grid marginRight={'10px'}>
                 <>
                   <Grid display={'flex'} alignItems={'center'} justifyContent={'space-between'} gap={2}>
-                    <MDButton
-                      sx={{
-                        display:{xs: 'flex',md:'none' },
-                        width:'150px',
-                        marginTop: "20px",
-                        border: '2px solid #006E90',
-                        backgroundColor: 'white',
-                        height:'20px',
-                        borderRadius: 5,
-                      }}
-                    >
+                    <MDButton sx={{ display:{xs: 'flex',md:'none' }, width:'150px', marginTop: "20px", border: '2px solid #006E90', backgroundColor: 'white', height:'20px', borderRadius: 5, }}>
                       <MDTypography sx={{color: '#006E90', fontWeight: 'bold', fontSize:{xs:'15px', md:'20px'}}}>Message</MDTypography>
                       <QuestionAnswerOutlinedIcon  sx={{ color: "#006E90", width: "30px", height: "30px", marginLeft:{ md:"10px", xs:"2px"} }} />
                     </MDButton>
@@ -164,7 +175,7 @@ function Details() {
                 </>
 
             </Grid>
-            )}
+            {/*)}*/}
           </Grid>
 
           <Grid container display={'flex'}>
@@ -182,7 +193,7 @@ function Details() {
 
               <DocumentList documents={jobDetails?.documents} />
 
-              <CredentialsList documents={jobDetails?.certifications} />
+              <CredentialsList documents={jobDetails?.certifications || []} />
 
               <Grid display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                 <MDTypography sx={{ fontSize: '16px', fontWeight: 'bold', marginTop: '20px' }}>
@@ -199,135 +210,141 @@ function Details() {
                 Daily Rate: $ {jobDetails?.daily_rate}
               </MDTypography>
 
-              <MDTypography sx={{ fontSize: '16px', marginTop: '15px' ,marginBottom:'10px'}}>
-                Per Diem: $ {jobDetails?.per_diem_rate}
-              </MDTypography>
+              {jobDetails?.per_diem_rate !== '0.00' && (
+                <MDTypography sx={{ fontSize: '16px', marginTop: '15px', marginBottom: '10px' }}>
+                  Per Diem: $ {jobDetails?.per_diem_rate}
+                </MDTypography>
+              )}
 
+              {jobDetails?.mileage_rate !== '0.00' && (
               <MDTypography sx={{ fontSize: '16px', marginTop: '15px' ,marginBottom:'10px'}}>
                 Mileage: $ {jobDetails?.mileage_rate}
               </MDTypography>
+              )}
 
+              {jobDetails?.misc_other_rate !== '0.00' && (
               <MDTypography sx={{ fontSize: '16px', marginTop: '15px' ,marginBottom:'10px'}}>
                 Misc/Other: $ {jobDetails?.misc_other_rate}
               </MDTypography>
+              )}
             </Grid>
           </Grid>
         </Grid>
 
 
-        <Grid borderTop={"1px solid #ccc"}>
-          {isJobActive && (
-          <FormikProvider value={formik}>
-            <Form>
-              <Grid>
-                <MDTypography sx={{ fontSize: '16px', fontWeight: 'bold', marginTop: '20px' , marginBottom: '10px' }}>
-                  Notes for the Owner
-                </MDTypography>
-                <FormikInput
-                  type="textarea"
-                  label=""
-                  name="Notes"
-                  rows={7}
-                />
-                <Grid display={'flex'} flexDirection={'column'} gap={2} marginTop={'20px'} >
-                  <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>
-                    <MDBox
-                      sx={{
-                        backgroundColor: 'white',
-                        border: '1px solid rgba(0, 0, 0, 0.2)',
-                        borderRadius: 5,
-                        width: 'fit-content',
-                        marginBottom: '10px',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => handleSelect('item1')}
-                    >
-                      <MDTypography
-                        sx={{
-                          padding: '5px',
-                          display: 'flex',
-                          fontSize: '14px',
-                          margin: '7px',
-                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                          fontWeight: 'bold',
-                        }}
-                      >
-                          <IconButton
-                            sx={{
-                              width: {md:'30px', xs:'30px'}, height: {md:'30px', xs:'30px'},
-                              backgroundColor: 'grey.300',
-                              borderRadius: '50%',
-                              marginRight: '8px',
-                              '&:hover': {
-                                backgroundColor: 'grey.400',
-                              },
-                            }}
-                            aria-label="check"
-                          >
-                            {selectedItems.includes('item1') && (
-                            <CheckIcon sx={{ color: '#006E90',  width: {md:'20px', xs:'30px'}, height: {md:'20px', xs:'30px'} }} /> )}
-                          </IconButton>
-                        <MDTypography sx={{fontSize:'15px',fontWeight: 'bold', padding:'3px' }}>Provide The Owner With The Attached Documents</MDTypography>
-                      </MDTypography>
-                    </MDBox>
-                  </MDBox>
+        {/*{isJobActive && (*/}
+        {/*<Grid borderTop={"1px solid #ccc"}>*/}
+        {/*  <FormikProvider value={formik}>*/}
+        {/*    <Form>*/}
+        {/*      <Grid>*/}
+        {/*        <MDTypography sx={{ fontSize: '16px', fontWeight: 'bold', marginTop: '20px' , marginBottom: '10px' }}>*/}
+        {/*          Notes for the Owner*/}
+        {/*        </MDTypography>*/}
+        {/*        <FormikInput*/}
+        {/*          type="textarea"*/}
+        {/*          label=""*/}
+        {/*          name="Notes"*/}
+        {/*          rows={7}*/}
+        {/*        />*/}
+        {/*        <Grid display={'flex'} flexDirection={'column'} gap={2} marginTop={'20px'} >*/}
+        {/*          <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>*/}
+        {/*            <MDBox*/}
+        {/*              sx={{*/}
+        {/*                backgroundColor: 'white',*/}
+        {/*                border: '1px solid rgba(0, 0, 0, 0.2)',*/}
+        {/*                borderRadius: 5,*/}
+        {/*                width: 'fit-content',*/}
+        {/*                marginBottom: '10px',*/}
+        {/*                cursor: 'pointer',*/}
+        {/*              }}*/}
+        {/*              onClick={() => handleSelect('item1')}*/}
+        {/*            >*/}
+        {/*              <MDTypography*/}
+        {/*                sx={{*/}
+        {/*                  padding: '5px',*/}
+        {/*                  display: 'flex',*/}
+        {/*                  fontSize: '14px',*/}
+        {/*                  margin: '7px',*/}
+        {/*                  whiteSpace: { xs: 'normal', sm: 'nowrap' },*/}
+        {/*                  fontWeight: 'bold',*/}
+        {/*                }}*/}
+        {/*              >*/}
+        {/*                  <IconButton*/}
+        {/*                    sx={{*/}
+        {/*                      width: {md:'30px', xs:'30px'}, height: {md:'30px', xs:'30px'},*/}
+        {/*                      backgroundColor: 'grey.300',*/}
+        {/*                      borderRadius: '50%',*/}
+        {/*                      marginRight: '8px',*/}
+        {/*                      '&:hover': {*/}
+        {/*                        backgroundColor: 'grey.400',*/}
+        {/*                      },*/}
+        {/*                    }}*/}
+        {/*                    aria-label="check"*/}
+        {/*                  >*/}
+        {/*                    {selectedItems.includes('item1') && (*/}
+        {/*                    <CheckIcon sx={{ color: '#006E90',  width: {md:'20px', xs:'30px'}, height: {md:'20px', xs:'30px'} }} /> )}*/}
+        {/*                  </IconButton>*/}
+        {/*                <MDTypography sx={{fontSize:'15px',fontWeight: 'bold', padding:'3px' }}>Provide The Owner With The Attached Documents</MDTypography>*/}
+        {/*              </MDTypography>*/}
+        {/*            </MDBox>*/}
+        {/*          </MDBox>*/}
 
 
-                  <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>
-                    <MDBox
-                      sx={{
-                        backgroundColor: 'white',
-                        border: '1px solid rgba(0, 0, 0, 0.2)',
-                        borderRadius: 5,
-                        width: 'fit-content',
-                        marginBottom: '10px',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => handleSelect('item2')}
-                    >
-                      <MDTypography
-                        sx={{
-                          padding: '5px',
-                          display: 'flex',
-                          fontSize: '14px',
-                          margin: '7px',
-                          whiteSpace: { xs: 'normal', sm: 'nowrap' },
-                          fontWeight: 'bold',
-                        }}
-                      >
+        {/*          <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>*/}
+        {/*            <MDBox*/}
+        {/*              sx={{*/}
+        {/*                backgroundColor: 'white',*/}
+        {/*                border: '1px solid rgba(0, 0, 0, 0.2)',*/}
+        {/*                borderRadius: 5,*/}
+        {/*                width: 'fit-content',*/}
+        {/*                marginBottom: '10px',*/}
+        {/*                cursor: 'pointer',*/}
+        {/*              }}*/}
+        {/*              onClick={() => handleSelect('item2')}*/}
+        {/*            >*/}
+        {/*              <MDTypography*/}
+        {/*                sx={{*/}
+        {/*                  padding: '5px',*/}
+        {/*                  display: 'flex',*/}
+        {/*                  fontSize: '14px',*/}
+        {/*                  margin: '7px',*/}
+        {/*                  whiteSpace: { xs: 'normal', sm: 'nowrap' },*/}
+        {/*                  fontWeight: 'bold',*/}
+        {/*                }}*/}
+        {/*              >*/}
 
-                          <IconButton
-                            sx={{
-                              width: {md:'30px', xs:'30px'}, height: {md:'30px', xs:'30px'},
-                              backgroundColor: 'grey.300',
-                              borderRadius: '50%',
-                              marginRight: '8px',
-                              '&:hover': {
-                                backgroundColor: 'grey.400',
-                              },
-                            }}
-                            aria-label="check"
-                          >
-                            {selectedItems.includes('item2') && (
-                            <CheckIcon sx={{ color: '#006E90', width: {md:'20px', xs:'30px'}, height: {md:'20px', xs:'30px'}}} />  )}
-                          </IconButton>
+        {/*                  <IconButton*/}
+        {/*                    sx={{*/}
+        {/*                      width: {md:'30px', xs:'30px'}, height: {md:'30px', xs:'30px'},*/}
+        {/*                      backgroundColor: 'grey.300',*/}
+        {/*                      borderRadius: '50%',*/}
+        {/*                      marginRight: '8px',*/}
+        {/*                      '&:hover': {*/}
+        {/*                        backgroundColor: 'grey.400',*/}
+        {/*                      },*/}
+        {/*                    }}*/}
+        {/*                    aria-label="check"*/}
+        {/*                  >*/}
+        {/*                    {selectedItems.includes('item2') && (*/}
+        {/*                    <CheckIcon sx={{ color: '#006E90', width: {md:'20px', xs:'30px'}, height: {md:'20px', xs:'30px'}}} />  )}*/}
+        {/*                  </IconButton>*/}
 
-                        <MDTypography sx={{fontSize:'15px',fontWeight: 'bold', padding:'3px' }}> Confirm That I Meet The Qualification For This Project</MDTypography>
+        {/*                <MDTypography sx={{fontSize:'15px',fontWeight: 'bold', padding:'3px' }}> Confirm That I Meet The Qualification For This Project</MDTypography>*/}
 
-                      </MDTypography>
-                    </MDBox>
-                  </MDBox>
-                </Grid>
+        {/*              </MDTypography>*/}
+        {/*            </MDBox>*/}
+        {/*          </MDBox>*/}
+        {/*        </Grid>*/}
 
-                <MDButton color={'secondary'} sx={{ marginLeft: 'auto', height: { md: '60px', xs: '40px' }, fontSize: { md: '18px', xs: '14px' } ,display: 'flex', borderRadius: 5, }} type="submit">
-                  Apply For The Job
-                </MDButton>
+        {/*        <MDButton color={'secondary'} sx={{ marginLeft: 'auto', height: { md: '60px', xs: '40px' }, fontSize: { md: '18px', xs: '14px' } ,display: 'flex', borderRadius: 5, }} type="submit">*/}
+        {/*          Apply For The Job*/}
+        {/*        </MDButton>*/}
 
-              </Grid>
-            </Form>
-          </FormikProvider>
-          )}
-        </Grid>
+        {/*      </Grid>*/}
+        {/*    </Form>*/}
+        {/*  </FormikProvider>*/}
+        {/*</Grid>*/}
+        {/*)}*/}
 
       </Grid>
     </Grid>

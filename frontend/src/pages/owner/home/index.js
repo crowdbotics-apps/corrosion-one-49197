@@ -27,6 +27,7 @@ import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsAc
 import DataTableBodyCell from "../../../components/AdminLayout/DataTableBodyCell"
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
 import { useNavigate } from "react-router-dom"
+import { ROUTES } from "../../../services/constants"
 
 function HomeInspector() {
   const loginStore = useLoginStore();
@@ -52,11 +53,11 @@ function HomeInspector() {
 
   const handleIconClick = () => {
     const data = { someKey: true };
-    navigate(`/find-jobs`, { state: data });
+    navigate(ROUTES.FIND_JOBS, { state: data });
   };
 
   const handleClick = (data) => {
-    navigate('/settings', { state: { defaultTab: data} });
+    navigate(ROUTES.SETTINGS, { state: { defaultTab: data} });
   };
 
 

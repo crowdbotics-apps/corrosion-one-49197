@@ -3,6 +3,7 @@ import MDBox from "@mui/material/Box";
 import MDButton from "../../../components/MDButton";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../services/constants"
 
 const statusMap = {
   Accepted: { color: '#D0FFE480', label: 'Accepted', labelColor: '#00AD42' },
@@ -34,7 +35,7 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
 
   const handleRejectDetails = () => {
     const data = { someKey: true };
-    navigate("/find-job-details", { state: data });
+    navigate(ROUTES.FIND_J0B_DETAILS, { state: data });
   };
 
   return (

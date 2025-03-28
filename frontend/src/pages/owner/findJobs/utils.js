@@ -4,6 +4,7 @@ import MDButton from "../../../components/MDButton";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
+import { ROUTES } from "../../../services/constants"
 
 const statusMap = {
   Active: { color: '#D0FFE480', label: 'Active', labelColor: '#00AD42' },
@@ -26,7 +27,7 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
 
   const handleRejectDetails = () => {
     const data = { someKey: true };
-    navigate("/find-job-details", { state: data });
+    navigate(ROUTES.J0B_DETAILS, { state: data });
   };
 
   return (
