@@ -12,11 +12,11 @@ import {ROUTES} from "../../../services/constants";
 export const dataTableModel = {
   columns: [
     { Header: "Job Title", accessor: "title",width: 150},
-    { Header: "Bids", accessor: "bids" ,width: 100 },
-    { Header: "Views", accessor: "views", width: 100 },
+    { Header: "Bids", accessor: "bids" ,width: 80 },
+    { Header: "Views", accessor: "views", width: 80 },
     { Header: "Date Posted", accessor: "created", width: 150 },
     { Header: "Status", accessor: "status",width: 150 },
-    { Header: " ",accessor: "actions", disableOrdering: true, width: 200 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 280 },
   ],
   rows: [],
 };
@@ -24,16 +24,13 @@ export const dataTableModel = {
 
 
 
-const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
-  const navigate = useNavigate();
-
-
+const renderActions = (item, setSelectedItem, setShowModal, navigate) => {
 
   return (
     <MDBox>
       <MDButton color={'primary'} variant={'outlined'} size={'small'} onClick={() => navigate(ROUTES.JOB_BIDS(item.id))}>Bids</MDButton>
-      {item.raw_status === 'pending' &&<MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Edit</MDButton>}
-      {item.raw_status === 'pending' &&<MDButton  onClick={() => navigate(ROUTES.J0B_DETAILS, { state: { jobId: item.id } })}  color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>View Details</MDButton>}
+      {item.raw_status === 'pending' &&<MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}  onClick={() => navigate(ROUTES.EDIT_JOB(item.id))}>Edit</MDButton>}
+      {item.raw_status === 'pending' &&<MDButton onClick={() => navigate(ROUTES.J0B_DETAIL(item.id))}  color={'secondary'} variant={'outlined'} size={'small'} sx={{ mr: 1}}>Detail</MDButton>}
       {item.raw_status === 'pending' && <MDButton
         color={'error'}
         variant={'outlined'}
@@ -51,11 +48,11 @@ const ActionButtons = ({ item, setSelectedItem, setShowModal }) => {
 
 
 
-export const renderTableRow = (item, setSelectedItem, setShowModal) => {
+export const renderTableRow = (item, setSelectedItem, setShowModal, navigate) => {
   item.created = moment(item.created).format('MM/DD/YYYY')
   item.raw_status = item.status
-  item.status =capitalize(item.status)
-  item.actions = <ActionButtons item={item} setSelectedItem={setSelectedItem} setShowModal={setShowModal} />;
+  item.status = capitalize(item.status)
+  item.actions = renderActions(item, setSelectedItem, setShowModal, navigate)
   return item
 }
 

@@ -1,7 +1,7 @@
 
 import AdminLayout from "../../../components/AdminLayout"
 import MDBox from "../../../components/MDBox"
-import Details from "../jobDetail/jobDetails"
+import Details from "../jobDetail"
 
 
 

@@ -41,7 +41,7 @@ function HomeOwnerJobs() {
       onSuccess: (result) => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
-        tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal))
+        tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal, navigate))
         setDatatable(tmp)
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)

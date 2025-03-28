@@ -15,15 +15,15 @@ export const ROUTES = {
   POST_JOB: "/post-job",
   APPLIED_JOBS: `/applied_jobs`,
   FIND_JOBS: `/find-jobs`,
-  J0B_DETAILS: `/job-details`,
   MESSAGES: `/messages`,
   SETTINGS: `/settings`,
   SUPPORT: `/support`,
   DETAILS: `/details`,
   JOB_REDIRECT: `/jtv/*`,
   FIND_JOB_DETAILS: `/find-job-details`,
-  EDIT_JOB: `/edit-job`,
+  EDIT_JOB: (jobId) => `/edit-job/${jobId}`,
   JOB_BIDS: (jobId) => `/job-bids/${jobId}`,
+  J0B_DETAIL: (jobId) => `/job-detail/${jobId}`,
 
 }
 

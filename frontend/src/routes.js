@@ -62,7 +62,8 @@ import HomeOwner from "./pages/owner/HomeOwner"
 import HomeOwnerAppliedJobs from "./pages/owner/Applied Jobs"
 import Support from "./pages/common/Support"
 import Payment from "./pages/owner/Payment"
-import EditJob from "./pages/owner/editJob"
+import JobDetail from "./pages/owner/jobDetail";
+// import EditJob from "./pages/owner/editJob"
 
 
 
@@ -140,20 +141,22 @@ export const protectedRoutes = [
   },
   ////////////////////////////////////////
   {
-    name: "Find Jobs",
-    key: "find-jobs",
-    route: ROUTES.J0B_DETAILS,
-    component: <HomeOwnerDetails />,
+    name: "Edit Job",
+    key: "edit-job",
+    route: ROUTES.EDIT_JOB(':jobId'),
+    component: <HomeOwnerPostJob />,
     role: [ROLES.INSPECTOR],
-    sidenav: true
+    sidenav: false
   },
   {
-    name: "Edit Jobs",
-    key: "edit-jobs",
-    route: ROUTES.EDIT_JOB,
-    component: <EditJob />,
+    name: "Job Detail",
+    key: "job-detail",
+    route: ROUTES.J0B_DETAIL(':jobId'),
+    component: <JobDetail />,
     role: [ROLES.INSPECTOR],
+    sidenav: false
   },
+
   ////////////////////////////////////////
   {
     type: "collapse",

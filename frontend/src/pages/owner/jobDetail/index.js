@@ -13,7 +13,7 @@ import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 import MDInput from "../../../components/MDInput"
-import { useLocation } from 'react-router-dom';
+import {useLocation, useParams} from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import CheckIcon from '@mui/icons-material/Check';
 import FormikInput from "../../../components/Formik/FormikInput"
@@ -23,10 +23,9 @@ import { useApi } from "../../../services/helpers"
 import { formatDate, CustomTypography, DocumentList, CredentialsList } from "../findJobs/components/utils"
 import { ROUTES } from "../../../services/constants"
 
-function Details() {
+function JobDetail() {
   const { state } = useLocation();
-  const { jobId } = state || {};
-  console.log('id',jobId);
+  const { jobId } = useParams()
   const [loading, setLoading] = useState(false);
   const [jobDetails, setJobDetails] = useState(null);
   const api = useApi();
@@ -352,4 +351,4 @@ function Details() {
   );
 }
 
-export default Details;
+export default JobDetail;
