@@ -22,6 +22,7 @@ import * as Yup from "yup"
 import { useApi } from "../../../services/helpers"
 import { formatDate, CustomTypography, DocumentList, CredentialsList } from "../findJobs/components/utils"
 import { ROUTES } from "../../../services/constants"
+import AdminLayout from "../../../components/AdminLayout";
 
 function JobDetail() {
   const { state } = useLocation();
@@ -81,6 +82,10 @@ function JobDetail() {
   };
 
   return (
+    <AdminLayout
+      title={'Job Details'}
+      showCard
+    >
     <Grid display="flex" flex={1} sx={{padding:{md:'70px', xs:'10px'}}}>
       <Grid width={'100%'} alignItems={'center'} border={'1px solid rgba(0, 0, 0, 0.1)'} borderRadius={5} gap={5} padding={'33px'}>
         <Grid width={'100%'}>
@@ -347,7 +352,7 @@ function JobDetail() {
 
       </Grid>
     </Grid>
-
+    </AdminLayout>
   );
 }
 
