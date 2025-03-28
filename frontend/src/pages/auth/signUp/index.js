@@ -42,7 +42,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from '@mui/icons-material/Close';
 import UserAvatar from "assets/images/photo-placeholder.png";
-import RenderWorkArea from "../../../components/RenderListOption";
+import RenderListOption from "../../../components/RenderListOption";
 import CustomCheckbox from "../../../components/CheckboxCustom";
 
 
@@ -882,7 +882,7 @@ function SignUp() {
             }}
           />
           <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-            {formikThirdStepInspector.values.country.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={handleRemoveCountry}/>)}
+            {formikThirdStepInspector.values.country.map((item) => <RenderListOption key={item.id} item={item} handleRemove={handleRemoveCountry}/>)}
           </MDBox>
           <FormikInput
             type={"autocomplete"}
@@ -900,7 +900,7 @@ function SignUp() {
             }}
           />
           <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-            {formikThirdStepInspector.values.state.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={handleRemoveState}/>)}
+            {formikThirdStepInspector.values.state.map((item) => <RenderListOption key={item.id} item={item} handleRemove={handleRemoveState}/>)}
           </MDBox>
           <MDBox mt={10} textAlign={"center"}>
             <MDButton

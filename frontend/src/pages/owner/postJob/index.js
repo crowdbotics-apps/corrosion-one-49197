@@ -9,15 +9,17 @@ import FormikInput from "../../../components/Formik/FormikInput";
 import MDButton from "../../../components/MDButton";
 import Grid from "@mui/material/Grid";
 import {checkUrl, showMessage, truncateFilename, useApi, useLoginStore} from "../../../services/helpers";
-import RenderWorkArea from "../../../components/RenderListOption";
+import RenderListOption from "../../../components/RenderListOption";
 import DocumentItem from "../../common/settings/documentItem";
 import AddDocumentBox from "../../common/settings/addDocumentBox";
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {ROUTES} from "../../../services/constants";
 
 
 function PostJob() {
   const api = useApi()
   const {jobId = null} = useParams()
+  const location = useLocation()
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -62,8 +64,9 @@ function PostJob() {
     }
     setLoading(true);
     api.editJob(dataToSend).handle({
+      successMessage: 'Job Updated',
       onSuccess: (result) => {
-        showMessage('Job Updated')
+        navigate(ROUTES.MY_JOBS)
       },
       onError: (error) => {
         formik.setErrors(error?.response?.data)
@@ -79,8 +82,11 @@ function PostJob() {
     setLoading(true);
     api.getJob(jobId).handle({
       onSuccess: (result) => {
-        console.log(result?.data)
-        // formik.setValues(result?.data)
+        const dataToSet = {
+          ...result?.data,
+          payment_modes: PaymentOptions.filter((item) => result?.data?.payment_modes?.includes(item.value)),
+        }
+        formik.setValues(dataToSet)
       },
       errorMessage: 'Error getting job details',
       onFinally: () => setLoading(false)
@@ -200,10 +206,15 @@ function PostJob() {
   useEffect(() => {
     getCredentialOptions()
     getJobCategories()
-    if (jobId) {
-      getJob()
+    if (location.pathname !== ROUTES.POST_JOB) {
+      if (jobId) {
+        getJob()
+      }
+    } else {
+      formik.resetForm()
     }
-  }, []);
+
+  }, [location]);
 
   return (
     <AdminLayout title={jobId ? `Edit Job - ${jobId}` : 'Post a Job'}>
@@ -232,7 +243,7 @@ function PostJob() {
                 multiple
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formik.values.categories.map((item) => <RenderWorkArea key={item.id} item={item}
+                {formik.values.categories.map((item) => <RenderListOption key={item.id} item={item}
                                                                         handleRemove={removeCategory}/>)}
               </MDBox>
 
@@ -262,7 +273,7 @@ function PostJob() {
                 styleContainer={{mb: 2}}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formik.values.certifications.map((item) => <RenderWorkArea key={item.id} item={item}
+                {formik.values.certifications.map((item) => <RenderListOption key={item.id} item={item}
                                                                             handleRemove={removeCertifications}/>)}
               </MDBox>
             </Card>
@@ -288,7 +299,7 @@ function PostJob() {
                 styleContainer={{mb: 2}}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formik.values.payment_modes.map((item) => <RenderWorkArea key={item.id} item={item}
+                {formik.values.payment_modes.map((item) => <RenderListOption key={item.id} item={item}
                                                                            handleRemove={removePaymentMethod}/>)}
               </MDBox>
 

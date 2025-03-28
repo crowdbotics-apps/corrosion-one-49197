@@ -43,11 +43,13 @@ class JobViewSet(
         'retrieve': [IsInspector, IsOwner],
         'list': [IsInspector, IsOwner],
         'create': [IsOwner],
+        'partial_update': [IsOwner],
     }
     action_serializers = {
         'list': JobListSerializer,
         'retrieve': JobDetailSerializer,
         'create': JobManagementSerializer,
+        'partial_update': JobManagementSerializer,
     }
 
     def get_queryset(self):

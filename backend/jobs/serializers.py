@@ -1,3 +1,4 @@
+import os
 import uuid
 
 
@@ -19,9 +20,22 @@ class JobCategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description']
 
 class JobDocumentSerializer(serializers.ModelSerializer):
+    document_name = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+
     class Meta:
         model = JobDocument
-        fields = ['id', 'document']
+        fields = ['id', 'document', 'document_name', 'size']
+
+    def get_document_name(self, obj):
+        if not obj.document:
+            return None
+        return os.path.basename(obj.document.name)
+
+    def get_size(self, obj):
+        if not obj.document:
+            return None
+        return round(obj.document.size / 1024 / 1024, 2)
 
 class JobListSerializer(serializers.ModelSerializer):
 
@@ -42,7 +56,7 @@ class JobDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job
-        fields = ['id', 'title', 'description', 'categories', 'certifications', 'start_date',
+        fields = ['id', 'title', 'description', 'categories', 'certifications', 'start_date', 'address',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
                   'misc_other_rate', 'payment_modes', 'created_by']
 
@@ -52,7 +66,7 @@ class JobManagementSerializer(serializers.ModelSerializer):
     certifications = PrimaryKeyRelatedField(many=True, queryset=Credential.objects.all())
     class Meta:
         model = Job
-        fields = [ 'title', 'description', 'categories', 'certifications', 'start_date',
+        fields = [ 'title', 'description', 'categories', 'certifications', 'start_date', 'address',
                   'end_date', 'daily_rate', 'per_diem_rate', 'mileage_rate', 'misc_other_rate', 'payment_modes']
 
     def validate(self, attrs):
@@ -116,19 +130,21 @@ class JobManagementSerializer(serializers.ModelSerializer):
                         "link": url,
                     }
                 )
-
-            # current_documents_ids = self.instance.support_documents.all().values_list('id', flat=True)
-            # for document in current_documents_ids:
-            #     if document not in [doc['id'] for doc in support_documents]:
-            #         SupportDocument.objects.get(id=document).delete()
-            #
-            # if support_documents:
-            #     for support_document in support_documents:
-            #         if 'file' in support_document:
-            #             SupportDocument.objects.create(inspector=self.instance, document=support_document['file'])
-            #     data.pop('support_documents')
-
-            self.instance.save()
+        else:
+            data = self.validated_data
+            user = self.context['request'].user
+            data['created_by'] = user.owner
+            documents = self.validated_data.get('documents', [])
+            if documents:
+                self.validated_data.pop('documents')
+                current_documents_ids = self.instance.documents.all().values_list('id', flat=True)
+                for document in current_documents_ids:
+                    if document not in [doc['id'] for doc in documents]:
+                        JobDocument.objects.get(id=document).delete()
+                for support_document in documents:
+                    if 'file' in support_document:
+                        JobDocument.objects.create(job=self.instance, document=support_document['file'])
+            self.instance = super().save(**kwargs)
         return self.instance
 
 

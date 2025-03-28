@@ -10,7 +10,7 @@ import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
 import DocumentItem from "./documentItem";
 import AddDocumentBox from "./addDocumentBox";
-import RenderWorkArea from "../../../components/RenderListOption";
+import RenderListOption from "../../../components/RenderListOption";
 import moment from "moment";
 import InsertLinkOutlinedIcon from "@mui/icons-material/InsertLinkOutlined"
 import MailOutlineIcon from "@mui/icons-material/MailOutline"
@@ -249,7 +249,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formik.values.languages.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={removeLanguage}/>)}
+                {formik.values.languages.map((item) => <RenderListOption key={item.id} item={item} handleRemove={removeLanguage}/>)}
               </MDBox>
             </Grid>
             <Grid item xs={12} lg={6}>

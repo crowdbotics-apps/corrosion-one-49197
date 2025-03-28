@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import MDTypography from "../MDTypography";
 
-function RenderWorkArea({
+function RenderListOption({
                           item,
                           handleRemove
                         }) {
@@ -34,4 +34,4 @@ function RenderWorkArea({
   )
 }
 
-export default RenderWorkArea;
+export default RenderListOption;

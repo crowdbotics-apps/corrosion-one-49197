@@ -63,7 +63,6 @@ class Job(TimeStampedModel):
     per_diem_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     mileage_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     misc_other_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
-
     payment_modes = ArrayField(
         base_field=models.CharField(
             max_length=20,
@@ -72,8 +71,8 @@ class Job(TimeStampedModel):
         default=list,
         blank=True,
     )
-
     views = models.IntegerField(default=0)
+    address = models.TextField(null=True, blank=True)
 
 
     class Meta:

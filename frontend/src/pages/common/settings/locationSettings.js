@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import {useEffect, useState} from "react";
 import {useApi, useLoginStore} from "../../../services/helpers";
 import Grid from "@mui/material/Grid";
-import RenderWorkArea from "../../../components/RenderListOption";
+import RenderListOption from "../../../components/RenderListOption";
 
 function LocationSettings({updateLocation, countries, states, getStates, loading}) {
   const loginStore = useLoginStore();
@@ -81,7 +81,7 @@ function LocationSettings({updateLocation, countries, states, getStates, loading
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formikThirdStepInspector.values.country.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={handleRemoveCountry}/>)}
+                {formikThirdStepInspector.values.country.map((item) => <RenderListOption key={item.id} item={item} handleRemove={handleRemoveCountry}/>)}
               </MDBox>
             </Grid>
             <Grid item xs={12} lg={6}>
@@ -101,7 +101,7 @@ function LocationSettings({updateLocation, countries, states, getStates, loading
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formikThirdStepInspector.values.state.map((item) => <RenderWorkArea key={item.id} item={item} handleRemove={handleRemoveState}/>)}
+                {formikThirdStepInspector.values.state.map((item) => <RenderListOption key={item.id} item={item} handleRemove={handleRemoveState}/>)}
               </MDBox>
             </Grid>
           </Grid>

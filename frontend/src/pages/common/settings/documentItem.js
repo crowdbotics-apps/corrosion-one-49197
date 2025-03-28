@@ -60,7 +60,7 @@ export default function DocumentItem({ doc, onOpenDownload, onDelete }) {
         {/* Document Info */}
         <Box sx={{ flex: 1, overflow: 'hidden' }}>
           <Typography variant="subtitle2" noWrap>
-            {doc.name}
+            {doc.name || doc?.document_name}
           </Typography>
           <Typography variant="caption" color="text.secondary">
             {doc.size} MB
