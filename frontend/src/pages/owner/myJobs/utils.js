@@ -24,11 +24,11 @@ export const dataTableModel = {
 
 
 
-const renderActions = (item, setSelectedItem, setShowModal, navigate) => {
+const renderActions = (item, setSelectedItem, setShowModal, navigate, user_type) => {
 
   return (
     <MDBox>
-      <MDButton color={'primary'} variant={'outlined'} size={'small'} onClick={() => navigate(ROUTES.JOB_BIDS(item.id))}>Bids</MDButton>
+      {<MDButton color={'primary'} variant={'outlined'} size={'small'} onClick={() => navigate(ROUTES.JOB_BIDS(item.id))}>Bids</MDButton>}
       <MDButton onClick={() => navigate(ROUTES.J0B_DETAIL(item.id))}  color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Detail</MDButton>
       {item.raw_status === 'pending' &&<MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ mr: 1}}  onClick={() => navigate(ROUTES.EDIT_JOB(item.id))}>Edit</MDButton>}
       {item.raw_status === 'pending' && <MDButton
@@ -48,11 +48,11 @@ const renderActions = (item, setSelectedItem, setShowModal, navigate) => {
 
 
 
-export const renderTableRow = (item, setSelectedItem, setShowModal, navigate) => {
+export const renderTableRow = (item, setSelectedItem, setShowModal, navigate, user_type) => {
   item.created = moment(item.created).format('MM/DD/YYYY')
   item.raw_status = item.status
   item.status = capitalize(item.status)
-  item.actions = renderActions(item, setSelectedItem, setShowModal, navigate)
+  item.actions = renderActions(item, setSelectedItem, setShowModal, navigate, user_type)
   return item
 }
 

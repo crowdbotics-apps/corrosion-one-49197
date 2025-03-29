@@ -7,7 +7,7 @@ export const ROUTES = {
   LOGIN: "/",
   FORGOT_PASSWORD: "/forgot-password",
   SET_NEW_PASSWORD: "/set-new-password/*",
-  DASHBOARD: `/dashboard-inspector`,
+  DASHBOARD: `/dashboard`,
   PAYMENT: `/payment`,
   DASHBOARD_OWNER: `/dashboard-owner`,
   BIDS: `/bids`,

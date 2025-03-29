@@ -60,7 +60,9 @@ class JobViewSet(
             start_date, end_date = query_params.get('dates').split(',')
             jobs = jobs.filter(created__range=[start_date, end_date])
         if user_is_inspector(user):
-            active_jobs = jobs.filter(active=True)
+            inspector = user.inspector
+            credentials = list(inspector.credentials.values_list('id', flat=True))
+            active_jobs = jobs.filter(active=True, certifications__in=credentials, status=Job.JobStatus.PENDING)
             return active_jobs
 
         return jobs.filter(created_by=user.owner)
@@ -165,6 +167,10 @@ class BidViewSet(
             other_bid.save()
         bid.status = Bid.StatusChoices.ACCEPTED
         bid.save()
+        job.status = Job.JobStatus.STARTED
+        job.inspector = bid.inspector
+        job.save()
+
         return Response()
 
     @may_fail(Bid.DoesNotExist, 'Bid not found')

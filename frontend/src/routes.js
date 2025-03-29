@@ -112,20 +112,10 @@ export const protectedRoutes = [
     component: <HomeInspector />,
     noCollapse: true,
     icon: <Icon fontSize="small">home_outlined</Icon>,
-    role: [ROLES.INSPECTOR],
+    role: [ROLES.INSPECTOR, ROLES.OWNER],
     sidenav: true
   },
-  {
-    type: "collapse",
-    name: "Dashboard",
-    key: "dashboardOwner",
-    route: ROUTES.DASHBOARD_OWNER,
-    component: <HomeOwner />,
-    noCollapse: true,
-    icon: <Icon fontSize="small">home_outlined</Icon>,
-    role: [ROLES.OWNER],
-    sidenav: true
-  },
+
   {
     type: "collapse",
     name: "Find Jobs",
@@ -143,7 +133,7 @@ export const protectedRoutes = [
     key: "edit-job",
     route: ROUTES.EDIT_JOB(':jobId'),
     component: <HomeOwnerPostJob />,
-    role: [ROLES.INSPECTOR],
+    role: [ROLES.OWNER],
     sidenav: false
   },
   {
@@ -151,7 +141,7 @@ export const protectedRoutes = [
     key: "job-detail",
     route: ROUTES.J0B_DETAIL(':jobId'),
     component: <JobDetail />,
-    role: [ROLES.INSPECTOR],
+    role: [ROLES.INSPECTOR, ROLES.OWNER],
     sidenav: false
   },
 
@@ -159,7 +149,7 @@ export const protectedRoutes = [
   {
     type: "collapse",
     name: "Post a Job",
-    key: "post-jobs",
+    key: "post-job",
     route: ROUTES.POST_JOB,
     component: <HomeOwnerPostJob />,
     icon: <Icon fontSize="small">ballot_outlined</Icon>,
@@ -274,8 +264,8 @@ export const protectedRoutes = [
     component: <Logout />,
     icon: null,
     noCollapse: true,
-    role: [],
-    sidenav: true
+    role: [ROLES.OWNER, ROLES.INSPECTOR],
+    sidenav: false
   },
   {
     type: "collapse",
@@ -285,8 +275,8 @@ export const protectedRoutes = [
     component: <Settings />,
     icon: null,
     noCollapse: true,
-    role: [],
-    sidenav: true
+    role: [ROLES.OWNER, ROLES.INSPECTOR],
+    sidenav: false
   },
   {
     type: "collapse",
@@ -296,8 +286,8 @@ export const protectedRoutes = [
     component: <Support />,
     icon: null,
     noCollapse: true,
-    role: [],
-    sidenav: true
+    role: [ROLES.OWNER, ROLES.INSPECTOR],
+    sidenav: false
   },
 
   ];

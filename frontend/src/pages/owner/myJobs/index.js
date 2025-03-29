@@ -21,6 +21,7 @@ function HomeOwnerJobs() {
   const loginStore = useLoginStore();
   const api = useApi()
   const navigate = useNavigate()
+  const {pathname} = useLocation();
   const [datatable, setDatatable] = useState({...dataTableModel});
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +42,7 @@ function HomeOwnerJobs() {
       onSuccess: (result) => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
-        tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal, navigate))
+        tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal, navigate, loginStore.user_type))
         setDatatable(tmp)
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)
@@ -96,7 +97,7 @@ function HomeOwnerJobs() {
 
   return (
     <AdminLayout
-      title={'My Jobs'}
+      title={pathname === ROUTES.MY_JOBS ? 'My Jobs' : "Find Jobs"}
       showCard
     >
       <Grid container spacing={2}>
