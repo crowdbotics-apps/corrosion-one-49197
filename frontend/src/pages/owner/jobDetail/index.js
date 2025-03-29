@@ -376,14 +376,51 @@ function JobDetail() {
                   </MDBox>
                 </MDBox>
               </MDBox>
-
-              <MDButton color={'secondary'} sx={{ marginLeft: 'auto', height: { md: '60px', xs: '40px' }, fontSize: { md: '18px', xs: '14px' } ,display: 'flex' }} type="submit">
+              <MDBox display={'flex'} justifyContent={'flex-end'} gap={2} marginTop={'20px'} marginBottom={'20px'}>
+              <MDButton
+                color={'secondary'}
+                type="submit"
+                disabled={loading}
+                loading={loading}
+              >
                 Apply For The Job
               </MDButton>
+
+              {/*<MDButton*/}
+              {/*  color={'secondary'}*/}
+              {/*  variant={'outlined'}*/}
+              {/*  onClick={() => navigate(-1)}*/}
+              {/*>*/}
+              {/*  Go Back*/}
+              {/*</MDButton>*/}
+              </MDBox>
 
             </Grid>
           </Form>
         </FormikProvider>
+      </MDBox>}
+      {loginStore.user_type === 'OWNER' && <MDBox borderTop={"1px solid #ccc"}>
+        <MDBox display={'flex'} justifyContent={'flex-end'} gap={2} marginTop={'20px'} marginBottom={'20px'}>
+          <MDButton
+            color={'primary'}
+            onClick={() => navigate(ROUTES.JOB_BIDS(jobId))}
+          >
+            Bids
+          </MDButton>
+          {jobDetails?.status === "pending" &&<MDButton
+            color={'secondary'}
+            onClick={() => navigate(ROUTES.EDIT_JOB(jobId))}
+          >
+            Edit
+          </MDButton>}
+          <MDButton
+            color={'secondary'}
+            variant={'outlined'}
+            onClick={() => navigate(-1)}
+          >
+            Go Back
+          </MDButton>
+        </MDBox>
       </MDBox>}
     </AdminLayout>
   );
