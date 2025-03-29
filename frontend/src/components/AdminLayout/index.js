@@ -13,7 +13,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
 
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -30,6 +30,7 @@ import Card from "@mui/material/Card";
 import {ROLES, ROUTES} from "../../services/constants";
 import pxToRem from "assets/theme/functions/pxToRem";
 import {useIsMobile} from "../../services/helpers";
+import {protectedRoutes} from "../../routes";
 
 function AdminLayout
 ({
@@ -43,6 +44,7 @@ function AdminLayout
    contentCentered = false
  }) {
   const rootStore = useStores()
+  const location = useLocation();
   const {loginStore} = rootStore
   const isLoggedIn = loginStore.isLoggedIn;
   const navigate = useNavigate();
@@ -97,6 +99,15 @@ function AdminLayout
   }
 
   if (isLoggedIn) {
+    const parts = location.pathname.split('/');
+    const baseRoute = parts?.[1]
+    const currentRoute = protectedRoutes.find(route => route.key === baseRoute)
+    if (currentRoute === undefined) {
+      return <Navigate to={ROUTES.DASHBOARD}/>;
+    }
+    if (currentRoute.role && !currentRoute.role.includes(loginStore.user_type)) {
+      return <Navigate to={ROUTES.DASHBOARD}/>;
+    }
     return renderMainContent();
   } else {
     return <Navigate to={ROUTES.LOGIN}/>;
