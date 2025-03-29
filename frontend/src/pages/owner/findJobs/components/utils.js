@@ -5,6 +5,7 @@ import MDTypography from "@mui/material/Typography";
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import React from "react"
+import {checkUrl} from "../../../../services/helpers";
 
 export const formatDate = (date) => {
   return date ? new Date(date).toLocaleDateString('en-US', {
@@ -25,15 +26,14 @@ export const CustomTypography = ({ text }) => {
 
 export const DocumentList = ({ documents }) => {
   return (
-    <MDBox sx={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', width: '100%', gap: 2 }}>
+    <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: 2 }} mt={2}>
       {Array.isArray(documents) && documents.length > 0 ? (
         documents.map((doc) => (
           <MDButton
-            key={doc}
+            key={'key-' + doc.id}
             color={'primary'}
             sx={{
               width: '100%',
-              marginTop: '20px',
               backgroundColor: '#6DDA434D',
               color: 'white',
               height: '60px',
@@ -44,18 +44,27 @@ export const DocumentList = ({ documents }) => {
                 backgroundColor: '#6DDA434D',
               },
             }}
-            component="a"
-            href={doc.document}
-            download
+            onClick={() => window.open(checkUrl(doc.document), '_blank')}
           >
-            <MDBox sx={{ display: 'flex', alignItems: 'center' }}>
+            <MDBox display={'flex'} alignItems={'center'} justifyContent={'flex-start'}>
               <DescriptionOutlinedIcon sx={{ color: "#006E90", width: "30px", height: "30px", marginRight: '8px' }} />
-              <MDBox sx={{ marginLeft: { md: '20px', xs: '10px' }, overflow: 'hidden' }}>
-                <MDTypography sx={{ fontWeight: 'bold', fontSize: { md: '14px', xs: '12px' }, marginTop: '2px' }}>
-                  {doc.name || 'Requirement Doc'}
+              <MDBox>
+                <MDTypography
+                  sx={{
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    maxWidth: 250,          // or a width value that fits your design
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                }} textAlign={'left'} >
+                  {doc.name || doc?.document_name}
                 </MDTypography>
-                <MDTypography sx={{ color: 'gray', fontSize: '14px', marginTop: { md: '2px', xs: '-1px' } }}>
-                  {'File Size Info'}
+                <MDTypography
+                  sx={{ color: 'gray', fontSize: '14px'}}
+                  textAlign={'left'}
+                >
+                  {doc.size} MB
                 </MDTypography>
               </MDBox>
             </MDBox>
@@ -75,7 +84,7 @@ export const DocumentList = ({ documents }) => {
 
 export const CredentialsList = ({ documents }) => {
   return (
-    <MDBox sx={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', width: '100%', gap: 2 }}>
+    <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: 2 }} mt={2}>
       {documents.map((cert) => (
         <MDBox
           key={cert.id}
@@ -84,8 +93,8 @@ export const CredentialsList = ({ documents }) => {
             border: '1px solid rgba(0, 0, 0, 0.2)',
             borderRadius: 5,
             width: 'fit-content',
-            marginBottom: '10px',
           }}
+          mb={1}
         >
           <MDTypography
             sx={{
@@ -99,6 +108,7 @@ export const CredentialsList = ({ documents }) => {
           </MDTypography>
         </MDBox>
       ))}
+
     </MDBox>
   )
 }

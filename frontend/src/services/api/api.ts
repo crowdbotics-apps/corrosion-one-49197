@@ -145,6 +145,9 @@ export class Api extends ApiBase {
   getBids(data: any) {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/bids/`, data);
   }
+  createBid(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/bids/`, data);
+  }
 
   getOrdersStatusAdmin(data: any) {
     return this.simple_get(`${API_VERSION_PREFIX}/order/list_status/`, data);
