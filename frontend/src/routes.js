@@ -51,17 +51,15 @@ import {
   JobRedirect
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
-import HomeOwnerDos from "./pages/owner/findJobs"
 import HomeOwnerMessages from "./pages/owner/messages"
 import HomeOwnerPostJob from "./pages/owner/postJob"
 import HomeOwnerBids from "./pages/owner/bids"
 import HomeOwnerJobs from "./pages/owner/myJobs"
-import HomeOwnerDetails from "./pages/owner/findJobs/detailsIndex"
 import HomeInspector from "./pages/owner/home"
-import HomeOwner from "./pages/owner/HomeOwner"
-import HomeOwnerAppliedJobs from "./pages/owner/Applied Jobs"
+import HomeOwner from "./pages/owner/homeOwner"
+import HomeOwnerAppliedJobs from "./pages/owner/appliedJobs"
 import Support from "./pages/common/Support"
-import Payment from "./pages/owner/Payment"
+import Payment from "./pages/owner/payment"
 import JobDetail from "./pages/owner/jobDetail";
 // import EditJob from "./pages/owner/editJob"
 
@@ -133,7 +131,7 @@ export const protectedRoutes = [
     name: "Find Jobs",
     key: "find-jobs",
     route: ROUTES.FIND_JOBS,
-    component: <HomeOwnerDos />,
+    component: <HomeOwnerJobs />,
     icon: <Icon fontSize="small">search_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],

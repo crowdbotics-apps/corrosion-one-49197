@@ -1,7 +1,6 @@
 import AdminLayout from "../../../components/AdminLayout";
 import DataTable from "../../../components/DataTable/index";
 import React, { useEffect, useState } from "react";
-import { dataTableModel } from "../findJobs/utils";
 import { useApi, useLoginStore } from "../../../services/helpers";
 import MDBox from "../../../components/MDBox";
 import {
@@ -18,7 +17,7 @@ import SearchBar from "../../../components/SearchBar";
 import Box from "@mui/material/Box";
 import MDButton from "../../../components/MDButton";
 import DateBar from "../../../components/DateBar";
-import { renderTableRow } from "../findJobs/utils";
+
 import MDAvatar from "../../../components/MDAvatar"
 import MDTypography from "@mui/material/Typography"
 import Card from "@mui/material/Card"
@@ -34,7 +33,7 @@ function HomeInspector() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState(null);
   const api = useApi();
-  const [datatable, setDatatable] = useState({ ...dataTableModel });
+  // const [datatable, setDatatable] = useState({ ...dataTableModel });
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
@@ -149,14 +148,14 @@ function HomeInspector() {
 
 
     const { count, results } = result.data;
-    const tmp = { ...dataTableModel };
+    // const tmp = { ...dataTableModel };
 
-    tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal));
-
-    setDatatable(tmp);
-    setNumberOfItems(count);
-    setNumberOfItemsPage(results.length);
-    setLoading(false);
+    // tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal));
+    //
+    // setDatatable(tmp);
+    // setNumberOfItems(count);
+    // setNumberOfItemsPage(results.length);
+    // setLoading(false);
   };
 
   useEffect(() => {
@@ -271,23 +270,23 @@ function HomeInspector() {
                 </Grid>
               </Grid>
 
-              <DataTable
-                loading={loading}
-                loadingText={'Loading...'}
-                showHeader={false}
-                showTotalEntries={false}
-                table={datatable}
-                currentPage={currentPage}
-                numberOfItems={numberOfItems}
-                numberOfItemsPage={numberOfItemsPage}
-                searchFunc={getJobs}
-                searchQuery={searchQuery}
-                pageSize={10}
-                onPageChange={page => {
-                  getJobs(searchQuery, page);
-                  setCurrentPage(page);
-                }}
-              />
+              {/*<DataTable*/}
+              {/*  loading={loading}*/}
+              {/*  loadingText={'Loading...'}*/}
+              {/*  showHeader={false}*/}
+              {/*  showTotalEntries={false}*/}
+              {/*  table={datatable}*/}
+              {/*  currentPage={currentPage}*/}
+              {/*  numberOfItems={numberOfItems}*/}
+              {/*  numberOfItemsPage={numberOfItemsPage}*/}
+              {/*  searchFunc={getJobs}*/}
+              {/*  searchQuery={searchQuery}*/}
+              {/*  pageSize={10}*/}
+              {/*  onPageChange={page => {*/}
+              {/*    getJobs(searchQuery, page);*/}
+              {/*    setCurrentPage(page);*/}
+              {/*  }}*/}
+              {/*/>*/}
 
               <MDBox sx={{ display: "flex",justifyContent: "center", marginTop: '30px' }}>
                 <MDButton

@@ -17,8 +17,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import FormikInput from "../../../components/Formik/FormikInput"
 import {Form, FormikProvider, useFormik} from "formik"
 import * as Yup from "yup"
-import {checkUrl, showMessage, useApi, useLoginStore} from "../../../services/helpers"
-import {formatDate, CustomTypography, DocumentList, CredentialsList} from "../findJobs/components/utils"
+import {checkUrl, date_fmt, showMessage, useApi, useLoginStore} from "../../../services/helpers"
+import {CustomTypography, DocumentList, CredentialsList} from "./utils"
 import {ROUTES} from "../../../services/constants"
 import AdminLayout from "../../../components/AdminLayout";
 import gradientImage from "../../../assets/images/gradient.png";
@@ -263,10 +263,10 @@ function JobDetail() {
           <CustomTypography text="Job Schedule"/>
           <MDBox display={'flex'} justifyContent={'space-between'}>
             <MDTypography sx={{fontSize: '16px', fontWeight: 'bold', marginTop: '20px'}}>
-              Start Date: {formatDate(jobDetails?.start_date)}
+              Start Date: {date_fmt(jobDetails?.start_date, 'MMMM D, YYYY')}
             </MDTypography>
             <MDTypography sx={{fontSize: '16px', fontWeight: 'bold', marginTop: '20px'}}>
-              End Date: {formatDate(jobDetails?.end_date)}
+              End Date: {date_fmt(jobDetails?.end_date,'MMMM D, YYYY')}
             </MDTypography>
           </MDBox>
         </Grid>

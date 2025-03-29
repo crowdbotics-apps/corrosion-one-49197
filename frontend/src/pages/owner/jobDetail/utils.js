@@ -5,15 +5,7 @@ import MDTypography from "@mui/material/Typography";
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import React from "react"
-import {checkUrl} from "../../../../services/helpers";
-
-export const formatDate = (date) => {
-  return date ? new Date(date).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric'
-  }) : 'N/A';
-};
+import {checkUrl} from "../../../services/helpers";
 
 export const CustomTypography = ({ text }) => {
   return (
