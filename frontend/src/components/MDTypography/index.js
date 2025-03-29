@@ -91,7 +91,6 @@ MDTypography.propTypes = {
     "bottom",
   ]),
   textGradient: PropTypes.bool,
-  children: PropTypes.node.isRequired,
   opacity: PropTypes.number,
 };
 
