@@ -10,13 +10,11 @@ function JobRedirect() {
   const api = useApi()
   const navigate = useNavigate()
   const loginStore = useLoginStore();
-  const [loading, setLoading] = useState(false);
   const getUrls = window.location.href.split('jtv/')?.[1]
   const [, dispatch] = useMaterialUIController();
   const { pathname } = useLocation();
 
   const loginWithToken = () => {
-    setLoading(true)
     const token = getUrls
     api.loginWithToken({token}).handle(
       {
@@ -28,16 +26,13 @@ function JobRedirect() {
             loginStore.setUser(user.user)
             loginStore.setApiToken(user.access)
           })
-          // TODO: ADD REAL ROUTE
-          navigate(ROUTES.DASHBOARD)
-
+          navigate(ROUTES.J0B_DETAIL(job))
         },
         errorMessage: 'Invalid token',
         onError: (error) => {
           console.log(error)
           navigate(ROUTES.LOGIN)
         },
-        onFinally: () => setLoading(false)
       }
     )
   }

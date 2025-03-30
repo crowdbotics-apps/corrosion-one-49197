@@ -51,16 +51,16 @@ import {
   JobRedirect
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
-import HomeOwnerMessages from "./pages/owner/messages"
+import HomeOwnerMessages from "./pages/common/messages"
 import HomeOwnerPostJob from "./pages/owner/postJob"
 import HomeOwnerBids from "./pages/owner/bids"
 import HomeOwnerJobs from "./pages/owner/myJobs"
 import HomeInspector from "./pages/owner/home"
 import HomeOwner from "./pages/owner/homeOwner"
 import HomeOwnerAppliedJobs from "./pages/owner/appliedJobs"
-import Support from "./pages/common/Support"
+import Support from "./pages/common/support"
 import Payment from "./pages/owner/payment"
-import JobDetail from "./pages/owner/jobDetail";
+import JobDetail from "./pages/common/jobDetail";
 // import EditJob from "./pages/owner/editJob"
 
 
