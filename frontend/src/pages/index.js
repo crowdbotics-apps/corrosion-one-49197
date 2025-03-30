@@ -6,6 +6,7 @@ import SetNewPassword from "./auth/setNewPassword";
 import Logout from "./auth/logout";
 import Settings from "./common/settings";
 import JobRedirect from "./inspector/jobRedirect";
+import BidDetail from "./owner/bidDetail";
 
 export {
   SignIn,
@@ -15,6 +16,6 @@ export {
   SetNewPassword,
   Logout,
   Settings,
-  JobRedirect
-
+  JobRedirect,
+  BidDetail
 };

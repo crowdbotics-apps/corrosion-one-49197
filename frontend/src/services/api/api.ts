@@ -149,8 +149,21 @@ export class Api extends ApiBase {
   getBids(data: any) {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/bids/`, data);
   }
+
   createBid(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/jobs/bids/`, data);
+  }
+
+  getBid(id: number | string) {
+    return this.simple_get(`${API_VERSION_PREFIX}/jobs/bids/${id}/`);
+  }
+
+  acceptBid(id: number | string) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/bids/${id}/accept/`);
+  }
+
+  rejectBid(id: number | string) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/bids/${id}/reject/`);
   }
 
   getOrdersStatusAdmin(data: any) {

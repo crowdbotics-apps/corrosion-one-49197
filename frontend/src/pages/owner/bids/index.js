@@ -14,11 +14,10 @@ import { renderTableRow } from "./utils";
 import MDAvatar from "../../../components/MDAvatar"
 import Grid from "@mui/material/Grid" // Importar la función que renderiza las filas
 
-function HomeOwnerJobs() {
+function Bids() {
   const loginStore = useLoginStore();
   const {jobId = null} = useParams();
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const api = useApi();
   const [datatable, setDatatable] = useState({ ...dataTableModel });
   const [loading, setLoading] = useState(false);
@@ -35,14 +34,10 @@ function HomeOwnerJobs() {
   const handleDateChange = (newStartDate, newEndDate) => {
 
     if (newEndDate && newStartDate && newEndDate.isBefore(newStartDate)) {
-      setError('End date cannot be before start date');
+
     } else {
-      setError(null);
       setStartDate(newStartDate);
       setEndDate(newEndDate);
-      if (newStartDate && newEndDate) {
-        setOpen(false);
-      }
     }
   };
 
@@ -52,7 +47,7 @@ function HomeOwnerJobs() {
       onSuccess: (result) => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
-        tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal))
+        tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal, navigate))
         setDatatable(tmp)
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)
@@ -112,4 +107,4 @@ function HomeOwnerJobs() {
   );
 }
 
-export default HomeOwnerJobs;
+export default Bids;

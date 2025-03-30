@@ -154,7 +154,7 @@ class BidListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bid
-        fields = ['job', 'inspector', 'status', 'note']
+        fields = ['id', 'job', 'inspector', 'status', 'note']
 
 
 class BidCreateSerializer(serializers.ModelSerializer):

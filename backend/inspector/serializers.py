@@ -2,8 +2,11 @@ from cities_light.models import Country, Region, City
 import os
 
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
+from rest_framework.serializers import ModelSerializer
 
 from inspector.models import Credential, Inspector, Language, SupportDocument, CredentialDcoument
+from users.models import User
 from utils.utils import SmartUpdatableImageField
 
 
@@ -124,9 +127,10 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class RegionSerializer(serializers.ModelSerializer):
+    country_name = serializers.CharField(source='country.name')
     class Meta:
         model = Region
-        fields = ['id', 'name', 'country_id']
+        fields = ['id', 'name', 'country_id', 'country_name']
 
 
 class CitySerializer(serializers.ModelSerializer):
@@ -173,6 +177,19 @@ class CredentialDocumentsSerializer(serializers.ModelSerializer):
         return round(obj.document.size / 1024 / 1024, 2)
 
 
+class UserDetailInspectorSerializer(ModelSerializer):
+    phone_number = SerializerMethodField()
+
+
+    class Meta:
+        model = User
+        fields = ['email', 'name', 'first_name', 'last_name', 'phone_number', 'linkedin', 'website']
+
+    def get_phone_number(self, obj):
+        if not obj.phone_number:
+            return None
+        return obj.phone_number.as_international
+
 
 class InspectorDetailSerializer(serializers.ModelSerializer):
     credentials = CredentialDocumentsSerializer(many=True, source='credential_documents')
@@ -180,11 +197,12 @@ class InspectorDetailSerializer(serializers.ModelSerializer):
     countries = serializers.SerializerMethodField()
     languages = LanguageSerializer(many=True)
     support_documents = SupportDocumentSerializer(many=True)
+    user = UserDetailInspectorSerializer()
 
     class Meta:
         model = Inspector
         fields = ['credentials', 'regions', 'languages', 'date_of_birth', 'support_documents', 'countries',
-                  'profile_picture', 'notify_job_applied', 'notify_im_qualified', 'notify_new_message']
+                  'profile_picture', 'notify_job_applied', 'notify_im_qualified', 'notify_new_message', 'user']
 
 
     def get_countries(self, obj):

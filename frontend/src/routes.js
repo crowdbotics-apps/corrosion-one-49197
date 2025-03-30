@@ -48,12 +48,12 @@ import {
   SetNewPassword,
   Logout,
   Settings,
-  JobRedirect
+  JobRedirect, BidDetail
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerMessages from "./pages/common/messages"
 import HomeOwnerPostJob from "./pages/owner/postJob"
-import HomeOwnerBids from "./pages/owner/bids"
+import Bids from "./pages/owner/bids"
 import HomeOwnerJobs from "./pages/owner/myJobs"
 import HomeInspector from "./pages/owner/home"
 import HomeOwner from "./pages/owner/homeOwner"
@@ -162,7 +162,7 @@ export const protectedRoutes = [
     name: "Bids",
     key: "bids",
     route: ROUTES.BIDS,
-    component: <HomeOwnerBids />,
+    component: <Bids />,
     icon: <Icon fontSize="small">people_all_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
@@ -184,7 +184,18 @@ export const protectedRoutes = [
     name: "Job Bids",
     key: "job-bids",
     route: ROUTES.JOB_BIDS(':jobId'),
-    component: <HomeOwnerBids />,
+    component: <Bids />,
+    icon: null,
+    noCollapse: true,
+    role: [ROLES.OWNER],
+    sidenav: false
+  },
+  {
+    type: "collapse",
+    name: "Bid detail",
+    key: "bid-detail",
+    route: ROUTES.BID_DETAIL(':bidId'),
+    component: <BidDetail />,
     icon: null,
     noCollapse: true,
     role: [ROLES.OWNER],
