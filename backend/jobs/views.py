@@ -44,6 +44,9 @@ class JobViewSet(
         'list': [IsInspector, IsOwner],
         'create': [IsOwner],
         'partial_update': [IsOwner],
+        'cancel': [IsOwner],
+        'destroy': [IsOwner],
+        'viewed': [IsInspector, IsOwner],
     }
     action_serializers = {
         'list': JobListSerializer,

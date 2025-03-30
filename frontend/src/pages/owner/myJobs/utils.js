@@ -6,7 +6,7 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined"
-import {ROUTES} from "../../../services/constants";
+import {ROLES, ROUTES} from "../../../services/constants";
 
 
 export const dataTableModel = {
@@ -28,10 +28,10 @@ const renderActions = (item, setSelectedItem, setShowModal, navigate, user_type)
 
   return (
     <MDBox>
-      {<MDButton color={'primary'} variant={'outlined'} size={'small'} onClick={() => navigate(ROUTES.JOB_BIDS(item.id))}>Bids</MDButton>}
+      {user_type === ROLES.OWNER && <MDButton color={'primary'} variant={'outlined'} size={'small'} onClick={() => navigate(ROUTES.JOB_BIDS(item.id))}>Bids</MDButton>}
       <MDButton onClick={() => navigate(ROUTES.J0B_DETAIL(item.id))}  color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Detail</MDButton>
-      {item.raw_status === 'pending' &&<MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ mr: 1}}  onClick={() => navigate(ROUTES.EDIT_JOB(item.id))}>Edit</MDButton>}
-      {item.raw_status === 'pending' && <MDButton
+      {item.raw_status === 'pending' && user_type === ROLES.OWNER && <MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ mr: 1}}  onClick={() => navigate(ROUTES.EDIT_JOB(item.id))}>Edit</MDButton>}
+      {item.raw_status === 'pending' && user_type === ROLES.OWNER &&  <MDButton
         color={'error'}
         variant={'outlined'}
         size={'small'}

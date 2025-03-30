@@ -142,6 +142,10 @@ export class Api extends ApiBase {
     return this.simple_delete(`${API_VERSION_PREFIX}/jobs/${id}/`);
   }
 
+  markAsViewed(id: number | string) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/${id}/viewed/`);
+  }
+
   getBids(data: any) {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/bids/`, data);
   }

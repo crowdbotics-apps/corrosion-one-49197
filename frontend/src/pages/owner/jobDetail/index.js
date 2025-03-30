@@ -50,7 +50,7 @@ function JobDetail() {
   const createBid = (values) => {
     const bidData = {
       job: jobId,
-      notes: values.notes,
+      note: values.notes,
     }
     setLoading(true);
     api.createBid(bidData).handle({
@@ -60,6 +60,11 @@ function JobDetail() {
       },
       errorMessage: 'Error creating bid',
       onFinally: () => setLoading(false)
+    });
+  }
+
+  const markAsViewed = () => {
+    api.markAsViewed(jobId).handle({
     });
   }
 
@@ -98,7 +103,8 @@ function JobDetail() {
 
   useEffect(() => {
     if (jobId) getJob();
-  }, [jobId]);
+    markAsViewed()
+  }, []);
 
   return (
     <AdminLayout

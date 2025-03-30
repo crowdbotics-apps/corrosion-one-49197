@@ -11,7 +11,6 @@ import {Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextF
 import SearchBar from "../../../components/SearchBar";
 import Box from "@mui/material/Box";
 import MDButton from "../../../components/MDButton";
-import {runInAction} from "mobx";
 import {ROUTES} from "../../../services/constants";
 import DateBar from "../../../components/DateBar"
 import Grid from "@mui/material/Grid"
@@ -33,8 +32,6 @@ function HomeOwnerJobs() {
   const [openCancelModal, setOpenCancelModal] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState(null);
 
   const getJobs = (search = '', page = 1, ordering = order, dates = null) => {
     setLoading(true)
@@ -69,17 +66,8 @@ function HomeOwnerJobs() {
 
 
   const handleDateChange = (newStartDate, newEndDate) => {
-
-    if (newEndDate && newStartDate && newEndDate.isBefore(newStartDate)) {
-      setError('End date cannot be before start date');
-    } else {
-      setError(null);
-      setStartDate(newStartDate);
-      setEndDate(newEndDate);
-      if (newStartDate && newEndDate) {
-        setOpen(false);
-      }
-    }
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
   };
 
   const handleCloseModal = () => {

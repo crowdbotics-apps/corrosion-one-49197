@@ -170,6 +170,8 @@ class BidCreateSerializer(serializers.ModelSerializer):
         job = attrs['job']
         if job.status != Job.JobStatus.PENDING:
             raise serializers.ValidationError('Job is not available for bidding')
+        if Bid.objects.filter(job=job, inspector=user.inspector).exists():
+            raise serializers.ValidationError('You have already bid for this job')
         return attrs
 
     def save(self, **kwargs):
