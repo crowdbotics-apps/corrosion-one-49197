@@ -31,15 +31,18 @@ function Bids() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const handleDateChange = (newStartDate, newEndDate) => {
-
-    if (newEndDate && newStartDate && newEndDate.isBefore(newStartDate)) {
-
-    } else {
-      setStartDate(newStartDate);
-      setEndDate(newEndDate);
-    }
-  };
+  const rejectBid = () => {
+    setLoading(true)
+    api.rejectBid({bid_id: selectedItem?.id}).handle({
+      successMessage: 'Bid rejected successfully',
+      onSuccess: () => {
+        getBids()
+        handleCloseModal()
+      },
+      errorMessage: 'Error rejecting bid',
+      onFinally: () => setLoading(false)
+    })
+  }
 
   const getBids = (search = '', page = 1, ordering = order, dates = null) => {
     setLoading(true);
@@ -56,6 +59,21 @@ function Bids() {
       errorMessage: 'Error getting jobs',
       onFinally: () => setLoading(false)
     })
+  };
+
+  const handleCloseModal = () => {
+    setOpenCancelModal(false);
+    setSelectedItem(null);
+  }
+
+  const handleDateChange = (newStartDate, newEndDate) => {
+
+    if (newEndDate && newStartDate && newEndDate.isBefore(newStartDate)) {
+
+    } else {
+      setStartDate(newStartDate);
+      setEndDate(newEndDate);
+    }
   };
 
   useEffect(() => {
@@ -87,18 +105,18 @@ function Bids() {
           setCurrentPage(page);
         }}
       />
-      <Dialog open={openCancelModal} onClose={() => setOpenCancelModal(false)}>
-        <DialogTitle>Confirmation</DialogTitle>
+      <Dialog open={openCancelModal} onClose={() => handleCloseModal()}>
+        <DialogTitle>Reject bid</DialogTitle>
         <DialogContent>
-          <p>Do you want to cancel this job?</p>
+          <p>Do you want to reject this bid?</p>
         </DialogContent>
         <DialogActions sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexGrow: 1 }}>
-            <MDButton variant="outlined" onClick={() => setOpenCancelModal(false)} color={'secondary'}>
+            <MDButton variant="outlined" onClick={() => handleCloseModal()} color={'secondary'}>
               Cancel
             </MDButton>
           </Box>
-          <MDButton onClick={() => {}} color={'error'}>
+          <MDButton onClick={() => rejectBid()} color={'error'}>
             Confirm
           </MDButton>
         </DialogActions>

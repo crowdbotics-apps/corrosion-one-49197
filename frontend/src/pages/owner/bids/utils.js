@@ -25,7 +25,7 @@ const renderActions = (item, setSelectedItem, setShowModal, navigate) => {
         size={'small'}
         onClick={() => navigate(ROUTES.BID_DETAIL(item.id))}
       >Detail</MDButton>
-      <MDButton
+      {item.status_raw === 'pending' && <MDButton
         color={'error'}
         variant={'outlined'}
         size={'small'}
@@ -35,13 +35,14 @@ const renderActions = (item, setSelectedItem, setShowModal, navigate) => {
         }}
       >
         Reject
-      </MDButton>
+      </MDButton>}
     </MDBox>
   );
 };
 
 export const renderTableRow = (item, setSelectedItem, setShowModal, navigate) => {
   item.created = moment(item.created).format('MM/DD/YYYY');
+  item.status_raw = item.status
   item.status = capitalize(item.status);
   item.actions = renderActions(item, setSelectedItem, setShowModal, navigate);
   return item;

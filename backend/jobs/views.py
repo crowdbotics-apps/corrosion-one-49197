@@ -129,6 +129,7 @@ class BidViewSet(
         'list': [IsInspector, IsOwner],
         'create': [IsInspector],
         'accept': [IsOwner],
+        'reject': [IsOwner],
         'retrieve': [IsInspector, IsOwner],
         'destroy': [IsInspector],
     }
@@ -164,7 +165,7 @@ class BidViewSet(
         job = bid.job
         if job.status != Job.JobStatus.PENDING:
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
-        other_bids = bid.bids.filter(job=job).exclude(id=bid.id)
+        other_bids = Bid.objects.filter(job=job).exclude(id=bid.id)
         for other_bid in other_bids:
             other_bid.status = Bid.StatusChoices.REJECTED
             other_bid.save()

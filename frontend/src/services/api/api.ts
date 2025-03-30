@@ -158,12 +158,12 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/bids/${id}/`);
   }
 
-  acceptBid(id: number | string) {
-    return this.simple_post(`${API_VERSION_PREFIX}/jobs/bids/${id}/accept/`);
+  acceptBid(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/bids/accept/`, data);
   }
 
-  rejectBid(id: number | string) {
-    return this.simple_post(`${API_VERSION_PREFIX}/jobs/bids/${id}/reject/`);
+  rejectBid(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/bids/reject/`, data);
   }
 
   getOrdersStatusAdmin(data: any) {

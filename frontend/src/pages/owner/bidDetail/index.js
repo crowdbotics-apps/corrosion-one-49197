@@ -2,7 +2,7 @@ import AdminLayout from "components/AdminLayout";
 import React, {useEffect, useState} from "react"
 import {useApi} from "../../../services/helpers";
 import {useNavigate, useParams} from "react-router-dom";
-import {Grid} from "@mui/material";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Grid} from "@mui/material";
 import MDBox from "../../../components/MDBox";
 import MDButton from "../../../components/MDButton";
 import MDTypography from "@mui/material/Typography";
@@ -10,6 +10,7 @@ import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlin
 import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
 import {DocumentList} from "../../common/jobDetail/utils";
 import {CredentialDocumentList} from "./utils";
+import Box from "@mui/material/Box";
 
 
 function BidDetail() {
@@ -18,17 +19,59 @@ function BidDetail() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [bid, setBid] = useState(null);
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [action, setAction] = useState('reject');
+
 
   const getBid = () => {
     setLoading(true)
     api.getBid(bidId).handle({
       onSuccess: (result) => {
-        console.log(result.data)
+        console.log(result);
         setBid(result.data)
       },
       errorMessage: 'Error getting bid',
       onFinally: () => setLoading(false)
     })
+  }
+
+  const rejectBid = () => {
+    setLoading(true)
+    api.rejectBid({bid_id: bidId}).handle({
+      successMessage: 'Bid rejected successfully',
+      onSuccess: () => {
+        getBid()
+        handleCloseModal()
+      },
+      errorMessage: 'Error rejecting bid',
+      onFinally: () => setLoading(false)
+    })
+  }
+
+  const acceptBid = () => {
+    setLoading(true)
+    api.acceptBid({bid_id: bidId}).handle({
+      successMessage: 'Bid accepted successfully',
+      onSuccess: () => {
+        getBid()
+        handleCloseModal()
+      },
+      errorMessage: 'Error accepting bid',
+      onFinally: () => setLoading(false)
+    })
+  }
+
+  const handleAction = () => {
+    if (action === 'reject') {
+      rejectBid()
+    } else if (action === 'accept') {
+      acceptBid()
+    }
+
+  }
+
+  const handleCloseModal = () => {
+    setShowActionModal(false);
   }
 
   useEffect(() => {
@@ -158,18 +201,28 @@ function BidDetail() {
       </Grid>
       <MDBox borderTop={"1px solid #ccc"} mt={3}>
         <MDBox display={'flex'} justifyContent={'flex-end'} gap={2} marginTop={'20px'} marginBottom={'20px'}>
-          <MDButton
+          {bid?.status === 'pending' && <MDButton
             color={'primary'}
-            // onClick={() => navigate(ROUTES.JOB_BIDS(jobId))}
+            disabled={loading}
+            onClick={
+              () => {
+                setAction('accept')
+                setShowActionModal(true)
+              }
+            }
           >
             Approve
-          </MDButton>
-          <MDButton
+          </MDButton>}
+          {bid?.status === 'pending' && <MDButton
+            disabled={loading}
             color={'error'}
-            // onClick={() => navigate(ROUTES.EDIT_JOB(jobId))}
+            onClick={() => {
+              setAction('reject')
+              setShowActionModal(true)
+            }}
           >
             Reject
-          </MDButton>
+          </MDButton>}
           <MDButton
             color={'secondary'}
             variant={'outlined'}
@@ -179,6 +232,30 @@ function BidDetail() {
           </MDButton>
         </MDBox>
       </MDBox>
+      <Dialog open={showActionModal} onClose={handleCloseModal}>
+        <DialogTitle>{action === 'reject' ? 'Reject Bid' : 'Accept Bid'}</DialogTitle>
+        <DialogContent>
+          {action === 'reject' && <p>Do you want to reject this bid?</p>}
+          {action === 'accept' && <p>Do you want to accept this bid? This action will reject any other bids for this job.</p>}
+        </DialogContent>
+        <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>
+            <MDButton
+              variant="outlined"
+              onClick={handleCloseModal}
+              color={'secondary'}
+            >
+              Cancel
+            </MDButton>
+          </Box>
+          <MDButton
+            onClick={handleAction}
+            color={'error'}
+          >
+            Confirm
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </AdminLayout>
   );
 }
