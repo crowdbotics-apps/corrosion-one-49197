@@ -178,7 +178,7 @@ class BidViewSet(
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
         job = bid.job
         if job.status != Job.JobStatus.PENDING:
-            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+            return Response('This job is not available for bidding', status=HTTP_400_BAD_REQUEST)
         other_bids = Bid.objects.filter(job=job).exclude(id=bid.id)
         for other_bid in other_bids:
             other_bid.status = Bid.StatusChoices.REJECTED
