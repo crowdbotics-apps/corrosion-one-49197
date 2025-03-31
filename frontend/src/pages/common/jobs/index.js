@@ -1,5 +1,5 @@
 import AdminLayout from "../../../components/AdminLayout"
-import DataTable from "../../../components/DataTable/index";
+import DataTable from "../../../components/DataTable";
 // import DataTable from "../../../components/AdminLayout/MyJobs/dataTable";
 import React, {useEffect, useState} from "react"
 import {dataTableModel, renderTableRow} from "./utils"

@@ -76,11 +76,12 @@ class JobDetailSerializer(serializers.ModelSerializer):
         return obj.favorites.filter(inspector=user.inspector).exists()
 
 class JobManagementSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, read_only=True)
     categories = PrimaryKeyRelatedField(many=True, queryset=JobCategory.objects.all())
     certifications = PrimaryKeyRelatedField(many=True, queryset=Credential.objects.all())
     class Meta:
         model = Job
-        fields = [ 'title', 'description', 'categories', 'certifications', 'start_date', 'address',
+        fields = [ 'id', 'title', 'description', 'categories', 'certifications', 'start_date', 'address',
                   'end_date', 'daily_rate', 'per_diem_rate', 'mileage_rate', 'misc_other_rate', 'payment_modes']
 
     def validate(self, attrs):

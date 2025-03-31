@@ -17,7 +17,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import FormikInput from "../../../components/Formik/FormikInput"
 import {Form, FormikProvider, useFormik} from "formik"
 import * as Yup from "yup"
-import {checkUrl, date_fmt, showMessage, useApi, useLoginStore} from "../../../services/helpers"
+import {checkUrl, date_fmt, money_fmt, showMessage, useApi, useLoginStore} from "../../../services/helpers"
 import {CustomTypography, DocumentList, CredentialsList} from "./utils"
 import {ROLES, ROUTES} from "../../../services/constants"
 import AdminLayout from "../../../components/AdminLayout";
@@ -307,21 +307,21 @@ function JobDetail() {
           <CustomTypography text="Payment"/>
           <MDBox>
             <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>
-              Daily Rate: $ {jobDetails?.daily_rate}
+              Daily Rate: {money_fmt(jobDetails?.daily_rate)}
             </MDTypography>
             {jobDetails?.payment_modes.includes('per_diem') && (
               <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>
-                Per Diem: $ {jobDetails?.per_diem_rate}
+                Per Diem: {money_fmt(jobDetails?.per_diem_rate)}
               </MDTypography>
             )}
             {jobDetails?.payment_modes.includes('mileage') && (
               <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>
-                Mileage: $ {jobDetails?.mileage_rate}
+                Mileage: {money_fmt(jobDetails?.mileage_rate)}
               </MDTypography>
             )}
             {jobDetails?.payment_modes.includes('misc_other') && (
               <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>
-                Misc/Other: $ {jobDetails?.misc_other_rate}
+                Misc/Other: {money_fmt(jobDetails?.misc_other_rate)}
               </MDTypography>
             )}
           </MDBox>

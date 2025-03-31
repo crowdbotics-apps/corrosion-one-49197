@@ -54,7 +54,7 @@ import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerMessages from "./pages/common/messages"
 import HomeOwnerPostJob from "./pages/owner/postJob"
 import Bids from "./pages/owner/bids"
-import JobList from "./pages/owner/jobs"
+import JobList from "./pages/common/jobs"
 import HomeInspector from "./pages/owner/home"
 import HomeOwner from "./pages/owner/homeOwner"
 import HomeOwnerAppliedJobs from "./pages/owner/appliedJobs"

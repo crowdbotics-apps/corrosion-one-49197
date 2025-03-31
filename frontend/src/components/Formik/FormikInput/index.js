@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Field, useField} from "formik";
+import {Field, useField, useFormikContext} from "formik";
 import MDBox from "components/MDBox";
 import InputMask from "react-input-mask";
 import {AutocompleteFormik} from "../AutocompleteFormik";
@@ -22,6 +22,7 @@ import Typography from "@mui/material/Typography";
 import {InputAdornment, Select, TextField} from "@mui/material";
 import MDInput from "../../MDInput";
 import {FormikRichTextInput} from "./FormikRichTextInput";
+import {NumericFormat} from "react-number-format";
 
 const FormikFileInput = (props) => {
   const [field, meta] = useField(props);
@@ -301,6 +302,56 @@ const FormikDateYearInput = (props) => {
   )
 }
 
+
+export const FormikNumericInput = (props) => {
+  const [field, meta] = useField(props);
+  const { setFieldValue } = useFormikContext();
+  const errorText = meta.error && meta.touched ? meta.error : "";
+
+  const {
+    variant = "outlined",
+    label,
+    fullWidth = true,
+    overrideError,
+    multiline,
+    disabled = false,
+    rows,
+    // any other NumberFormat props you may want to pass, such as:
+    // thousandSeparator = true,
+    // decimalScale = 2,
+    ...rest
+  } = props;
+
+  // This callback sets the Formik field’s value whenever the NumberFormat changes.
+  const handleValueChange = (values) => {
+    const { floatValue } = values;
+    setFieldValue(field.name, floatValue);
+  };
+
+  return (
+    <MDBox {...rest}>
+      <NumericFormat
+        {...field} // includes name, value, onBlur, etc.
+        customInput={MDInput} // tells NumberFormat to render MDInput under the hood
+        label={label}
+        variant={variant}
+        fullWidth={fullWidth}
+        disabled={disabled}
+        helperText={overrideError && !!errorText ? overrideError : errorText}
+        error={!!errorText}
+        multiline={multiline}
+        rows={rows}
+        onValueChange={handleValueChange}
+        onChange={() =>{}}
+        // You can add formatting props here, e.g. thousandSeparator, prefix/suffix, etc.
+        thousandSeparator
+        decimalScale={2}
+      />
+    </MDBox>
+  );
+};
+
+
 const FormikInput = (props) => {
   let component = null
   switch (props.type) {
@@ -332,7 +383,7 @@ const FormikInput = (props) => {
       component = <FormikTextInput {...props} />
       break;
     case FieldTypes.number:
-      component = <FormikTextInput {...props} />
+      component = <FormikNumericInput {...props} />
       break;
     case FieldTypes.checkbox:
       component = <FormikBooleanInput {...props} />

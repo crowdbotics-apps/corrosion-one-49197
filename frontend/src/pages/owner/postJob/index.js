@@ -24,6 +24,7 @@ function PostJob() {
   const [credentials, setCredentials] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [job, setJob] = useState(null);
 
   const getCredentialOptions = () => {
     api.getCredentialsAvailable().handle({
@@ -45,7 +46,7 @@ function PostJob() {
     setLoading(true);
     api.createJob(values).handle({
       onSuccess: (result) => {
-        formik.resetForm()
+        navigate(ROUTES.J0B_DETAIL(result?.response?.id))
       },
       successMessage: 'Job Created',
       onError: (error) => {
@@ -66,7 +67,7 @@ function PostJob() {
     api.editJob(dataToSend).handle({
       successMessage: 'Job Updated',
       onSuccess: (result) => {
-        navigate(ROUTES.MY_JOBS)
+        navigate(ROUTES.J0B_DETAIL(result?.response?.id))
       },
       onError: (error) => {
         formik.setErrors(error?.response?.data)
@@ -86,6 +87,7 @@ function PostJob() {
           ...result?.data,
           payment_modes: PaymentOptions.filter((item) => result?.data?.payment_modes?.includes(item.value)),
         }
+        setJob(dataToSet)
         formik.setValues(dataToSet)
       },
       errorMessage: 'Error getting job details',
@@ -147,10 +149,10 @@ function PostJob() {
     certifications: [],
     start_date: '',
     end_date: '',
-    daily_rate: 0,
-    per_diem_rate: 0,
-    mileage_rate: 0,
-    misc_other_rate: 0,
+    daily_rate: null,
+    per_diem_rate: null,
+    mileage_rate: null,
+    misc_other_rate: null,
     payment_modes: [PaymentOptions[0]],
     documents: [],
   };
@@ -244,7 +246,7 @@ function PostJob() {
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
                 {formik.values.categories.map((item) => <RenderListOption key={item.id} item={item}
-                                                                        handleRemove={removeCategory}/>)}
+                                                                          handleRemove={removeCategory}/>)}
               </MDBox>
 
               <FormikInput
@@ -274,7 +276,7 @@ function PostJob() {
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
                 {formik.values.certifications.map((item) => <RenderListOption key={item.id} item={item}
-                                                                            handleRemove={removeCertifications}/>)}
+                                                                              handleRemove={removeCertifications}/>)}
               </MDBox>
             </Card>
           </Grid>
@@ -300,7 +302,7 @@ function PostJob() {
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
                 {formik.values.payment_modes.map((item) => <RenderListOption key={item.id} item={item}
-                                                                           handleRemove={removePaymentMethod}/>)}
+                                                                             handleRemove={removePaymentMethod}/>)}
               </MDBox>
 
               <FormikInput
@@ -308,6 +310,7 @@ function PostJob() {
                 label="Daily Rate"
                 type="number"
                 errors={formik.errors}
+                setFieldValue={formik.setFieldValue}
                 mb={2}
               />
               {formik.values.payment_modes.find((item) => item.value === 'per_diem') && (
