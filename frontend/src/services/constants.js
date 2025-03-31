@@ -11,6 +11,7 @@ export const ROUTES = {
   PAYMENT: `/payment`,
   BIDS: `/bids`,
   MY_JOBS: `/my-jobs`,
+  HISTORY: `/history`,
   POST_JOB: "/post-job",
   APPLIED_JOBS: `/applied_jobs`,
   FIND_JOBS: `/find-jobs`,

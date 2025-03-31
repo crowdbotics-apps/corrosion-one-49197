@@ -16,7 +16,7 @@ import DateBar from "../../../components/DateBar"
 import Grid from "@mui/material/Grid"
 
 
-function HomeOwnerJobs() {
+function JobList() {
   const loginStore = useLoginStore();
   const api = useApi()
   const navigate = useNavigate()
@@ -32,10 +32,17 @@ function HomeOwnerJobs() {
   const [openCancelModal, setOpenCancelModal] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [pageTitle, setPageTitle] = useState("My Active Jobs");
 
   const getJobs = (search = '', page = 1, ordering = order, dates = null) => {
     setLoading(true)
-    api.getJobs({search, page, ordering, page_size: 10, dates}).handle({
+    let status = null
+    if (pathname === ROUTES.MY_JOBS || pathname === ROUTES.FIND_JOBS) {
+      status = 'started,pending'
+    } else if (pathname === ROUTES.MY_JOBS) {
+      status = 'canceled,finished'
+    }
+    api.getJobs({search, page, ordering, page_size: 10, dates, status}).handle({
       onSuccess: (result) => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -83,9 +90,16 @@ function HomeOwnerJobs() {
     if (startDate && endDate) getJobs(searchQuery, 1, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`)
   }, [startDate, endDate])
 
+  useEffect(() => {
+    if (pathname === ROUTES.MY_JOBS) setPageTitle("My Active Jobs")
+    if (pathname === ROUTES.HISTORY) setPageTitle("Jobs History")
+    if (pathname === ROUTES.FIND_JOBS) setPageTitle("Find Jobs")
+    getJobs()
+  }, [pathname])
+
   return (
     <AdminLayout
-      title={pathname === ROUTES.MY_JOBS ? 'My Jobs' : "Find Jobs"}
+      title={pageTitle}
       showCard
     >
       <Grid container spacing={2}>
@@ -145,4 +159,4 @@ function HomeOwnerJobs() {
   );
 }
 
-export default HomeOwnerJobs;
+export default JobList;

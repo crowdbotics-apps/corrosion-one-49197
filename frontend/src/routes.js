@@ -54,7 +54,7 @@ import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerMessages from "./pages/common/messages"
 import HomeOwnerPostJob from "./pages/owner/postJob"
 import Bids from "./pages/owner/bids"
-import HomeOwnerJobs from "./pages/owner/myJobs"
+import JobList from "./pages/owner/jobs"
 import HomeInspector from "./pages/owner/home"
 import HomeOwner from "./pages/owner/homeOwner"
 import HomeOwnerAppliedJobs from "./pages/owner/appliedJobs"
@@ -121,7 +121,7 @@ export const protectedRoutes = [
     name: "Find Jobs",
     key: "find-jobs",
     route: ROUTES.FIND_JOBS,
-    component: <HomeOwnerJobs />,
+    component: <JobList />,
     icon: <Icon fontSize="small">search_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],
@@ -170,10 +170,10 @@ export const protectedRoutes = [
   },
   {
     type: "collapse",
-    name: "My Jobs",
+    name: "My Active Jobs",
     key: "my-jobs",
     route: ROUTES.MY_JOBS,
-    component: <HomeOwnerJobs />,
+    component: <JobList />,
     icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
@@ -203,10 +203,10 @@ export const protectedRoutes = [
   },
   {
     type: "collapse",
-    name: "History",
+    name: "Jobs History",
     key: "history",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.HISTORY,
+    component: <JobList />,
     icon: <Icon fontSize="small">history_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER],
@@ -217,7 +217,7 @@ export const protectedRoutes = [
     name: "Applied Jobs",
     key: "applied-jobs",
     route: ROUTES.APPLIED_JOBS,
-    component: <HomeOwnerAppliedJobs />,
+    component: <JobList />,
     icon: <Icon fontSize="small">cases_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],
@@ -228,7 +228,7 @@ export const protectedRoutes = [
     name: "Favorite Jobs",
     key: "favorite-jobs",
     route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    component: <JobList />,
     icon: <Icon fontSize="small">bookmarks_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.INSPECTOR],

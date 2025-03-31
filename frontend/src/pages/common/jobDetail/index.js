@@ -118,7 +118,7 @@ function JobDetail() {
   };
 
   const validationSchema = Yup.object().shape({
-    notes: Yup.string().required('Notes is required'),
+
   });
 
 

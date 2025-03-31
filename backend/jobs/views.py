@@ -63,6 +63,8 @@ class JobViewSet(
         if query_params.get('dates', None):
             start_date, end_date = query_params.get('dates').split(',')
             jobs = jobs.filter(created__range=[start_date, end_date])
+        if query_params.get('status', None):
+            jobs = jobs.filter(status__in=query_params.get('status').split(','))
         if user_is_inspector(user):
             inspector = user.inspector
             credentials = list(inspector.credentials.values_list('id', flat=True))
