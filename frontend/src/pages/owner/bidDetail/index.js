@@ -27,7 +27,6 @@ function BidDetail() {
     setLoading(true)
     api.getBid(bidId).handle({
       onSuccess: (result) => {
-        console.log(result);
         setBid(result.data)
       },
       errorMessage: 'Error getting bid',
@@ -121,7 +120,7 @@ function BidDetail() {
               <QuestionAnswerOutlinedIcon
                 sx={{color: "#006E90", width: "30px", height: "30px", marginLeft: '2px'}}/>
             </MDButton>
-            <MDBox
+            {bid?.inspector?.user?.linkedin && <MDBox
               sx={{
                 width: '40px',
                 height: '40px',
@@ -138,7 +137,7 @@ function BidDetail() {
               <MDTypography sx={{fontWeight: 'bold', color: '#006E90', fontSize: '20px'}}>
                 in
               </MDTypography>
-            </MDBox>
+            </MDBox>}
           </MDBox>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -146,9 +145,11 @@ function BidDetail() {
             <MDTypography sx={{fontSize: "14px"}} mb={2}>Languages</MDTypography>
             {bid?.inspector?.languages?.length > 0 ? (
               <MDBox display={'flex'} gap={1}>
-                {bid?.inspector?.languages.map((lang, index) => (
-                  <MDTypography key={index} sx={{fontSize: "18px", color: '#767977'}}>{lang.name} </MDTypography>
-                ))}
+                {bid?.inspector?.languages.map((lang, index) => {
+                  return (
+                    <MDTypography key={index} sx={{fontSize: "14px", color: '#767977'}}>{index !== 0 && bid?.inspector?.languages.length > 1 && ' / '} {lang.name} </MDTypography>
+                  )
+                })}
               </MDBox>
             ) : "-"}
           </MDBox>
@@ -173,13 +174,13 @@ function BidDetail() {
             )}
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        {bid?.inspector?.user?.website && <Grid item xs={12}>
           <MDTypography sx={{fontSize: "14px"}} my={2}>Portfolio link</MDTypography>
           <MDTypography
             sx={{fontSize: "18px", color: '#767977', cursor: 'pointer'}}
             onClick={() => window.open(bid?.inspector?.user?.website, '_blank')}
           >{bid?.inspector?.user?.website}</MDTypography>
-        </Grid>
+        </Grid>}
         <Grid item xs={12}>
           <MDBox borderTop={"1px solid #ccc"}>
             <MDTypography sx={{fontSize: "20px", color: '#006E90'}} my={2}>Documents</MDTypography>

@@ -58,9 +58,9 @@ function JobDetail() {
     }
     setLoading(true);
     api.createBid(bidData).handle({
+      successMessage: 'Bid created successfully',
       onSuccess: (result) => {
-        showMessage('Bid created successfully', 'success');
-        // navigate(ROUTES.OWNER_MY_JOBS);
+        navigate(-1);
       },
       errorMessage: 'Error creating bid',
       onFinally: () => setLoading(false)

@@ -26,7 +26,6 @@ function Credentials({updateCredentials, credentials, loading}) {
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      console.log('values', values)
       updateCredentials(values);
     }
   })

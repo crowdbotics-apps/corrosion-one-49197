@@ -117,9 +117,11 @@ class JobViewSet(
     @may_fail(Job.DoesNotExist, 'Job not found')
     @action(detail=True, methods=['post'])
     def viewed(self, request, pk=None):
-        job = Job.objects.get(pk=pk)
-        job.views += 1
-        job.save()
+        user = self.request.user
+        if user_is_inspector(user):
+            job = Job.objects.get(pk=pk)
+            job.views += 1
+            job.save()
         return Response()
 
     @may_fail(Job.DoesNotExist, 'Job not found')

@@ -30,7 +30,6 @@ function JobRedirect() {
         },
         errorMessage: 'Invalid token',
         onError: (error) => {
-          console.log(error)
           navigate(ROUTES.LOGIN)
         },
       }
