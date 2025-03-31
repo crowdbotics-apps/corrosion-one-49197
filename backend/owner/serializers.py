@@ -97,6 +97,8 @@ class OwnerDetailSerializer(serializers.ModelSerializer):
         return obj.logo.size
 
     def get_phone_number(self, obj):
+        if not obj.user.phone_number:
+            return None
         return obj.user.phone_number.as_e164
 
 
