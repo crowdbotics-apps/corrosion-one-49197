@@ -227,7 +227,7 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Favorite Jobs",
     key: "favorite-jobs",
-    route: ROUTES.DASHBOARD,
+    route: ROUTES.FAVORITE,
     component: <JobList />,
     icon: <Icon fontSize="small">bookmarks_outlined</Icon>,
     noCollapse: true,

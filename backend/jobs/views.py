@@ -68,7 +68,12 @@ class JobViewSet(
         if user_is_inspector(user):
             inspector = user.inspector
             credentials = list(inspector.credentials.values_list('id', flat=True))
-            active_jobs = jobs.filter(active=True, certifications__in=credentials, status=Job.JobStatus.PENDING)
+            active_jobs = jobs.filter(active=True, certifications__in=credentials)
+            if query_params.get('applied', None):
+                my_bids_ids = list(inspector.bids.values_list('job_id', flat=True))
+                active_jobs = active_jobs.filter(id__in=my_bids_ids)
+            else:
+                active_jobs = active_jobs.filter(status=Job.JobStatus.PENDING)
             return active_jobs
 
         return jobs.filter(created_by=user.owner)

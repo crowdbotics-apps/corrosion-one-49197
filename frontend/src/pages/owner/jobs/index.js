@@ -42,7 +42,13 @@ function JobList() {
     } else if (pathname === ROUTES.MY_JOBS) {
       status = 'canceled,finished'
     }
-    api.getJobs({search, page, ordering, page_size: 10, dates, status}).handle({
+
+    let applied = null
+    if (pathname === ROUTES.APPLIED_JOBS) {
+      applied = true
+    }
+
+    api.getJobs({search, page, ordering, page_size: 10, dates, status, applied}).handle({
       onSuccess: (result) => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -94,6 +100,8 @@ function JobList() {
     if (pathname === ROUTES.MY_JOBS) setPageTitle("My Active Jobs")
     if (pathname === ROUTES.HISTORY) setPageTitle("Jobs History")
     if (pathname === ROUTES.FIND_JOBS) setPageTitle("Find Jobs")
+    if (pathname === ROUTES.FAVORITE) setPageTitle("Favorite Jobs")
+    if (pathname === ROUTES.APPLIED_JOBS) setPageTitle("Applied Jobs")
     getJobs()
   }, [pathname])
 
