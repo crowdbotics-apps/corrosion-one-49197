@@ -116,6 +116,9 @@ export const showErrorMessageBasedOnResult = (result_or_error, mainError = 'An e
   } else if (kind === 'forbidden') {
       html = 'You do not have permission to perform this action'
       doToast(type, mainError, html)
+  } else if (kind === 'unauthorized') {
+    html = 'You are not authorized to perform this action'
+    doToast(type, mainError, html)
   } else if (result_or_error.result?.errors || result_or_error.errors) {
     if (result_or_error.message) {
       mainError = result_or_error.message
