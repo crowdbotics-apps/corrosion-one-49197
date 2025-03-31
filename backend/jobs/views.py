@@ -47,6 +47,7 @@ class JobViewSet(
         'cancel': [IsOwner],
         'destroy': [IsOwner],
         'viewed': [IsInspector, IsOwner],
+        'mark_as_completed': [IsOwner],
     }
     action_serializers = {
         'list': JobListSerializer,
@@ -107,6 +108,19 @@ class JobViewSet(
     def viewed(self, request, pk=None):
         job = Job.objects.get(pk=pk)
         job.views += 1
+        job.save()
+        return Response()
+
+    @may_fail(Job.DoesNotExist, 'Job not found')
+    @action(detail=True, methods=['post'])
+    def mark_as_completed(self, request, pk=None):
+        user = self.request.user
+        if user_is_inspector(user):
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        job = Job.objects.get(pk=pk, created_by=user.owner)
+        if job.status == Job.JobStatus.FINISHED:
+            return Response('Job already completed', status=HTTP_400_BAD_REQUEST)
+        job.status = Job.JobStatus.FINISHED
         job.save()
         return Response()
 

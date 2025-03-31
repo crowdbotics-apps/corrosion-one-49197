@@ -53,13 +53,16 @@ class JobDetailSerializer(serializers.ModelSerializer):
     certifications = CredentialSerializer(many=True)
     documents = JobDocumentSerializer(many=True)
     created_by = OwnerDetailSerializer()
+    bids = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = ['id', 'title', 'description', 'categories', 'certifications', 'start_date', 'address',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
-                  'misc_other_rate', 'payment_modes', 'created_by']
+                  'misc_other_rate', 'payment_modes', 'created_by', 'bids']
 
+    def get_bids(self, obj):
+        return obj.bids.count()
 
 class JobManagementSerializer(serializers.ModelSerializer):
     categories = PrimaryKeyRelatedField(many=True, queryset=JobCategory.objects.all())

@@ -22,16 +22,20 @@ import {CustomTypography, DocumentList, CredentialsList} from "./utils"
 import {ROUTES} from "../../../services/constants"
 import AdminLayout from "../../../components/AdminLayout";
 import gradientImage from "../../../assets/images/gradient.png";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import Box from "@mui/material/Box";
 
 function JobDetail() {
-
+  const api = useApi();
   const {jobId = null} = useParams()
   const navigate = useNavigate()
   const loginStore = useLoginStore()
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [jobDetails, setJobDetails] = useState(null);
-  const api = useApi();
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [action, setAction] = useState('delete');
+
 
   const getJob = () => {
     setLoading(true);
@@ -63,9 +67,50 @@ function JobDetail() {
     });
   }
 
+  const cancelJob = () => {
+    setLoading(true)
+    api.cancelJob(jobId).handle({
+        onSuccess: (res) => {
+          handleCloseModal()
+          navigate(-1)
+        },
+        successMessage: action === 'delete' ? `Job ${jobDetails?.bids === 0 ? 'deleted' : 'canceled'} successfully` : 'Job canceled successfully',
+        errorMessage: 'Error cancelling job',
+        onFinally: () => setLoading(false)
+      }
+    )
+  }
+
+  const markAsCompleted = () => {
+    setLoading(true)
+    api.markAsCompleted(jobId).handle({
+        onSuccess: (res) => {
+          handleCloseModal()
+          getJob()
+        },
+        successMessage: 'Job mark as done successfully',
+        errorMessage: 'Error marking job as done',
+        onFinally: () => setLoading(false)
+      }
+    )
+  }
+
+
   const markAsViewed = () => {
-    api.markAsViewed(jobId).handle({
-    });
+    api.markAsViewed(jobId).handle({});
+  }
+
+  const handleCloseModal = () => {
+    setShowActionModal(false)
+  }
+
+  const handleAction = () => {
+    if (action === 'delete') {
+      cancelJob()
+    } else if (action === 'finish') {
+      markAsCompleted()
+    }
+
   }
 
   const initialValues = {
@@ -237,9 +282,9 @@ function JobDetail() {
       <Grid container>
         <Grid item xs={12} md={6} mt={2}>
           <CustomTypography text="Job Description"/>
-            <MDBox p={3}>
-              <div dangerouslySetInnerHTML={{__html: jobDetails?.description}}/>
-            </MDBox>
+          <MDBox p={3}>
+            <div dangerouslySetInnerHTML={{__html: jobDetails?.description}}/>
+          </MDBox>
         </Grid>
         <Grid item xs={12} md={6} mt={2}>
           <CustomTypography text="Requirements"/>
@@ -272,19 +317,18 @@ function JobDetail() {
               Start Date: {date_fmt(jobDetails?.start_date, 'MMMM D, YYYY')}
             </MDTypography>
             <MDTypography sx={{fontSize: '16px', fontWeight: 'bold', marginTop: '20px'}}>
-              End Date: {date_fmt(jobDetails?.end_date,'MMMM D, YYYY')}
+              End Date: {date_fmt(jobDetails?.end_date, 'MMMM D, YYYY')}
             </MDTypography>
           </MDBox>
         </Grid>
       </Grid>
 
 
-
       {loginStore.user_type === 'INSPECTOR' && <MDBox borderTop={"1px solid #ccc"}>
         <FormikProvider value={formik}>
           <Form>
             <Grid>
-              <MDTypography sx={{ fontSize: '16px', fontWeight: 'bold', marginTop: '20px' , marginBottom: '10px' }}>
+              <MDTypography sx={{fontSize: '16px', fontWeight: 'bold', marginTop: '20px', marginBottom: '10px'}}>
                 Notes for the Owner
               </MDTypography>
               <FormikInput
@@ -293,8 +337,8 @@ function JobDetail() {
                 name="notes"
                 rows={7}
               />
-              <MDBox display={'flex'} flexDirection={'column'} gap={2} marginTop={'20px'} >
-                <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>
+              <MDBox display={'flex'} flexDirection={'column'} gap={2} marginTop={'20px'}>
+                <MDBox sx={{display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px'}}>
                   <MDBox
                     sx={{
                       backgroundColor: 'white',
@@ -312,32 +356,37 @@ function JobDetail() {
                         display: 'flex',
                         fontSize: '14px',
                         margin: '7px',
-                        whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                        whiteSpace: {xs: 'normal', sm: 'nowrap'},
                         fontWeight: 'bold',
                       }}
                     >
-                        <IconButton
-                          sx={{
-                            width: {md:'30px', xs:'30px'}, height: {md:'30px', xs:'30px'},
-                            backgroundColor: 'grey.300',
-                            borderRadius: '50%',
-                            marginRight: '8px',
-                            '&:hover': {
-                              backgroundColor: 'grey.400',
-                            },
-                          }}
-                          aria-label="check"
-                        >
-                          {selectedItems.includes('item1') && (
-                          <CheckIcon sx={{ color: '#006E90',  width: {md:'20px', xs:'30px'}, height: {md:'20px', xs:'30px'} }} /> )}
-                        </IconButton>
-                      <MDTypography sx={{fontSize:'15px',fontWeight: 'bold', padding:'3px' }}>Provide The Owner With The Attached Documents</MDTypography>
+                      <IconButton
+                        sx={{
+                          width: {md: '30px', xs: '30px'}, height: {md: '30px', xs: '30px'},
+                          backgroundColor: 'grey.300',
+                          borderRadius: '50%',
+                          marginRight: '8px',
+                          '&:hover': {
+                            backgroundColor: 'grey.400',
+                          },
+                        }}
+                        aria-label="check"
+                      >
+                        {selectedItems.includes('item1') && (
+                          <CheckIcon sx={{
+                            color: '#006E90',
+                            width: {md: '20px', xs: '30px'},
+                            height: {md: '20px', xs: '30px'}
+                          }}/>)}
+                      </IconButton>
+                      <MDTypography sx={{fontSize: '15px', fontWeight: 'bold', padding: '3px'}}>Provide The Owner With
+                        The Attached Documents</MDTypography>
                     </MDTypography>
                   </MDBox>
                 </MDBox>
 
 
-                <MDBox sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px' }}>
+                <MDBox sx={{display: 'flex', flexWrap: 'wrap', width: '100%', gap: '10px'}}>
                   <MDBox
                     sx={{
                       backgroundColor: 'white',
@@ -355,50 +404,55 @@ function JobDetail() {
                         display: 'flex',
                         fontSize: '14px',
                         margin: '7px',
-                        whiteSpace: { xs: 'normal', sm: 'nowrap' },
+                        whiteSpace: {xs: 'normal', sm: 'nowrap'},
                         fontWeight: 'bold',
                       }}
                     >
 
-                        <IconButton
-                          sx={{
-                            width: {md:'30px', xs:'30px'}, height: {md:'30px', xs:'30px'},
-                            backgroundColor: 'grey.300',
-                            borderRadius: '50%',
-                            marginRight: '8px',
-                            '&:hover': {
-                              backgroundColor: 'grey.400',
-                            },
-                          }}
-                          aria-label="check"
-                        >
-                          {selectedItems.includes('item2') && (
-                          <CheckIcon sx={{ color: '#006E90', width: {md:'20px', xs:'30px'}, height: {md:'20px', xs:'30px'}}} />  )}
-                        </IconButton>
+                      <IconButton
+                        sx={{
+                          width: {md: '30px', xs: '30px'}, height: {md: '30px', xs: '30px'},
+                          backgroundColor: 'grey.300',
+                          borderRadius: '50%',
+                          marginRight: '8px',
+                          '&:hover': {
+                            backgroundColor: 'grey.400',
+                          },
+                        }}
+                        aria-label="check"
+                      >
+                        {selectedItems.includes('item2') && (
+                          <CheckIcon sx={{
+                            color: '#006E90',
+                            width: {md: '20px', xs: '30px'},
+                            height: {md: '20px', xs: '30px'}
+                          }}/>)}
+                      </IconButton>
 
-                      <MDTypography sx={{fontSize:'15px',fontWeight: 'bold', padding:'3px' }}> Confirm That I Meet The Qualification For This Project</MDTypography>
+                      <MDTypography sx={{fontSize: '15px', fontWeight: 'bold', padding: '3px'}}> Confirm That I Meet The
+                        Qualification For This Project</MDTypography>
 
                     </MDTypography>
                   </MDBox>
                 </MDBox>
               </MDBox>
               <MDBox display={'flex'} justifyContent={'flex-end'} gap={2} marginTop={'20px'} marginBottom={'20px'}>
-              <MDButton
-                color={'secondary'}
-                type="submit"
-                disabled={loading}
-                loading={loading}
-              >
-                Apply For The Job
-              </MDButton>
+                <MDButton
+                  color={'secondary'}
+                  type="submit"
+                  disabled={loading}
+                  loading={loading}
+                >
+                  Apply For The Job
+                </MDButton>
 
-              {/*<MDButton*/}
-              {/*  color={'secondary'}*/}
-              {/*  variant={'outlined'}*/}
-              {/*  onClick={() => navigate(-1)}*/}
-              {/*>*/}
-              {/*  Go Back*/}
-              {/*</MDButton>*/}
+                {/*<MDButton*/}
+                {/*  color={'secondary'}*/}
+                {/*  variant={'outlined'}*/}
+                {/*  onClick={() => navigate(-1)}*/}
+                {/*>*/}
+                {/*  Go Back*/}
+                {/*</MDButton>*/}
               </MDBox>
 
             </Grid>
@@ -413,11 +467,29 @@ function JobDetail() {
           >
             Bids
           </MDButton>
-          {jobDetails?.status === "pending" &&<MDButton
+          {jobDetails?.status === "started" && <MDButton
+            color={'error'}
+            onClick={() => {
+              setAction('finish')
+              setShowActionModal(true)
+            }}
+          >
+            Mark as done
+          </MDButton>}
+          {jobDetails?.status === "pending" && <MDButton
             color={'secondary'}
             onClick={() => navigate(ROUTES.EDIT_JOB(jobId))}
           >
             Edit
+          </MDButton>}
+          {jobDetails?.status === "pending" && <MDButton
+            color={'error'}
+            onClick={() => {
+              setAction('delete')
+              setShowActionModal(true)
+            }}
+          >
+            {jobDetails?.bids === 0 ? 'Delete' : 'Cancel'}
           </MDButton>}
           <MDButton
             color={'secondary'}
@@ -428,6 +500,32 @@ function JobDetail() {
           </MDButton>
         </MDBox>
       </MDBox>}
+      <Dialog open={showActionModal} onClose={handleCloseModal}>
+        <DialogTitle>{action === 'delete' ? `${jobDetails?.bids === 0 ? 'Delete' : 'Cancel'} Job` : 'Mark Job as Done'}</DialogTitle>
+        <DialogContent>
+          {action === 'delete' && <p>Do you want to {jobDetails?.bids === 0 ? 'delete' : 'cancel'} this job?</p>}
+          {action === 'finish' &&
+            <p>Do you want to mark this job as completed? This action will trigger the payment process for the
+              inspector.</p>}
+        </DialogContent>
+        <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>
+            <MDButton
+              variant="outlined"
+              onClick={handleCloseModal}
+              color={'secondary'}
+            >
+              Cancel
+            </MDButton>
+          </Box>
+          <MDButton
+            onClick={handleAction}
+            color={'error'}
+          >
+            Confirm
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </AdminLayout>
   );
 }
