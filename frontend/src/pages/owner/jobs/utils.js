@@ -11,7 +11,8 @@ import {ROLES, ROUTES} from "../../../services/constants";
 
 export const dataTableModel = {
   columns: [
-    { Header: "Job Title", accessor: "title",width: 150},
+    { Header: "Job Title", accessor: "title",width: 120},
+    { Header: "Job Owner", accessor: "owner",width: 120},
     { Header: "Bids", accessor: "bids" ,width: 80 },
     { Header: "Views", accessor: "views", width: 80 },
     { Header: "Date Posted", accessor: "created", width: 150 },

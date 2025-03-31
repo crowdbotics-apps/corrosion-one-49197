@@ -24,6 +24,8 @@ class CustomOrderingFilterJobs(OrderingFilter):
                 queryset = queryset.annotate(property_value=F('views')).order_by(direction + 'property_value')
             case 'bids':
                 queryset = queryset.annotate(bid_count=Count('bids')).order_by(direction + 'bid_count')
+            case 'owner':
+                queryset = queryset.annotate(property_value=F('created_by__user__first_name')).order_by(direction + 'property_value')
         if ordering:
             queryset = queryset.order_by(*ordering)
         return queryset

@@ -37,7 +37,7 @@ class JobViewSet(
     queryset = Job.objects.all()
     pagination_class = CustomPageSizePagination
     filter_backends = [SearchFilter, OrderingFilter, CustomOrderingFilterJobs]
-    search_fields = ['title', 'description', 'status']
+    search_fields = ['title', 'description', 'status', 'created_by__first_name', 'created_by__last_name']
     ordering_fields = ['title', 'created', 'status', 'views', 'bids']
     action_permissions = {
         'retrieve': [IsInspector, IsOwner],

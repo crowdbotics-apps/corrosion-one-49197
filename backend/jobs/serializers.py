@@ -38,15 +38,19 @@ class JobDocumentSerializer(serializers.ModelSerializer):
         return round(obj.document.size / 1024 / 1024, 2)
 
 class JobListSerializer(serializers.ModelSerializer):
+    owner = serializers.SerializerMethodField()
 
     bids = serializers.SerializerMethodField()
     class Meta:
         model = Job
         fields = ['id', 'title', 'created_by', 'start_date',
-                  'end_date', 'status', 'views', 'created', 'bids']
+                  'end_date', 'status', 'views', 'created', 'bids', 'owner']
 
     def get_bids(self, obj):
         return obj.bids.count()
+
+    def get_owner(self, obj):
+        return obj.created_by.user.first_name + ' ' + obj.created_by.user.last_name if obj.created_by else None
 
 class JobDetailSerializer(serializers.ModelSerializer):
     categories = JobCategorySerializer(many=True)
