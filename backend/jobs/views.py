@@ -9,7 +9,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from jobs.filters import CustomOrderingFilterJobs, CustomOrderingFilterBids
-from jobs.models import Job, JobCategory, Bid
+from jobs.models import Job, JobCategory, Bid, JobFavorite
 from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
 from users.permissions import IsOwner, IsInspector
@@ -37,7 +37,7 @@ class JobViewSet(
     queryset = Job.objects.all()
     pagination_class = CustomPageSizePagination
     filter_backends = [SearchFilter, OrderingFilter, CustomOrderingFilterJobs]
-    search_fields = ['title', 'description', 'status', 'created_by__first_name', 'created_by__last_name']
+    search_fields = ['title', 'description', 'status', 'created_by__user__first_name', 'created_by__user__last_name']
     ordering_fields = ['title', 'created', 'status', 'views', 'bids']
     action_permissions = {
         'retrieve': [IsInspector, IsOwner],
@@ -48,6 +48,7 @@ class JobViewSet(
         'destroy': [IsOwner],
         'viewed': [IsInspector, IsOwner],
         'mark_as_completed': [IsOwner],
+        'mark_as_favorite': [IsInspector],
     }
     action_serializers = {
         'list': JobListSerializer,
@@ -69,6 +70,9 @@ class JobViewSet(
             inspector = user.inspector
             credentials = list(inspector.credentials.values_list('id', flat=True))
             active_jobs = jobs.filter(active=True, certifications__in=credentials)
+            if query_params.get('favorite', None):
+                active_jobs = active_jobs.filter(favorites__inspector=inspector)
+                return active_jobs
             if query_params.get('applied', None):
                 my_bids_ids = list(inspector.bids.values_list('job_id', flat=True))
                 active_jobs = active_jobs.filter(id__in=my_bids_ids)
@@ -129,6 +133,22 @@ class JobViewSet(
             return Response('Job already completed', status=HTTP_400_BAD_REQUEST)
         job.status = Job.JobStatus.FINISHED
         job.save()
+        return Response()
+
+    @may_fail(Job.DoesNotExist, 'Job not found')
+    @action(detail=True, methods=['post'])
+    def mark_as_favorite(self, request, pk=None):
+        user = self.request.user
+        if not user_is_inspector(user):
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        job = Job.objects.get(pk=pk)
+        if job.status == Job.JobStatus.CANCELED or job.status == Job.JobStatus.FINISHED:
+            return Response('Job not available', status=HTTP_400_BAD_REQUEST)
+        job_favorite = JobFavorite.objects.filter(job=job, inspector=user.inspector)
+        if job_favorite:
+            job_favorite.delete()
+            return Response()
+        JobFavorite.objects.create(job=job, inspector=user.inspector)
         return Response()
 
 

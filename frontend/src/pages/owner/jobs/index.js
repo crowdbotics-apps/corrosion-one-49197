@@ -48,7 +48,12 @@ function JobList() {
       applied = true
     }
 
-    api.getJobs({search, page, ordering, page_size: 10, dates, status, applied}).handle({
+    let favorite = null
+    if (pathname === ROUTES.FAVORITE){
+      favorite = true
+    }
+
+    api.getJobs({search, page, ordering, page_size: 10, dates, status, applied, favorite}).handle({
       onSuccess: (result) => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}

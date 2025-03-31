@@ -19,7 +19,7 @@ import {Form, FormikProvider, useFormik} from "formik"
 import * as Yup from "yup"
 import {checkUrl, date_fmt, showMessage, useApi, useLoginStore} from "../../../services/helpers"
 import {CustomTypography, DocumentList, CredentialsList} from "./utils"
-import {ROUTES} from "../../../services/constants"
+import {ROLES, ROUTES} from "../../../services/constants"
 import AdminLayout from "../../../components/AdminLayout";
 import gradientImage from "../../../assets/images/gradient.png";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
@@ -95,6 +95,19 @@ function JobDetail() {
     )
   }
 
+  const markAsFavorite = () => {
+    setLoading(true)
+    api.markAsFavorite(jobId).handle({
+        onSuccess: (res) => {
+          getJob()
+        },
+        successMessage: `Job ${jobDetails?.favorite ? 'unmarked' : 'marked'} as favorite successfully`,
+        errorMessage: 'Error marking job as favorite',
+        onFinally: () => setLoading(false)
+      }
+    )
+  }
+
 
   const markAsViewed = () => {
     api.markAsViewed(jobId).handle({});
@@ -117,9 +130,7 @@ function JobDetail() {
     notes: '',
   };
 
-  const validationSchema = Yup.object().shape({
-
-  });
+  const validationSchema = Yup.object().shape({});
 
 
   const formik = useFormik({
@@ -231,15 +242,18 @@ function JobDetail() {
             </Grid>
           </Grid>
           <Grid item xs={12} sm={6} mt={"auto"}>
-            <MDBox display={'flex'} justifyContent={'flex-end'} alignItems={'center'} mb={1}>
-              <MDButton variant="text">
-                <BookmarkOutlinedIcon sx={{color: "#006E90", width: '30px', height: '30px'}}/>
-              </MDButton>
-
-              <MDButton color={'secondary'}>
-                Bid
-              </MDButton>
-            </MDBox>
+            {loginStore.user_type === ROLES.INSPECTOR &&
+              <MDBox display={'flex'} justifyContent={'flex-end'} alignItems={'flex-end'} mb={2}>
+                <BookmarkOutlinedIcon
+                  sx={{
+                    color: jobDetails?.favorite ? "#8EDA4F" : "#006E90",
+                    width: '30px',
+                    height: '30px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => markAsFavorite()}
+                />
+              </MDBox>}
 
             <MDBox display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
               <MDButton sx={{
@@ -443,7 +457,7 @@ function JobDetail() {
                   disabled={loading}
                   loading={loading}
                 >
-                  Apply For The Job
+                  Place a Bid
                 </MDButton>
 
                 {/*<MDButton*/}

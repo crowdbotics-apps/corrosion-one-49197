@@ -35,7 +35,6 @@ class JobDocument(TimeStampedModel):
     def __str__(self):
         return f'{self.job.title} - {self.document}'
 
-
 class Job(TimeStampedModel):
     class JobStatus(models.TextChoices):
         PENDING = 'pending', 'Pending'
@@ -80,6 +79,14 @@ class Job(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+class JobFavorite(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='favorites')
+    inspector = models.ForeignKey(Inspector, on_delete=models.CASCADE, related_name='favorites')
+
+    def __str__(self):
+        return f'{self.inspector.user.username} - {self.job.title}'
+
 
 class Bid(TimeStampedModel):
     class StatusChoices(models.TextChoices):

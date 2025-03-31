@@ -58,15 +58,22 @@ class JobDetailSerializer(serializers.ModelSerializer):
     documents = JobDocumentSerializer(many=True)
     created_by = OwnerDetailSerializer()
     bids = serializers.SerializerMethodField()
+    favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = ['id', 'title', 'description', 'categories', 'certifications', 'start_date', 'address',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
-                  'misc_other_rate', 'payment_modes', 'created_by', 'bids']
+                  'misc_other_rate', 'payment_modes', 'created_by', 'bids', 'favorite']
 
     def get_bids(self, obj):
         return obj.bids.count()
+
+    def get_favorite(self, obj):
+        user = self.context['request'].user
+        if not hasattr(user, 'inspector'):
+            return False
+        return obj.favorites.filter(inspector=user.inspector).exists()
 
 class JobManagementSerializer(serializers.ModelSerializer):
     categories = PrimaryKeyRelatedField(many=True, queryset=JobCategory.objects.all())

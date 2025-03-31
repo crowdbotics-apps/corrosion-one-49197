@@ -146,6 +146,10 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/jobs/${id}/mark_as_completed/`);
   }
 
+  markAsFavorite(id: number | string) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/${id}/mark_as_favorite/`);
+  }
+
   markAsViewed(id: number | string) {
     return this.simple_post(`${API_VERSION_PREFIX}/jobs/${id}/viewed/`);
   }
