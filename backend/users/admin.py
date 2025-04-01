@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from users.forms import UserChangeForm, UserCreationForm
 from users.models import UserVerificationCode, SupportEmail
 from utils.utils import user_is_inspector
+from utils.utils.email import send_email_with_template
 
 User = get_user_model()
 
@@ -80,12 +81,16 @@ class SupportEmailAdmin(admin.ModelAdmin):
                 self.message_user(request, "This email has already been answered.", level="error")
                 return HttpResponseRedirect(".")
             if obj.answer:
-                send_mail(
-                    subject=f"Re: {obj.subject}",
-                    message=obj.answer,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[obj.user.email],  # send to the user who made the support request
+                send_email_with_template(
+                    subject=f"Re: {obj.subject} - {settings.PROJECT_NAME}",
+                    email=obj.user.email,
+                    template_to_load='emails/admin_support_reply.html',
+                    context={
+                        "answer": obj.answer,
+                        "username": obj.user.first_name,
+                    }
                 )
+                # admin_support_reply
 
                 # Mark as answered, record who answered
                 obj.answered = True
