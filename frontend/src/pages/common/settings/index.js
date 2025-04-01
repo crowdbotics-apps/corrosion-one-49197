@@ -48,8 +48,6 @@ function Settings() {
   const [industries, setIndustries] = useState([]);
   const location = useLocation();
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     getLanguages();
     getCountries();

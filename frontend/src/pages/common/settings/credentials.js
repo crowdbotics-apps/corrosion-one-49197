@@ -7,7 +7,7 @@ import FormikInput from "../../../components/Formik/FormikInput";
 import {useLoginStore} from "../../../services/helpers";
 import IconButton from "@mui/material/IconButton";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import React from "react";
+import React, {useEffect} from "react";
 import {CredentialsInspector} from "../../../components/CredentialsInspector";
 
 
@@ -15,7 +15,7 @@ function Credentials({updateCredentials, credentials, loading}) {
   const loginStore = useLoginStore();
 
   const initialValues  = {
-    credentials: JSON.parse(JSON.stringify(loginStore.credentials)),
+    credentials: loginStore.credentials
   }
 
   const validationSchema = Yup.object().shape({
@@ -53,7 +53,7 @@ function Credentials({updateCredentials, credentials, loading}) {
             multiple
             onChange={(value) => {
               const currentValues = [...formik.values.credentials]
-              if (currentValues.find((item) => item.id === value?.[0]?.id)) return
+              if (currentValues.find((item) => item.id === value?.[0]?.id) || currentValues.find((item) => item.credential_id === value?.[0]?.id)) return
               const newValues = {...value[0], credential_id: value[0].id}
               currentValues.push(newValues)
               formik.setFieldValue('credentials', currentValues)

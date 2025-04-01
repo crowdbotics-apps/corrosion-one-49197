@@ -93,7 +93,7 @@ class InspectorViewSet(
         inspector = user.inspector
         credentials = data.get('credentials', [])
         credential_documents = inspector.credential_documents.all().values_list('id', flat=True)
-        credentials_ids = [credential['id'] for credential in credentials if not 'credential_id' in credential]
+        credentials_ids = [credential['id'] for credential in credentials]
         for credential_document_id in credential_documents:
             if credential_document_id not in credentials_ids:
                 CredentialDcoument.objects.get(id=credential_document_id).delete()
@@ -104,10 +104,10 @@ class InspectorViewSet(
                 credential_document = CredentialDcoument.objects.filter(credential_id=credential_id, inspector=inspector)
                 if not credential_document:
                     credential_document = CredentialDcoument.objects.create(credential_id=credential_id, inspector=inspector)
-                    if hasattr(credential, 'document') and credential['document'] and hasattr(credential['document'], 'file'):
-                        credential_document.document = credential['document']
+                    document = credential.get('document', None)
+                    if document and hasattr(document, 'file'):
+                        credential_document.document = document
                         credential_document.save()
-
             else:
                 if credential['document'] and hasattr(credential['document'], 'file'):
                     credential_document = CredentialDcoument.objects.get(id=credential['id'])
