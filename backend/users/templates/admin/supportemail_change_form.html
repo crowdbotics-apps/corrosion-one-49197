@@ -1,0 +1,14 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_list admin_modify %}
+
+{% block submit_buttons_bottom %}
+  {# The built-in Save/Save & continue/etc. buttons #}
+  {{ block.super }}
+
+  {# Add our custom button #}
+  <div class="form-group">
+    <button type="submit" class="btn btn-warning form-control mt-3" name="_sendemail">Reply</button>
+  </div>
+
+
+{% endblock %}

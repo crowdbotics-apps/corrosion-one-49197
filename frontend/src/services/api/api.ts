@@ -42,6 +42,10 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/users/login-with-token/`, data);
   }
 
+  support(data: any): ApiReturnType<Types.SimplePostResult> {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/support/`, data);
+  }
+
   getTermsConditions(): ApiReturnType<Types.SimpleGetResult> {
     return this.simple_get(`${API_VERSION_PREFIX}/terms_and_conditions/`);
   }

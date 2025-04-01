@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from model_utils.models import TimeStampedModel
 from timezone_field import TimeZoneField
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -84,3 +85,20 @@ class UserVerificationCode(models.Model):
 
     def __str__(self):
         return f'{self.user} - {self.code_type} - {self.verification_code} - {"Active" if self.active else "Inactive"}'
+
+
+class SupportEmail(TimeStampedModel):
+    subject = models.CharField(max_length=255)
+    description = models.TextField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    answered = models.BooleanField(default=False)
+    answered_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='answered_support')
+    answer = models.TextField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name = 'Support Email'
+        verbose_name_plural = 'Support Emails'
+
+    def __str__(self):
+        return f'{self.subject} - {self.user.username} - {"Answered" if self.answered else "Not Answered"}'

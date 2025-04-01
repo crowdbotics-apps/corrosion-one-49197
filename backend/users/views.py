@@ -22,7 +22,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, \
 from rest_framework.viewsets import GenericViewSet
 
 from jobs.models import MagicLinkToken
-from users.models import User, UserVerificationCode
+from users.models import User, UserVerificationCode, SupportEmail
 from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserCreateSerializer, \
     UserLoginResponseSerializer, UserDetailSerializer
 from utils.utils import get_user_by_uidb64, get_and_validate_serializer
@@ -562,3 +562,26 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
     def user_detail(self, request):
         user = request.user
         return Response(UserDetailSerializer(user).data)
+
+    @action(detail=False, methods=['post'])
+    def support(self, request):
+        """
+        Send support email
+        """
+        user = request.user
+        subject = request.data.get('subject')
+        description = request.data.get('description')
+        if not user.is_authenticated:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        if not subject or not description:
+            return Response('Subject and description are required', status=HTTP_400_BAD_REQUEST)
+        current_support_request = SupportEmail.objects.filter(user=user, answered=False).first()
+        if current_support_request:
+            return Response('You already have a support request open', status=HTTP_400_BAD_REQUEST)
+        SupportEmail.objects.create(
+            user=user,
+            subject=subject,
+            description=description
+        )
+
+        return Response()

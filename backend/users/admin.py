@@ -1,10 +1,14 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 
 from users.forms import UserChangeForm, UserCreationForm
-from users.models import UserVerificationCode
+from users.models import UserVerificationCode, SupportEmail
+from utils.utils import user_is_inspector
 
 User = get_user_model()
 
@@ -37,6 +41,61 @@ admin.site.register(UserVerificationCode, UserVerificationCodeAdmin)
 #             form.base_fields["is_superuser"].disabled = True
 #             form.base_fields["is_staff"].disabled = True
 #         return form
+
+@admin.register(SupportEmail)
+class SupportEmailAdmin(admin.ModelAdmin):
+    list_display = ["subject", "user", "user_type", "answered", "answered_by", "created"]
+    search_fields = ["subject", "user__username"]
+    list_filter = ["answered"]
+
+    # What fields to display/edit on the detail form:
+    fields = ("subject", "user", "description", "answer", "answered", "answered_by")
+
+    # Some of those could be read-only if you prefer:
+    readonly_fields = ("subject", "user", "description", "answered", "answered_by")
+
+    # Use a custom template for the change form.
+    change_form_template = "admin/supportemail_change_form.html"
+
+    def user_type(self, obj):
+        if user_is_inspector(obj.user):
+            return "Inspector"
+        return "Owner"
+
+    user_type.short_description = "User Type"
+
+    def response_change(self, request, obj):
+        """
+        Runs after the user clicks any button in the change form.
+        We look for our custom button in request.POST.
+        """
+        if "_sendemail" in request.POST:
+            # If there's an answer, send it to the user
+            if obj.answered:
+                self.message_user(request, "This email has already been answered.", level="error")
+                return HttpResponseRedirect(".")
+            if obj.answer:
+                send_mail(
+                    subject=f"Re: {obj.subject}",
+                    message=obj.answer,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[obj.user.email],  # send to the user who made the support request
+                )
+
+                # Mark as answered, record who answered
+                obj.answered = True
+                obj.answered_by = request.user
+                obj.save()
+
+                self.message_user(request, "Support email replied successfully.")
+            else:
+                self.message_user(request, "Please enter an answer before sending.", level="error")
+
+            # Redirect back to the same change form
+            return HttpResponseRedirect(".")
+
+        # Otherwise, use the default behavior (e.g., Save, Save & continue, etc.)
+        return super().response_change(request, obj)
 
 
 
