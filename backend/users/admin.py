@@ -57,6 +57,11 @@ class SupportEmailAdmin(admin.ModelAdmin):
     # Use a custom template for the change form.
     change_form_template = "admin/supportemail_change_form.html"
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.answered:
+            return self.readonly_fields + ("answer",)
+        return self.readonly_fields
+
     def user_type(self, obj):
         if user_is_inspector(obj.user):
             return "Inspector"
