@@ -39,7 +39,7 @@ function JobList() {
     let status = null
     if (pathname === ROUTES.MY_JOBS || pathname === ROUTES.FIND_JOBS) {
       status = 'started,pending'
-    } else if (pathname === ROUTES.MY_JOBS) {
+    } else if (pathname === ROUTES.HISTORY) {
       status = 'canceled,finished'
     }
 
