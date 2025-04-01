@@ -12,6 +12,7 @@ from inspector.serializers import CredentialSerializer, InspectorDetailSerialize
 from jobs.models import Job, JobCategory, MagicLinkToken, JobDocument, Bid
 from owner.serializers import OwnerDetailSerializer
 from utils.utils.email import send_email_with_template
+from utils.utils.send_sms import send_sms
 
 
 class JobCategorySerializer(serializers.ModelSerializer):
@@ -145,6 +146,9 @@ class JobManagementSerializer(serializers.ModelSerializer):
                         "link": url,
                     }
                 )
+                if user.phone_number:
+                    message = f"Hello {user.first_name},\n\nA new job has been created. Please check your this {url} for more details.\n\nBest regards,\n{settings.PROJECT_NAME}"
+                    send_sms(message, user.phone_number.as_e164)
         else:
             data = self.validated_data
             user = self.context['request'].user
