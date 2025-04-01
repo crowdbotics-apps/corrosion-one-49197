@@ -35,9 +35,8 @@
                      style="border-collapse: separate; width: 100%; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px">
                 <tr>
                   <td style="font-family: Roboto, Arial, sans-serif; font-size: 14px; vertical-align: top;" align="center">
-                    <div style="display: flex;margin-left: 60px;margin-top: -100px; align-items: center;">
-                      <img src="images/logo.svg">
-                    </div>
+                    <img src="https://stgcontent71740.blob.core.windows.net/static/img/logo.png?se=2025-04-05T21%3A34%3A42Z&sp=r&sv=2025-01-05&sr=b&skoid=347a9a30-7289-47f1-919f-f53b1a90b732&sktid=c09fae9e-0750-4861-a01d-0dd6d9721be7&skt=2025-04-01T14%3A04%3A09Z&ske=2025-04-08T14%3A04%3A09Z&sks=b&skv=2025-01-05&sig=/U5dpnp%2Bh%2BXaHs6v95S7RFr%2BqhD7NxbXjBAC28vrP0s%3D" style="object-fit: contain;">
+
                     <hr style="border: 1px solid #e0e0e0;">
                     <h3
                       style="font-family: Roboto, Arial, sans-serif; margin-right: 40px; margin-bottom: 28px; color:rgba(109, 218, 67, 1); text-align: left; font-size: 28px;">
@@ -46,27 +45,44 @@
 
                     <div style="  text-align: left; background-color: rgba(31, 66, 85, 0.1); border-radius: 15px; padding: 10px 20px; margin-bottom: 20px;">
                       <div style="display: flex; align-items: center;gap: 10px;">
-                        <img src="{{ logo_url }}" alt="Avatar" style="width: 60px; height: 60px; border-radius: 50%; background-color: white; margin-top: 15px;">
+                        <img src="{{ logo_url }}" alt="Avatar" style="object-fit: contain; width: 60px; height: 60px; border-radius: 50%; background-color: white; margin-top: 15px;">
                         <div style="width: 100%">
                           <h2 style="color: rgba(0, 110, 144, 1); margin-bottom: 5px;">{{company_name}}</h2>
                           <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
                           <div style="display: flex; justify-content: space-between; width: 100%;">
+                            {% if user_email %}
                             <p style="font-size: 10px; display: flex; align-items: center; margin-top: 0; margin-bottom: 3px;">
-                              <span class="material-icons-outlined" style="margin-right: 8px; color: rgba(0, 110, 144, 1);">email</span>
-                              {{user_email}}
+                              <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+                                <path d="M14.6667 4.61715C14.6667 3.88381 14.0667 3.28381 13.3334 3.28381H2.66671C1.93337 3.28381 1.33337 3.88381 1.33337 4.61715V12.6171C1.33337 13.3505 1.93337 13.9505 2.66671 13.9505H13.3334C14.0667 13.9505 14.6667 13.3505 14.6667 12.6171V4.61715ZM13.3334 4.61715L8.00004 7.95048L2.66671 4.61715H13.3334ZM13.3334 12.6171H2.66671V5.95048L8.00004 9.28381L13.3334 5.95048V12.6171Z" fill="#006E90"/>
+                              </svg>
+                              {{ user_email }}
                             </p>
+                            {% endif %}
+
+                            {% if user_phone_number %}
                             <p style="font-size: 10px; display: flex; align-items: center; margin-top: 0; margin-bottom: 3px;">
-                              <span class="material-icons-outlined" style="margin-right: 8px; color: rgba(0, 110, 144, 1);">phone</span>
+                              <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+                                <path d="M5.25004 2.61719C5.58337 2.61719 6.91671 5.61719 6.91671 5.95052C6.91671 6.61719 5.91671 7.28385 5.58337 7.95052C5.25004 8.61719 5.91671 9.28385 6.58337 9.95052C6.84337 10.2105 7.91671 11.2839 8.58337 10.9505C9.25004 10.6172 9.91671 9.61719 10.5834 9.61719C10.9167 9.61719 13.9167 10.9505 13.9167 11.2839C13.9167 12.6172 12.9167 13.6172 11.9167 13.9505C10.9167 14.2839 10.25 14.2839 8.91671 13.9505C7.58337 13.6172 6.58337 13.2839 4.91671 11.6172C3.25004 9.95052 2.91671 8.95052 2.58337 7.61719C2.25004 6.28385 2.25004 5.61719 2.58337 4.61719C2.91671 3.61719 3.91671 2.61719 5.25004 2.61719Z" stroke="#006E90" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
                               {{user_phone_number}}
                             </p>
+                            {% endif %}
+
                           </div>
+                          {% if job_address %}
                           <p style="font-size: 10px; display: flex; align-items: center; margin-top: 0; margin-bottom: 3px;">
-                            <span class="material-icons-outlined" style="margin-right: 8px; color: rgba(0, 110, 144, 1);">pin_drop</span>
-                            {{user_address}}
+                            <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+                              <path d="M8.00004 3.28389C9.28671 3.28389 11.3334 4.21723 11.3334 6.71723C11.3334 8.15723 10.1867 9.83056 8.00004 11.5972C5.81337 9.83056 4.66671 8.15056 4.66671 6.71723C4.66671 4.21723 6.71337 3.28389 8.00004 3.28389ZM8.00004 1.95056C5.82004 1.95056 3.33337 3.59056 3.33337 6.71723C3.33337 8.79723 4.88671 10.9906 8.00004 13.2839C11.1134 10.9906 12.6667 8.79723 12.6667 6.71723C12.6667 3.59056 10.18 1.95056 8.00004 1.95056Z" fill="#006E90"/>
+                              <path d="M8.00004 5.28381C7.26671 5.28381 6.66671 5.88381 6.66671 6.61715C6.66671 7.35048 7.26671 7.95048 8.00004 7.95048C8.35366 7.95048 8.6928 7.81 8.94285 7.55996C9.1929 7.30991 9.33337 6.97077 9.33337 6.61715C9.33337 6.26352 9.1929 5.92439 8.94285 5.67434C8.6928 5.42429 8.35366 5.28381 8.00004 5.28381ZM3.33337 13.9505H12.6667V15.2838H3.33337V13.9505Z" fill="#006E90"/>
+                            </svg>
+                            {{job_address}}
                           </p>
+                          {% endif %}
+
                         </div>
                       </div>
-                      <h2 style="color: rgba(31, 66, 85, 1); margin-bottom: 5px;">Jobs - {{job_name}}</h2>
+                      <h2 style="color: rgba(31, 66, 85, 1); margin-bottom: 5px;">Jobs - {{job_title}}</h2>
                       <p style="font-size: 11px">{{job_description}}</p>
                       <div style="display: flex; justify-content: space-between;">
                         <h3 style="color: rgba(31, 66, 85, 1); font-size: 12px">Start Date: {{job_start_date}}</h3>
@@ -74,7 +90,12 @@
                       </div>
                     </div>
                     <hr style="border: 1px solid #e0e0e0;">
-                    <button style="background-color:rgba(109, 218, 67, 1); width: 300px ;margin-top: 20px; height:40px; color: white; border-color: transparent; border-radius: 5px; font-size: 16px; font-weight: bold;" onclick="window.location.href='{{ link }}'" >View Proposal</button>
+                    <a href="{{ link }}">
+                      <button style="background-color:rgba(109, 218, 67, 1); width: 300px; margin-top: 20px; height: 40px; color: white; border-color: transparent; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                        View Proposal
+                      </button>
+                    </a>
+
                     <h4 style="font-size: 15px; font-weight: 400; margin-left: 40px; margin-right: 40px; color: black; text-align: left;">
                       <a href="{{ link }}">{{ link }}</a>
                     </h4>
@@ -83,7 +104,9 @@
                 </tr>
               </table>
               <div style="display: flex; justify-content: center; align-items: center; ">
-                <button style="border-radius: 50px; width: 48px; height: 48px; margin-top: 20px; background-color: white; border-color: rgba(31, 66, 85, 1) ; color: rgba(31, 66, 85, 1); font-size:20px; font-weight: bold" onclick="window.location.href='{{user_linkedin}}'">in</button>
+                <a href="{{user_linkedin}}">
+                <button style="cursor: pointer;border-radius: 50px; width: 48px; height: 48px; margin-top: 20px; background-color: white; border-color: rgba(31, 66, 85, 1) ; color: rgba(31, 66, 85, 1); font-size:20px; font-weight: bold">in</button>
+                </a>
               </div>
             </td>
           </tr>
