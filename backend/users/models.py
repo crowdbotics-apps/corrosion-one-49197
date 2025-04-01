@@ -90,7 +90,7 @@ class UserVerificationCode(models.Model):
 class SupportEmail(TimeStampedModel):
     subject = models.CharField(max_length=255)
     description = models.TextField()
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     answered = models.BooleanField(default=False)
     answered_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='answered_support')
     answer = models.TextField(null=True, blank=True)
