@@ -142,8 +142,15 @@ class JobManagementSerializer(serializers.ModelSerializer):
                     email=user.email,
                     template_to_load='emails/new_job_email_link.html',
                     context={
-                        "username": user.email,
+                        "username": user.first_name,
                         "link": url,
+                        "company_name": self.instance.created_by.company_name,
+                        "job_title": self.instance.title,
+                        "job_description": self.instance.description,
+                        "job_start_date": self.instance.start_date,
+                        "job_end_date": self.instance.end_date,
+                        "job_address": self.instance.address,
+                        "user_phone_number": user.phone_number.as_e164 if user.phone_number else None,
                     }
                 )
                 if user.phone_number:
