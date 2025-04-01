@@ -161,10 +161,11 @@ class CredentialDocumentsSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='credential.name')
     document_name = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
+    credential_id = serializers.IntegerField(source='credential.id', read_only=True)
 
     class Meta:
         model = CredentialDcoument
-        fields = ['id', 'name', 'document', 'document_name', 'size']
+        fields = ['id', 'name', 'document', 'document_name', 'size', 'credential_id']
 
     def get_document_name(self, obj):
         if not obj.document:
