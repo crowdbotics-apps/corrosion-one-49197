@@ -940,7 +940,6 @@ function SignUp() {
           <FormikInput
             name={'verification_code'}
             label={'Verification Code'}
-            type={'number'}
             errors={formikThirdStep.errors}
             style={{mb: 0}}
           />
