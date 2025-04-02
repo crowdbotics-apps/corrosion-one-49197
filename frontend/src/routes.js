@@ -57,7 +57,7 @@ import Bids from "./pages/owner/bids"
 import JobList from "./pages/common/jobs"
 import HomeInspector from "./pages/owner/home"
 import HomeOwner from "./pages/owner/homeOwner"
-import HomeOwnerAppliedJobs from "./pages/owner/appliedJobs"
+import HomeOwnerAppliedJobs from "./pages/inspector/appliedJobs"
 import Support from "./pages/common/support"
 import Payment from "./pages/owner/payment"
 import JobDetail from "./pages/common/jobDetail";

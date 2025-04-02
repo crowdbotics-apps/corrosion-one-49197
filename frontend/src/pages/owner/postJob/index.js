@@ -22,9 +22,11 @@ function PostJob() {
   const location = useLocation()
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [industries, setIndustries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [job, setJob] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
 
   const getCredentialOptions = () => {
     api.getCredentialsAvailable().handle({
@@ -34,10 +36,27 @@ function PostJob() {
     })
   }
 
-  const getJobCategories = () => {
-    api.getJobCategories().handle({
+  const getIndustries = () => {
+    api.getIndustries().handle({
       onSuccess: (result) => {
-        setCategories(result?.data)
+        setIndustries(result?.data?.results)
+      },
+    })
+  }
+
+
+  const getCountries = () => {
+    api.getCountries().handle({
+      onSuccess: (result) => {
+        setCountries(result?.data)
+      },
+    })
+  }
+
+  const getStates = (countryIds) => {
+    api.getStates({countries: countryIds.toString()}).handle({
+      onSuccess: (result) => {
+        setStates(result?.data)
       },
     })
   }
@@ -104,9 +123,9 @@ function PostJob() {
 
 
   const removeCategory = (id) => {
-    const currentValues = [...formik.values.categories]
+    const currentValues = [...formik.values.industries]
     const newValues = currentValues.filter((item) => item.id !== id)
-    formik.setFieldValue('categories', newValues)
+    formik.setFieldValue('industries', newValues)
   }
 
   const removeCertifications = (id) => {
@@ -140,11 +159,27 @@ function PostJob() {
     formik.setFieldValue('documents', [...formik.values.documents, {id: Math.random(), name: filename, file: newFile}])
   };
 
+  const handleRemoveCountry = (id) => {
+    const currentCountries = formik.values.country
+    const newCountries = currentCountries.filter((item) => item.id !== id)
+    const newStates = formik.values.regions.filter((item) => {
+      return item.country_id !== id
+    })
+
+    formik.setFieldValue('country', newCountries)
+    formik.setFieldValue('regions', newStates)
+  }
+
+  const handleRemoveState = (id) => {
+    const newStates = formik.values.regions.filter((item) => item.id !== id)
+    formik.setFieldValue('regions', newStates)
+  }
+
 
   const initialValues = {
     title: '',
     address: '',
-    categories: [],
+    industries: [],
     description: null,
     certifications: [],
     start_date: '',
@@ -155,6 +190,8 @@ function PostJob() {
     misc_other_rate: 0,
     payment_modes: [PaymentOptions[0]],
     documents: [],
+    country: [],
+    regions: [],
   };
 
   const validationSchema = Yup.object().shape({
@@ -162,7 +199,7 @@ function PostJob() {
     description: Yup.string().required('Job Description is required'),
     start_date: Yup.date().required('Required'),
     certifications: Yup.array().min(1, 'At least one certification is required'),
-    categories: Yup.array().min(1, 'At least one category is required'),
+    industries: Yup.array().min(1, 'At least one industry is required'),
     end_date: Yup.date()
       .min(Yup.ref('start_date'), 'Completion date cannot be before the start date')
       .required('Required'),
@@ -181,7 +218,9 @@ function PostJob() {
       is: (value) => value.find((item) => item.value === 'misc_other'),
       then: schema => schema.required('Misc/Other rate is required').min(1, 'Misc/Other rate must be greater than 0'),
       otherwise: schema => schema.nullable(),
-    })
+    }),
+    country: Yup.array().min(1, 'At least one country is required'),
+    regions: Yup.array().min(1, 'At least one state is required'),
   });
 
   const formik = useFormik({
@@ -192,9 +231,10 @@ function PostJob() {
     onSubmit: (values) => {
       const dataToSend = {
         ...values,
-        categories: values.categories.map((category) => category.id),
+        industries: values.industries.map((industry) => industry.id),
         certifications: values.certifications.map((certification) => certification.id),
         payment_modes: values.payment_modes.map((payment_mode) => payment_mode.value),
+        regions: values.regions.map((region) => region.id),
       }
       // console.log('data to send', dataToSend)
       if (jobId) {
@@ -207,7 +247,8 @@ function PostJob() {
 
   useEffect(() => {
     getCredentialOptions()
-    getJobCategories()
+    getCountries()
+    getIndustries()
     if (location.pathname !== ROUTES.POST_JOB) {
       if (jobId) {
         getJob()
@@ -218,6 +259,10 @@ function PostJob() {
 
   }, [location]);
 
+  useEffect(() => {
+    getStates(formik.values.country.map((item) => item.id))
+  }, [formik.values.country])
+
   return (
     <AdminLayout title={jobId ? `Edit Job - ${jobId}` : 'Post a Job'}>
       <FormikProvider value={formik}>
@@ -226,26 +271,63 @@ function PostJob() {
             <Card sx={{p: 3, height: '100%'}}>
               {/*{JSON.stringify(formik.errors, null, 2)}*/}
               <FormikInput name="title" label="Job Title" type="text" errors={formik.errors} mb={2}/>
-              <FormikInput name="address" label="Job Address" type="text" errors={formik.errors} mb={2}/>
               <FormikInput
-                type="autocomplete"
-                placeholder="Select your categories"
+                type={"autocomplete"}
                 value={[]}
-                fieldName="categories"
-                label="Categories"
-                options={categories}
-                accessKey="name"
+                fieldName={"country"}
+                label={"Country"}
+                placeholder={"Country"}
+                options={countries}
+                accessKey={"name"}
+                multiple
                 onChange={(value) => {
-                  const currentValues = [...formik.values.categories]
+                  const currentValues = [...formik.values.country]
                   if (currentValues.find((item) => item.id === value?.[0]?.id)) return
                   currentValues.push(value[0])
-                  formik.setFieldValue('categories', currentValues)
+                  formik.setFieldValue('country', currentValues)
+                }}
+              />
+              <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
+                {formik.values.country.map((item) => <RenderListOption key={item.id} item={item} handleRemove={handleRemoveCountry}/>)}
+              </MDBox>
+              <FormikInput
+                type={"autocomplete"}
+                value={[]}
+                fieldName={"regions"}
+                label={"State"}
+                options={states}
+                accessKey={"name"}
+                multiple={true}
+                onChange={(value) => {
+                  const currentValues = [...formik.values.regions]
+                  if (currentValues.find((item) => item.id === value?.[0]?.id)) return
+                  currentValues.push(value[0])
+                  formik.setFieldValue('regions', currentValues)
+                }}
+              />
+              <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
+                {formik.values.regions.map((item) => <RenderListOption key={item.id} item={item} handleRemove={handleRemoveState}/>)}
+              </MDBox>
+              <FormikInput name="address" label="Inspection Address" type="text" errors={formik.errors} mb={2}/>
+              <FormikInput
+                type="autocomplete"
+                placeholder="Select your industries"
+                value={[]}
+                fieldName="industries"
+                label="Industries"
+                options={industries}
+                accessKey="name"
+                onChange={(value) => {
+                  const currentValues = [...formik.values.industries]
+                  if (currentValues.find((item) => item.id === value?.[0]?.id)) return
+                  currentValues.push(value[0])
+                  formik.setFieldValue('industries', currentValues)
                 }}
                 styleContainer={{mb: 2}}
                 multiple
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
-                {formik.values.categories.map((item) => <RenderListOption key={item.id} item={item}
+                {formik.values.industries.map((item) => <RenderListOption key={item.id} item={item}
                                                                           handleRemove={removeCategory}/>)}
               </MDBox>
 
@@ -256,7 +338,11 @@ function PostJob() {
                 setFieldValue={formik.setFieldValue}
                 mb={2}
               />
+            </Card>
+          </Grid>
 
+          <Grid item xs={12} lg={6}>
+            <Card sx={{p: 3, height: '100%'}}>
               <FormikInput
                 type={"autocomplete"}
                 placeholder={"Credentials"}
@@ -278,11 +364,6 @@ function PostJob() {
                 {formik.values.certifications.map((item) => <RenderListOption key={item.id} item={item}
                                                                               handleRemove={removeCertifications}/>)}
               </MDBox>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} lg={6}>
-            <Card sx={{p: 3, height: '100%'}}>
               <FormikInput
                 type="autocomplete"
                 placeholder="paymentMethod"

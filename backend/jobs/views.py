@@ -9,8 +9,8 @@ from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from jobs.filters import CustomOrderingFilterJobs, CustomOrderingFilterBids
-from jobs.models import Job, JobCategory, Bid, JobFavorite
-from jobs.serializers import JobListSerializer, JobCategorySerializer, JobManagementSerializer, JobDetailSerializer, \
+from jobs.models import Job, Bid, JobFavorite
+from jobs.serializers import JobListSerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
@@ -18,16 +18,7 @@ from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMix
 from utils.utils.pagination import CustomPageSizePagination
 
 
-# Create your views here.
-
-class JobCategoryListViewSet(GenericViewSet, ListModelMixin):
-    queryset = JobCategory.objects.all()
-    serializer_class = JobCategorySerializer
-    filter_backends = [SearchFilter]
-    pagination_class = None
-    search_fields = ['name', 'description']
-
-
+# Create your views here
 class JobViewSet(
     CollectedMultipartJsonViewMixin,
     PermissionClassByActionMixin,
@@ -37,7 +28,8 @@ class JobViewSet(
     queryset = Job.objects.all()
     pagination_class = CustomPageSizePagination
     filter_backends = [SearchFilter, OrderingFilter, CustomOrderingFilterJobs]
-    search_fields = ['title', 'description', 'status', 'created_by__user__first_name', 'created_by__user__last_name']
+    search_fields = ['title', 'description', 'status', 'created_by__user__first_name', 'created_by__user__last_name' 
+                     'inspector__user__first_name', 'inspector__user__last_name']
     ordering_fields = ['title', 'created', 'status', 'views', 'bids']
     action_permissions = {
         'retrieve': [IsInspector, IsOwner],

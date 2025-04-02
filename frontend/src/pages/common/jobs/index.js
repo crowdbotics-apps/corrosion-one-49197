@@ -2,7 +2,7 @@ import AdminLayout from "../../../components/AdminLayout"
 import DataTable from "../../../components/DataTable";
 // import DataTable from "../../../components/AdminLayout/MyJobs/dataTable";
 import React, {useEffect, useState} from "react"
-import {dataTableModel, renderTableRow} from "./utils"
+import {dataTableModel, dataTableModelOwner, renderTableRow} from "./utils"
 // import {dataTableModel} from "../../../components/AdminLayout/MyJobs/utils";
 import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -11,7 +11,7 @@ import {Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextF
 import SearchBar from "../../../components/SearchBar";
 import Box from "@mui/material/Box";
 import MDButton from "../../../components/MDButton";
-import {ROUTES} from "../../../services/constants";
+import {ROLES, ROUTES} from "../../../services/constants";
 import DateBar from "../../../components/DateBar"
 import Grid from "@mui/material/Grid"
 
@@ -56,7 +56,7 @@ function JobList() {
     api.getJobs({search, page, ordering, page_size: 10, dates, status, applied, favorite}).handle({
       onSuccess: (result) => {
         const {count, results} = result.data
-        const tmp = {...dataTableModel}
+        const tmp =loginStore.user_type === ROLES.INSPECTOR ? {...dataTableModel} : {...dataTableModelOwner}
         tmp.rows = results.map(e => renderTableRow(e, setSelectedItem, setOpenCancelModal, navigate, loginStore.user_type))
         setDatatable(tmp)
         setNumberOfItems(count)

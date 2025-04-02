@@ -1,3 +1,4 @@
+from cities_light.models import Region
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 import uuid
@@ -7,22 +8,8 @@ from datetime import timedelta
 from model_utils.models import TimeStampedModel
 
 from inspector.models import Credential, Inspector
-from owner.models import Owner
+from owner.models import Owner, Industry
 from users.models import User
-
-
-# Create your models here.
-
-class JobCategory(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-
-    class Meta:
-        verbose_name = 'Job Category'
-        verbose_name_plural = 'Job Categories'
-
-    def __str__(self):
-        return self.name
 
 
 class JobDocument(TimeStampedModel):
@@ -50,7 +37,7 @@ class Job(TimeStampedModel):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    categories = models.ManyToManyField(JobCategory)
+    industries = models.ManyToManyField(Industry, blank=True)
     created_by = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='jobs')
     inspector = models.ForeignKey(Inspector, on_delete=models.CASCADE, related_name='jobs', null=True, blank=True)
     certifications = models.ManyToManyField(Credential)
@@ -72,6 +59,7 @@ class Job(TimeStampedModel):
     )
     views = models.IntegerField(default=0)
     address = models.TextField(null=True, blank=True)
+    regions = models.ManyToManyField(Region, blank=True)
 
 
     class Meta:

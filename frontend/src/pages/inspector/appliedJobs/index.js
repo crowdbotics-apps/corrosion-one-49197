@@ -1,5 +1,5 @@
 import AdminLayout from "../../../components/AdminLayout";
-import DataTable from "../../../components/DataTable/index";
+import DataTable from "../../../components/DataTable";
 import React, { useEffect, useState } from "react";
 import { dataTableModel } from "./utils";
 import { useApi, useLoginStore } from "../../../services/helpers";

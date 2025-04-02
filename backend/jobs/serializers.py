@@ -1,24 +1,20 @@
 import os
 import uuid
 
-
+from cities_light.models import Country, Region
 from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from inspector.models import Credential, Inspector
-from inspector.serializers import CredentialSerializer, InspectorDetailSerializer
-from jobs.models import Job, JobCategory, MagicLinkToken, JobDocument, Bid
-from owner.serializers import OwnerDetailSerializer
+from inspector.serializers import CredentialSerializer, InspectorDetailSerializer, RegionSerializer, CountrySerializer
+from jobs.models import Job, MagicLinkToken, JobDocument, Bid
+from owner.models import Industry
+from owner.serializers import OwnerDetailSerializer, IndustrySerializer
 from utils.utils.email import send_email_with_template
 from utils.utils.send_sms import send_sms
 
-
-class JobCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = JobCategory
-        fields = ['id', 'name', 'description']
 
 class JobDocumentSerializer(serializers.ModelSerializer):
     document_name = serializers.SerializerMethodField()
@@ -40,12 +36,12 @@ class JobDocumentSerializer(serializers.ModelSerializer):
 
 class JobListSerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField()
-
+    inspector = serializers.SerializerMethodField()
     bids = serializers.SerializerMethodField()
     class Meta:
         model = Job
         fields = ['id', 'title', 'created_by', 'start_date',
-                  'end_date', 'status', 'views', 'created', 'bids', 'owner']
+                  'end_date', 'status', 'views', 'created', 'bids', 'owner', 'inspector']
 
     def get_bids(self, obj):
         return obj.bids.count()
@@ -53,19 +49,26 @@ class JobListSerializer(serializers.ModelSerializer):
     def get_owner(self, obj):
         return obj.created_by.user.first_name + ' ' + obj.created_by.user.last_name if obj.created_by else None
 
+    def get_inspector(self, obj):
+        if obj.inspector:
+            return obj.inspector.user.first_name + ' ' + obj.inspector.user.last_name
+        return '-'
+
 class JobDetailSerializer(serializers.ModelSerializer):
-    categories = JobCategorySerializer(many=True)
+    industries = IndustrySerializer(many=True)
     certifications = CredentialSerializer(many=True)
     documents = JobDocumentSerializer(many=True)
     created_by = OwnerDetailSerializer()
     bids = serializers.SerializerMethodField()
     favorite = serializers.SerializerMethodField()
+    regions = RegionSerializer(many=True)
+    country = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
-        fields = ['id', 'title', 'description', 'categories', 'certifications', 'start_date', 'address',
+        fields = ['id', 'title', 'description', 'industries', 'certifications', 'start_date', 'address',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
-                  'misc_other_rate', 'payment_modes', 'created_by', 'bids', 'favorite']
+                  'misc_other_rate', 'payment_modes', 'created_by', 'bids', 'favorite', 'regions', 'country']
 
     def get_bids(self, obj):
         return obj.bids.count()
@@ -76,14 +79,20 @@ class JobDetailSerializer(serializers.ModelSerializer):
             return False
         return obj.favorites.filter(inspector=user.inspector).exists()
 
+    def get_country(self, obj):
+        return CountrySerializer(Country.objects.filter(region__in=obj.regions.all()).distinct(), many=True).data
+
 class JobManagementSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=True)
-    categories = PrimaryKeyRelatedField(many=True, queryset=JobCategory.objects.all())
+    industries = PrimaryKeyRelatedField(many=True, queryset=Industry.objects.all())
     certifications = PrimaryKeyRelatedField(many=True, queryset=Credential.objects.all())
+    regions = PrimaryKeyRelatedField(many=True, queryset=Region.objects.all())
+
     class Meta:
         model = Job
-        fields = [ 'id', 'title', 'description', 'categories', 'certifications', 'start_date', 'address',
-                  'end_date', 'daily_rate', 'per_diem_rate', 'mileage_rate', 'misc_other_rate', 'payment_modes']
+        fields = [ 'id', 'title', 'description', 'industries', 'certifications', 'start_date', 'address',
+                  'end_date', 'daily_rate', 'per_diem_rate', 'mileage_rate', 'misc_other_rate', 'payment_modes',
+                   'regions']
 
     def validate(self, attrs):
         if attrs['start_date'] > attrs['end_date']:
@@ -120,6 +129,10 @@ class JobManagementSerializer(serializers.ModelSerializer):
             if documents:
                 data.pop('documents')
             self.instance = super().save(**kwargs)
+            regions = self.validated_data.get('regions', [])
+            if regions:
+                self.instance.regions.set(regions)
+
             if documents:
                 for support_document in documents:
                     if 'file' in support_document:
