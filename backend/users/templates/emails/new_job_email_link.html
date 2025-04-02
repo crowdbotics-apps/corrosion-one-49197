@@ -44,7 +44,7 @@
                     </h3>
 
                     <div style=" background-color: rgba(31, 66, 85, 0.1); border-radius: 15px; padding: 10px 20px; margin-bottom: 20px;">
-                      <table style="width: 100%; border-collapse: collapse; table-layout: fixed; ;margin-left:20px; box-sizing: border-box;">
+                      <table style="width: 100%; border-collapse: collapse; table-layout: fixed; box-sizing: border-box;">
                           <tr>
                             <td rowspan="3" style="text-align: center; padding: 0; width: 100px;vertical-align: middle;">
                               <img src="{{ logo_url }}" alt="Avatar" style="object-fit: contain; width: 60px; height: 60px; border-radius: 50%; background-color: white; display: block; margin-left: auto; margin-right: auto;">
@@ -65,7 +65,7 @@
                               </p>
                               {% endif %}
                             </td>
-                            <td>
+                            <td style="text-align: right">
                               {% if user_phone_number %}
                               <p style="font-size: 10px;display: flex; align-items: center; margin-top: 0; margin-bottom: 3px;">
                                 <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
@@ -108,7 +108,7 @@
                               <h3 style="color: rgba(31, 66, 85, 1); font-size: 12px;">Start Date: {{job_start_date}}</h3>
                             </td>
 
-                            <td>
+                            <td style="text-align: right">
                               <h3 style="color: rgba(31, 66, 85, 1); font-size: 12px">End Date: {{job_end_date}}</h3>
                             </td>
                           </tr>
