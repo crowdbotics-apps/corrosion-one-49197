@@ -48,7 +48,7 @@ function Support() {
 
 
   return (
-    <AdminLayout title={'Support'} showCard>
+    <AdminLayout title={'Corrosion One Support'} showCard>
       <FormikProvider value={formik}>
         <FormikInput name="subject" label="Subject" type="text" errors={formik.errors} mb={2}/>
         <FormikInput

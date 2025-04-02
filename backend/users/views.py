@@ -15,7 +15,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, \
     HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
@@ -518,7 +518,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             return Response('Verification email sent', status=HTTP_200_OK)
         return Response('The email is invalid', status=HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def deactivate(self, request):
         user = request.user
         user.is_active = False
@@ -558,7 +558,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
         return Response(data)
 
-    @action(detail=False, methods=['get'], url_path='user-detail')
+    @action(detail=False, methods=['get'], url_path='user-detail', permission_classes=[IsAuthenticated])
     def user_detail(self, request):
         user = request.user
         return Response(UserDetailSerializer(user).data)

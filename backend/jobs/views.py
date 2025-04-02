@@ -72,13 +72,15 @@ class JobViewSet(
             active_jobs = jobs.filter(active=True, certifications__in=credentials)
             if query_params.get('favorite', None):
                 active_jobs = active_jobs.filter(favorites__inspector=inspector)
-                return active_jobs
+                return active_jobs.distinct()
             if query_params.get('applied', None):
                 my_bids_ids = list(inspector.bids.values_list('job_id', flat=True))
                 active_jobs = active_jobs.filter(id__in=my_bids_ids)
             else:
+                if self.action == "retrieve":
+                    return active_jobs.distinct()
                 active_jobs = active_jobs.filter(status=Job.JobStatus.PENDING)
-            return active_jobs
+            return active_jobs.distinct()
 
         return jobs.filter(created_by=user.owner)
 
