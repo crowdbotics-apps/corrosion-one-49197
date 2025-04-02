@@ -24,6 +24,7 @@ import AdminLayout from "../../../components/AdminLayout";
 import gradientImage from "../../../assets/images/gradient.png";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Box from "@mui/material/Box";
+import RenderListOption from "../../../components/RenderListOption";
 
 function JobDetail() {
   const api = useApi();
@@ -304,6 +305,20 @@ function JobDetail() {
           <CustomTypography text="Requirements"/>
           <DocumentList documents={jobDetails?.documents}/>
           <CredentialsList documents={jobDetails?.certifications || []}/>
+          <CustomTypography text="Job Industry"/>
+          <CredentialsList documents={jobDetails?.industries || []}/>
+          <CustomTypography text="Job Address"/>
+          <MDBox display={'flex'} justifyContent={'space-between'} flexDirection={'column'}>
+            <MDTypography sx={{fontSize: '16px', fontWeight: 'bold', marginTop: '20px'}}>
+              {jobDetails?.country?.length === 1 ? "Country" : "Countries" }: {jobDetails?.country?.map((item, index) => `${item.name} ${index !== jobDetails?.country?.length - 1 ? ', ' : ''} ` )}
+            </MDTypography>
+            <MDTypography sx={{fontSize: '16px', fontWeight: 'bold', marginTop: '20px'}}>
+              {jobDetails?.regions?.length === 1 ? "State" : "States" }: {jobDetails?.regions?.map((item, index) => `${item.name} ${index !== jobDetails?.regions?.length - 1 ? ', ' : ''} ` )}
+            </MDTypography>
+            <MDTypography sx={{fontSize: '16px', fontWeight: 'bold', marginTop: '20px'}}>
+              Inspection Address: {jobDetails?.address}
+            </MDTypography>
+          </MDBox>
           <CustomTypography text="Payment"/>
           <MDBox>
             <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>

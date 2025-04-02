@@ -22,6 +22,19 @@ export const dataTableModel = {
   rows: [],
 };
 
+export const dataTableModelOwner = {
+  columns: [
+    { Header: "Job Title", accessor: "title",width: 120},
+    { Header: "Job Inspector", accessor: "inspector",width: 120},
+    { Header: "Bids", accessor: "bids" ,width: 80 },
+    { Header: "Views", accessor: "views", width: 80 },
+    { Header: "Date Posted", accessor: "created", width: 150 },
+    { Header: "Status", accessor: "status",width: 150 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 280 },
+  ],
+  rows: [],
+};
+
 
 
 
