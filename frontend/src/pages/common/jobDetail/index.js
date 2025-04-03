@@ -17,12 +17,12 @@ import CheckIcon from '@mui/icons-material/Check';
 import FormikInput from "../../../components/Formik/FormikInput"
 import {Form, FormikProvider, useFormik} from "formik"
 import * as Yup from "yup"
-import {checkUrl, date_fmt, money_fmt, showMessage, useApi, useLoginStore} from "../../../services/helpers"
+import {capitalize, checkUrl, date_fmt, money_fmt, showMessage, useApi, useLoginStore} from "../../../services/helpers"
 import {CustomTypography, DocumentList, CredentialsList} from "./utils"
 import {ROLES, ROUTES} from "../../../services/constants"
 import AdminLayout from "../../../components/AdminLayout";
 import gradientImage from "../../../assets/images/gradient.png";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Box from "@mui/material/Box";
 import RenderListOption from "../../../components/RenderListOption";
 
@@ -36,12 +36,14 @@ function JobDetail() {
   const [jobDetails, setJobDetails] = useState(null);
   const [showActionModal, setShowActionModal] = useState(false);
   const [action, setAction] = useState('delete');
+  const [showMarkAsDoneIM, setShowMarkAsDoneIM] = useState(false);
 
 
   const getJob = () => {
     setLoading(true);
     api.getJob(jobId).handle({
       onSuccess: (result) => {
+        console.log('==>  ', result);
         setJobDetails(result.data);
       },
       errorMessage: 'Error getting job details',
@@ -82,9 +84,15 @@ function JobDetail() {
     )
   }
 
-  const markAsCompleted = () => {
+  const markAsCompleted = (values = null) => {
+    const dataToSend = {
+      id: jobId,
+      mileage: values?.mileage,
+    }
+
+    console.log(values)
     setLoading(true)
-    api.markAsCompleted(jobId).handle({
+    api.markAsCompleted(dataToSend).handle({
         onSuccess: (res) => {
           handleCloseModal()
           getJob()
@@ -116,9 +124,11 @@ function JobDetail() {
 
   const handleCloseModal = () => {
     setShowActionModal(false)
+    setShowMarkAsDoneIM(false)
   }
 
   const handleAction = () => {
+    console.log('handleAction')
     if (action === 'delete') {
       cancelJob()
     } else if (action === 'finish') {
@@ -149,6 +159,18 @@ function JobDetail() {
       createBid(values);
     },
   });
+
+  const formikModal = useFormik({
+    initialValues: {
+      mileage: 0,
+    },
+    validationSchema: Yup.object().shape({
+      mileage: Yup.number().required('Mileage is required'),
+    }),
+    onSubmit: (values) => {
+      markAsCompleted(values);
+    }
+  })
 
   const handleSelect = (item) => {
     if (selectedItems.includes(item)) {
@@ -339,6 +361,11 @@ function JobDetail() {
                 Misc/Other: {money_fmt(jobDetails?.misc_other_rate)}
               </MDTypography>
             )}
+            {jobDetails?.total_amount && (
+              <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>
+                Total: {money_fmt(jobDetails?.total_amount)}
+              </MDTypography>
+            )}
           </MDBox>
           <CustomTypography text="Job Schedule"/>
           <MDBox display={'flex'} justifyContent={'space-between'}>
@@ -351,9 +378,27 @@ function JobDetail() {
           </MDBox>
         </Grid>
       </Grid>
+      {jobDetails?.bid && <MDBox mt={2} mb={2}>
+        <CustomTypography text="My Bid"/>
+        <MDTypography sx={{fontSize: '16px', fontWeight: 'bold'}} mt={1}>
+          Status: {capitalize(jobDetails?.status)}
+        </MDTypography>
+        <MDTypography sx={{fontSize: '16px', fontWeight: 'bold'}} mt={1} mb={2}>
+          Note: {jobDetails?.bid?.note}
+        </MDTypography>
+        {jobDetails?.status === "started" && <MDButton
+          color={'error'}
+          onClick={() => {
+            setShowMarkAsDoneIM(true)
+            setAction('finish')
+          }}
+        >
+          Mark as done
+        </MDButton>}
+      </MDBox>}
 
 
-      {loginStore.user_type === 'INSPECTOR' && <MDBox borderTop={"1px solid #ccc"}>
+      {loginStore.user_type === 'INSPECTOR' && jobDetails?.bid === null && <MDBox borderTop={"1px solid #ccc"}>
         <FormikProvider value={formik}>
           <Form>
             <Grid>
@@ -474,14 +519,6 @@ function JobDetail() {
                 >
                   Place a Bid
                 </MDButton>
-
-                {/*<MDButton*/}
-                {/*  color={'secondary'}*/}
-                {/*  variant={'outlined'}*/}
-                {/*  onClick={() => navigate(-1)}*/}
-                {/*>*/}
-                {/*  Go Back*/}
-                {/*</MDButton>*/}
               </MDBox>
 
             </Grid>
@@ -496,7 +533,7 @@ function JobDetail() {
           >
             Bids
           </MDButton>
-          {jobDetails?.status === "started" && <MDButton
+          {jobDetails?.status === "finished_by_inspector" && <MDButton
             color={'error'}
             onClick={() => {
               setAction('finish')
@@ -529,6 +566,45 @@ function JobDetail() {
           </MDButton>
         </MDBox>
       </MDBox>}
+      <Dialog open={showMarkAsDoneIM} onClose={handleCloseModal}>
+        <DialogTitle>Mark Job as Done</DialogTitle>
+        <DialogContent>
+          {jobDetails?.payment_modes.includes('mileage') && <p>Do you want to mark this job as completed? This action will trigger the payment process for the
+            owner, please enter the mileage to complete the process.</p>}
+          {!jobDetails?.payment_modes.includes('mileage') && <p>Do you want to mark this job as completed? This action will trigger the payment process for the owner.</p>}
+        </DialogContent>
+        {jobDetails?.payment_modes.includes('mileage') && <FormikProvider value={formikModal}>
+          <Form>
+            <Grid container spacing={2} sx={{padding: '20px'}}>
+              <Grid item xs={12}>
+                <FormikInput
+                  type="number"
+                  label="Mileage"
+                  name="mileage"
+                />
+              </Grid>
+            </Grid>
+          </Form>
+        </FormikProvider>}
+        <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>
+            <MDButton
+              variant="outlined"
+              onClick={handleCloseModal}
+              color={'secondary'}
+            >
+              Cancel
+            </MDButton>
+          </Box>
+          {jobDetails?.payment_modes.includes('mileage')}
+          <MDButton
+            onClick={!jobDetails?.payment_modes.includes('mileage')  ? () => handleAction() : () => formikModal.submitForm()}
+            color={'error'}
+          >
+            Confirm
+          </MDButton>
+        </DialogActions>
+      </Dialog>
       <Dialog open={showActionModal} onClose={handleCloseModal}>
         <DialogTitle>{action === 'delete' ? `${jobDetails?.bids === 0 ? 'Delete' : 'Cancel'} Job` : 'Mark Job as Done'}</DialogTitle>
         <DialogContent>

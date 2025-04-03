@@ -146,8 +146,8 @@ export class Api extends ApiBase {
     return this.simple_delete(`${API_VERSION_PREFIX}/jobs/${id}/`);
   }
 
-  markAsCompleted(id: number | string) {
-    return this.simple_post(`${API_VERSION_PREFIX}/jobs/${id}/mark_as_completed/`);
+  markAsCompleted(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/jobs/${data.id}/mark_as_completed/`, data);
   }
 
   markAsFavorite(id: number | string) {

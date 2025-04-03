@@ -12,6 +12,7 @@ from inspector.serializers import CredentialSerializer, InspectorDetailSerialize
 from jobs.models import Job, MagicLinkToken, JobDocument, Bid
 from owner.models import Industry
 from owner.serializers import OwnerDetailSerializer, IndustrySerializer
+from utils.utils import user_is_inspector
 from utils.utils.email import send_email_with_template
 from utils.utils.send_sms import send_sms
 
@@ -63,12 +64,15 @@ class JobDetailSerializer(serializers.ModelSerializer):
     favorite = serializers.SerializerMethodField()
     regions = RegionSerializer(many=True)
     country = serializers.SerializerMethodField()
+    bid = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = ['id', 'title', 'description', 'industries', 'certifications', 'start_date', 'address',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
-                  'misc_other_rate', 'payment_modes', 'created_by', 'bids', 'favorite', 'regions', 'country']
+                  'misc_other_rate', 'payment_modes', 'created_by', 'bids', 'favorite', 'regions', 'country', 'bid',
+                  'total_amount', 'days'
+                  ]
 
     def get_bids(self, obj):
         return obj.bids.count()
@@ -81,6 +85,21 @@ class JobDetailSerializer(serializers.ModelSerializer):
 
     def get_country(self, obj):
         return CountrySerializer(Country.objects.filter(region__in=obj.regions.all()).distinct(), many=True).data
+
+    def get_bid(self, obj):
+        user = self.context['request'].user
+        if not user_is_inspector(user):
+            return None
+        inspector = user.inspector
+        bid = Bid.objects.filter(job=obj, inspector=inspector).first()
+        if bid:
+            return {
+                'id': bid.id,
+                'status': bid.status,
+                'note': bid.note
+            }
+        return None
+
 
 class JobManagementSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False, read_only=True)

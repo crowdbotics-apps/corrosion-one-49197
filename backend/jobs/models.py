@@ -26,6 +26,7 @@ class Job(TimeStampedModel):
     class JobStatus(models.TextChoices):
         PENDING = 'pending', 'Pending'
         STARTED = 'started', 'Started'
+        FINISHED_BY_INSPECTOR = 'finished_by_inspector', 'Finished by Inspector'
         FINISHED = 'finished', 'Finished'
         CANCELED = 'canceled', 'Canceled'
 
@@ -44,7 +45,7 @@ class Job(TimeStampedModel):
     active = models.BooleanField(default=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    status = models.CharField(max_length=10, choices=JobStatus.choices, default=JobStatus.PENDING)
+    status = models.CharField(max_length=21, choices=JobStatus.choices, default=JobStatus.PENDING)
     daily_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     per_diem_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     mileage_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
@@ -61,6 +62,24 @@ class Job(TimeStampedModel):
     address = models.TextField(null=True, blank=True)
     regions = models.ManyToManyField(Region, blank=True)
 
+    @property
+    def days(self):
+        return (self.end_date - self.start_date).days
+
+    @property
+    def total_amount(self):
+        total = 0
+        if 'daily' in self.payment_modes:
+            total += self.daily_rate * self.days
+        if 'per_diem' in self.payment_modes:
+            total += self.per_diem_rate * self.days
+        if 'mileage' in self.payment_modes:
+            bid = self.bids.filter(status=Bid.StatusChoices.ACCEPTED).first()
+            if bid:
+                total += bid.mileage * self.mileage_rate
+        if 'misc_other' in self.payment_modes:
+            total += self.misc_other_rate
+        return total
 
     class Meta:
         ordering = ['-id']
@@ -81,10 +100,12 @@ class Bid(TimeStampedModel):
         PENDING = 'pending', 'Pending'
         ACCEPTED = 'accepted', 'Accepted'
         REJECTED = 'rejected', 'Rejected'
+        CANCELED = 'canceled', 'Canceled'
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='bids')
     inspector = models.ForeignKey(Inspector, on_delete=models.CASCADE, related_name='bids')
     status = models.CharField(max_length=10, choices=StatusChoices.choices, default=StatusChoices.PENDING)
-    note = models.TextField()
+    mileage = models.DecimalField(decimal_places=0, max_digits=10, default=0)
+    note = models.TextField(null=True, blank=True)
 
     class Meta:
         ordering = ['-id']
