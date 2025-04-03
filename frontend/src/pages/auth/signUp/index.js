@@ -313,8 +313,9 @@ function SignUp() {
     verification_code: "",
   }
 
+  //TODO: REVERTIR UNA VEZ QUE ANDE TWILIO
   const validationSchemaThirdStep = Yup.object().shape({
-    verification_code: Yup.string().required('Verification Code is required')
+    // verification_code: Yup.string().required('Verification Code is required')
   })
 
   const formikThirdStep = useFormik({

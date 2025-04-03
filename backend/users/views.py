@@ -161,6 +161,17 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         """
         Verify phone code marketing emails and recaptcha check
         """
+        # TODO: ELIMINAR UNA VEZ QUE ANDE TWILIO
+        user = self.request.user
+        if not user:
+            return Response('User not found', status=HTTP_400_BAD_REQUEST)
+        marketing_notifications = request.data.get("marketing_notifications", False)
+        user.phone_verified = True
+        user.marketing_notifications = marketing_notifications
+        user.save()
+        return Response(UserDetailSerializer(user).data)
+
+        # eliminar HASTA ACA
         code = request.data.get("verification_code", None)
         recaptcha_token = request.data.get("recaptcha", None)
         marketing_notifications = request.data.get("marketing_notifications", False)
