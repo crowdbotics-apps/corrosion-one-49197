@@ -386,7 +386,7 @@ function JobDetail() {
         <MDTypography sx={{fontSize: '16px', fontWeight: 'bold'}} mt={1} mb={2}>
           Note: {jobDetails?.bid?.note}
         </MDTypography>
-        {jobDetails?.status === "started" && <MDButton
+        {jobDetails?.status === "started" && jobDetails?.bid?.status === 'accepted' && <MDButton
           color={'error'}
           onClick={() => {
             setShowMarkAsDoneIM(true)
