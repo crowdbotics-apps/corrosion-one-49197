@@ -17,7 +17,7 @@ export const showMessage = (error = 'An error occurred while communicating with 
 }
 
 export const capitalize = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  return str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, ' ');
 }
 
 
