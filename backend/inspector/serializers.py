@@ -20,7 +20,7 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
     credentials = serializers.PrimaryKeyRelatedField(queryset=Credential.objects.all(), many=True)
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    profile_picture = SmartUpdatableImageField(required=False, allow_null=True)
+    profile_picture = SmartUpdatableImageField(required=False, allow_null=True, allow_empty_file=True)
 
     class Meta:
         model = Inspector
@@ -34,8 +34,8 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('User already completed profile')
         if not user.email_verified:
             raise serializers.ValidationError('Please verify your email to continue with the sign up process')
-        profile_picture = attrs.get('profile_picture')
-        if profile_picture.size > 5 * 1024 * 1024:  # 5MB limit
+        profile_picture = attrs.get('profile_picture', None)
+        if profile_picture and profile_picture.size > 5 * 1024 * 1024:  # 5MB limit
             raise serializers.ValidationError('Profile picture size should not exceed 5MB')
         return attrs
 

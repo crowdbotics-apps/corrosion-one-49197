@@ -340,7 +340,6 @@ function SignUp() {
   };
 
   const validationSchemaSecondStepInspector = Yup.object().shape({
-    profile_picture: Yup.string().required('Profile Picture is required'),
     first_name: Yup.string().required('First Name is required'),
     last_name: Yup.string().required('Last Name is required'),
     credentials: Yup.array().min(1, 'At least one credential is required')
@@ -353,6 +352,7 @@ function SignUp() {
     onSubmit: (values) => {
       const valuesToSend = {...values}
       valuesToSend.credentials = valuesToSend.credentials.map((item) => item.id)
+      valuesToSend.profile_picture = valuesToSend.profile_picture !== "" ? valuesToSend.profile_picture : null
       completeInspectorData(valuesToSend)
     }
   })
