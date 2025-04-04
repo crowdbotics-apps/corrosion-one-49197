@@ -40,7 +40,7 @@ import {Form, Formik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
-import {useGoogleLogin} from "@react-oauth/google";
+import {GoogleLogin, useGoogleLogin, useGoogleOneTapLogin} from "@react-oauth/google";
 
 
 function SignIn() {
@@ -116,8 +116,15 @@ function SignIn() {
   // });
   const googleSignIn = useGoogleLogin({
     flow: "auth-code",
-    ux_mode: "redirect",
-    redirect_uri: 'https://app.corrosionone.com/auth/google/callback',
+    onSuccess: tokenResponse => {
+      console.log('===> ', tokenResponse)
+    },
+    onError: (errorResponse) => console.log("### onError =>", errorResponse),
+    onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
+  })
+
+  const googole2 =  useGoogleLogin({
+    flow: "implicit",
     onSuccess: tokenResponse => {
       console.log('===> ', tokenResponse)
     },
@@ -253,6 +260,26 @@ function SignIn() {
                 // mr={5}
                 sx={{cursor: "pointer"}}
                 onClick={googleSignIn}
+              />
+              <MDBox
+                component="img"
+                src={googleIcon}
+                alt="google"
+                width={"32px"}
+                // mr={5}
+                sx={{cursor: "pointer"}}
+                onClick={googole2}
+              />
+
+
+              <GoogleLogin
+                type={'icon'}
+                onSuccess={(credentialResponse) => {
+                  console.log(credentialResponse);
+                }}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
               />
             </MDBox>
 
