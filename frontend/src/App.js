@@ -156,13 +156,10 @@ export default function App() {
           />
         </>
       )}
-      <GoogleOAuthProvider clientId={"1075946037800-i2uef08ogjjtill8vrc8ao9coankl1i8.apps.googleusercontent.com"}>
-      {/*<GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>*/}
         <Routes>
           {getRoutes(unprotectedRoutes)}
           {getRoutes(protectedRoutes)}
         </Routes>
-      </GoogleOAuthProvider>
     </ThemeProvider>
   );
 }

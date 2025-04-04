@@ -116,7 +116,7 @@ function SignIn() {
   // });
   const googleSignIn = useGoogleLogin({
     flow: "auth-code",
-    onSuccess: tokenResponse => {
+    onSuccess: async tokenResponse => {
       console.log('===> ', tokenResponse)
     },
     onError: (errorResponse) => console.log("### onError =>", errorResponse),
@@ -125,7 +125,7 @@ function SignIn() {
 
   const googole2 =  useGoogleLogin({
     flow: "implicit",
-    onSuccess: tokenResponse => {
+    onSuccess: async tokenResponse => {
       console.log('===> ', tokenResponse)
     },
     onError: (errorResponse) => console.log("### onError =>", errorResponse),
