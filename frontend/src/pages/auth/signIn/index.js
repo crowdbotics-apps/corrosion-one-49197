@@ -104,24 +104,8 @@ function SignIn() {
       errorMessage: 'Error resending email',
     })
   }
-  //
-  // const googleSignIn = useGoogleLogin({
-  //   flow: 'auth-code',
-  //   onSuccess: tokenResponse => {
-  //     console.log('===> ', tokenResponse)
-  //   },
-  //   onError: error => {
-  //     console.log('Login Failed:', error);
-  //   },
-  // });
-  const googleSignIn = useGoogleLogin({
-    onSuccess: tokenResponse => console.log('===> ', tokenResponse),
-    onError: (errorResponse) => console.log("### onError =>", errorResponse),
-    onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
-    flow: "auth-code",
-  })
 
-  const googole2 =  useGoogleLogin({
+  const googleSignIn = useGoogleLogin({
     onSuccess: tokenResponse => console.log('===> ', tokenResponse),
     onError: (errorResponse) => console.log("### onError =>", errorResponse),
     onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
@@ -259,26 +243,7 @@ function SignIn() {
                 sx={{cursor: "pointer"}}
                 onClick={googleSignIn}
               />
-              <MDBox
-                component="img"
-                src={googleIcon}
-                alt="google"
-                width={"32px"}
-                mr={5}
-                sx={{cursor: "pointer"}}
-                onClick={googleSignIn}
-              />
-              <MDBox
-                component="img"
-                src={googleIcon}
-                alt="google"
-                width={"32px"}
-                // mr={5}
-                sx={{cursor: "pointer"}}
-                onClick={googole2}
-              />
             </MDBox>
-
           </Form>
         )}
       </Formik>

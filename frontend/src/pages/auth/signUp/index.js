@@ -401,14 +401,13 @@ function SignUp() {
   }
 
   const googleSignIn = useGoogleLogin({
-    flow: 'auth-code',
-    onSuccess: tokenResponse => {
-      console.log('===> ', tokenResponse)
-    },
-    onError: error => {
-      console.log('Login Failed:', error);
-    },
-  });
+    onSuccess: tokenResponse => console.log('===> ', tokenResponse),
+    onError: (errorResponse) => console.log("### onError =>", errorResponse),
+    onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
+    flow: "auth-code",
+    ux_mode: "redirect",
+    redirect_uri: "https://app.corrosionone.com",
+  })
 
   const cancel = () => {
     if (loginStore.isLoggedIn) loginStore.reset()
