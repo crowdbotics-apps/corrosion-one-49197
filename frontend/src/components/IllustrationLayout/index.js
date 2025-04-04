@@ -58,7 +58,7 @@ function IllustrationLayout({header = "", title = "", description = "", illustra
             display={{xs: "none", md: "flex"}}
             width="calc(100%)"
             height="calc(100vh)"
-            sx={{backgroundImage: `url(${illustration})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center center"}}
+            sx={{backgroundImage: `url(${illustration})`, backgroundRepeat: "no-repeat", backgroundSize: "contain", backgroundPosition: "center center"}}
           />
 
         </Grid>

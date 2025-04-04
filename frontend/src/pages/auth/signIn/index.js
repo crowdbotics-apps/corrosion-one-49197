@@ -104,16 +104,26 @@ function SignIn() {
       errorMessage: 'Error resending email',
     })
   }
-
+  //
+  // const googleSignIn = useGoogleLogin({
+  //   flow: 'auth-code',
+  //   onSuccess: tokenResponse => {
+  //     console.log('===> ', tokenResponse)
+  //   },
+  //   onError: error => {
+  //     console.log('Login Failed:', error);
+  //   },
+  // });
   const googleSignIn = useGoogleLogin({
-    flow: 'auth-code',
+    flow: "auth-code",
+    ux_mode: "redirect",
+    redirect_uri: 'https://app.corrosionone.com/auth/google/callback',
     onSuccess: tokenResponse => {
       console.log('===> ', tokenResponse)
     },
-    onError: error => {
-      console.log('Login Failed:', error);
-    },
-  });
+    onError: (errorResponse) => console.log("### onError =>", errorResponse),
+    onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
+  })
 
   const validationSchema =
     Yup.object().shape({
