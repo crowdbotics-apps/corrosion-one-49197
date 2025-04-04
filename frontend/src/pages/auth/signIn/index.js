@@ -234,7 +234,7 @@ function SignIn() {
                 src={googleIcon}
                 alt="google"
                 width={"32px"}
-                mr={5}
+                // mr={5}
                 sx={{cursor: "pointer"}}
                 onClick={googleSignIn}
               />

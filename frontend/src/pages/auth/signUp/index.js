@@ -255,7 +255,7 @@ function SignUp() {
     })
 
   const initialValuesFirstStep = {
-    user_type: ACCOUNT_TYPES[0],
+    user_type: ACCOUNT_TYPES[1],
     email: "",
     password: "",
     confirm_password: "",
@@ -537,7 +537,7 @@ function SignUp() {
     return (
       <FormikProvider value={formikFirstStep}>
         <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-          {/*<MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikFirstStep.values)}</MDTypography>*/}
+          <MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikFirstStep.values)}</MDTypography>
           <FormikInput
             type={"autocomplete"}
             value={formikFirstStep.values.user_type}
@@ -559,7 +559,7 @@ function SignUp() {
             errors={formikFirstStep.errors}
             mb={2}
           />
-          {formikFirstStep.values.user_type === ACCOUNT_TYPES[1] && <FormikInput
+          {formikFirstStep.values.user_type.value === ACCOUNT_TYPES[1].value && <FormikInput
             name={'phone_number'}
             label={'Phone Number'}
             type={'phone_input'}
@@ -643,7 +643,7 @@ function SignUp() {
               src={googleIcon}
               alt="google"
               width={"32px"}
-              mr={5}
+              // mr={5}
               sx={{cursor: "pointer"}}
               onClick={googleSignIn}
             />
