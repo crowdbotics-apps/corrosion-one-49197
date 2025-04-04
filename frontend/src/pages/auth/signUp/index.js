@@ -401,6 +401,7 @@ function SignUp() {
   }
 
   const googleSignIn = useGoogleLogin({
+    flow: 'auth-code',
     onSuccess: tokenResponse => {
       console.log('===> ', tokenResponse)
     },

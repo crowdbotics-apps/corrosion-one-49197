@@ -103,6 +103,7 @@ function SignIn() {
   }
 
   const googleSignIn = useGoogleLogin({
+    flow: 'auth-code',
     onSuccess: tokenResponse => {
       console.log('===> ', tokenResponse)
     },

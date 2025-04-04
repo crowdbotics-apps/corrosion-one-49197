@@ -5,7 +5,7 @@ from inspector.models import Inspector, Credential, Language
 
 @admin.register(Credential)
 class CredentialAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'description']
+    list_display = ['id', 'name', 'description', 'order']
     search_fields = ['name', 'description']
 
 
