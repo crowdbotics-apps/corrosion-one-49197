@@ -107,6 +107,8 @@ function SignUp() {
       onSuccess: (result) => {
         runInAction(() => {
           loginStore.setUser(result.data)
+          //TODO: REVERTIR UNA VEZ QUE ANDE TWILIO
+          verifyCode()
         })
         setStage(2)
 
@@ -159,6 +161,8 @@ function SignUp() {
     api.updateInspectorWorkArea(data).handle({
       onSuccess: (result) => {
         setStage(3)
+        //TODO: REVERTIR UNA VEZ QUE ANDE TWILIO
+        verifyCode()
       },
       errorMessage: 'Error updating inspector work area',
       onError: (result) => {
@@ -537,7 +541,7 @@ function SignUp() {
     return (
       <FormikProvider value={formikFirstStep}>
         <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-          <MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikFirstStep.values)}</MDTypography>
+          {/*<MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikFirstStep.values)}</MDTypography>*/}
           <FormikInput
             type={"autocomplete"}
             value={formikFirstStep.values.user_type}
@@ -585,7 +589,7 @@ function SignUp() {
               By signing up, you agree to our{" "}
               <MDTypography
                 component={Link}
-                to="/authentication/sign-up/cover"
+                to="/"
                 variant="button"
                 color="info"
                 fontWeight="medium"
@@ -595,7 +599,7 @@ function SignUp() {
               </MDTypography> and
               <MDTypography
                 component={Link}
-                to="/authentication/sign-up/cover"
+                to="/"
                 variant="button"
                 color="info"
                 fontWeight="medium"
