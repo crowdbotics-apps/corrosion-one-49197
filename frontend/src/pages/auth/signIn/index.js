@@ -127,7 +127,7 @@ function SignIn() {
     onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
     flow: "auth-code",
     ux_mode: "redirect",
-    redirect_uri: "https://app.corrosionone.com/",
+    redirect_uri: "https://app.corrosionone.com",
   })
 
   const validationSchema =
@@ -256,6 +256,15 @@ function SignIn() {
                 alt="google"
                 width={"32px"}
                 // mr={5}
+                sx={{cursor: "pointer"}}
+                onClick={googleSignIn}
+              />
+              <MDBox
+                component="img"
+                src={googleIcon}
+                alt="google"
+                width={"32px"}
+                mr={5}
                 sx={{cursor: "pointer"}}
                 onClick={googleSignIn}
               />
