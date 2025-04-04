@@ -122,11 +122,12 @@ function SignIn() {
   })
 
   const googole2 =  useGoogleLogin({
-
     onSuccess: tokenResponse => console.log('===> ', tokenResponse),
     onError: (errorResponse) => console.log("### onError =>", errorResponse),
     onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
-    flow: "implicit",
+    flow: "auth-code",
+    ux_mode: "redirect",
+    redirect_uri: "https://app.corrosionone.com/",
   })
 
   const validationSchema =
@@ -266,17 +267,6 @@ function SignIn() {
                 // mr={5}
                 sx={{cursor: "pointer"}}
                 onClick={googole2}
-              />
-
-
-              <GoogleLogin
-                type={'icon'}
-                onSuccess={(credentialResponse) => {
-                  console.log(credentialResponse);
-                }}
-                onError={() => {
-                  console.log('Login Failed');
-                }}
               />
             </MDBox>
 
