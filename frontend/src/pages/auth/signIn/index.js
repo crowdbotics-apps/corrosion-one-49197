@@ -40,6 +40,7 @@ import {Form, Formik} from "formik";
 import FormikInput from "../../../components/Formik/FormikInput";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
+import {useGoogleLogin} from "@react-oauth/google";
 
 
 function SignIn() {
@@ -101,6 +102,10 @@ function SignIn() {
     })
   }
 
+  const googleSignIn = useGoogleLogin({
+    onSuccess: tokenResponse => console.log(tokenResponse),
+  });
+
   const validationSchema =
     Yup.object().shape({
       email: Yup.string().email().required(),
@@ -111,10 +116,6 @@ function SignIn() {
     email: loginStore.stored_email || "",
     password: "",
   };
-
-  const googleSignIn = () => {
-    console.log('Google Sign In')
-  }
 
   const facebookSignIn = () => {
     console.log('Facebook Sign In')

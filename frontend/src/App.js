@@ -47,6 +47,7 @@ import {setupRootStore} from "./models";
 import useCurrentBreakpoint from "./services/helpers";
 import {ROUTES} from "./services/constants";
 import {SignUp} from "./pages";
+import {GoogleOAuthProvider} from "@react-oauth/google";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -136,7 +137,7 @@ export default function App() {
 
 
   console.log('Current Breakpoint:', currentBp);
-
+  console.log(process.env.REACT_APP_GOOGLE_CLIENT_ID)
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline/>
@@ -156,10 +157,13 @@ export default function App() {
           />
         </>
       )}
-      <Routes>
-        {getRoutes(unprotectedRoutes)}
-        {getRoutes(protectedRoutes)}
-      </Routes>
+      <GoogleOAuthProvider clientId={"1075946037800-i2uef08ogjjtill8vrc8ao9coankl1i8.apps.googleusercontent.com"}>
+      {/*<GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>*/}
+        <Routes>
+          {getRoutes(unprotectedRoutes)}
+          {getRoutes(protectedRoutes)}
+        </Routes>
+      </GoogleOAuthProvider>
     </ThemeProvider>
   );
 }
