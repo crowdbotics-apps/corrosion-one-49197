@@ -387,7 +387,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://192.168.183.108',
     'https://corrosion-one-49197.azurewebsites.net',
     'http://corrosion-one-49197.azurewebsites.net',
-    'https://stgcontent71740.blob.core.windows.net'
+    'https://stgcontent71740.blob.core.windows.net',
+    'https://app.corrosionone.com'
 ]
 
 CORS_EXPOSE_HEADERS = [
