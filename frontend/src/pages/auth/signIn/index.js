@@ -115,21 +115,18 @@ function SignIn() {
   //   },
   // });
   const googleSignIn = useGoogleLogin({
-    flow: "auth-code",
-    onSuccess: async tokenResponse => {
-      console.log('===> ', tokenResponse)
-    },
+    onSuccess: tokenResponse => console.log('===> ', tokenResponse),
     onError: (errorResponse) => console.log("### onError =>", errorResponse),
     onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
+    flow: "auth-code",
   })
 
   const googole2 =  useGoogleLogin({
-    flow: "implicit",
-    onSuccess: async tokenResponse => {
-      console.log('===> ', tokenResponse)
-    },
+
+    onSuccess: tokenResponse => console.log('===> ', tokenResponse),
     onError: (errorResponse) => console.log("### onError =>", errorResponse),
     onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
+    flow: "implicit",
   })
 
   const validationSchema =

@@ -22,6 +22,7 @@ import App from "App";
 // Material Dashboard 3 PRO React Context Provider
 import {MaterialUIControllerProvider} from "context";
 import StoreApp from "./StoreApp";
+import {GoogleOAuthProvider} from "@react-oauth/google";
 
 const container = document.getElementById("app");
 const root = createRoot(container);
@@ -49,7 +50,9 @@ root.render(
   <HashRouter>
     <MaterialUIControllerProvider>
       <StoreApp>
-        <App/>
+        <GoogleOAuthProvider clientId={"1075946037800-i2uef08ogjjtill8vrc8ao9coankl1i8.apps.googleusercontent.com"}>
+          <App/>
+        </GoogleOAuthProvider>
       </StoreApp>
     </MaterialUIControllerProvider>
   </HashRouter>
