@@ -647,14 +647,14 @@ function SignUp() {
               sx={{cursor: "pointer"}}
               onClick={googleSignIn}
             />
-            <MDBox
-              component="img"
-              src={facebookIcon}
-              alt="facebook"
-              width={"32px"}
-              sx={{cursor: "pointer"}}
-              onClick={facebookSignIn}
-            />
+            {/*<MDBox*/}
+            {/*  component="img"*/}
+            {/*  src={facebookIcon}*/}
+            {/*  alt="facebook"*/}
+            {/*  width={"32px"}*/}
+            {/*  sx={{cursor: "pointer"}}*/}
+            {/*  onClick={facebookSignIn}*/}
+            {/*/>*/}
           </MDBox>
 
         </Form>
