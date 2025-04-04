@@ -137,7 +137,6 @@ export default function App() {
 
 
   console.log('Current Breakpoint:', currentBp);
-  console.log(process.env.REACT_APP_GOOGLE_CLIENT_ID)
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline/>

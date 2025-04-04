@@ -442,7 +442,9 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
     @action(detail=False, methods=['post'])
     def login(self, request):
         email = request.data.get('email')
-        user = User.objects.get(email=email)
+        user = User.objects.filter(email=email).first()
+        if not user:
+            return Response("User doesn't exist", status=status.HTTP_400_BAD_REQUEST)
         if not user.check_password(request.data.get('password')):
             return Response("Invalid email or password. Please try again", status=status.HTTP_400_BAD_REQUEST)
         if user.is_superuser:

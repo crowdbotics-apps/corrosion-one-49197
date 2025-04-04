@@ -85,6 +85,9 @@ function SignIn() {
           if (result.errors === "Please verify your email address") {
             setShowResendEmail(true)
           }
+          if (result.errors === "User doesn't exist") {
+            navigate(ROUTES.SIGN_UP)
+          }
           formikRef.current?.setErrors(result.errors)
         },
         onFinally: () => setLoading(false)
