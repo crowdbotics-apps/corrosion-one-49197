@@ -103,7 +103,12 @@ function SignIn() {
   }
 
   const googleSignIn = useGoogleLogin({
-    onSuccess: tokenResponse => console.log(tokenResponse),
+    onSuccess: tokenResponse => {
+      console.log('===> ', tokenResponse)
+    },
+    onError: error => {
+      console.log('Login Failed:', error);
+    },
   });
 
   const validationSchema =
@@ -116,10 +121,6 @@ function SignIn() {
     email: loginStore.stored_email || "",
     password: "",
   };
-
-  const facebookSignIn = () => {
-    console.log('Facebook Sign In')
-  }
 
   useEffect(() => {
     if (loginStore.isLoggedIn) {
@@ -239,14 +240,6 @@ function SignIn() {
                 sx={{cursor: "pointer"}}
                 onClick={googleSignIn}
               />
-              {/*<MDBox*/}
-              {/*  component="img"*/}
-              {/*  src={facebookIcon}*/}
-              {/*  alt="facebook"*/}
-              {/*  width={"32px"}*/}
-              {/*  sx={{cursor: "pointer"}}*/}
-              {/*  onClick={facebookSignIn}*/}
-              {/*/>*/}
             </MDBox>
 
           </Form>

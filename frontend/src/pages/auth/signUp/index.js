@@ -44,6 +44,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import UserAvatar from "assets/images/photo-placeholder.png";
 import RenderListOption from "../../../components/RenderListOption";
 import CustomCheckbox from "../../../components/CheckboxCustom";
+import {useGoogleLogin} from "@react-oauth/google";
 
 
 function SignUp() {
@@ -399,13 +400,14 @@ function SignUp() {
     formikThirdStepInspector.setFieldValue('state', newStates)
   }
 
-  const googleSignIn = () => {
-    console.log('Google Sign In')
-  }
-
-  const facebookSignIn = () => {
-    console.log('Facebook Sign In')
-  }
+  const googleSignIn = useGoogleLogin({
+    onSuccess: tokenResponse => {
+      console.log('===> ', tokenResponse)
+    },
+    onError: error => {
+      console.log('Login Failed:', error);
+    },
+  });
 
   const cancel = () => {
     if (loginStore.isLoggedIn) loginStore.reset()
@@ -651,14 +653,6 @@ function SignUp() {
               sx={{cursor: "pointer"}}
               onClick={googleSignIn}
             />
-            {/*<MDBox*/}
-            {/*  component="img"*/}
-            {/*  src={facebookIcon}*/}
-            {/*  alt="facebook"*/}
-            {/*  width={"32px"}*/}
-            {/*  sx={{cursor: "pointer"}}*/}
-            {/*  onClick={facebookSignIn}*/}
-            {/*/>*/}
           </MDBox>
 
         </Form>

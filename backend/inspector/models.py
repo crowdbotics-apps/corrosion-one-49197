@@ -13,9 +13,13 @@ def file_size(value): # add this to some file where you can import it from
 class Credential(TimeStampedModel):
     name = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
+    class Meta:
+        ordering = ['order']
+
 
 class Inspector(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='inspector')
