@@ -438,7 +438,7 @@ function SignUp() {
 
   const cancel = () => {
     if (loginStore.isLoggedIn) loginStore.reset()
-    navigate(ROUTES.LOGIN)
+    navigate(ROUTES.LOGIN, { replace: true })
   }
 
   useEffect(() => {

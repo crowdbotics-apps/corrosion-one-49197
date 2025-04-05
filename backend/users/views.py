@@ -600,6 +600,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         """
         data = request.data
         id_token = data.get('code')
+        return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
         if not id_token:
             return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
         try:
