@@ -1,4 +1,5 @@
 import json
+import os
 from urllib import request as urequest
 
 # import facebook
@@ -7,6 +8,7 @@ import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.tokens import default_token_generator
+from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
@@ -21,7 +23,9 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, \
     HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 from rest_framework.viewsets import GenericViewSet
 
+from inspector.models import Inspector
 from jobs.models import MagicLinkToken
+from owner.models import Owner
 from users.models import User, UserVerificationCode, SupportEmail
 from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserCreateSerializer, \
     UserLoginResponseSerializer, UserDetailSerializer
@@ -624,20 +628,32 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
         user = User.objects.filter(email=email).first()
         if not user:
-            # first_name = user_data.get('given_name')
-            # last_name = user_data.get('family_name')
-            # profile_picture = user_data.get('picture')
-            # user = User.objects.create(
-            #     email=email,
-            #     username=email,
-            #     first_name=first_name,
-            #     last_name=last_name,
-            #     profile_picture=profile_picture,
-            # )
-            return Response('User not found', status=HTTP_404_NOT_FOUND)
+            user_type = data.get('account_type')
+            first_name = user_data.get('given_name')
+            last_name = user_data.get('family_name')
+            profile_picture = user_data.get('picture')
+            user = User.objects.create(
+                email=email,
+                username=email,
+                first_name=first_name,
+                last_name=last_name,
+                email_verified=True,
+            )
+            if user_type == 'INSPECTOR':
+                inspector = Inspector.objects.create(user=user)
+                if profile_picture:
+                    try:
+                        result = urequest.urlretrieve(profile_picture)
+
+                        inspector.profile_picture.save(os.path.basename(profile_picture), File(open(result[0], 'rb')))
+                    except Exception as error:
+                        print(f'Error getting profile picture from google: {str(error)}')
+            else:
+                Owner.objects.create(user=user)
+
+            return Response(UserDetailSerializer(user).data)
 
         if not user.is_active:
             return Response('The account has been removed', status=HTTP_404_NOT_FOUND)
 
-        serializer = UserLoginResponseSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(UserDetailSerializer(user).data)

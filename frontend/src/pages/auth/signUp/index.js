@@ -54,6 +54,7 @@ function SignUp() {
   const api = useApi()
   const {state} = useLocation();
   const navigate = useNavigate()
+  const currentPath = window.location.href;
 
   const [loading, setLoading] = useState(false);
   const [stage, setStage] = useState(state?.status || 0);
@@ -74,7 +75,6 @@ function SignUp() {
   const handleUploadFile = (file) => {
     setImgPreview(URL.createObjectURL(file))
   }
-
 
   const signup = (data) => {
     const dataToSend = {
@@ -237,6 +237,33 @@ function SignUp() {
       onSuccess: (result) => {
         setStates(result?.data)
       },
+    })
+  }
+
+  const loginGoogle = (data) => {
+    api.loginGoogle(data).handle({
+      onSuccess: (result) => {
+        const {response} = result
+        const {user, access} = response
+
+        runInAction(() => {
+          loginStore.setUser(user)
+          loginStore.setApiToken(access)
+        })
+        // TODO: RESTORE THIS AFTER TESTING
+        // if (loginStore.status !== 4) {
+        //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+        // } else {
+        //   navigate(ROUTES.DASHBOARD)
+        // }
+        // UNTIL HERE
+        navigate(ROUTES.DASHBOARD)
+      },
+      errorMessage: 'Error signing in with Google',
+      onError: (result) => {
+        // window.location.replace("https://app.corrosionone.com");
+      },
+      onFinally: () => setLoading(false)
     })
   }
 
@@ -406,7 +433,7 @@ function SignUp() {
     onNonOAuthError: (nonOAuthError) => console.log("### onNonOAuthError =>", nonOAuthError),
     flow: "auth-code",
     ux_mode: "redirect",
-    redirect_uri: "https://app.corrosionone.com",
+    redirect_uri: "https://app.corrosionone.com/signup/",
   })
 
   const cancel = () => {
@@ -457,6 +484,39 @@ function SignUp() {
     }
 
   }, [formikFirstStep.values.user_type, stage])
+
+  const analyzedUrl = (url) => {
+    console.log(url)
+    const nUrl = new URL(url);
+
+    const fullHash = nUrl.hash;
+    const queryStart = fullHash.indexOf('?');
+    if (queryStart !== -1) {
+      // Potentially there's another "#" after our query
+      const secondHash = fullHash.indexOf('#', queryStart);
+      let queryString = "";
+
+      if (secondHash !== -1) {
+        // substring from '?' to before the second '#'
+        queryString = fullHash.substring(queryStart + 1, secondHash);
+      } else {
+        // substring from '?' to the end of the string
+        queryString = fullHash.substring(queryStart + 1);
+      }
+
+      // 4. Parse the resulting query string manually
+      const params = new URLSearchParams(queryString);
+      const code = params.get("code");
+      if (code) {
+        loginGoogle({code, account_type: formikFirstStep.values.user_type.value})
+      }
+    }
+
+  }
+
+  useEffect(() => {
+    analyzedUrl(currentPath)
+  }, [currentPath])
 
   const renderFooter = () => {
     const isLoggedIn = loginStore.isLoggedIn

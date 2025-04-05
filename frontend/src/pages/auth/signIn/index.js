@@ -51,9 +51,7 @@ function SignIn() {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(loginStore.remember_me);
   const [showResendEmail, setShowResendEmail] = useState(false);
-  const queryString = window.location.search;
-  const params = new URLSearchParams(queryString);
-  const code = params.get("code");
+  const currentPath = window.location.href;
 
 
   const handleSetRememberMe = () => {
@@ -123,7 +121,7 @@ function SignIn() {
       },
       errorMessage: 'Error signing in with Google',
       onError: (result) => {
-        window.location.replace("https://app.corrosionone.com");
+        // window.location.replace("https://app.corrosionone.com");
       },
       onFinally: () => setLoading(false)
     })
@@ -172,11 +170,24 @@ function SignIn() {
     }
   }, [])
 
-  useEffect(() => {
+  const analyzedUrl = (url) => {
+    console.log(url)
+    const nUrl = new URL(url);
+    const code = nUrl.searchParams.get("code");
     if (code) {
-      loginGoogle({code})
+      console.log('code ==> ', code);
+      if (url.includes("signup")) {
+        console.log('signup')
+        navigate(ROUTES.SIGN_UP + '?code=' + code)
+      } else{
+        loginGoogle({code})
+      }
     }
-  }, [code])
+  }
+
+  useEffect(() => {
+    analyzedUrl(currentPath)
+  }, [currentPath])
 
   return (
     <IllustrationLayout

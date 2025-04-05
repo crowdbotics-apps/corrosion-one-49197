@@ -44,7 +44,7 @@ class Inspector(models.Model):
             # TODO: Remove this later
             # return 3
             return 4
-        if self.user.first_name:
+        if self.user.phone_number:
             return 2
         return 1
 
