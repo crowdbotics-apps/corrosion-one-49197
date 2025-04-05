@@ -1,7 +1,9 @@
 from cities_light.models import Country, Region, City
 import os
 
+from phonenumber_field.validators import validate_international_phonenumber
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
@@ -21,10 +23,11 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     profile_picture = SmartUpdatableImageField(required=False, allow_null=True, allow_empty_file=True)
+    phone_number = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
     class Meta:
         model = Inspector
-        fields = ['credentials', 'profile_picture', 'first_name', 'last_name']
+        fields = ['credentials', 'profile_picture', 'first_name', 'last_name', 'phone_number']
 
     def validate(self, attrs):
         user = self.context['request'].user
@@ -38,6 +41,14 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
         profile_picture = attrs.get('profile_picture', None)
         if profile_picture and profile_picture.size > 5 * 1024 * 1024:  # 5MB limit
             raise serializers.ValidationError('Profile picture size should not exceed 5MB')
+        phone_number = attrs.get('phone_number', None)
+        if not phone_number:
+            raise ValidationError({'phone_number': 'Phone number is required for inspector account.'})
+        try:
+            validate_international_phonenumber(phone_number)
+        except Exception as error:
+            raise serializers.ValidationError({'phone_number': error.message})
+        attrs['phone_number'] = phone_number
         return attrs
 
     def save(self, **kwargs):
@@ -45,6 +56,7 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         user.first_name = data['first_name']
         user.last_name = data['last_name']
+        user.phone_number = data['phone_number']
         user.save()
         self.instance = user.inspector
         self.instance.credentials.set(data['credentials'])

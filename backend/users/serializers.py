@@ -107,7 +107,6 @@ class UserCreateSerializer(Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
     user_type = serializers.CharField()
-    phone_number = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
     def _get_request(self):
         request = self.context.get('request')
@@ -137,15 +136,7 @@ class UserCreateSerializer(Serializer):
             raise ValidationError(
                 _("Invalid account type. Account type must be either 'OWNER' or 'INSPECTOR'.")
             )
-        if user_type == 'INSPECTOR':
-            phone_number = attrs.get('phone_number', None)
-            if not phone_number:
-                raise ValidationError({'phone_number': 'Phone number is required for inspector account.'})
-            try:
-                validate_international_phonenumber(phone_number)
-            except Exception as error:
-                raise serializers.ValidationError({'phone_number': error.message})
-            attrs['phone_number'] = phone_number
+
         return attrs
 
     def create(self, validated_data):
@@ -161,13 +152,9 @@ class UserCreateSerializer(Serializer):
 
         user_type = validated_data['user_type']
         if user_type == 'INSPECTOR':
-            inspector = Inspector.objects.create(user=user)
-            inspector.save()
-            user.phone_number = validated_data['phone_number']
-            user.save()
+            Inspector.objects.create(user=user)
         else:
-            owner = Owner.objects.create(user=user)
-            owner.save()
+            Owner.objects.create(user=user)
         send_email_with_template(
             subject=f'{settings.PROJECT_NAME} - Verification Link',
             email=user.email,

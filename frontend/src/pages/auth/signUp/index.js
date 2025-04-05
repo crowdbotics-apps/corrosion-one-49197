@@ -248,16 +248,6 @@ function SignUp() {
       confirm_password: Yup.string()
         .required('Confirm Password is required')
         .oneOf([Yup.ref("password")], "Passwords must match"),
-      phone_number: Yup.string().when('user_type', {
-        is: (user_type) => user_type.id === ACCOUNT_TYPES[1].id,
-        then: () => Yup.string().required('Phone Number is required')
-          .test('valid-phone', 'Phone Number is required', function (value) {
-            if (!value) return false; // If no value, fail (Yup will report "required")
-            if (value.length <= 6) return false; // If less than 3 characters, fail
-            return true;
-          }),
-        otherwise: () => Yup.string().notRequired()
-      })
     })
 
   const initialValuesFirstStep = {
@@ -265,7 +255,6 @@ function SignUp() {
     email: "",
     password: "",
     confirm_password: "",
-    phone_number: "",
   };
 
 
@@ -337,12 +326,20 @@ function SignUp() {
     first_name: "",
     last_name: "",
     credentials: [],
+    phone_number: "",
   };
 
   const validationSchemaSecondStepInspector = Yup.object().shape({
     first_name: Yup.string().required('First Name is required'),
     last_name: Yup.string().required('Last Name is required'),
-    credentials: Yup.array().min(1, 'At least one credential is required')
+    credentials: Yup.array().min(1, 'At least one credential is required'),
+    phone_number: Yup.string()
+      .required()
+      .test('valid-phone', 'Phone Number is required', function (value) {
+        if (!value) return false; // Fails if empty (required)
+        if (value.length <= 6) return false; // Fails if not at least 7 characters
+        return true;
+      }),
   })
 
   const formikSecondStepInspector = useFormik({
@@ -565,13 +562,6 @@ function SignUp() {
             errors={formikFirstStep.errors}
             mb={2}
           />
-          {formikFirstStep.values.user_type.value === ACCOUNT_TYPES[1].value && <FormikInput
-            name={'phone_number'}
-            label={'Phone Number'}
-            type={'phone_input'}
-            errors={formikFirstStep.errors}
-            mb={2}
-          />}
           <FormikInput
             name={'password'}
             label={'Set Password'}
@@ -796,6 +786,13 @@ function SignUp() {
             label={'Last Name'}
             type={'text'}
             errors={formikSecondStepInspector.errors}
+            mb={2}
+          />
+          <FormikInput
+            name={'phone_number'}
+            label={'Phone Number'}
+            type={'phone_input'}
+            errors={formikFirstStep.errors}
             mb={2}
           />
           <FormikInput

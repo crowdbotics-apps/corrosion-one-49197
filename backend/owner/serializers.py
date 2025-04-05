@@ -39,8 +39,9 @@ class OwnerCompleteSerializer(serializers.ModelSerializer):
             validate_international_phonenumber(phone_number)
         except Exception as error:
             raise serializers.ValidationError({'phone_number': error.message})
-        if not user.email_verified:
-            raise serializers.ValidationError('Please verify your email to continue with the sign up process')
+        # TODO: Uncomment this when email verification is implemented
+        # if not user.email_verified:
+        #     raise serializers.ValidationError('Please verify your email to continue with the sign up process')
         return attrs
 
     def save(self, **kwargs):
