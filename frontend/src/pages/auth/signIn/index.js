@@ -77,11 +77,15 @@ function SignIn() {
             loginStore.setUser(user)
             loginStore.setApiToken(access)
           })
-          if (loginStore.status !== 4) {
-            navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
-          } else {
-            navigate(ROUTES.DASHBOARD)
-          }
+          // TODO: RESTORE THIS AFTER TESTING
+          // if (loginStore.status !== 4) {
+          //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+          // } else {
+          //   navigate(ROUTES.DASHBOARD)
+          // }
+          // UNTIL HERE
+          // console.log(response)
+          navigate(ROUTES.DASHBOARD)
         },
         errorMessage: 'Error signing in',
         onError: (result) => {
@@ -108,11 +112,14 @@ function SignIn() {
           loginStore.setUser(user)
           loginStore.setApiToken(access)
         })
-        if (loginStore.status !== 4) {
-          navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
-        } else {
-          navigate(ROUTES.DASHBOARD)
-        }
+        // TODO: RESTORE THIS AFTER TESTING
+        // if (loginStore.status !== 4) {
+        //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+        // } else {
+        //   navigate(ROUTES.DASHBOARD)
+        // }
+        // UNTIL HERE
+        navigate(ROUTES.DASHBOARD)
       },
       errorMessage: 'Error signing in with Google',
       onError: (result) => {
@@ -154,11 +161,14 @@ function SignIn() {
 
   useEffect(() => {
     if (loginStore.isLoggedIn) {
-      if (loginStore.status !== 4) {
-        navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
-      } else {
-        navigate(ROUTES.DASHBOARD)
-      }
+      // TODO: RESTORE THIS AFTER TESTING
+      // if (loginStore.status !== 4) {
+      //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+      // } else {
+      //   navigate(ROUTES.DASHBOARD)
+      // }
+      // UNTIL HERE
+      navigate(ROUTES.DASHBOARD)
     }
   }, [])
 

@@ -167,7 +167,7 @@ function HomeInspector() {
   }, [startDate, endDate]);
 
   return (
-    <AdminLayout title={'Dashboard'} width={'100%'}>
+    <AdminLayout title={'Dashboard'}>
       <Grid flex={1} display="flex" direction="column" gap={2} xs={12} sx={{width:'100%',flexDirection: 'column', justifyContent: 'space-between'}}>
 
         {showManageCredentials && (

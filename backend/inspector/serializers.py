@@ -32,8 +32,9 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('User is not an inspector')
         if user.first_name:
             raise serializers.ValidationError('User already completed profile')
-        if not user.email_verified:
-            raise serializers.ValidationError('Please verify your email to continue with the sign up process')
+        # TODO: Uncomment this when email verification is implemented
+        # if not user.email_verified:
+        #     raise serializers.ValidationError('Please verify your email to continue with the sign up process')
         profile_picture = attrs.get('profile_picture', None)
         if profile_picture and profile_picture.size > 5 * 1024 * 1024:  # 5MB limit
             raise serializers.ValidationError('Profile picture size should not exceed 5MB')

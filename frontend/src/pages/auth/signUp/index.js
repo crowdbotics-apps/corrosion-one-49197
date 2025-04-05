@@ -109,7 +109,7 @@ function SignUp() {
         runInAction(() => {
           loginStore.setUser(result.data)
           //TODO: REVERTIR UNA VEZ QUE ANDE TWILIO
-          verifyCode()
+          navigate(ROUTES.DASHBOARD)
         })
         setStage(2)
 
@@ -161,9 +161,10 @@ function SignUp() {
     setLoading(true)
     api.updateInspectorWorkArea(data).handle({
       onSuccess: (result) => {
-        setStage(3)
+        // setStage(3)
         //TODO: REVERTIR UNA VEZ QUE ANDE TWILIO
-        verifyCode()
+        loginStore.setUser(result.response)
+        navigate(ROUTES.DASHBOARD)
       },
       errorMessage: 'Error updating inspector work area',
       onError: (result) => {
@@ -318,9 +319,8 @@ function SignUp() {
     verification_code: "",
   }
 
-  //TODO: REVERTIR UNA VEZ QUE ANDE TWILIO
   const validationSchemaThirdStep = Yup.object().shape({
-    // verification_code: Yup.string().required('Verification Code is required')
+    verification_code: Yup.string().required('Verification Code is required')
   })
 
   const formikThirdStep = useFormik({
