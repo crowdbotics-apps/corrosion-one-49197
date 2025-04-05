@@ -611,7 +611,7 @@ function SignUp() {
               </MDTypography>
             </MDTypography>
           </MDBox>
-          <MDBox mt={10} textAlign={"center"}>
+          <MDBox mt={5} textAlign={"center"}>
             <MDButton
               fullWidth
               variant="contained"
