@@ -13,7 +13,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
 
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 // react-router-dom components
 import {Link, useLocation, useNavigate} from "react-router-dom";
@@ -45,6 +45,8 @@ import UserAvatar from "assets/images/photo-placeholder.png";
 import RenderListOption from "../../../components/RenderListOption";
 import CustomCheckbox from "../../../components/CheckboxCustom";
 import {useGoogleLogin} from "@react-oauth/google";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import Box from "@mui/material/Box";
 
 
 function SignUp() {
@@ -66,6 +68,7 @@ function SignUp() {
   const recaptchaRef = useRef(null);
   const [recaptchaToken, setRecaptchaToken] = useState('xd');
   const [marketingAgreement, setMarketingAgreement] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
 
 
   const handleUploadFile = (file) => {
@@ -641,7 +644,7 @@ function SignUp() {
               width={"32px"}
               // mr={5}
               sx={{cursor: "pointer"}}
-              onClick={googleSignIn}
+              onClick={() =>setShowSignUpModal(true)}
             />
           </MDBox>
 
@@ -1003,6 +1006,29 @@ function SignUp() {
     >
       {renderBody()}
       {renderFooter()}
+      <Dialog open={showSignUpModal} onClose={() => setShowSignUpModal(false)}>
+        <DialogTitle>Sign Up with Google</DialogTitle>
+        <DialogContent>
+          <p>Do you want to sign up with your Google account? Before continue please be sure that you chose the correct account type.</p>
+        </DialogContent>
+        <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>
+            <MDButton
+              variant="outlined"
+              onClick={() => setShowSignUpModal(false)}
+              color={'secondary'}
+            >
+              Cancel
+            </MDButton>
+          </Box>
+          <MDButton
+            onClick={() => googleSignIn()}
+            color={'primary'}
+          >
+            Confirm
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </IllustrationLayout>
   );
 }

@@ -250,20 +250,6 @@ function SignIn() {
                 Continue
               </MDButton>
             </MDBox>
-            <MDBox mt={3} textAlign="center">
-              <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
-                <MDTypography
-                  component={Link}
-                  to={ROUTES.SIGN_UP}
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                >
-                  Sign up
-                </MDTypography>
-              </MDTypography>
-            </MDBox>
             {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
               <MDTypography variant="button" color="warning"
                             onClick={() => resendEmail({email: formikRef.current?.values.email})}>
@@ -287,6 +273,20 @@ function SignIn() {
                 sx={{cursor: "pointer"}}
                 onClick={googleSignIn}
               />
+            </MDBox>
+            <MDBox mt={3} textAlign="center">
+              <MDTypography variant="button" color="text">
+                Don&apos;t have an account?{" "}
+                <MDTypography
+                  component={Link}
+                  to={ROUTES.SIGN_UP}
+                  variant="button"
+                  color="info"
+                  fontWeight="medium"
+                >
+                  Sign up
+                </MDTypography>
+              </MDTypography>
             </MDBox>
           </Form>
         )}
