@@ -30,6 +30,10 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/users/resend_verification_email/`, data);
   }
 
+  loginGoogle(data: any): ApiReturnType<Types.SimplePostResult> {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/login-google/`, data);
+  }
+
   forgotPassword(email: string): ApiReturnType<Types.GenericResponse> {
     return this.simple_post(`${API_VERSION_PREFIX}/users/reset-password/`, { email: email });
   }

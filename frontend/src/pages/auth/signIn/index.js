@@ -16,7 +16,7 @@
 import {useEffect, useRef, useState} from "react";
 
 // react-router-dom components
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import * as Yup from "yup";
 
 // @mui material components
@@ -51,6 +51,9 @@ function SignIn() {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(loginStore.remember_me);
   const [showResendEmail, setShowResendEmail] = useState(false);
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+  const code = params.get("code");
 
 
   const handleSetRememberMe = () => {
@@ -64,7 +67,7 @@ function SignIn() {
         onSuccess: (result) => {
           if (rememberMe) {
             loginStore.setStoredEmail(data.email)
-          } else{
+          } else {
             loginStore.setStoredEmail('')
           }
           const {response} = result
@@ -75,7 +78,7 @@ function SignIn() {
             loginStore.setApiToken(access)
           })
           if (loginStore.status !== 4) {
-            navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})
+            navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
           } else {
             navigate(ROUTES.DASHBOARD)
           }
@@ -93,6 +96,27 @@ function SignIn() {
         onFinally: () => setLoading(false)
       }
     )
+  }
+
+  const loginGoogle = (data) => {
+    api.loginGoogle(data).handle({
+      onSuccess: (result) => {
+        const {response} = result
+        const {user, access} = response
+
+        runInAction(() => {
+          loginStore.setUser(user)
+          loginStore.setApiToken(access)
+        })
+        if (loginStore.status !== 4) {
+          navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+        } else {
+          navigate(ROUTES.DASHBOARD)
+        }
+      },
+      errorMessage: 'Error signing in with Google',
+      onFinally: () => setLoading(false)
+    })
   }
 
   const resendEmail = (data) => {
@@ -128,12 +152,18 @@ function SignIn() {
   useEffect(() => {
     if (loginStore.isLoggedIn) {
       if (loginStore.status !== 4) {
-        navigate(ROUTES.SIGN_UP, {state : {status: loginStore.status, user_type: loginStore.user_type}})
+        navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
       } else {
         navigate(ROUTES.DASHBOARD)
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (code) {
+      loginGoogle({code})
+    }
+  }, [code])
 
   return (
     <IllustrationLayout
@@ -222,13 +252,14 @@ function SignIn() {
               </MDTypography>
             </MDBox>
             {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
-              <MDTypography variant="button" color="warning" onClick={() => resendEmail({email: formikRef.current?.values.email})}>
+              <MDTypography variant="button" color="warning"
+                            onClick={() => resendEmail({email: formikRef.current?.values.email})}>
                 Didn&apos;t receive the verification email?{" "}
               </MDTypography>
             </MDBox>}
             <MDBox mt={3} display={"flex"} justifyContent={"center"} alignItems={"center"}>
               <Divider sx={{flexGrow: 1}}/>
-              <MDTypography color="text" fontWeight="regular"  variant="button">
+              <MDTypography color="text" fontWeight="regular" variant="button">
                 or
               </MDTypography>
               <Divider sx={{flexGrow: 1}}/>

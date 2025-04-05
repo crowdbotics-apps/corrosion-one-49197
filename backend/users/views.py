@@ -598,3 +598,56 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         )
 
         return Response()
+
+    @action(detail=False, methods=['post'], url_path='login-google')
+    def login_google_oauth2(self, request):
+        """
+        Login user with google oauth2
+        """
+        data = request.data
+        id_token = data.get('code')
+        if not id_token:
+            return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
+        try:
+            token_endpoint = "https://oauth2.googleapis.com/token"
+            payload = {
+                "code": id_token,
+                "client_id": settings.GOOGLE_OAUTH2_CLIENT_ID,
+                "client_secret": settings.GOOGLE_OAUTH2_CLIENT_SECRET,
+                "redirect_uri": settings.GOOGLE_OAUTH2_REDIRECT_URI,
+                "grant_type": "authorization_code"
+            }
+            response = requests.post(token_endpoint, data=payload)
+            idinfo = response.json()
+            response = requests.get(
+                "https://www.googleapis.com/oauth2/v3/userinfo",
+                headers={"Authorization": f"Bearer {idinfo.get('access_token')}"},
+            )
+            user_data = response.json()
+
+        except ValueError as e:
+            return Response(f'Invalid token: {str(e)}', status=HTTP_400_BAD_REQUEST)
+
+        email = user_data.get('email')
+        if not email:
+            return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
+
+        user = User.objects.filter(email=email).first()
+        if not user:
+            # first_name = user_data.get('given_name')
+            # last_name = user_data.get('family_name')
+            # profile_picture = user_data.get('picture')
+            # user = User.objects.create(
+            #     email=email,
+            #     username=email,
+            #     first_name=first_name,
+            #     last_name=last_name,
+            #     profile_picture=profile_picture,
+            # )
+            return Response('User not found', status=HTTP_404_NOT_FOUND)
+
+        if not user.is_active:
+            return Response('The account has been removed', status=HTTP_404_NOT_FOUND)
+
+        serializer = UserLoginResponseSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
