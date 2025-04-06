@@ -22,7 +22,7 @@ export const capitalize = (str) => {
 
 
 export const money_fmt = (monto) => {
-  return numeral(monto).format('$0,0.00')
+  return 'USD ' + numeral(monto).format('$0,0.00')
 }
 
 export const count_fmt = (monto) => {
