@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from inspector.models import Credential, Language, Inspector, CredentialDcoument
 from inspector.serializers import CredentialSerializer, InspectorCompleteSerializer, CountrySerializer, CitySerializer, \
     RegionSerializer, LanguageSerializer, InspectorUpdateSerializer
+from jobs.models import Job, Bid
 from users.models import UserVerificationCode
 from users.serializers import UserDetailSerializer
 from utils.utils import CollectedMultipartJsonViewMixin, GetViewsetMixin
@@ -115,6 +116,29 @@ class InspectorViewSet(
                     credential_document.save()
 
         return Response(UserDetailSerializer(user).data)
+
+    @action(methods=['post'], detail=False)
+    def dashboard(self, request):
+        user = request.user
+        inspector = user.inspector
+        jobs = Job.objects.filter(active=True)
+        credentials = list(inspector.credentials.values_list('id', flat=True))
+        available = jobs.filter(certifications__in=credentials)
+        favorite = available.filter(favorites__inspector=inspector).distinct().count()
+        my_bids_ids = list(inspector.bids.values_list('job_id', flat=True))
+        applied = jobs.filter(id__in=my_bids_ids).distinct().count()
+        bids = inspector.bids.count()
+        accepted_bids = inspector.bids.filter(status=Bid.StatusChoices.ACCEPTED).count()
+        rejected_bids = inspector.bids.filter(status=Bid.StatusChoices.REJECTED).count()
+        data = {
+            'available': available.distinct().count(),
+            'favorite': favorite,
+            'applied': applied,
+            'bids': bids,
+            'accepted_bids': accepted_bids,
+            'rejected_bids': rejected_bids,
+        }
+        return Response(data)
 
 class CountryViewSet(viewsets.GenericViewSet, GetViewsetMixin):
     permission_classes = []

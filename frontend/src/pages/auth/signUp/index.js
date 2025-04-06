@@ -317,8 +317,8 @@ function SignUp() {
 
   const initialValuesSecondStep = {
     company_name: "",
-    first_name: loginStore.first_name,
-    last_name: loginStore.last_name,
+    first_name: "",
+    last_name: "",
     phone_number: "",
     industry: "",
   };
@@ -370,9 +370,9 @@ function SignUp() {
   })
 
   const initialValuesSecondStepInspector = {
-    profile_picture: loginStore.profile_picture || "",
-    first_name: loginStore.first_name,
-    last_name: loginStore.last_name,
+    profile_picture: "",
+    first_name: "",
+    last_name: "",
     credentials: [],
     phone_number: "",
   };

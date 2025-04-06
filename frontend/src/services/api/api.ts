@@ -110,6 +110,14 @@ export class Api extends ApiBase {
     return this.post_collected_multipart_form_data(`${API_VERSION_PREFIX}/inspector/credentials/`, data);
   }
 
+  getDashboardDataInspector(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/inspector/dashboard/`, data);
+  }
+
+  getDashboardDataOwner(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/owner/dashboard/`, data);
+  }
+
   updateOwnerData(data: any) {
     return this.patch_collected_multipart_form_data(`${API_VERSION_PREFIX}/owner/update/`, data);
   }

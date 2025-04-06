@@ -180,7 +180,7 @@ class UserDetailSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'name', 'first_name', 'last_name', 'status', 'user_type', 'phone_number', 'linkedin',
-                  'website', 'owner', 'inspector']
+                  'website', 'owner', 'inspector', 'phone_verified', 'email_verified']
 
     def get_status(self, obj):
         if hasattr(obj, 'owner'):
