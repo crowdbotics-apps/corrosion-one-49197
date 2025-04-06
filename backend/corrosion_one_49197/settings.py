@@ -93,6 +93,7 @@ LOCAL_APPS = [
     'inspector',
     'home',
     'jobs',
+    'notifications'
 ]
 
 THIRD_PARTY_APPS = [
