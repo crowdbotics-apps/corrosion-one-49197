@@ -392,6 +392,7 @@ function PostJob() {
                 type="number"
                 errors={formik.errors}
                 setFieldValue={formik.setFieldValue}
+                prefix={'USD $'}
                 mb={2}
               />
               {formik.values.payment_modes.find((item) => item.value === 'per_diem') && (
@@ -400,6 +401,7 @@ function PostJob() {
                   label="Per Diem Rate"
                   type="number"
                   errors={formik.errors}
+                  prefix={'USD $'}
                   mb={2}
                 />
               )}
@@ -409,6 +411,7 @@ function PostJob() {
                   label="Mileage Rate"
                   type="number"
                   errors={formik.errors}
+                  prefix={'USD $'}
                   mb={2}
                 />
               )}
@@ -418,6 +421,7 @@ function PostJob() {
                   label="Misc/Other Rate"
                   type="number"
                   errors={formik.errors}
+                  prefix={'USD $'}
                   mb={2}
                 />
               )}

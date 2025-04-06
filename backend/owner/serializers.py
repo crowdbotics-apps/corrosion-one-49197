@@ -105,8 +105,8 @@ class OwnerDetailSerializer(serializers.ModelSerializer):
 
 class OwnerUpdateSerializer(serializers.ModelSerializer):
     industry = serializers.PrimaryKeyRelatedField(queryset=Industry.objects.all())
-    banner = SmartUpdatableImageField()
-    logo = SmartUpdatableImageField()
+    banner = SmartUpdatableImageField(allow_null=True, required=False, allow_empty_file=True)
+    logo = SmartUpdatableImageField(allow_null=True, required=False, allow_empty_file=True)
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     linkedin = serializers.CharField(allow_blank=True, allow_null=True)

@@ -316,6 +316,7 @@ export const FormikNumericInput = (props) => {
     multiline,
     disabled = false,
     rows,
+    prefix = '',
     // any other NumberFormat props you may want to pass, such as:
     // thousandSeparator = true,
     // decimalScale = 2,
@@ -346,6 +347,7 @@ export const FormikNumericInput = (props) => {
         // You can add formatting props here, e.g. thousandSeparator, prefix/suffix, etc.
         thousandSeparator
         decimalScale={2}
+        prefix={prefix}
       />
     </MDBox>
   );
