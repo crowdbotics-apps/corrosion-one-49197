@@ -26,6 +26,7 @@ export const ROUTES = {
   JOB_BIDS: (jobId) => `/job-bids/${jobId}`,
   J0B_DETAIL: (jobId) => `/job-detail/${jobId}`,
   BID_DETAIL: (bidId) => `/bid-detail/${bidId}`,
+  NOTIFICATIONS: `/notifications`,
 
 }
 

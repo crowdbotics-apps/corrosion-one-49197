@@ -48,7 +48,7 @@ import {
   SetNewPassword,
   Logout,
   Settings,
-  JobRedirect, BidDetail
+  JobRedirect, BidDetail, Notifications
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerMessages from "./pages/common/messages"
@@ -260,8 +260,8 @@ export const protectedRoutes = [
     type: "collapse",
     name: "Notifications",
     key: "notifications",
-    route: ROUTES.DASHBOARD,
-    component: <HomeOwner />,
+    route: ROUTES.NOTIFICATIONS,
+    component: <Notifications />,
     icon: <Icon fontSize="small">notifications_active_outlined</Icon>,
     noCollapse: true,
     role: [ROLES.OWNER, ROLES.INSPECTOR],

@@ -8,6 +8,7 @@ from notifications.serializers import NotificationSerializer
 from onesignal_client.api.v1.serializers import UserIdPushTokenSerializer
 from onesignal_client.models import UserDevice
 from utils.utils import may_fail, DefaultPagination
+from utils.utils.pagination import CustomPageSizePagination
 
 
 class SetDeviceViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -53,7 +54,7 @@ class NotificationsView(viewsets.ModelViewSet):
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
     queryset = Notification.objects.all()
-    pagination_class = DefaultPagination
+    pagination_class = CustomPageSizePagination
 
     def get_queryset(self):
         """

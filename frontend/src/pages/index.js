@@ -7,6 +7,7 @@ import Logout from "./auth/logout";
 import Settings from "./common/settings";
 import JobRedirect from "./inspector/jobRedirect";
 import BidDetail from "./owner/bidDetail";
+import Notifications from "./common/notifications";
 
 export {
   SignIn,
@@ -17,5 +18,6 @@ export {
   Logout,
   Settings,
   JobRedirect,
-  BidDetail
+  BidDetail,
+  Notifications
 };
