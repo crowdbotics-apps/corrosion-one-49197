@@ -40,10 +40,6 @@ function ProfileOwner({updateProfile, industries, loading}) {
     website: Yup.string().url("Invalid URL").nullable(),
     linkedin: Yup.string().url("Invalid URL").nullable(),
     company_name: Yup.string().required("Company name is required"),
-    // address: Yup.string().required("Address is required"),
-    // industry: Yup.string().required("Industry is required"),
-    logo: Yup.string().required("Logo is required"),
-    banner: Yup.string().required("Banner is required"),
   });
 
   const formik = useFormik({
@@ -70,6 +66,7 @@ function ProfileOwner({updateProfile, industries, loading}) {
 
   return (
     <MDBox >
+      {/*{JSON.stringify(formik.errors, null, 2)}*/}
       <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
         Logo & Banner
       </MDTypography>
@@ -87,6 +84,9 @@ function ProfileOwner({updateProfile, industries, loading}) {
             fileSize={loginStore.logo_size}
             onReplace={replaceLogo}
           />
+        <MDTypography fontSize={"10px"} sx={{ fontWeight: 300 }}>
+          Image size 512x512 px
+        </MDTypography>
 
         </Grid>
         <Grid item xs={12} lg={10.5}>
@@ -173,6 +173,14 @@ function ProfileOwner({updateProfile, industries, loading}) {
                 }
                 type={'text'}
                 errors={formik.errors}
+                onChange={(e) => {
+                  const value = e.target.value
+                  if (value && value.length >=5 && !value.startsWith('https')) {
+                    formik.setFieldValue('website', 'https://' + value)
+                  } else {
+                    formik.setFieldValue('website', value)
+                  }
+                }}
                 mb={2}
               />
 
