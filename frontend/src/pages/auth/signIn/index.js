@@ -75,15 +75,11 @@ function SignIn() {
             loginStore.setUser(user)
             loginStore.setApiToken(access)
           })
-          // TODO: RESTORE THIS AFTER TESTING
-          // if (loginStore.status !== 4) {
-          //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
-          // } else {
-          //   navigate(ROUTES.DASHBOARD)
-          // }
-          // UNTIL HERE
-          // console.log(response)
-          navigate(ROUTES.DASHBOARD)
+          if (loginStore.status !== 4) {
+            navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+          } else {
+            navigate(ROUTES.DASHBOARD)
+          }
         },
         errorMessage: 'Error signing in',
         onError: (result) => {
@@ -110,14 +106,11 @@ function SignIn() {
           loginStore.setUser(user)
           loginStore.setApiToken(access)
         })
-        // TODO: RESTORE THIS AFTER TESTING
-        // if (loginStore.status !== 4) {
-        //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
-        // } else {
-        //   navigate(ROUTES.DASHBOARD)
-        // }
-        // UNTIL HERE
-        navigate(ROUTES.DASHBOARD)
+        if (loginStore.status !== 4) {
+          navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+        } else {
+          navigate(ROUTES.DASHBOARD)
+        }
       },
       errorMessage: 'Error signing in with Google',
       onError: (result) => {
@@ -159,23 +152,18 @@ function SignIn() {
 
   useEffect(() => {
     if (loginStore.isLoggedIn) {
-      // TODO: RESTORE THIS AFTER TESTING
-      // if (loginStore.status !== 4) {
-      //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
-      // } else {
-      //   navigate(ROUTES.DASHBOARD)
-      // }
-      // UNTIL HERE
-      navigate(ROUTES.DASHBOARD)
+      if (loginStore.status !== 4) {
+        navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+      } else {
+        navigate(ROUTES.DASHBOARD)
+      }
     }
   }, [])
 
   const analyzedUrl = (url) => {
-    console.log(url)
     const nUrl = new URL(url);
     const code = nUrl.searchParams.get("code");
     if (code) {
-      console.log('code ==> ', code);
       if (url.includes("signup")) {
         console.log('signup')
         navigate(ROUTES.SIGN_UP + '?code=' + code)

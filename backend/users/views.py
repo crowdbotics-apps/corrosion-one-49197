@@ -600,16 +600,18 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         """
         data = request.data
         id_token = data.get('code')
-        return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
+        user_type = data.get('account_type', None)
+        # return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
         if not id_token:
             return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
         try:
             token_endpoint = "https://oauth2.googleapis.com/token"
+            redirect_uri = settings.GOOGLE_OAUTH2_REDIRECT_URI if not user_type else settings.GOOGLE_OAUTH2_REDIRECT_URI_SIGNUP
             payload = {
                 "code": id_token,
                 "client_id": settings.GOOGLE_OAUTH2_CLIENT_ID,
                 "client_secret": settings.GOOGLE_OAUTH2_CLIENT_SECRET,
-                "redirect_uri": settings.GOOGLE_OAUTH2_REDIRECT_URI,
+                "redirect_uri": redirect_uri,
                 "grant_type": "authorization_code"
             }
             response = requests.post(token_endpoint, data=payload)
@@ -629,7 +631,6 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
         user = User.objects.filter(email=email).first()
         if not user:
-            user_type = data.get('account_type')
             first_name = user_data.get('given_name')
             last_name = user_data.get('family_name')
             profile_picture = user_data.get('picture')
@@ -645,16 +646,16 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
                 if profile_picture:
                     try:
                         result = urequest.urlretrieve(profile_picture)
-
-                        inspector.profile_picture.save(os.path.basename(profile_picture), File(open(result[0], 'rb')))
+                        inspector.profile_picture.save(os.path.basename(profile_picture + '.png'), File(open(result[0], 'rb')))
+                        inspector.save()
                     except Exception as error:
                         print(f'Error getting profile picture from google: {str(error)}')
             else:
                 Owner.objects.create(user=user)
 
-            return Response(UserDetailSerializer(user).data)
+            return Response(UserLoginResponseSerializer(user).data)
 
         if not user.is_active:
             return Response('The account has been removed', status=HTTP_404_NOT_FOUND)
 
-        return Response(UserDetailSerializer(user).data)
+        return Response(UserLoginResponseSerializer(user).data)

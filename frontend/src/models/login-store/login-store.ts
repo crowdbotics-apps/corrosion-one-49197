@@ -89,7 +89,7 @@ export const LoginStoreModel = types
     address: types.maybeNull(types.string),
     logo_size: types.maybeNull(types.number),
     banner_size: types.maybeNull(types.number),
-
+    user_type_sign_up_process: types.maybeNull(types.string),
 
   })
   .views(self => ({
@@ -119,6 +119,9 @@ export const LoginStoreModel = types
     },
     setStoredEmail(email: string) {
       self.stored_email = email
+    },
+    setUserTypeSignUp(user_type: string) {
+      self.user_type_sign_up_process = user_type
     },
     setUser(user: any) {
       ALLOWED_KEYS_USER.forEach((key) => {

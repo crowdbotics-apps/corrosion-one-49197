@@ -32,7 +32,7 @@ class OwnerCompleteSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if hasattr(user, 'inspector'):
             raise serializers.ValidationError('User is not an owner')
-        if user.first_name:
+        if user.phone_number:
             raise serializers.ValidationError('User already completed profile')
         phone_number = attrs.get('phone_number')
         try:

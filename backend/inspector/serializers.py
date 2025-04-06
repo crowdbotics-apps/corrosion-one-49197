@@ -33,7 +33,7 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if hasattr(user, 'owner'):
             raise serializers.ValidationError('User is not an inspector')
-        if user.first_name:
+        if user.phone_number:
             raise serializers.ValidationError('User already completed profile')
         # TODO: Uncomment this when email verification is implemented
         # if not user.email_verified:

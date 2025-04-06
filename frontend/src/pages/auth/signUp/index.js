@@ -33,7 +33,7 @@ import facebookIcon from "assets/svgs/facebook.svg";
 import googleIcon from "assets/svgs/google.svg";
 
 import IllustrationLayout from "components/IllustrationLayout";
-import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
+import {checkUrl, showMessage, useApi, useLoginStore} from "../../../services/helpers";
 import {ACCOUNT_TYPES, ROLES, ROUTES} from "../../../services/constants";
 import {runInAction} from "mobx";
 import {Form, FormikProvider, useFormik} from "formik";
@@ -47,6 +47,7 @@ import CustomCheckbox from "../../../components/CheckboxCustom";
 import {useGoogleLogin} from "@react-oauth/google";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Box from "@mui/material/Box";
+import Icon from "@mui/material/Icon";
 
 
 function SignUp() {
@@ -55,6 +56,7 @@ function SignUp() {
   const {state} = useLocation();
   const navigate = useNavigate()
   const currentPath = window.location.href;
+  const fileInputRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [stage, setStage] = useState(state?.status || 0);
@@ -71,10 +73,6 @@ function SignUp() {
   const [marketingAgreement, setMarketingAgreement] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
 
-
-  const handleUploadFile = (file) => {
-    setImgPreview(URL.createObjectURL(file))
-  }
 
   const signup = (data) => {
     const dataToSend = {
@@ -233,10 +231,12 @@ function SignUp() {
   }
 
   const getStates = (countryIds) => {
+    setLoading(true)
     api.getStates({countries: countryIds.toString()}).handle({
       onSuccess: (result) => {
         setStates(result?.data)
       },
+      onFinally: () => setLoading(false)
     })
   }
 
@@ -250,6 +250,23 @@ function SignUp() {
           loginStore.setUser(user)
           loginStore.setApiToken(access)
         })
+
+        if (user.user_type === ROLES.INSPECTOR) {
+          formikSecondStepInspector.setValues({
+            ...initialValuesSecondStepInspector,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            profile_picture: user.profile_picture,
+          })
+        } else {
+          formikSecondStep.setValues({
+            ...initialValuesSecondStep,
+            first_name: user.first_name,
+            last_name: user.last_name,
+          })
+        }
+
+
         // TODO: RESTORE THIS AFTER TESTING
         // if (loginStore.status !== 4) {
         //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
@@ -257,7 +274,8 @@ function SignUp() {
         //   navigate(ROUTES.DASHBOARD)
         // }
         // UNTIL HERE
-        navigate(ROUTES.DASHBOARD)
+        // navigate(ROUTES.DASHBOARD)
+        setStage(user.status)
       },
       errorMessage: 'Error signing in with Google',
       onError: (result) => {
@@ -299,8 +317,8 @@ function SignUp() {
 
   const initialValuesSecondStep = {
     company_name: "",
-    first_name: "",
-    last_name: "",
+    first_name: loginStore.first_name,
+    last_name: loginStore.last_name,
     phone_number: "",
     industry: "",
   };
@@ -352,9 +370,9 @@ function SignUp() {
   })
 
   const initialValuesSecondStepInspector = {
-    profile_picture: "",
-    first_name: "",
-    last_name: "",
+    profile_picture: loginStore.profile_picture || "",
+    first_name: loginStore.first_name,
+    last_name: loginStore.last_name,
     credentials: [],
     phone_number: "",
   };
@@ -377,12 +395,19 @@ function SignUp() {
     validateOnChange: false,
     validationSchema: validationSchemaSecondStepInspector,
     onSubmit: (values) => {
-      const valuesToSend = {...values}
-      valuesToSend.credentials = valuesToSend.credentials.map((item) => item.id)
-      valuesToSend.profile_picture = valuesToSend.profile_picture !== "" ? valuesToSend.profile_picture : null
+      const valuesToSend = {
+        ...values,
+        profile_picture: typeof formikSecondStepInspector.values.profile_picture === 'object' ? formikSecondStepInspector.values.profile_picture : null,
+        credentials:  values.credentials.map((item) => item.id)
+      }
+      console.log(valuesToSend)
       completeInspectorData(valuesToSend)
     }
   })
+
+  const handleFileChange = (e) => {
+    formikSecondStepInspector.setFieldValue('profile_picture', e.target.files[0])
+  }
 
 
   const initialValuesThirdStepInspector = {
@@ -486,7 +511,6 @@ function SignUp() {
   }, [formikFirstStep.values.user_type, stage])
 
   const analyzedUrl = (url) => {
-    console.log(url)
     const nUrl = new URL(url);
 
     const fullHash = nUrl.hash;
@@ -508,14 +532,18 @@ function SignUp() {
       const params = new URLSearchParams(queryString);
       const code = params.get("code");
       if (code) {
-        loginGoogle({code, account_type: formikFirstStep.values.user_type.value})
+        loginGoogle({code, account_type: loginStore.user_type_sign_up_process})
       }
     }
 
   }
 
   useEffect(() => {
-    analyzedUrl(currentPath)
+    console.log(stage)
+    if (stage === 0) {
+      analyzedUrl(currentPath)
+    }
+
   }, [currentPath])
 
   const renderFooter = () => {
@@ -614,6 +642,7 @@ function SignUp() {
             multiple={false}
             onChange={(value) => {
               formikFirstStep.setFieldValue('user_type', value)
+              loginStore.setUserTypeSignUp(value.value)
             }}
             disableClearable
             styleContainer={{mb: 2}}
@@ -800,38 +829,65 @@ function SignUp() {
         <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
           <MDBox sx={{position: 'relative'}} display="flex" justifyContent="center" alignItems="center"
                  flexDirection="column" mb={4}>
-            <label htmlFor='input_file'>
-              <MDBox
-                component={"img"}
-                src={imgPreview}
-                alt={"Profile Picture"}
-                width={100}
-                height={100}
-                borderRadius={'50%'}
-                sx={{objectFit: 'cover'}}
-              />
-            </label>
-            <input
-              type='file'
-              accept='image/*'
-              id={'input_file'}
-              onChange={(e) => {
-                const file = e.target.files[0]
-                handleUploadFile(file);
-                formikSecondStepInspector.setFieldValue('profile_picture', file)
-              }}
-              style={{display: 'none'}}
-            />
-            <label htmlFor='input_file'>
+            {typeof formikSecondStepInspector.values.profile_picture === 'object' && formikSecondStepInspector.values.profile_picture ? (
+              <>
+                <MDBox
+                  component={"img"}
+                  onClick={() => fileInputRef?.current?.click()}
+                  src={URL.createObjectURL(formikSecondStepInspector.values.profile_picture)}
+                  alt={"Profile Picture"}
+                  width={100}
+                  height={100}
+                  borderRadius={'50%'}
+                  sx={{objectFit: 'cover', cursor: 'pointer'}}
+                />
+                <input
+                  ref={fileInputRef}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  onChange={handleFileChange}
+                />
+              </>
+            ) : loginStore.profile_picture ? (
+              <>
+                <MDBox
+                  component={"img"}
+                  onClick={() => fileInputRef?.current?.click()}
+                  src={checkUrl(loginStore.profile_picture)}
+                  alt={"Profile Picture"}
+                  width={100}
+                  height={100}
+                  borderRadius={'50%'}
+                  sx={{objectFit: 'cover', cursor: 'pointer'}}
+                />
+                <input
+                  ref={fileInputRef}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  onChange={handleFileChange}
+                />
+              </>
+            ) : (
               <MDTypography
                 component={"span"}
                 variant='caption'
                 fontSize={14}
+                onClick={() => fileInputRef?.current?.click()}
                 sx={{cursor: 'pointer', mt: 1, fontWeight: "bold", color: '#000000'}}
               >
                 Upload Your Photo
+                <input
+                  ref={fileInputRef}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  onChange={handleFileChange}
+                />
               </MDTypography>
-            </label>
+            )
+            }
             {formikSecondStepInspector.errors.profile_picture && (
               <MDTypography variant={"caption"}
                             color={"error"}>{formikSecondStepInspector.errors.profile_picture}</MDTypography>
