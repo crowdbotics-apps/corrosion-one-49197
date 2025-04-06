@@ -369,7 +369,7 @@ function PostJob() {
                 placeholder="paymentMethod"
                 value={[]}
                 fieldName="payment_modes"
-                label="How do you want to pay?"
+                label="How to display pay rates"
                 options={PaymentOptions}
                 accessKey="name"
                 multiple
