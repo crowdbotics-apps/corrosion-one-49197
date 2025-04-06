@@ -49,25 +49,16 @@ class OwnerViewSet(
     @action(methods=['post'], detail=False)
     def dashboard(self, request):
         user = request.user
-        # inspector = user.inspector
-        # jobs = Job.objects.filter(active=True)
-        # credentials = list(inspector.credentials.values_list('id', flat=True))
-        # available = jobs.filter(certifications__in=credentials)
-        # favorite = available.filter(favorites__inspector=inspector).distinct().count()
-        # my_bids_ids = list(inspector.bids.values_list('job_id', flat=True))
-        # applied = jobs.filter(id__in=my_bids_ids).distinct().count()
-        # bids = inspector.bids.count()
-        # accepted_bids = inspector.bids.filter(status=Bid.StatusChoices.ACCEPTED).count()
-        # rejected_bids = inspector.bids.filter(status=Bid.StatusChoices.REJECTED).count()
-        # data = {
-        #     'available': available.distinct().count(),
-        #     'favorite': favorite,
-        #     'applied': applied,
-        #     'bids': bids,
-        #     'accepted_bids': accepted_bids,
-        #     'rejected_bids': rejected_bids,
-        # }
+        owner = user.owner
+        jobs = Job.objects.filter(created_by=owner)
+        bids = Bid.objects.filter(job__in=jobs)
+        active_jobs = jobs.filter(status__in=[Job.JobStatus.PENDING, Job.JobStatus.STARTED, Job.JobStatus.FINISHED_BY_INSPECTOR]).distinct()
+        finished_jobs = jobs.filter(status=Job.JobStatus.FINISHED).distinct()
+
         data = {
-            'jobs': 0
+            'all':jobs.count(),
+            'active': bids.count(),
+            'bids': active_jobs.count(),
+            'finished_jobs': finished_jobs.count(),
         }
         return Response(data)
