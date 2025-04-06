@@ -279,7 +279,7 @@ function SignUp() {
       },
       errorMessage: 'Error signing in with Google',
       onError: (result) => {
-        // window.location.replace("https://app.corrosionone.com");
+        window.location.replace("https://app.corrosionone.com");
       },
       onFinally: () => setLoading(false)
     })
