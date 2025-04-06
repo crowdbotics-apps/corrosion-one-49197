@@ -156,6 +156,8 @@ def create_user_activation_link(user, request):
     confirmation_token = default_token_generator.make_token(user)
     activation_link = (f'{request.scheme}://{request.get_host()}/api/v1/users/activate/'
                        f'{urlsafe_base64_encode(force_bytes(user.pk))}-_-{confirmation_token}/')
+    # TODO: CHECK WHY IS HAPPENING THIS
+    activation_link = f'https://app.corrosionone.com/api/v1/users/activate/{urlsafe_base64_encode(force_bytes(user.pk))}-_-{confirmation_token}/'
     return activation_link
 
 def file_size(value):

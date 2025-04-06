@@ -169,6 +169,8 @@ class JobManagementSerializer(serializers.ModelSerializer):
                     token=str(uuid.uuid4()) + '-' + str(self.instance.id)
                 )
                 url = f"{request.scheme}://{request.get_host()}/#/jtv/{magic_token.token}"
+                # TODO: CHECK THIS LATER
+                url = f'https://app.corrosionone.com/#/jtv/{magic_token.token}'
                 send_email_with_template(
                     subject=f'New Job Created - {settings.PROJECT_NAME}',
                     email=user.email,
