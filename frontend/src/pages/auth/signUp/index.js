@@ -532,7 +532,7 @@ function SignUp() {
       const params = new URLSearchParams(queryString);
       const code = params.get("code");
       if (code) {
-        loginGoogle({code, account_type: loginStore.user_type_sign_up_process})
+        loginGoogle({code, account_type: loginStore.user_type_sign_up_process ? loginStore.user_type_sign_up_process : formikFirstStep.values.user_type.value})
       }
     }
 
@@ -545,6 +545,7 @@ function SignUp() {
     }
 
   }, [currentPath])
+
 
   const renderFooter = () => {
     const isLoggedIn = loginStore.isLoggedIn
