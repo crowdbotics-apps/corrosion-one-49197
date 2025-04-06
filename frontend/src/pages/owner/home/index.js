@@ -38,7 +38,10 @@ const DASHBOARD_INITIAL_STATE_INSPECTOR = {
 }
 
 const DASHBOARD_INITIAL_STATE_OWNER = {
-  'available': 0,
+  'active': 0,
+  'bids': 0,
+  'all': 0,
+  'finished_jobs': 0,
 }
 
 const getButtonStylesS = () => ({
@@ -157,14 +160,20 @@ function HomeInspector() {
         <Card>
           <MDBox display="flex" flex={1} flexDirection="column" p={4} >
             <MDTypography sx={{fontWeight: 'bold'}} mb={4}>Recent Activities</MDTypography>
-            <Grid container borderTop={'2px solid #e0e0e0'} spacing={3}>
+            {loginStore.user_type === ROLES.INSPECTOR && <Grid container borderTop={'2px solid #e0e0e0'} spacing={3}>
               {renderInternalCard('Applied Jobs', dataInspector.applied, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
               {renderInternalCard('Available Jobs', dataInspector.available, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
               {renderInternalCard('Favorite Jobs', dataInspector.favorite, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
               {renderInternalCard('Bids', dataInspector.bids, <NotificationsActiveOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
               {renderInternalCard('Accepted Bids', dataInspector.accepted_bids, <BookmarkOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
               {renderInternalCard('Rejected Bids', dataInspector.rejected_bids, <BookmarkOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
-            </Grid>
+            </Grid>}
+            {loginStore.user_type === ROLES.OWNER && <Grid container borderTop={'2px solid #e0e0e0'} spacing={3}>
+              {renderInternalCard('Active Jobs', dataOwner.active, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
+              {renderInternalCard('Bids', dataOwner.bids, <NotificationsActiveOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
+              {renderInternalCard('All Jobs', dataOwner.all, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
+              {renderInternalCard('Finished Jobs', dataOwner.finished_jobs, <BookmarkOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
+            </Grid>}
           </MDBox>
         </Card>
       </MDBox>
