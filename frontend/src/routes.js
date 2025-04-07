@@ -48,7 +48,7 @@ import {
   SetNewPassword,
   Logout,
   Settings,
-  JobRedirect, BidDetail, Notifications
+  JobRedirect, BidDetail, Notifications, TermsAndConditions, PrivacyPolicy
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerMessages from "./pages/common/messages"
@@ -100,7 +100,21 @@ export const unprotectedRoutes = [
     key: "job-redirect",
     route: ROUTES.JOB_REDIRECT,
     component: <JobRedirect />,
-  }
+  },
+  {
+    type: "fixed",
+    name: "Terms and Conditions",
+    key: "terms-and-conditions",
+    route: ROUTES.TERMS_AND_CONDITIONS,
+    component: <TermsAndConditions />,
+  },
+  {
+    type: "fixed",
+    name: "Privacy Policy",
+    key: "privacy-policy",
+    route: ROUTES.PRIVACY_POLICY,
+    component: <PrivacyPolicy />,
+  },
 ]
 
 export const protectedRoutes = [

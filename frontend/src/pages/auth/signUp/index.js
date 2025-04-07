@@ -674,21 +674,23 @@ function SignUp() {
               By signing up, you agree to our{" "}
               <MDTypography
                 component={Link}
-                to="/"
+                to={ROUTES.TERMS_AND_CONDITIONS}
                 variant="button"
                 color="info"
                 fontWeight="medium"
                 sx={{fontSize: 13}}
+                target="_blank"
               >
-                Terms & Conditions
+                Terms of Service
               </MDTypography> and
               <MDTypography
                 component={Link}
-                to="/"
+                to={ROUTES.PRIVACY_POLICY}
                 variant="button"
                 color="info"
                 fontWeight="medium"
                 sx={{fontSize: 13}}
+                target="_blank"
               >
                 {" "}Privacy Policy
               </MDTypography>

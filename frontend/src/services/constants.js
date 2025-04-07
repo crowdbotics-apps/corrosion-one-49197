@@ -27,6 +27,8 @@ export const ROUTES = {
   J0B_DETAIL: (jobId) => `/job-detail/${jobId}`,
   BID_DETAIL: (bidId) => `/bid-detail/${bidId}`,
   NOTIFICATIONS: `/notifications`,
+  TERMS_AND_CONDITIONS: '/terms-and-conditions',
+  PRIVACY_POLICY: '/privacy-policy',
 
 }
 

@@ -8,6 +8,8 @@ import Settings from "./common/settings";
 import JobRedirect from "./inspector/jobRedirect";
 import BidDetail from "./owner/bidDetail";
 import Notifications from "./common/notifications";
+import TermsAndConditions from "./auth/termns";
+import PrivacyPolicy from "./auth/privacy"
 
 export {
   SignIn,
@@ -19,5 +21,7 @@ export {
   Settings,
   JobRedirect,
   BidDetail,
-  Notifications
+  Notifications,
+  TermsAndConditions,
+  PrivacyPolicy
 };
