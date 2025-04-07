@@ -97,17 +97,17 @@ class Notification(models.Model):
             users = [users]
 
         for user in users:
-
-            send_email_with_template(
-                subject=self.title,
-                email=user.email,
-                template_to_load='emails/notification.html',
-                context={
-                    "title": self.title,
-                    "username": user.first_name,
-                    "description": self.description,
-                }
-            )
+            if self.type != Notification.NotificationType.JOB_AVAILABLE:
+                send_email_with_template(
+                    subject=self.title,
+                    email=user.email,
+                    template_to_load='emails/notification.html',
+                    context={
+                        "title": self.title,
+                        "username": user.first_name,
+                        "description": self.description,
+                    }
+                )
     def __str__(self):
         """
         Return a string representation of the notification.
