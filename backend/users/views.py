@@ -457,7 +457,8 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
     @action(detail=False, methods=['get'], url_path='activate/(?P<slug>[A-Za-z0-9-_.]+)')
     def activate(self, request, slug=None):
-        base_url = settings.REDIRECT_DEEP_LINK
+        # base_url = settings.REDIRECT_DEEP_LINK
+        base_url = None
         splitted_data = slug.split('-_-')
         if len(splitted_data) != 2:
             return Response( 'Invalid link', status=status.HTTP_400_BAD_REQUEST)
