@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 import logging
 from datetime import datetime
 
+from utils.utils.email import send_email_with_template
+
 # from onesignal_client.client import OneSignalClient
 
 User = get_user_model()
@@ -94,23 +96,18 @@ class Notification(models.Model):
         if not isinstance(users, models.QuerySet) and not isinstance(users, list):
             users = [users]
 
-        # for user in users:
-        #     devices = user.devices.filter(active=True)
-        #     if not devices.exists():
-        #         error_message = 'The user {} doesnt have any active devices '.format(user.username)
-        #         LOGGER.warning(error_message)
-        #         self.register_error(error_message, user)
-        #         continue
-        #     try:
-        #         if self.channel == Notification.NotificationChannel.PUSH:
-        #             os_client = OneSignalClient()
-        #             os_client.send_push_notification(self, list(devices.values_list('device_id', flat=True)))
-        #         self.sent = True
-        #         self.sent_timestamp = datetime.now()
-        #         self.save()
-        #     except Exception as e:
-        #         self.register_error(str(e), user)
+        for user in users:
 
+            send_email_with_template(
+                subject=self.title,
+                email=user.email,
+                template_to_load='emails/admin_support_reply.html',
+                context={
+                    "title": self.title,
+                    "username": user.first_name,
+                    "description": self.description,
+                }
+            )
     def __str__(self):
         """
         Return a string representation of the notification.
