@@ -101,7 +101,7 @@ class Notification(models.Model):
             send_email_with_template(
                 subject=self.title,
                 email=user.email,
-                template_to_load='emails/admin_support_reply.html',
+                template_to_load='emails/notification.html',
                 context={
                     "title": self.title,
                     "username": user.first_name,
