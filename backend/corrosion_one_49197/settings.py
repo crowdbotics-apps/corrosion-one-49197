@@ -375,7 +375,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ALLOW_SUPER_USERS_LOGIN = env.bool("ALLOW_SUPER_USERS_LOGIN", True)
 PROJECT_NAME = env.str("PROJECT_NAME", "Project")
 LOGO_URL = env.str("LOGO_URL", "https://example.com/logo.png")
-REDIRECT_DEEP_LINK = env.str("REDIRECT_DEEP_LINK", "project")
+REDIRECT_DEEP_LINK = env.str("REDIRECT_DEEP_LINK", "")
 
 
 CORS_ALLOW_ALL = DEBUG

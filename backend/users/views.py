@@ -466,7 +466,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
         # Check if the user is on a mobile device
         user_agent = get_user_agent(request)
-        if user_agent.is_mobile or user_agent.is_tablet:
+        if base_url and (user_agent.is_mobile or user_agent.is_tablet):
             url = f'{base_url}://activate-user/{user_id}/{token}/'
             HttpResponseRedirect.allowed_schemes.append(base_url)
             return HttpResponseRedirect(url)
