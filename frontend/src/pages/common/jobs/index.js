@@ -76,6 +76,7 @@ function JobList() {
           setSelectedItem(null)
           setOpenCancelModal(false)
         },
+      successMessage: 'Job cancelled successfully',
         errorMessage: 'Error cancelling job',
         onFinally: () => setLoading(false)
       }

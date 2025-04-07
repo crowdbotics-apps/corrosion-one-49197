@@ -12,9 +12,10 @@ from jobs.filters import CustomOrderingFilterJobs, CustomOrderingFilterBids
 from jobs.models import Job, Bid, JobFavorite
 from jobs.serializers import JobListSerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
+from notifications.models import Notification
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
-    CollectedMultipartJsonViewMixin, may_fail
+    CollectedMultipartJsonViewMixin, may_fail, send_notifications
 from utils.utils.pagination import CustomPageSizePagination
 
 
@@ -36,7 +37,6 @@ class JobViewSet(
         'list': [IsInspector, IsOwner],
         'create': [IsOwner],
         'partial_update': [IsOwner],
-        'cancel': [IsOwner],
         'destroy': [IsOwner],
         'viewed': [IsInspector, IsOwner],
         'mark_as_completed': [IsOwner, IsInspector],
@@ -77,20 +77,6 @@ class JobViewSet(
         return jobs.filter(created_by=user.owner)
 
     @may_fail(Job.DoesNotExist, 'Job not found')
-    @action(detail=True, methods=['post'])
-    def cancel(self, request, pk=None):
-        user = self.request.user
-        if user_is_inspector(user):
-            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
-        job = Job.objects.get(pk=pk, created_by=user.owner)
-        if job.status == Job.JobStatus.CANCELED:
-            return Response('Job already canceled', status=HTTP_400_BAD_REQUEST)
-        job.status = Job.JobStatus.CANCELED
-        job.active = False
-        job.save()
-        return Response()
-
-    @may_fail(Job.DoesNotExist, 'Job not found')
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         user = self.request.user
@@ -103,6 +89,17 @@ class JobViewSet(
             job.status = Job.JobStatus.CANCELED
             job.active = False
             job.save()
+            for bid in job.bids.all():
+                send_notifications(
+                    users=[bid.inspector.user],
+                    title=f'Job Canceled - {job.title}',
+                    description=f'Your bid for the job "{job.title}" has been canceled.',
+                    extra_data={
+                        'job_id': job.id,
+                    },
+                    n_type=Notification.NotificationType.JOB_CANCELED,
+                    channel=Notification.NotificationChannel.EMAIL,
+                )
         else:
             self.perform_destroy(instance)
         return Response()
@@ -138,12 +135,36 @@ class JobViewSet(
                     return Response('Mileage must be positive', status=HTTP_400_BAD_REQUEST)
                 bid.mileage = mileage
                 bid.save()
+
+            send_notifications(
+                users=[job.created_by.user],
+                title=f'Job marked as completed by inspector - {job.title}',
+                description=f' Inspector {user.first_name} {user.last_name} marked the job "{job.title}" as completed.',
+                extra_data={
+                    'job_id': job.id,
+                },
+                n_type=Notification.NotificationType.JOB_COMPLETED_BY_INSPECTOR,
+                channel=Notification.NotificationChannel.EMAIL,
+            )
+
             job.status = Job.JobStatus.FINISHED_BY_INSPECTOR
             job.save()
             return Response()
         job = Job.objects.get(pk=pk, created_by=user.owner)
         if job.status != Job.JobStatus.FINISHED_BY_INSPECTOR:
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+
+        send_notifications(
+            users=[job.inspector.user],
+            title=f'Job marked as completed - {job.title}',
+            description=f'Owner marked the job "{job.title}" as completed.',
+            extra_data={
+                'job_id': job.id,
+            },
+            n_type=Notification.NotificationType.JOB_COMPLETED_BY_INSPECTOR,
+            channel=Notification.NotificationChannel.EMAIL,
+        )
+
         job.status = Job.JobStatus.FINISHED
         job.save()
         return Response()
@@ -224,6 +245,28 @@ class BidViewSet(
         for other_bid in other_bids:
             other_bid.status = Bid.StatusChoices.REJECTED
             other_bid.save()
+            send_notifications(
+                users=[other_bid.inspector.user],
+                title=f'Bid Rejected - {job.title}',
+                description=f'Your bid for the job "{job.title}" has been rejected.',
+                extra_data={
+                    'job_id': job.id,
+                },
+                n_type=Notification.NotificationType.BID_REJECTED,
+                channel=Notification.NotificationChannel.EMAIL,
+            )
+
+        send_notifications(
+            users=[bid.inspector.user],
+            title=f'Bid Accepted - {job.title}',
+            description=f'Your bid for the job "{job.title}" has been accepted.',
+            extra_data={
+                'job_id': job.id,
+            },
+            n_type=Notification.NotificationType.BID_ACCEPTED,
+            channel=Notification.NotificationChannel.EMAIL,
+        )
+
         bid.status = Bid.StatusChoices.ACCEPTED
         bid.save()
         job.status = Job.JobStatus.STARTED
@@ -240,6 +283,17 @@ class BidViewSet(
         bid = Bid.objects.get(pk=bid_id)
         if bid.job.created_by != user.owner:
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        job = bid.job
+        send_notifications(
+            users=[bid.inspector.user],
+            title=f'Bid Rejected - {job.title}',
+            description=f'Your bid for the job "{job.title}" has been rejected.',
+            extra_data={
+                'job_id': job.id,
+            },
+            n_type=Notification.NotificationType.BID_REJECTED,
+            channel=Notification.NotificationChannel.EMAIL,
+        )
         bid.status = Bid.StatusChoices.REJECTED
         bid.save()
         return Response()

@@ -10,9 +10,10 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from inspector.models import Credential, Inspector
 from inspector.serializers import CredentialSerializer, InspectorDetailSerializer, RegionSerializer, CountrySerializer
 from jobs.models import Job, MagicLinkToken, JobDocument, Bid
+from notifications.models import Notification
 from owner.models import Industry
 from owner.serializers import OwnerDetailSerializer, IndustrySerializer
-from utils.utils import user_is_inspector
+from utils.utils import user_is_inspector, send_notifications
 from utils.utils.email import send_email_with_template
 from utils.utils.send_sms import send_sms
 
@@ -190,6 +191,19 @@ class JobManagementSerializer(serializers.ModelSerializer):
                 if user.phone_number:
                     message = f"Hello {user.first_name},\n\nA new job has been created. Please check your this {url} for more details.\n\nBest regards,\n{settings.PROJECT_NAME}"
                     send_sms(message, user.phone_number.as_e164)
+
+                send_notifications(
+                    users=[user],
+                    title=f'New Job Available - {self.instance.title}',
+                    description=f'A new job has been created. Please check your email for more details.',
+                    extra_data={
+                        'job_id': self.instance.id,
+                        'url': url
+                    },
+                    n_type=Notification.NotificationType.JOB_AVAILABLE,
+                    channel=Notification.NotificationChannel.EMAIL,
+                )
+
         else:
             data = self.validated_data
             user = self.context['request'].user
@@ -236,6 +250,18 @@ class BidCreateSerializer(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         data = self.validated_data
+        job = data.get('job')
+        user = job.created_by.user
+        send_notifications(
+            users=[user],
+            title=f'New Bid Created- {job.title}',
+            description=f'A new bid has been created',
+            extra_data={
+                'job_id': job.id,
+            },
+            n_type=Notification.NotificationType.NEW_BID,
+            channel=Notification.NotificationChannel.EMAIL,
+        )
         return super().save(**kwargs)
 
 

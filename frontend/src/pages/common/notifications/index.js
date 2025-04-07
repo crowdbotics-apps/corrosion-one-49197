@@ -1,13 +1,14 @@
 import {useApi, useLoginStore} from "../../../services/helpers";
 import {useLocation, useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import {dataTableModel} from "./utils";
+import {dataTableModel, renderTableRow} from "./utils";
 import AdminLayout from "../../../components/AdminLayout";
 import Grid from "@mui/material/Grid";
 import SearchBar from "../../../components/SearchBar";
 import MDBox from "../../../components/MDBox";
 import DateBar from "../../../components/DateBar";
 import DataTable from "../../../components/DataTable";
+import {ROLES} from "../../../services/constants";
 
 
 function Notifications() {
@@ -28,7 +29,32 @@ function Notifications() {
   const [endDate, setEndDate] = useState(null);
 
   const getNotifications = (search = '', page = 1, ordering = order, dates = null) => {
-    // setLoading(true)
+    setLoading(true);
+    api.getNotifications({search, page, ordering, page_size: 10, dates}).handle({
+      onSuccess: (result) => {
+        const {count, results} = result.data
+        console.log(result)
+        const tmp = {...dataTableModel}
+        tmp.rows = results.map(e => renderTableRow(e, markAsRead))
+        setDatatable(tmp)
+        setNumberOfItems(count)
+        setNumberOfItemsPage(results.length)
+        setOrder(ordering)
+      },
+      errorMessage: 'Error getting jobs',
+      onFinally: () => setLoading(false)
+    })
+  }
+
+  const markAsRead = (id) => {
+    setLoading(true);
+    api.markAaRead(id).handle({
+      onSuccess: (result) => {
+        getNotifications(searchQuery)
+      },
+      errorMessage: 'Error marking notification as read',
+      onFinally: () => setLoading(false)
+    })
   }
 
   const handleDateChange = (newStartDate, newEndDate) => {

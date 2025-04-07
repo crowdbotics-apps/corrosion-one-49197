@@ -13,6 +13,8 @@ from itsdangerous import URLSafeSerializer
 from rest_framework.exceptions import ValidationError
 from urllib.parse import quote
 
+from notifications.models import Notification
+
 User = get_user_model()
 
 flat_map = lambda f, xs: (y for ys in xs for y in f(ys))
@@ -167,3 +169,26 @@ def file_size(value):
 
 def user_is_inspector(user):
     return hasattr(user, 'inspector')
+
+
+
+
+def send_notifications(
+        users,
+        title,
+        description,
+        extra_data = None,
+        n_type = Notification.NotificationType.DEFAULT,
+        channel = Notification.NotificationChannel.PUSH,
+        from_user = None
+):
+    notification = Notification.objects.create(
+        title=title,
+        description=description,
+        extra_data=extra_data,
+        type=n_type,
+        channel=channel,
+        from_user=from_user
+    )
+    notification.targets.set(users)
+    notification.send()
