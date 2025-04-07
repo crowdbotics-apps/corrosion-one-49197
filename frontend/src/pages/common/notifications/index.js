@@ -12,10 +12,7 @@ import {ROLES} from "../../../services/constants";
 
 
 function Notifications() {
-  const loginStore = useLoginStore();
   const api = useApi()
-  const navigate = useNavigate()
-  const {pathname} = useLocation();
   const [datatable, setDatatable] = useState({...dataTableModel});
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,8 +20,6 @@ function Notifications() {
   const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
   const [order, setOrder] = useState("");
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [openCancelModal, setOpenCancelModal] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -33,7 +28,6 @@ function Notifications() {
     api.getNotifications({search, page, ordering, page_size: 10, dates}).handle({
       onSuccess: (result) => {
         const {count, results} = result.data
-        console.log(result)
         const tmp = {...dataTableModel}
         tmp.rows = results.map(e => renderTableRow(e, markAsRead))
         setDatatable(tmp)
