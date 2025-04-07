@@ -632,8 +632,8 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
         user = User.objects.filter(email=email).first()
         if not user:
-            first_name = user_data.get('given_name')
-            last_name = user_data.get('family_name')
+            first_name = user_data.get('given_name', '')
+            last_name = user_data.get('family_name', '')
             profile_picture = user_data.get('picture')
             user = User.objects.create(
                 email=email,
