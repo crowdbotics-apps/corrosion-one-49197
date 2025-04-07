@@ -1,5 +1,6 @@
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -55,6 +56,9 @@ class NotificationsView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Notification.objects.all()
     pagination_class = CustomPageSizePagination
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', 'description']
+    ordering_fields = ['timestamp', 'is_read', 'title', 'description']
 
     def get_queryset(self):
         """
