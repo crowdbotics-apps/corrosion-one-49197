@@ -202,5 +202,9 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/chat/start-chat/`, data);
   }
 
+  getChatsAvailable(data: any) {
+    return this.simple_get(`${API_VERSION_PREFIX}/chat/`, data);
+  }
+
 
 }

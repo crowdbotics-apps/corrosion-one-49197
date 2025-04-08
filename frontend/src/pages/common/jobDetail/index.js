@@ -24,7 +24,6 @@ import AdminLayout from "../../../components/AdminLayout";
 import gradientImage from "../../../assets/images/gradient.png";
 import { Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Box from "@mui/material/Box";
-import RenderListOption from "../../../components/RenderListOption";
 
 function JobDetail() {
   const api = useApi();
@@ -129,8 +128,7 @@ function JobDetail() {
     }
     api.startChat(data).handle({
         onSuccess: (res) => {
-          // navigate(ROUTES.MESSAGES + '/' + res.data.id)
-          console.log(res)
+          navigate(ROUTES.MESSAGES, { state: { chatId: res?.data?.id } })
         },
         errorMessage: 'Error creating chat',
         onFinally: () => setLoading(false)

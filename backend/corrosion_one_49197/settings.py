@@ -93,7 +93,8 @@ LOCAL_APPS = [
     'inspector',
     'home',
     'jobs',
-    'notifications'
+    'notifications',
+    'chat'
 ]
 
 THIRD_PARTY_APPS = [
@@ -453,3 +454,34 @@ GOOGLE_OAUTH2_CLIENT_ID = env.str("GOOGLE_OAUTH2_CLIENT_ID", "")
 GOOGLE_OAUTH2_REDIRECT_URI = env.str("GOOGLE_OAUTH2_REDIRECT_URI", "")
 GOOGLE_OAUTH2_REDIRECT_URI_SIGNUP = env.str("GOOGLE_OAUTH2_REDIRECT_URI_SIGNUP", "")
 
+OVERRIDE_REDIS_URL = env.str("OVERRIDE_REDIS_URL", None)
+REDIS_URL = OVERRIDE_REDIS_URL or env.str("REDIS_URL", "redis://redis:6379/0")
+
+REDIS_PARAMS = dict(ssl_cert_reqs=None) if REDIS_URL.startswith("rediss:") else dict()
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION":  REDIS_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "IGNORE_EXCEPTIONS": True,
+            "REDIS_CLIENT_KWARGS": REDIS_PARAMS,
+            "CONNECTION_POOL_KWARGS": {
+                #"max_connections": 40,
+                **REDIS_PARAMS,
+            },
+        }
+    }
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer",
+        "CONFIG": {
+            "hosts": [dict(address=REDIS_URL, **REDIS_PARAMS)],
+        },
+    },
+}
+
+CELERY_BROKER_URL = CELERY_RESULT_BACKEND = env.str("REDIS_URL", "redis://redis:6379/")
