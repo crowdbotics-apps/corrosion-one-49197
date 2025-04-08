@@ -122,6 +122,22 @@ function JobDetail() {
     api.markAsViewed(jobId).handle({});
   }
 
+  const getCreateChat = () => {
+    setLoading(true)
+    const data = {
+      job_id: jobId,
+    }
+    api.startChat(data).handle({
+        onSuccess: (res) => {
+          // navigate(ROUTES.MESSAGES + '/' + res.data.id)
+          console.log(res)
+        },
+        errorMessage: 'Error creating chat',
+        onFinally: () => setLoading(false)
+      }
+    )
+  }
+
   const handleCloseModal = () => {
     setShowActionModal(false)
     setShowMarkAsDoneIM(false)
@@ -278,14 +294,24 @@ function JobDetail() {
                 />
               </MDBox>}
 
-            <MDBox display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
-              <MDButton sx={{
+            {loginStore.user_type === 'INSPECTOR' && <MDBox display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
+              <MDButton
+                disabled={loading}
+                sx={{
                 width: '150px',
                 border: '2px solid #006E90',
                 backgroundColor: 'white',
                 height: '20px',
                 borderRadius: 5,
-              }}>
+              }}
+                        onClick={() => {
+                          if (loginStore.user_type === ROLES.INSPECTOR) {
+                            getCreateChat()
+                          } else {
+                            navigate(ROUTES.MESSAGES)
+                          }
+                        }}
+              >
                 <MDTypography sx={{
                   color: '#006E90',
                   fontWeight: 'bold',
@@ -312,7 +338,7 @@ function JobDetail() {
                   in
                 </MDTypography>
               </MDBox>
-            </MDBox>
+            </MDBox>}
           </Grid>
         </Grid>
       </MDBox>

@@ -16,11 +16,10 @@ function HomeOwnerMessages() {
 
   }
 
-  const renderChatList = (chat) => {
+  const renderChatItem= (chat) => {
     return (
       <Grid item xs={12} key={chat.id + '-chat'}>a</Grid>
     )
-
   }
 
 
@@ -82,7 +81,7 @@ function HomeOwnerMessages() {
             height="100%"
           >
             <Grid container>
-              {chats.map((chat) => renderChatList(chat))}
+              {chats.map((chat) => renderChatItem(chat))}
               {chats.length === 0 && renderNoMessages()}
             </Grid>
           </MDBox>

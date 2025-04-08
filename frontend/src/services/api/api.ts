@@ -198,5 +198,9 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/notifications/${id}/mark_as_read/`);
   }
 
+  startChat(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/chat/start-chat/`, data);
+  }
+
 
 }
