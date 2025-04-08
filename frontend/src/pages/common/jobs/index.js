@@ -95,7 +95,17 @@ function JobList() {
   }
 
   useEffect(() => {
-    getJobs(searchQuery)
+    if (loading) return
+    // Set up the timer
+    const debounceTimer = setTimeout(() => {
+      getJobs(searchQuery)
+    }, 500)
+
+
+    // Clear the timer if searchQuery changes before the delay is over
+    return () => {
+      clearTimeout(debounceTimer)
+    }
   }, [searchQuery])
 
   useEffect(() => {

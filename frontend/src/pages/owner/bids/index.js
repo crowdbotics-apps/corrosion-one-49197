@@ -76,9 +76,20 @@ function Bids() {
     }
   };
 
+
   useEffect(() => {
-    getBids(searchQuery);
-  }, [searchQuery]);
+    if (loading) return
+    // Set up the timer
+    const debounceTimer = setTimeout(() => {
+      getBids(searchQuery)
+    }, 500)
+
+
+    // Clear the timer if searchQuery changes before the delay is over
+    return () => {
+      clearTimeout(debounceTimer)
+    }
+  }, [searchQuery])
 
   useEffect(() => {
     if (startDate && endDate) getBids(searchQuery, 1, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`);

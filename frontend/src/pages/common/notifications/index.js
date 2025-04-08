@@ -57,9 +57,20 @@ function Notifications() {
   };
 
 
+
   useEffect(() => {
-    getNotifications(searchQuery)
-  }, [])
+    if (loading) return
+    // Set up the timer
+    const debounceTimer = setTimeout(() => {
+      getNotifications(searchQuery)
+    }, 500)
+
+
+    // Clear the timer if searchQuery changes before the delay is over
+    return () => {
+      clearTimeout(debounceTimer)
+    }
+  }, [searchQuery])
 
   return (
     <AdminLayout
