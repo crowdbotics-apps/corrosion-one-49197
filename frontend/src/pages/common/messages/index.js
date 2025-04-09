@@ -10,6 +10,9 @@ import moment from "moment";
 import { Client as ConversationsClient } from "@twilio/conversations"
 import MDButton from "../../../components/MDButton";
 import avatar from "assets/images/avatar.png";
+import file from "assets/images/file.png"
+import send from "assets/images/send.png"
+import {InsertDriveFileOutlined} from "@mui/icons-material";
 
 
 function HomeOwnerMessages() {
@@ -29,7 +32,7 @@ function HomeOwnerMessages() {
   const [searchQuery, setSearchQuery] = useState('')
   const scrollRef = useRef(null)
   const currentConversationRef = useRef(null)
-
+  const fileRef = useRef(null)
 
   const getChatsAvailable = (search = '') => {
     setLoading(true)
@@ -127,13 +130,14 @@ function HomeOwnerMessages() {
   }
 
   const sendMessage = async () => {
-    setSendingMessage(true)
     if (currentConversationRef.current && sendingMessage === false) {
       if (messageToSend) {
+        setSendingMessage(true)
         await currentConversationRef.current.sendMessage(messageToSend);
         setMessageToSend('')
         setSendingMessage(false)
       } else if (selectedFile) {
+        setSendingMessage(true)
         const mediaStream = new Blob([selectedFile], {type: selectedFile.type});
         const fileName = selectedFile.name;
         const data = {
@@ -141,7 +145,7 @@ function HomeOwnerMessages() {
           media: mediaStream,
           filename: fileName,
         }
-        await clientRef.current.sendMessage(data);
+        await currentConversationRef.current.sendMessage(data);
         setSelectedFile(null)
         setSendingMessage(false)
       }
@@ -157,7 +161,17 @@ function HomeOwnerMessages() {
   }, [currentConversation]);
 
   useEffect(() => {
-    getChatsAvailable(searchQuery)
+    if (loading) return
+    // Set up the timer
+    const debounceTimer = setTimeout(() => {
+      getChatsAvailable(searchQuery)
+    }, 500)
+
+
+    // Clear the timer if searchQuery changes before the delay is over
+    return () => {
+      clearTimeout(debounceTimer)
+    }
   }, [searchQuery])
 
   useEffect(() => {
@@ -222,6 +236,7 @@ function HomeOwnerMessages() {
               padding: '16px',
               overflowY: 'scroll',
               maxHeight: '700px',
+              minHeight: '300px',
               '&::-webkit-scrollbar': {
                 width: '8px',
               },
@@ -244,73 +259,76 @@ function HomeOwnerMessages() {
               <CircularProgress color="primary" size={40} sx={{mt: 20}} />
             ) : (
               messages.map((message, index) => {
+                console.log('message ', message)
                 return (
                   <MDBox
                     key={index}
                     display="flex"
-                    flexDirection={message.author == selectedChat?.counterpart_id ? "row" : "row-reverse"}
-                    alignItems="center"
-                    justifyContent={message.author == selectedChat?.counterpart_id ? "flex-start" : "flex-end"}
+                    flexDirection="column"
+                    alignItems={ message.author == selectedChat?.counterpart_id ? 'flex-start': 'flex-end'}
                     sx={{
-                      marginBottom: '10px',
-                      padding: '10px',
-                      borderRadius: '12px',
-                      backgroundColor: message.author == selectedChat?.counterpart_id ? '#E0F7FA' : '#B2EBF2',
-                      maxWidth: '400px',
-                      wordWrap: 'break-word',
-                      position: 'relative',
                       marginLeft: message.author == selectedChat?.counterpart_id ? '10px' : 'auto',
                       marginRight: message.author == selectedChat?.counterpart_id ? 'auto' : '10px',
-                      '&::after': {
-                        content: '""',
-                        position: 'absolute',
-                        bottom: '-5px',
-                        left: message.author == selectedChat?.counterpart_id ? '10px' : 'auto',
-                        right: message.author == selectedChat?.counterpart_id ? 'auto' : '10px',
-                        borderWidth: '5px',
-                        borderStyle: 'solid',
-                        borderColor: message.author == selectedChat?.counterpart_id ? '#E0F7FA transparent transparent transparent' : '#B2EBF2 transparent transparent transparent',
-                      },
                     }}
                   >
-                    {message.type === 'media' ? (
-                      <MDBox
-                        component="img"
-                        src={message.url_file}
-                        alt={message.author}
-                        sx={{
-                          width: '200px',
-                          height: '200px',
-                          borderRadius: '12px',
-                          objectFit: 'cover',
-                          marginRight: message.author == selectedChat?.counterpart_id ? '10px' : '0',
-                          marginLeft: message.author == selectedChat?.counterpart_id ? '0' : '10px',
-
-                        }}
-                      />
-                    ) : (
-                      <MDTypography
-                        fontSize={'16px'}
-                        sx={{
-                          width: '100%',
-                        }}
-                      >
-                        {message.body}
-                      </MDTypography>
-                    )}
                     <MDTypography
                       fontSize={'12px'}
-                      ml={1}
+                      mb={1}
+                    >
+                      {message.author == selectedChat?.counterpart_id ? selectedChat?.counterpart_name : 'You'}
+                        </MDTypography>
+                    <MDBox
+                      alignItems="center"
+                      sx={{
+                        marginBottom: '10px',
+                        padding: '10px',
+                        borderRadius: message.author == selectedChat?.counterpart_id ?  0 : '12px',
+                        backgroundColor: message.author == selectedChat?.counterpart_id ? '#ffffff' : '#E0F7FA',
+                        maxWidth: '400px',
+                        wordWrap: 'break-word',
+                        position: 'relative',
+                        border: message.author != selectedChat?.counterpart_id ? 'none' : '1px solid #E0E0E0',
+                      }}
+                    >
+                      {message.type === 'media' ? (
+                        <MDBox
+                          src={message.url_file}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          onClick={() => window.open(message.url_file)}
+                          sx={{
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <InsertDriveFileOutlined sx={{ fontSize: 36, color: '#4f8fc5', mr: 1}} />
+                          <MDTypography fontSize={'15px'}>
+                            {message.media.filename}
+                          </MDTypography>
+                        </MDBox>
+                      ) : (
+                        <MDTypography
+                          fontSize={'16px'}
+                          sx={{
+                            width: '100%',
+                          }}
+                        >
+                          {message.body}
+                        </MDTypography>
+                      )}
+                    </MDBox>
+                    <MDTypography
+                      fontSize={'12px'}
                       sx={{
                         color: '#888',
-                        marginLeft: '10px',
                         marginTop: '5px',
                         fontStyle: 'italic'
                       }}
                     >
-                      {message.author == selectedChat?.counterpart_id ? selectedChat?.counterpart_name : 'You'} - {moment(message.dateCreated).format('LT')}
+                      {moment(message.dateCreated).format('LT')}
                     </MDTypography>
                   </MDBox>
+
                 )
               })
             )}
@@ -322,22 +340,53 @@ function HomeOwnerMessages() {
           display="flex"
           justifyContent="space-between"
           alignItems="center"
-          sx={{padding: '16px'}}
           mt={'auto'}
+          border={'1px solid #D6DDEB'}
+          mx={2}
         >
+            <input
+              ref={fileRef}
+              hidden
+              accept=".pdf,.xlsx,.docx"
+              type="file"
+              onChange={(e) => {
+                const file = e.target.files[0]
+                setSelectedFile(file)
+              }}
+              style={{display: 'none'}}
+            />
+          <MDButton
+            variant="text"
+            onClick={sendMessage}
+            disabled={sendingMessage || loading}
+            onClick={() => fileRef.current?.click()}
+          >
+            <img src={file} />
+          </MDButton>
           <TextField
-            variant="outlined"
             placeholder="Type a message..."
             value={messageToSend}
             disabled={sendingMessage || loading}
             onChange={(e) => setMessageToSend(e.target.value)}
+            variant="outlined"
             sx={{
               width: '100%',
+              pr: 2,
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  border: 'none', // Remove the normal border
+                },
+                '&:hover fieldset': {
+                  border: 'none', // Remove the hover border
+                },
+                '&.Mui-focused fieldset': {
+                  border: 'none', // Remove the focused border
+                },
+              },
               '& .MuiInputBase-input': {
                 height: '40px',
                 fontSize: '18px',
               },
-              pr: 2,
             }}
           />
           <MDButton
@@ -345,31 +394,15 @@ function HomeOwnerMessages() {
             color="primary"
             onClick={sendMessage}
             sx={{
-              marginLeft: '10px',
               height: '40px',
               borderRadius: '12px',
+              marginRight: '10px',
             }}
-            disabled={sendingMessage || loading}
+            disabled={loading || (messageToSend === '' && selectedFile === null || sendingMessage)}
 
           >
-            {sendingMessage ? <CircularProgress size={24} color="inherit" /> : 'Send'}
+            {sendingMessage ? <CircularProgress size={24} color="inherit" /> : <img src={send} />}
           </MDButton>
-          {/*<MDBox ml={2}>*/}
-          {/*  <input*/}
-          {/*    type='file'*/}
-          {/*    accept='image/*'*/}
-          {/*    id={'input_file'}*/}
-          {/*    onChange={(e) => {*/}
-          {/*      const file = e.target.files[0]*/}
-          {/*      setSelectedFile(file)*/}
-          {/*    }}*/}
-          {/*    style={{display: 'none'}}*/}
-          {/*  />*/}
-          {/*  <label htmlFor='input_file'>*/}
-          {/*    <img src={checkUrl(selectedChat?.counterpart_image)} alt={selectedChat?.counterpart_name}*/}
-          {/*         style={{width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px'}}/>*/}
-          {/*  </label>*/}
-          {/*</MDBox>*/}
         </MDBox>
       </MDBox>
     )
@@ -466,11 +499,17 @@ function HomeOwnerMessages() {
     >
       <Grid
         container
-        sx={{
-          minHeight: "70vh",
+        minHeight={{
+          xs: '200px',
+          sm: "70vh",
         }}
       >
-        <Grid item sm={3} sx={{backgroundColor: "white", borderRight: '1px solid #E0E0E0'}}>
+        <Grid
+          item
+          sm={3}
+          sx={{backgroundColor: "white"}}
+          borderRight={{xs: 'none', sm: '1px solid #E0E0E0'}}
+        >
           <MDBox display={'flex'}>
             <TextField
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -493,6 +532,7 @@ function HomeOwnerMessages() {
                   fontSize: '18px',
                 },
                 pr: 2,
+                mb:1
               }}
             />
           </MDBox>
@@ -503,6 +543,28 @@ function HomeOwnerMessages() {
             alignItems="center"
             width="100%"
             height="100%"
+            maxHeight={{
+              xs: '200px',
+              sm: "70vh",
+            }}
+            sx={{
+              overflowY: 'auto',
+              '&::-webkit-scrollbar': {
+                width: '8px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: '#ccc',
+                borderRadius: '10px',
+              },
+              '&::-webkit-scrollbar-thumb:hover': {
+                backgroundColor: '#aaa',
+              },
+              '&::-webkit-scrollbar-track': {
+                backgroundColor: '#f1f1f1',
+                borderRadius: '10px',
+              },
+            }}
+
           >
             <Grid container>
               {chats.map((chat) => renderChatItem(chat))}
