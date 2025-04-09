@@ -51,8 +51,11 @@ class InspectorViewSet(
         data = request.data
         user = request.user
         inspector = user.inspector
+        countries = data.get('country')
         states_id = data.get('state', [])
         send_verification_code = data.get('send_verification_code', True)
+        if 0 in states_id and 234 in countries:
+            states_id = list(Region.objects.filter(country_id__in=countries).values_list('id', flat=True))
         inspector.regions.set(states_id)
         if send_verification_code:
             code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)

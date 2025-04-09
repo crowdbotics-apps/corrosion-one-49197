@@ -234,7 +234,15 @@ function SignUp() {
     setLoading(true)
     api.getStates({countries: countryIds.toString()}).handle({
       onSuccess: (result) => {
-        setStates(result?.data)
+        let states = result?.data
+        if (countryIds.includes(234)) {
+          const allState = {
+            id: 0,
+            name: 'All States',
+          }
+          states = [allState, ...states]
+        }
+        setStates(states)
       },
       onFinally: () => setLoading(false)
     })
@@ -427,6 +435,7 @@ function SignUp() {
     onSubmit: (values) => {
       const valuesToSend = {...values}
       valuesToSend.state = valuesToSend.state.map((item) => item.id)
+      valuesToSend.country = valuesToSend.country.map((item) => item.id)
       updateInspectorWorkArea(valuesToSend)
     }
   })
@@ -1012,6 +1021,14 @@ function SignUp() {
             multiple={true}
             onChange={(value) => {
               const currentValues = [...formikThirdStepInspector.values.state]
+              if (value[0].id === 0) {
+                formikThirdStepInspector.setFieldValue('state', [value[0]])
+                return
+              }
+              if (currentValues.find((item) => item.id === 0)){
+                showMessage('You have already selected all US states')
+                return
+              }
               if (currentValues.find((item) => item.id === value?.[0]?.id)) return
               currentValues.push(value[0])
               formikThirdStepInspector.setFieldValue('state', currentValues)
