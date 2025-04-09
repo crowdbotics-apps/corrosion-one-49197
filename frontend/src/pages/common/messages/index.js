@@ -4,11 +4,10 @@ import MDBox from "../../../components/MDBox"
 import {CircularProgress, Grid, InputAdornment, TextField} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, {useEffect, useRef, useState} from "react";
-import {checkUrl, date_fmt, useApi} from "../../../services/helpers";
+import {checkUrl, date_fmt, showMessage, useApi} from "../../../services/helpers";
 import MDTypography from "../../../components/MDTypography";
 import moment from "moment";
 import { Client as ConversationsClient } from "@twilio/conversations"
-import {ROUTES} from "../../../services/constants";
 import MDButton from "../../../components/MDButton";
 import avatar from "assets/images/avatar.png";
 
@@ -18,7 +17,6 @@ function HomeOwnerMessages() {
   const [chats, setChats] = useState([])
   const [selectedChat, setSelectedChat] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [selectedContact, setSelectedContact] = useState(null)
   const clientRef = useRef(null)
   const [messages, setMessages] = useState([])
   const [messageToSend, setMessageToSend] = useState('')
@@ -66,11 +64,11 @@ function HomeOwnerMessages() {
   }
 
 
-  const handleClick = (user) => {
-    if (selectedContact && selectedContact.id === user.id) {
-      setSelectedContact(null)
+  const handleClick = (chat) => {
+    if (selectedChat && selectedChat.id === chat.id) {
+      setSelectedChat(null)
     } else {
-      setSelectedContact(user)
+      setSelectedChat(chat)
     }
   }
 
@@ -83,7 +81,7 @@ function HomeOwnerMessages() {
     });
     client.on('initFailed', ({ error }) => {
       // Handle the error.
-      console.log(error)
+      showMessage('Error initializing Twilio chat')
     });
   }
 
@@ -151,12 +149,9 @@ function HomeOwnerMessages() {
     }
   }, [currentConversation]);
 
-
-
   useEffect(() => {
     getChatsAvailable('')
   }, [])
-
 
   useEffect(() => {
     if (selectedChat) {
@@ -178,6 +173,7 @@ function HomeOwnerMessages() {
         </MDBox>
       )
     }
+
     return (
       <MDBox
         width="100%"
@@ -215,7 +211,7 @@ function HomeOwnerMessages() {
             sx={{
               padding: '16px',
               overflowY: 'scroll',
-              maxHeight: '600px',
+              maxHeight: '500px',
               '&::-webkit-scrollbar': {
                 width: '8px',
               },
@@ -308,7 +304,7 @@ function HomeOwnerMessages() {
                 )
               })
             )}
-
+            <div ref={scrollRef}></div>
           </MDBox>
         </MDBox>
       {/* INPUT*/}
@@ -385,7 +381,7 @@ function HomeOwnerMessages() {
             },
             position: 'relative'
           }}
-          onClick={() => setSelectedChat(chat)}
+          onClick={() => handleClick(chat)}
         >
           <MDBox
             sx={{
@@ -399,7 +395,7 @@ function HomeOwnerMessages() {
             }}
           />
           <img
-            src={selectedChat?.counterpart_image ? checkUrl(selectedChat?.counterpart_image) : avatar}
+            src={chat?.counterpart_image ? checkUrl(chat?.counterpart_image) : avatar}
             style={{width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px'}}
           />
           <MDBox flex={1}>
