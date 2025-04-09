@@ -160,6 +160,10 @@ function HomeOwnerMessages() {
     }
   }, [selectedChat])
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const renderCurrentChat = () => {
     if (!selectedChat) {
       return (
