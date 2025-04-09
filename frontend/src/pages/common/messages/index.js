@@ -67,6 +67,7 @@ function HomeOwnerMessages() {
   const handleClick = (chat) => {
     if (selectedChat && selectedChat.id === chat.id) {
       setSelectedChat(null)
+      currentConversationRef.current = null
     } else {
       setSelectedChat(chat)
     }
@@ -156,7 +157,6 @@ function HomeOwnerMessages() {
   useEffect(() => {
     if (selectedChat) {
       getChat(selectedChat.id)
-      scrollToBottom()
     }
   }, [selectedChat])
 
