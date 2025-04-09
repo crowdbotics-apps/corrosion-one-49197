@@ -26,6 +26,7 @@ function HomeOwnerMessages() {
     conversation_sid: null,
     token: null
   })
+  const [searchQuery, setSearchQuery] = useState('')
   const scrollRef = useRef(null)
   const currentConversationRef = useRef(null)
 
@@ -65,9 +66,11 @@ function HomeOwnerMessages() {
 
 
   const handleClick = (chat) => {
+    if (loading || sendingMessage) return
+    currentConversationRef.current = null
+    setMessages([])
     if (selectedChat && selectedChat.id === chat.id) {
       setSelectedChat(null)
-      currentConversationRef.current = null
     } else {
       setSelectedChat(chat)
     }
@@ -77,13 +80,15 @@ function HomeOwnerMessages() {
   const initializeTwilio = async () => {
     const client = new ConversationsClient(currentConversation.token);
     clientRef.current = client
-    client.on('initialized', async () => {
-      await onSelectConversation(currentConversation.conversation_sid, currentConversation.token)
-    });
-    client.on('initFailed', ({ error }) => {
-      // Handle the error.
-      showMessage('Error initializing Twilio chat')
-    });
+    if (clientRef.current) {
+      clientRef.current.on('initialized', async () => {
+        await onSelectConversation(currentConversation.conversation_sid, currentConversation.token)
+      });
+      clientRef.current.on('initFailed', ({ error }) => {
+        // Handle the error.
+        showMessage('Error initializing Twilio chat')
+      });
+    }
   }
 
   const onSelectConversation = async (sid, token) => {
@@ -100,6 +105,7 @@ function HomeOwnerMessages() {
       }
       editedMessages.push(message)
     })
+
     setMessages(editedMessages)
     setLoading(false)
 
@@ -151,8 +157,8 @@ function HomeOwnerMessages() {
   }, [currentConversation]);
 
   useEffect(() => {
-    getChatsAvailable('')
-  }, [])
+    getChatsAvailable(searchQuery)
+  }, [searchQuery])
 
   useEffect(() => {
     if (selectedChat) {
@@ -215,7 +221,7 @@ function HomeOwnerMessages() {
             sx={{
               padding: '16px',
               overflowY: 'scroll',
-              maxHeight: '500px',
+              maxHeight: '700px',
               '&::-webkit-scrollbar': {
                 width: '8px',
               },
@@ -323,6 +329,7 @@ function HomeOwnerMessages() {
             variant="outlined"
             placeholder="Type a message..."
             value={messageToSend}
+            disabled={sendingMessage || loading}
             onChange={(e) => setMessageToSend(e.target.value)}
             sx={{
               width: '100%',
@@ -342,7 +349,8 @@ function HomeOwnerMessages() {
               height: '40px',
               borderRadius: '12px',
             }}
-            disabled={sendingMessage}
+            disabled={sendingMessage || loading}
+
           >
             {sendingMessage ? <CircularProgress size={24} color="inherit" /> : 'Send'}
           </MDButton>
@@ -381,7 +389,8 @@ function HomeOwnerMessages() {
             '&:hover': {
               backgroundColor: '#EBF7FA',
               borderRadius: '12px',
-              borderWidth: 0
+              borderWidth: 1,
+              borderColor: '#FFFFFF',
             },
             position: 'relative'
           }}
@@ -464,6 +473,7 @@ function HomeOwnerMessages() {
         <Grid item sm={3} sx={{backgroundColor: "white", borderRight: '1px solid #E0E0E0'}}>
           <MDBox display={'flex'}>
             <TextField
+              onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

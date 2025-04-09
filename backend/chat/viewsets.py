@@ -23,8 +23,7 @@ class ConversationsView(
     viewsets.ModelViewSet
 ):
     filter_backends = [filters.SearchFilter]
-    # permission_classes = [IsAuthenticated | IsClient | IsContractor]
-    search_fields = ['email']
+    search_fields = ['participants__email', 'participants__first_name', 'participants__last_name']
     queryset = Conversation.objects.all()
     serializer_class = ConversationListSerializer
     pagination_class = None
