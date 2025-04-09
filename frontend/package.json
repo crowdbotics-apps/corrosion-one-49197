@@ -30,6 +30,7 @@
     "@react-jvectormap/world": "1.1.2",
     "@react-oauth/google": "^0.12.1",
     "@sentry/react": "^9.1.0",
+    "@twilio/conversations": "^2.3.0",
     "@types/react": "^19.0.8",
     "ajv": "8.17.1",
     "apisauce": "^2.1.6",

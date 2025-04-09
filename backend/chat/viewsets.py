@@ -177,10 +177,13 @@ class ConversationsView(
             raise ValidationError('job_id is required')
         job = Job.objects.get(id=job_id)
         client = TwilioClient()
-        chat = client.get_or_create_conversation(user, job.created_by.user)
+        chat, token = client.get_or_create_conversation(user, job.created_by.user)
+
 
         data = {
             "id": chat.id,
+            "conversation_sid": chat.conversation_sid,
+            "token": token,
         }
 
         return Response(data)

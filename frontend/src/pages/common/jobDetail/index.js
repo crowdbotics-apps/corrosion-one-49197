@@ -89,7 +89,6 @@ function JobDetail() {
       mileage: values?.mileage,
     }
 
-    console.log(values)
     setLoading(true)
     api.markAsCompleted(dataToSend).handle({
         onSuccess: (res) => {

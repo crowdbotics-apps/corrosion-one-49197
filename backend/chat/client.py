@@ -12,7 +12,11 @@ from chat.models import TwilioUserToken, Conversation
 class TwilioClient:
 
     def __init__(self):
-        self.twilio_client = Client(username=settings.TWILIO_ACCOUNT_SID, password=settings.TWILIO_API_KEY_SECRET)
+        self.twilio_client = Client(
+            settings.TWILIO_API_KEY_SID,
+            settings.TWILIO_API_KEY_SECRET,
+            account_sid=settings.TWILIO_ACCOUNT_SID
+        )
 
 
     def create_or_update_user_token(self, user, conversation):
@@ -30,22 +34,7 @@ class TwilioClient:
         access_token_str = token.to_jwt()
         obj.access_token = access_token_str
         obj.save()
-        return token
-
-    def create_access_token_video(self, participant):
-        # create the access token
-        token = AccessToken(
-            settings.TWILIO_ACCOUNT_SID,
-            settings.TWILIO_API_KEY_SID,
-            settings.TWILIO_API_KEY_SECRET,
-            identity=participant.id
-        )
-        # create the video grant
-        video_grant = VideoGrant()
-        token.add_grant(video_grant)
-        obj, created = TwilioUserToken.objects.get_or_create(user_id=participant.id)
-        obj.access_token = token.to_jwt()
-        obj.save()
+        return access_token_str
 
     def add_twilio_participants(self, participants, *, twilio_conversation=None, conversation_sid=None):
         twilio_conversation = twilio_conversation or self.twilio_client.conversations.v1.conversations.get(conversation_sid)
@@ -84,9 +73,9 @@ class TwilioClient:
         else:
             conversation = self.twilio_client.conversations.v1.conversations.get(chat.conversation_sid)
         chat.conversation = conversation
-        self.create_or_update_user_token(user, chat)
+        token = self.create_or_update_user_token(user, chat)
         self.create_or_update_user_token(counterpart, chat)
-        return chat
+        return chat, token
 
 
     @transaction.atomic
