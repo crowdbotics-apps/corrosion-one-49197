@@ -17,6 +17,25 @@ class CredentialSerializer(serializers.ModelSerializer):
         model = Credential
         fields = ['id', 'name']
 
+class InspectorPublicProfileSerializer(serializers.ModelSerializer):
+    credentials = CredentialSerializer(many=True)
+    languages = serializers.SerializerMethodField()
+    profile_picture = SmartUpdatableImageField()
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    phone_number = serializers.CharField(source='user.phone_number', allow_blank=True, allow_null=True)
+    linkedin = serializers.CharField(source='user.linkedin', allow_blank=True, allow_null=True)
+    website = serializers.CharField(source='user.website', allow_blank=True, allow_null=True)
+
+
+    class Meta:
+        model = Inspector
+        fields = ['id', 'credentials', 'languages', 'profile_picture', 'first_name', 'last_name', 'phone_number',
+                  'linkedin', 'website']
+
+    def get_languages(self, obj):
+        return LanguageSerializer(obj.languages.all(), many=True).data
+
 
 class InspectorCompleteSerializer(serializers.ModelSerializer):
     credentials = serializers.PrimaryKeyRelatedField(queryset=Credential.objects.all(), many=True)

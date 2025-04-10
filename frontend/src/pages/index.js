@@ -10,6 +10,7 @@ import BidDetail from "./owner/bidDetail";
 import Notifications from "./common/notifications";
 import TermsAndConditions from "./auth/termns";
 import PrivacyPolicy from "./auth/privacy"
+import InspectorPublicProfile from "./inspector/inspectorPublicProfile";
 
 export {
   SignIn,
@@ -23,5 +24,6 @@ export {
   BidDetail,
   Notifications,
   TermsAndConditions,
-  PrivacyPolicy
+  PrivacyPolicy,
+  InspectorPublicProfile
 };

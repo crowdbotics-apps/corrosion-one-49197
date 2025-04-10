@@ -8,15 +8,17 @@ from django.shortcuts import render
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from inspector.models import Credential, Language, Inspector, CredentialDcoument
 from inspector.serializers import CredentialSerializer, InspectorCompleteSerializer, CountrySerializer, CitySerializer, \
-    RegionSerializer, LanguageSerializer, InspectorUpdateSerializer
+    RegionSerializer, LanguageSerializer, InspectorUpdateSerializer, InspectorPublicProfileSerializer
 from jobs.models import Job, Bid
 from users.models import UserVerificationCode
+from users.permissions import IsInspector, IsOwner
 from users.serializers import UserDetailSerializer
-from utils.utils import CollectedMultipartJsonViewMixin, GetViewsetMixin
+from utils.utils import CollectedMultipartJsonViewMixin, GetViewsetMixin, PermissionClassByActionMixin
 from utils.utils.send_sms import send_sms
 from utils.utils.verification_code import setup_verification_code
 
@@ -29,12 +31,17 @@ class CredentialsViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
 class InspectorViewSet(
     CollectedMultipartJsonViewMixin,
+    PermissionClassByActionMixin,
     viewsets.GenericViewSet,
     mixins.UpdateModelMixin,
 ):
 
     queryset = Inspector.objects.all()
     serializer_class = InspectorUpdateSerializer
+    permission_classes = [IsInspector]
+    action_permissions = {
+        'public_profile': [AllowAny],
+    }
 
     @action(methods=['post'], detail=False)
     def complete(self, request):
@@ -72,6 +79,12 @@ class InspectorViewSet(
         self.perform_update(serializer)
 
         return Response(UserDetailSerializer(request.user).data)
+
+    @action(methods=['get'], detail=True, url_path='public-profile')
+    def public_profile(self, request, pk=None):
+        inspector = self.get_object()
+        serializer = InspectorPublicProfileSerializer(inspector, context={'request': request})
+        return Response(serializer.data)
 
     @action(methods=['post'], detail=False)
     def notification_settings(self, request):

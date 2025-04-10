@@ -48,7 +48,7 @@ import {
   SetNewPassword,
   Logout,
   Settings,
-  JobRedirect, BidDetail, Notifications, TermsAndConditions, PrivacyPolicy
+  JobRedirect, BidDetail, Notifications, TermsAndConditions, PrivacyPolicy, InspectorPublicProfile
 } from "./pages";
 import {ROLES, ROUTES} from "./services/constants";
 import HomeOwnerMessages from "./pages/common/messages"
@@ -114,6 +114,13 @@ export const unprotectedRoutes = [
     key: "privacy-policy",
     route: ROUTES.PRIVACY_POLICY,
     component: <PrivacyPolicy />,
+  },
+  {
+    type: "fixed",
+    name: "Inspector Public Profile",
+    key: "inspector-public-profile",
+    route: ROUTES.INSPECTOR_PUBLIC_PROFILE,
+    component: <InspectorPublicProfile />,
   },
 ]
 
