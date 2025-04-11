@@ -26,10 +26,12 @@ from rest_framework.viewsets import GenericViewSet
 from inspector.models import Inspector
 from jobs.models import MagicLinkToken
 from owner.models import Owner
+from payments.helpers import create_stripe_customer, create_stripe_account
+from payments.stripe_api import StripeClient
 from users.models import User, UserVerificationCode, SupportEmail
 from users.serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserCreateSerializer, \
     UserLoginResponseSerializer, UserDetailSerializer
-from utils.utils import get_user_by_uidb64, get_and_validate_serializer
+from utils.utils import get_user_by_uidb64, get_and_validate_serializer, user_is_inspector
 from utils.utils import may_fail, update_with_kwargs, create_user_activation_link
 from utils.utils.email import send_email_with_template
 from utils.utils.send_sms import send_sms
@@ -569,6 +571,22 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
     @action(detail=False, methods=['get'], url_path='user-detail', permission_classes=[IsAuthenticated])
     def user_detail(self, request):
         user = request.user
+        # STRIPE CHECKS
+        if not user_is_inspector(user):
+            create_stripe_customer(user)
+        else:
+            create_stripe_account(user)
+            client = StripeClient()
+            acc = client.verify_stripe_account(user.stripe_account_id)
+            details_submitted = acc.get('details_submitted', False)
+            payouts_enabled = acc.get('payouts_enabled', False)
+            if details_submitted:
+                user.stripe_account_linked = True
+                user.save()
+            if payouts_enabled:
+                user.stripe_payouts_enabled = True
+                user.save()
+
         return Response(UserDetailSerializer(user).data)
 
     @action(detail=False, methods=['post'])

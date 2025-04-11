@@ -94,7 +94,8 @@ LOCAL_APPS = [
     'home',
     'jobs',
     'notifications',
-    'chat'
+    'chat',
+    'payments',
 ]
 
 THIRD_PARTY_APPS = [
@@ -111,6 +112,7 @@ THIRD_PARTY_APPS = [
     'import_export',
     'webshell',
     'cities_light',
+    'stripe'
 ]
 
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
@@ -485,3 +487,11 @@ CHANNEL_LAYERS = {
 }
 
 CELERY_BROKER_URL = CELERY_RESULT_BACKEND = env.str("REDIS_URL", "redis://redis:6379/")
+
+
+STRIPE_LIVE_PUBLIC_KEY = env.str("STRIPE_LIVE_PUBLIC_KEY", "")
+STRIPE_LIVE_SECRET_KEY = env.str("STRIPE_LIVE_SECRET_KEY", "")
+STRIPE_TEST_PUBLIC_KEY = env.str("STRIPE_TEST_PUBLIC_KEY", "")
+STRIPE_TEST_SECRET_KEY = env.str("STRIPE_TEST_SECRET_KEY", "")
+STRIPE_LIVE_MODE = env.bool("STRIPE_LIVE_MODE", default=False)
+STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET", "")

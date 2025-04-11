@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import MDBox from "components/MDBox";
+import MDBox from "../../../../components/MDBox";
 
 function DataTableBodyCell({ noBorder = false, align = 'left', children, width, selected = false, isFirstCell = false }) {
   return (

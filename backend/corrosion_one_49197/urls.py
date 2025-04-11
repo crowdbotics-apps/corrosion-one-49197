@@ -26,6 +26,7 @@ api_v1 = [
     path('jobs/', include('jobs.urls')),
     path('notifications/', include('notifications.urls')),
     path('chat/', include('chat.urls')),
+    path('payments/', include('payments.urls')),
     path('cities_light/api/', include('cities_light.contrib.restframework3')),
 
 ]

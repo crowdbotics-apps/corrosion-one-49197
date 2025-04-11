@@ -55,13 +55,10 @@ import HomeOwnerMessages from "./pages/common/messages"
 import HomeOwnerPostJob from "./pages/owner/postJob"
 import Bids from "./pages/owner/bids"
 import JobList from "./pages/common/jobs"
-import HomeInspector from "./pages/owner/home"
-import HomeOwner from "./pages/owner/homeOwner"
-import HomeOwnerAppliedJobs from "./pages/inspector/appliedJobs"
+import HomeInspector from "./pages/common/home"
 import Support from "./pages/common/support"
-import Payment from "./pages/owner/payment"
+import Payment from "./pages/common/payment"
 import JobDetail from "./pages/common/jobDetail";
-// import EditJob from "./pages/owner/editJob"
 
 
 

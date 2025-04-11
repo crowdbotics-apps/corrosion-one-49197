@@ -31,21 +31,3 @@ class NotificationSerializer(serializers.ModelSerializer):
         if not from_user:
             return '-'
         return from_user.get_full_name() if (from_user.first_name and from_user.last_name) else from_user.username
-
-    def get_from_user_profile_picture(self, obj):
-        """
-        Get the profile picture URL of the user who sent the notification.
-
-        Args:
-            obj (Notification): The notification instance.
-
-        Returns:
-            str: The URL of the profile picture.
-        """
-        from_user = obj.from_user
-        if not from_user:
-            return '-'
-        specialist = getattr(from_user, 'specialist', None)
-        if specialist:
-            return from_user.specialist.profile_picture.url if from_user.specialist.profile_picture else None
-        return from_user.seeker.profile_picture.url if from_user.seeker.profile_picture else None

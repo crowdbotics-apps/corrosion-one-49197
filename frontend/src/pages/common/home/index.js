@@ -1,5 +1,5 @@
 import AdminLayout from "../../../components/AdminLayout";
-import DataTable from "../../../components/DataTable/index";
+import DataTable from "../../../components/DataTable";
 import React, {useEffect, useState} from "react";
 import {useApi, useLoginStore} from "../../../services/helpers";
 import MDBox from "../../../components/MDBox";
@@ -54,6 +54,7 @@ const getButtonStylesS = () => ({
 function HomeInspector() {
   const loginStore = useLoginStore();
   const api = useApi();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [dataInspector, setDataInspector] = useState(DASHBOARD_INITIAL_STATE_INSPECTOR);
   const [dataOwner, setDataOwner] = useState(DASHBOARD_INITIAL_STATE_OWNER);
@@ -156,6 +157,8 @@ function HomeInspector() {
              sx={{width: '100%', flexDirection: 'column', justifyContent: 'space-between'}}>
         {!loginStore.phone_verified && renderAlertCard("Phone number not verified", "Your phone number is not verified. Verify your phone number to access more opportunities")}
         {!loginStore.email_verified && renderAlertCard("Email not verified", "Your email is not verified. Verify your email to access more opportunities")}
+        {!loginStore.stripe_account_linked && loginStore.user_type === ROLES.INSPECTOR && renderAlertCard("Stripe account not linked", "Your Stripe account is not linked. Please link your Stripe account to receive payments", "Link Stripe Account", () => navigate(ROUTES.PAYMENT))}
+        {/*{!loginStore.stripe_customer_id && loginStore.user_type === ROLES.OWNER && renderAlertCard("Stripe account generated", "Your Stripe account is not generated. Please generate your Stripe account to receive payments", "Generate Stripe Account", () => navigate(ROUTES.PAYMENT))}*/}
 
         <Card>
           <MDBox display="flex" flex={1} flexDirection="column" p={4} >

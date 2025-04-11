@@ -16,7 +16,7 @@ import {useGlobalFilter, usePagination, useSortBy, useTable} from "react-table";
 // @mui material components
 import {Grid, Table, TableBody, TableContainer, TableRow} from "@mui/material";
 // Material Dashboard 2 PRO React components
-import MDBox from "components/MDBox";
+import MDBox from "../../../../components/MDBox";
 // Material Dashboard 2 PRO React examples
 import DataTableHeadCell from "./DataTableHeadCell"
 import DataTableBodyCell from "./DataTableBodyCell";

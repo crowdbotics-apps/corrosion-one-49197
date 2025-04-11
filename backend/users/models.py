@@ -42,6 +42,23 @@ class User(AbstractUser):
     website = models.URLField(_("Website"), null=True, blank=True)
     linkedin = models.URLField(_("LinkedIn"), null=True, blank=True)
 
+    stripe_account_link = models.URLField(_("Account Link"), blank=True, null=True)
+    stripe_customer_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Stripe Customer (consumer facing) ID',
+    )
+    stripe_account_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text='Stripe Connected Account ID',
+    )
+    stripe_account_linked = models.BooleanField(default=False)
+
+    stripe_payouts_enabled = models.BooleanField(default=False)
+
     # Notifications
     marketing_notifications = models.BooleanField(_("Marketing Notifications"), default=True)
 

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.validators import validate_international_phonenumber
 from rest_framework.exceptions import ValidationError
@@ -12,6 +13,7 @@ from inspector.models import Inspector
 from inspector.serializers import InspectorDetailSerializer
 from owner.models import Owner
 from owner.serializers import OwnerDetailSerializer
+from payments.helpers import create_stripe_customer, create_stripe_account
 from utils.utils import create_user_activation_link
 from utils.utils.email import send_email_with_template
 
@@ -143,30 +145,32 @@ class UserCreateSerializer(Serializer):
         """
         Create user and sends verification email
         """
-        request = self._get_request()
-        email = validated_data['email']
-        user = User(email=email, username=email)
-        user.set_password(validated_data['password'])
-        user.last_verification_email_sent = timezone.now()
-        user.save()
+        with transaction.atomic():
+            request = self._get_request()
+            email = validated_data['email']
+            user = User(email=email, username=email)
+            user.set_password(validated_data['password'])
+            user.last_verification_email_sent = timezone.now()
+            user.save()
 
-        user_type = validated_data['user_type']
-        if user_type == 'INSPECTOR':
-            Inspector.objects.create(user=user)
-        else:
-            Owner.objects.create(user=user)
-        send_email_with_template(
-            subject=f'{settings.PROJECT_NAME} - Verification Link',
-            email=user.email,
-            template_to_load='emails/activate_user_email.html',
-            context={
-                "name": user.email,
-                "verification_link": create_user_activation_link(user, request),
-            }
-        )
+            user_type = validated_data['user_type']
+            if user_type == 'INSPECTOR':
+                Inspector.objects.create(user=user)
+                create_stripe_account(user)
+            else:
+                Owner.objects.create(user=user)
+                create_stripe_customer(user)
+            send_email_with_template(
+                subject=f'{settings.PROJECT_NAME} - Verification Link',
+                email=user.email,
+                template_to_load='emails/activate_user_email.html',
+                context={
+                    "name": user.email,
+                    "verification_link": create_user_activation_link(user, request),
+                }
+            )
 
-
-        return user
+            return user
 
 
 class UserDetailSerializer(ModelSerializer):
@@ -180,7 +184,8 @@ class UserDetailSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'name', 'first_name', 'last_name', 'status', 'user_type', 'phone_number', 'linkedin',
-                  'website', 'owner', 'inspector', 'phone_verified', 'email_verified']
+                  'website', 'owner', 'inspector', 'phone_verified', 'email_verified', 'stripe_account_linked',
+                  'stripe_customer_id']
 
     def get_status(self, obj):
         if hasattr(obj, 'owner'):
