@@ -511,16 +511,18 @@ CONTENT_SECURITY_POLICY = {
         'script-src': (
             "'self'",
             "'unsafe-inline'",  # If you have inline scripts (not ideal, but quick fix)
-            "https://js.stripe.com",
             "https://connect-js.stripe.com",
+            "https://js.stripe.com",
+            "https://stgcontent71740.blob.core.windows.net",
         ),
         # Some browsers differentiate script-src vs script-src-elem for <script> tags
         'script-src-elem': (
             "'self'",
             "'unsafe-inline'",
             "https://accounts.google.com",  # for gsi/client if you need Google sign-in
-            "https://js.stripe.com",
             "https://connect-js.stripe.com",
+            "https://js.stripe.com",
+            "https://stgcontent71740.blob.core.windows.net",
         ),
 
         # Stylesheets from self, Google, unpkg, etc.
@@ -537,6 +539,7 @@ CONTENT_SECURITY_POLICY = {
             "'unsafe-inline'",
             "https://fonts.googleapis.com",
             "https://unpkg.com",
+            "https://stgcontent71740.blob.core.windows.net",
         ),
 
         # Images from self, data URLs, and Stripe
@@ -544,6 +547,7 @@ CONTENT_SECURITY_POLICY = {
             "'self'",
             "data:",
             "https://*.stripe.com",
+            "https://stgcontent71740.blob.core.windows.net",
         ),
 
         # Fonts (Google Fonts, etc.)
@@ -551,13 +555,14 @@ CONTENT_SECURITY_POLICY = {
             "'self'",
             "https://fonts.gstatic.com",
             "https://unpkg.com",
+            "https://stgcontent71740.blob.core.windows.net",
         ),
 
         # Frames (Stripe Elements, etc.)
         'frame-src': (
             "'self'",
-            "https://js.stripe.com",
             "https://connect-js.stripe.com",
+            "https://js.stripe.com",
         ),
 
         # If your app loads web workers via blob: or external domains:
@@ -574,12 +579,15 @@ CONTENT_SECURITY_POLICY = {
         # Allow fetch/XHR/WebSocket calls to your own domain, Sentry, Stripe, etc.
         'connect-src': (
             "'self'",
+            "https://connect-js.stripe.com",
+            "https://js.stripe.com",
             "http://0.0.0.0:8000",
             "https://app.corrosionone.com",
             "https://corrosion-one-49197.azurewebsites.net",
             "https://sentry.innovatica.com.py",
-            "https://js.stripe.com",
-            "https://connect-js.stripe.com",
+            "https://fonts.googleapis.com",
+            "https://fonts.gstatic.com",
+            "https://stgcontent71740.blob.core.windows.net",
         ),
 
     }
