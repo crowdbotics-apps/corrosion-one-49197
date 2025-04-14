@@ -8,14 +8,13 @@ class NotificationSerializer(serializers.ModelSerializer):
     Serializer for the Notification model.
     """
     from_user = serializers.SerializerMethodField()
-    from_user_profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         """
         Meta options for the NotificationSerializer.
         """
         model = Notification
-        fields = ['id', 'from_user', 'title', 'description', 'timestamp', 'sent', 'is_read', 'from_user_profile_picture']
+        fields = ['id', 'from_user', 'title', 'description', 'timestamp', 'sent', 'is_read']
 
     def get_from_user(self, obj):
         """
