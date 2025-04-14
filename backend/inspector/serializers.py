@@ -231,10 +231,11 @@ class InspectorDetailSerializer(serializers.ModelSerializer):
     languages = LanguageSerializer(many=True)
     support_documents = SupportDocumentSerializer(many=True)
     user = UserDetailInspectorSerializer()
+    inspector_id = serializers.IntegerField(source='id', read_only=True)
 
     class Meta:
         model = Inspector
-        fields = ['credentials', 'regions', 'languages', 'date_of_birth', 'support_documents', 'countries',
+        fields = ['inspector_id', 'credentials', 'regions', 'languages', 'date_of_birth', 'support_documents', 'countries',
                   'profile_picture', 'notify_job_applied', 'notify_im_qualified', 'notify_new_message', 'user']
 
 
