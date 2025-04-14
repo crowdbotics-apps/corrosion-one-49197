@@ -4,6 +4,7 @@ import stripe
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from munch import munchify
 
 from payments.models import StripeCard, Transaction
 
@@ -181,9 +182,9 @@ class StripeClient:
         if LOG_ACTIVE:
             logger.info('create_user_card')
         try:
-            card = self.stripe.Customer.create_source(
-                user.stripe_customer_id,
-                source=token
+            card = self.stripe.PaymentMethod.attach(
+                token,
+                customer=user.stripe_customer_id
             )
         except Exception as error:
             return error
@@ -271,12 +272,11 @@ class StripeClient:
         if LOG_ACTIVE:
             logger.info('get_user_cards')
         if user.stripe_customer_id:
-            cards = self.stripe.Customer.list_sources(
-                user.stripe_customer_id,
-                object="card",
-                limit=3,
+            cards = self.stripe.PaymentMethod.list(
+                customer=user.stripe_customer_id,
+                type="card",
             )
-            self.verify_user_cards(user, cards)
+            self.verify_user_cards(user, cards.get('data'))
         cards = StripeCard.objects.filter(user=user)
         return cards
 
@@ -312,13 +312,19 @@ class StripeClient:
         Returns:
             None
         """
-        for card in cards:
-            stripe_card = StripeCard.objects.filter(card_id=card.id).first()
+        for card_data in cards:
+            card = munchify(card_data['card'])
+            stripe_card = StripeCard.objects.filter(
+                user=user,
+                brand=card.brand,
+                last4=card.last4,
+                exp_month=card.exp_month,
+                exp_year=card.exp_year,
+            ).first()
             if stripe_card:
                 continue
             else:
                 StripeCard.objects.create(
-                    card_id=card.id,
                     user=user,
                     exp_month=card.exp_month,
                     exp_year=card.exp_year,
@@ -326,7 +332,6 @@ class StripeClient:
                     last4=card.last4,
                     country=card.country,
                     brand=card.brand,
-                    metadata=card.metadata,
                 )
 
     def verify_stripe_account(self, account_id):

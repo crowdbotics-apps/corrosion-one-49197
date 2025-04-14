@@ -14,4 +14,4 @@ class StripeCardListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StripeCard
-        fields = ['last4', 'brand', 'id', 'country', 'funding', 'default']
+        fields = ['last4', 'brand', 'id', 'country', 'funding', 'default', 'exp_month', 'exp_year']

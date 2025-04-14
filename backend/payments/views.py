@@ -70,7 +70,7 @@ class StripeViewset(viewsets.GenericViewSet):
         customer = self.api.create_customer(user)
         return Response(customer)
 
-    @action(methods=['post'], detail=False, url_path='create-card')
+    @action(methods=['post'], detail=False, url_path='add-card')
     def create_card(self, request):
         """
         Create a new card for the authenticated user.
@@ -84,7 +84,7 @@ class StripeViewset(viewsets.GenericViewSet):
         data = request.data
         user = request.user
         self.verify_stripe_customer(request.user)
-        card = self.api.create_user_card(user, data.get("card_token"))
+        card = self.api.create_user_card(user, data.get("payment_method"))
         if hasattr(card, 'error') and card.error.message:
             return Response(card.error.message, status=status.HTTP_400_BAD_REQUEST)
         return Response(card)
