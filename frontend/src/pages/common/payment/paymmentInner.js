@@ -34,6 +34,15 @@ function PaymentInner() {
   const [accountSecretClient, setAccountSecretClient] = useState(null);
   const [cards, setCards] = useState([]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [numberOfItems, setNumberOfItems] = useState(0);
+  const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
+  const [order, setOrder] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+
 
   const stripeRef = useRef(null)
 
@@ -139,6 +148,11 @@ function PaymentInner() {
             onExit={() => {
               getUserDetail()
             }}
+            onLoadError={
+              (error) => {
+                console.log('error', error)
+              }
+            }
           />}
           {loginStore.stripe_account_linked === true && <><ConnectBalances/><ConnectAccountManagement/></>}
         </ConnectComponentsProvider>
@@ -226,6 +240,21 @@ function PaymentInner() {
     >
       {loginStore.user_type === ROLES.INSPECTOR && renderInspectorBody()}
       {loginStore.user_type === ROLES.OWNER && renderOwnerBody()}
+      {/*<DataTable*/}
+      {/*  loading={loading}*/}
+      {/*  loadingText={'Loading...'}*/}
+      {/*  table={[]}*/}
+      {/*  currentPage={currentPage}*/}
+      {/*  numberOfItems={numberOfItems}*/}
+      {/*  numberOfItemsPage={numberOfItemsPage}*/}
+      {/*  searchFunc={() => {}}*/}
+      {/*  searchQuery={searchQuery}*/}
+      {/*  pageSize={10}*/}
+      {/*  onPageChange={page => {*/}
+      {/*    // getNotifications(searchQuery, page)*/}
+      {/*    setCurrentPage(page)*/}
+      {/*  }}*/}
+      {/*/>*/}
     </AdminLayout>
   );
 }
