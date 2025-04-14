@@ -10,8 +10,6 @@ const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 
 const stripeInstance = loadStripe(stripePublicKey);
 
-console.log('stripeInstance ', stripeInstance);
-
 function Payment() {
   return (
     <Elements stripe={stripeInstance}>

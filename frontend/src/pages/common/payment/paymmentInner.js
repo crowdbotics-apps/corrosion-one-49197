@@ -67,6 +67,7 @@ function PaymentInner() {
   }
 
   const addPaymentMethod =  async () => {
+    setLoading(true)
     const cardElement = elements.getElement(CardElement);
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
@@ -77,10 +78,10 @@ function PaymentInner() {
 
     if (error) {
       console.log('error', error)
+      setLoading(false)
     }
 
     if (paymentMethod) {
-      setLoading(true)
       api.addCard({payment_method: paymentMethod.id}).handle({
         successMessage: 'Successfully added card',
         onSuccess: (result) => {
@@ -150,7 +151,7 @@ function PaymentInner() {
             }}
             onLoadError={
               (error) => {
-                console.log('error', error)
+                console.log('error ===> ', error)
               }
             }
           />}
