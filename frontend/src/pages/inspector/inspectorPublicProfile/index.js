@@ -7,20 +7,21 @@ import {Grid} from "@mui/material";
 import MDTypography from "../../../components/MDTypography";
 import avatar from "assets/images/avatar.png";
 import logo from "assets/svgs/logo-text.svg";
+import {useParams} from "react-router-dom";
 
 
 function InspectorPublicProfile() {
   const api = useApi()
+  const {inspectorId = null} = useParams();
   const [loading, setLoading] = useState(false)
   const [inspectorData, setInspectorData] = useState(null)
 
 
   const getInspectorPublic = () => {
     setLoading(true)
-    api.getInspectorPublic(21).handle({
+    api.getInspectorPublic(inspectorId).handle({
         onSuccess: (res) => {
           setInspectorData(res.data)
-          console.log(res)
         },
         onFinally: () => setLoading(false)
       }

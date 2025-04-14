@@ -4,7 +4,7 @@ import MDBox from "../../../components/MDBox";
 import Icon from "@mui/material/Icon";
 import MDButton from "../../../components/MDButton";
 import {useRef, useState} from "react";
-import {checkUrl, truncateFilename, useLoginStore} from "../../../services/helpers";
+import {checkUrl, showMessage, truncateFilename, useLoginStore} from "../../../services/helpers";
 import {Form, FormikProvider, useFormik} from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../../components/Formik/FormikInput";
@@ -298,6 +298,21 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
             />
         </Grid>
       </Grid>
+      <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3}/>
+      <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
+        My Public profile
+      </MDTypography>
+      <MDTypography
+        fontSize={"14px"}
+        sx={{fontWeight: 500, color: "#007BFF", textDecoration: "none", cursor: "pointer"}}
+        mb={2}
+        onClick={() => {
+          navigator.clipboard.writeText(`https://app.corrosionone.com/#/inspector-public-profile/${loginStore.inspector_id}`)
+          showMessage("Link copied to clipboard", "success")
+        }}
+      >
+        https://app.corrosionone.com/#/inspector-public-profile/{loginStore.inspector_id}
+      </MDTypography>
       <MDBox sx={{height: '1px', width: "100%", backgroundColor: "#E4E5E8"}} my={3}/>
       <MDBox display={"flex"}>
         <MDButton

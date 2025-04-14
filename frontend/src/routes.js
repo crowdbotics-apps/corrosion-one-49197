@@ -116,7 +116,7 @@ export const unprotectedRoutes = [
     type: "fixed",
     name: "Inspector Public Profile",
     key: "inspector-public-profile",
-    route: ROUTES.INSPECTOR_PUBLIC_PROFILE,
+    route: ROUTES.INSPECTOR_PUBLIC_PROFILE(':inspectorId'),
     component: <InspectorPublicProfile />,
   },
 ]

@@ -44,7 +44,7 @@ const ALLOWED_KEYS_USER = ['id', 'email', 'phone_number', 'first_name', 'last_na
   'status', 'user_type', 'website', 'linkedin', 'access', 'refresh', 'email_verified', 'phone_verified',
   'stripe_customer_id', 'stripe_account_linked']
 
-const ALLOWED_KEYS_INSPECTOR = ['date_of_birth', 'languages', 'regions', 'credentials', 'support_documents',
+const ALLOWED_KEYS_INSPECTOR = ['inspector_id', 'date_of_birth', 'languages', 'regions', 'credentials', 'support_documents',
   'countries', 'profile_picture','notify_im_qualified', 'notify_new_message', 'notify_job_applied']
 
 const ALLOWED_KEYS_OWNER = ['company_name', 'industry', 'banner', 'logo', 'address', 'industry']
@@ -95,6 +95,7 @@ export const LoginStoreModel = types
     phone_verified: types.maybeNull(types.boolean),
     stripe_account_linked: types.maybeNull(types.boolean),
     stripe_customer_id: types.maybeNull(types.string),
+    inspector_id: types.maybeNull(types.number),
 
   })
   .views(self => ({

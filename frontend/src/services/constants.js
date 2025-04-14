@@ -29,7 +29,7 @@ export const ROUTES = {
   NOTIFICATIONS: `/notifications`,
   TERMS_AND_CONDITIONS: '/terms-and-conditions',
   PRIVACY_POLICY: '/privacy-policy',
-  INSPECTOR_PUBLIC_PROFILE: 'inspector-public-profile'
+  INSPECTOR_PUBLIC_PROFILE:  (inspectorId) => `/inspector-public-profile/${inspectorId}`,
 
 }
 
