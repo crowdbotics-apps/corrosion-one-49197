@@ -28,6 +28,7 @@ from google.api_core.exceptions import PermissionDenied
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from sentry_sdk.integrations.django import DjangoIntegration
+from csp.constants import NONE, SELF
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -112,7 +113,8 @@ THIRD_PARTY_APPS = [
     'import_export',
     'webshell',
     'cities_light',
-    'stripe'
+    'stripe',
+    'csp'
 ]
 
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
@@ -120,6 +122,7 @@ INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -495,3 +498,89 @@ STRIPE_TEST_PUBLIC_KEY = env.str("STRIPE_TEST_PUBLIC_KEY", "")
 STRIPE_TEST_SECRET_KEY = env.str("STRIPE_TEST_SECRET_KEY", "")
 STRIPE_LIVE_MODE = env.bool("STRIPE_LIVE_MODE", default=False)
 STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET", "")
+
+# settings.py
+
+CONTENT_SECURITY_POLICY = {
+    'DIRECTIVES': {
+        # Fallback for all resource types not otherwise specified
+        'default-src': ("'self'",),
+
+        # Scripts your site uses (including Stripe, Google, etc.)
+        # Also allow inline scripts if necessary (via 'unsafe-inline')
+        'script-src': (
+            "'self'",
+            "'unsafe-inline'",  # If you have inline scripts (not ideal, but quick fix)
+            "https://js.stripe.com",
+            "https://connect-js.stripe.com",
+        ),
+        # Some browsers differentiate script-src vs script-src-elem for <script> tags
+        'script-src-elem': (
+            "'self'",
+            "'unsafe-inline'",
+            "https://accounts.google.com",  # for gsi/client if you need Google sign-in
+            "https://js.stripe.com",
+            "https://connect-js.stripe.com",
+        ),
+
+        # Stylesheets from self, Google, unpkg, etc.
+        # Allow inline styles if React/MUI or Leaflet inject them
+        'style-src': (
+            "'self'",
+            "'unsafe-inline'",
+            "https://fonts.googleapis.com",
+            "https://unpkg.com",       # if Leaflet loads CSS from unpkg
+        ),
+        # Same note as with script-src-elem
+        'style-src-elem': (
+            "'self'",
+            "'unsafe-inline'",
+            "https://fonts.googleapis.com",
+            "https://unpkg.com",
+        ),
+
+        # Images from self, data URLs, and Stripe
+        'img-src': (
+            "'self'",
+            "data:",
+            "https://*.stripe.com",
+        ),
+
+        # Fonts (Google Fonts, etc.)
+        'font-src': (
+            "'self'",
+            "https://fonts.gstatic.com",
+            "https://unpkg.com",
+        ),
+
+        # Frames (Stripe Elements, etc.)
+        'frame-src': (
+            "'self'",
+            "https://js.stripe.com",
+            "https://connect-js.stripe.com",
+        ),
+
+        # If your app loads web workers via blob: or external domains:
+        'worker-src': (
+            "'self'",
+            "blob:",
+        ),
+
+        # If your app or PWAs have a manifest.json
+        'manifest-src': (
+            "'self'",
+        ),
+
+        # Allow fetch/XHR/WebSocket calls to your own domain, Sentry, Stripe, etc.
+        'connect-src': (
+            "'self'",
+            "http://0.0.0.0:8000",
+            "https://app.corrosionone.com",
+            "https://corrosion-one-49197.azurewebsites.net",
+            "https://sentry.innovatica.com.py",
+            "https://js.stripe.com",
+            "https://connect-js.stripe.com",
+        ),
+
+    }
+}

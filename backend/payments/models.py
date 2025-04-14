@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from model_utils.models import TimeStampedModel
 
 from jobs.models import Job
 
@@ -11,7 +12,7 @@ logger = logging.getLogger('django')
 
 # Create your models here.
 
-class StripeCard(models.Model):
+class StripeCard(TimeStampedModel):
     """
     Model representing a Stripe card associated with a user.
 
@@ -52,7 +53,7 @@ class StripeCard(models.Model):
         return '{} - {} - {}'.format(self.pk, self.brand, self.user.username)
 
 
-class Transaction(models.Model):
+class Transaction(TimeStampedModel):
     """
     Model representing a financial transaction.
 
@@ -60,7 +61,6 @@ class Transaction(models.Model):
         transaction_id (str): Unique identifier for the transaction.
         amount (Decimal): Amount of the transaction.
         currency (str): Currency of the transaction.
-        created_at (datetime): Timestamp when the transaction was created.
         created_by (ForeignKey): Reference to the user who created the transaction.
         stripe_payment_intent_id (str): Stripe Payment Intent ID associated with the transaction.
         status (int): Status of the transaction (e.g., pending, completed).
@@ -97,7 +97,6 @@ class Transaction(models.Model):
     transaction_id = models.CharField(max_length=100, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=10)
-    created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='owner_transactions', null=True, blank=True)
     inspector = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='inspector_transactions', null=True, blank=True)
     job = models.ForeignKey(Job, on_delete=models.PROTECT, related_name='transactions', null=True, blank=True)
@@ -129,7 +128,7 @@ class Transaction(models.Model):
     class Meta:
         verbose_name = 'Transaction'
         verbose_name_plural = 'Transactions'
-        ordering = ['-created_at']
+        ordering = ['-created']
 
 
 # @receiver(post_save, sender=Transaction)
