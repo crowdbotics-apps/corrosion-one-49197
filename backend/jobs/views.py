@@ -1,5 +1,5 @@
-from django.db.models import ProtectedError, ObjectDoesNotExist
-from django.shortcuts import render
+from django.db import transaction
+from psycopg.pq import error_message
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
@@ -13,6 +13,8 @@ from jobs.models import Job, Bid, JobFavorite
 from jobs.serializers import JobListSerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
 from notifications.models import Notification
+from payments.helpers import create_initial_transaction, release_funds_to_inspector
+from payments.models import Transaction
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
     CollectedMultipartJsonViewMixin, may_fail, send_notifications
@@ -114,6 +116,7 @@ class JobViewSet(
             job.save()
         return Response()
 
+    @transaction.atomic
     @may_fail(Job.DoesNotExist, 'Job not found')
     @action(detail=True, methods=['post'])
     def mark_as_completed(self, request, pk=None):
@@ -152,6 +155,14 @@ class JobViewSet(
         job = Job.objects.get(pk=pk, created_by=user.owner)
         if job.status != Job.JobStatus.FINISHED_BY_INSPECTOR:
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+
+        tx = Transaction.objects.filter(
+            job=job,
+        ).first()
+
+        transfer, error_message =release_funds_to_inspector(tx_id=tx.id)
+        if error_message:
+            return Response(error_message, status=HTTP_400_BAD_REQUEST)
 
         send_notifications(
             users=[job.inspector.user],
@@ -229,10 +240,13 @@ class BidViewSet(
             return bids.filter(inspector=user.inspector)
         return bids.filter(job__created_by=user.owner)
 
+    @transaction.atomic
     @may_fail(Bid.DoesNotExist, 'Bid not found')
     @action(detail=False, methods=['post'])
     def accept(self, request):
         user = self.request.user
+        if user.stripe_cards.count() == 0:
+            return Response('Please add a card in order to proceed', status=HTTP_400_BAD_REQUEST)
         bid_id = request.data.get('bid_id')
         bid = Bid.objects.get(pk=bid_id)
         if bid.job.created_by != user.owner:
@@ -240,6 +254,21 @@ class BidViewSet(
         job = bid.job
         if job.status != Job.JobStatus.PENDING:
             return Response('This job is not available for bidding', status=HTTP_400_BAD_REQUEST)
+
+        # Create stripe money held
+
+        tx, error_message = create_initial_transaction(
+            user_owner=user,
+            user_inspector=bid.inspector.user,
+            amount=job.total_amount,
+            description=f"Job id: {job.id} - {job.title}",
+            job=job
+        )
+
+        if error_message:
+            return Response(error_message, status=HTTP_400_BAD_REQUEST)
+
+
         other_bids = Bid.objects.filter(job=job).exclude(id=bid.id)
         for other_bid in other_bids:
             other_bid.status = Bid.StatusChoices.REJECTED
@@ -254,7 +283,6 @@ class BidViewSet(
                 n_type=Notification.NotificationType.BID_REJECTED,
                 channel=Notification.NotificationChannel.EMAIL,
             )
-
         send_notifications(
             users=[bid.inspector.user],
             title=f'Bid Accepted - {job.title}',
@@ -265,7 +293,6 @@ class BidViewSet(
             n_type=Notification.NotificationType.BID_ACCEPTED,
             channel=Notification.NotificationChannel.EMAIL,
         )
-
         bid.status = Bid.StatusChoices.ACCEPTED
         bid.save()
         job.status = Job.JobStatus.STARTED

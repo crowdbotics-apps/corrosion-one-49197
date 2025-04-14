@@ -315,17 +315,14 @@ class StripeClient:
         for card_data in cards:
             card = munchify(card_data['card'])
             stripe_card = StripeCard.objects.filter(
-                user=user,
-                brand=card.brand,
-                last4=card.last4,
-                exp_month=card.exp_month,
-                exp_year=card.exp_year,
+                card_id=card_data['id']
             ).first()
             if stripe_card:
                 continue
             else:
                 StripeCard.objects.create(
                     user=user,
+                    card_id=card_data['id'],
                     exp_month=card.exp_month,
                     exp_year=card.exp_year,
                     funding=card.funding,
@@ -926,6 +923,52 @@ class StripeClient:
                 components=components
             )
             return account_session.client_secret
+        except Exception as error:
+            logger.info(error)
+            return error
+
+    def create_payment_intent_held(
+            self,
+            amount,
+            currency,
+            transfer_group,
+            description,
+            payment_method_id,
+            metadata,
+            customer
+    ):
+        try:
+            if LOG_ACTIVE:
+                logger.info('create_payment_intent_held')
+            payment_intent = self.stripe.PaymentIntent.create(
+                amount=amount,
+                currency=currency,
+                transfer_group=transfer_group,
+                description=description,
+                payment_method=payment_method_id,
+                metadata=metadata,
+                payment_method_types=["card"],
+                confirm=True,
+                off_session=True,
+                customer=customer
+            )
+            return payment_intent
+
+        except Exception as error:
+            logger.info(error)
+            return error
+
+    def transfer_held_amount(self, amount, currency, destination, transfer_group):
+        try:
+            if LOG_ACTIVE:
+                logger.info('transfer_held_amount')
+            transfer = self.stripe.Transfer.create(
+                amount=amount,
+                currency=currency,
+                destination=destination,
+                transfer_group=transfer_group
+            )
+            return transfer
         except Exception as error:
             logger.info(error)
             return error

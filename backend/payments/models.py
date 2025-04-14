@@ -5,6 +5,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from jobs.models import Job
+
 logger = logging.getLogger('django')
 
 # Create your models here.
@@ -69,6 +71,7 @@ class Transaction(models.Model):
 
     # Define the status choices as class constants
     PENDING = 10
+    HELD = 15
     COMPLETED = 20
     FAILED = 30
     CANCELLED = 40
@@ -76,6 +79,7 @@ class Transaction(models.Model):
     # A list of tuples that defines the choices for the status field
     STATUS_CHOICES = [
         (PENDING, 'Pending'),
+        (HELD, 'Held'),
         (COMPLETED, 'Completed'),
         (FAILED, 'Failed'),
         (CANCELLED, 'Cancelled'),
@@ -94,14 +98,18 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='transactions')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='owner_transactions', null=True, blank=True)
+    inspector = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='inspector_transactions', null=True, blank=True)
+    job = models.ForeignKey(Job, on_delete=models.PROTECT, related_name='transactions', null=True, blank=True)
 
     # Stripe Payment Intent details
     stripe_payment_intent_id = models.CharField(max_length=100, null=True, blank=True)
+    stripe_transfer_id = models.CharField(max_length=100, null=True, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=PENDING)
     transaction_type = models.IntegerField(choices=TRANSACTION_TYPE, default=CREDIT)
     description = models.TextField(blank=True, null=True)
     stripe_response = models.JSONField(blank=True, null=True)
+    transfer_group = models.CharField(max_length=100, null=True, blank=True)
 
     #booking data
     # session_id = models.ForeignKey('bookings.Session', on_delete=models.PROTECT, related_name='transactions', null=True, blank=True)
