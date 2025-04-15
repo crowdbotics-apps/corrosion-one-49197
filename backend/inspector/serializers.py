@@ -86,7 +86,7 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
 
 class InspectorUpdateSerializer(serializers.ModelSerializer):
     credentials = serializers.PrimaryKeyRelatedField(queryset=Credential.objects.all(), many=True)
-    profile_picture = SmartUpdatableImageField()
+    profile_picture = SmartUpdatableImageField(allow_null=True, allow_empty_file=True)
     languages = serializers.PrimaryKeyRelatedField(queryset=Language.objects.all(), many=True)
     first_name = serializers.CharField()
     last_name = serializers.CharField()
@@ -102,7 +102,7 @@ class InspectorUpdateSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if not hasattr(user, 'inspector'):
             raise serializers.ValidationError('User is not an inspector')
-        profile_picture = attrs.get('profile_picture')
+        profile_picture = attrs.get('profile_picture', None)
         if profile_picture and profile_picture.size > 5 * 1024 * 1024:
             raise serializers.ValidationError('Profile picture size should not exceed 5MB')
         support_documents = self.initial_data.get('support_documents')
