@@ -105,6 +105,22 @@ function PaymentInner() {
     })
   }
 
+  const setDefaultCard = (cardId) => {
+    setLoading(true)
+    api.setDefaultCard({card_id: cardId}).handle({
+      successMessage: 'Successfully set default card',
+      onSuccess: (result) => {
+        getCards()
+      },
+      errorMessage: 'Error setting default card',
+      onFinally: () => setLoading(false)
+    })
+  }
+
+  const handleToggle = (cardId) => {
+    setDefaultCard(cardId)
+  }
+
 
   useEffect(() => {
     if (!accountSecretClient) return
@@ -222,7 +238,8 @@ function PaymentInner() {
                   expireDate={card.exp_month + '/' + card.exp_year}
                   cardNumber={card.last4}
                   isActive={card.default}
-                  // onToggle={handleToggle}
+                  loading={loading}
+                  onToggle={handleToggle}
                 />
               </Grid>
             )

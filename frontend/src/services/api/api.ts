@@ -229,6 +229,9 @@ export class Api extends ApiBase {
   getCards() {
     return this.simple_get(`${API_VERSION_PREFIX}/payments/get-cards/`);
   }
+  setDefaultCard(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/payments/set-default-card/`, data);
+  }
 
 
 }

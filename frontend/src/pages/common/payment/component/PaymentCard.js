@@ -8,7 +8,7 @@ import MDAvatar from "../../../../components/MDAvatar"
 import React from "react"
 import Switch from "@mui/material/Switch"
 
-const PaymentCard = ({ nameOnCard, expireDate, cardNumber, cardId, isActive, onToggle }) => {
+const PaymentCard = ({ nameOnCard, expireDate, cardNumber, cardId, isActive, loading, onToggle }) => {
 
   return (
     <Card sx={{ p: 2, display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderRadius: '12px'}}>
@@ -32,6 +32,7 @@ const PaymentCard = ({ nameOnCard, expireDate, cardNumber, cardId, isActive, onT
         </MDTypography>
         <Switch
           checked={isActive}
+          disabled={loading}
           onChange={() => onToggle(cardId)}
           color="primary"
           inputProps={{ 'aria-label': 'toggle card visibility' }}
