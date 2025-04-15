@@ -548,6 +548,7 @@ CONTENT_SECURITY_POLICY = {
             "data:",
             "https://*.stripe.com",
             "https://stgcontent71740.blob.core.windows.net",
+            "https://cdnjs.cloudflare.com",
         ),
 
         # Fonts (Google Fonts, etc.)
