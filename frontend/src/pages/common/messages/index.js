@@ -1,7 +1,7 @@
 
 import AdminLayout from "../../../components/AdminLayout"
 import MDBox from "../../../components/MDBox"
-import {CircularProgress, Grid, InputAdornment, TextField} from "@mui/material";
+import { CircularProgress, Grid, IconButton, InputAdornment, Menu, MenuItem, TextField } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search";
 import React, {useEffect, useRef, useState} from "react";
 import {checkUrl, date_fmt, showMessage, useApi} from "../../../services/helpers";
@@ -13,6 +13,9 @@ import avatar from "assets/images/avatar.png";
 import file from "assets/images/file.png"
 import send from "assets/images/send.png"
 import {InsertDriveFileOutlined} from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert"
+import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined"
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined"
 
 
 function HomeOwnerMessages() {
@@ -33,6 +36,21 @@ function HomeOwnerMessages() {
   const scrollRef = useRef(null)
   const currentConversationRef = useRef(null)
   const fileRef = useRef(null)
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDelete = () => {
+    handleMenuClose();
+  };
+
 
   const getChatsAvailable = (search = '') => {
     setLoading(true)
@@ -213,14 +231,32 @@ function HomeOwnerMessages() {
           py={3}
           display="flex"
           alignItems="center"
+          justifyContent="space-between"
         >
-          <img
-            src={selectedChat?.counterpart_image ? checkUrl(selectedChat?.counterpart_image) : avatar}
-            style={{width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px'}}
-          />
-          <MDTypography variant="h4" fontWeight="bold" mb={2}>
-            {selectedChat?.counterpart_name}
-          </MDTypography>
+          <MDBox display={'flex'}>
+            <img
+              src={selectedChat?.counterpart_image ? checkUrl(selectedChat?.counterpart_image) : avatar}
+              style={{width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px'}}
+            />
+            <MDTypography variant="h4" fontWeight="bold" mb={2}>
+              {selectedChat?.counterpart_name}
+            </MDTypography>
+          </MDBox>
+          <IconButton onClick={handleMenuOpen} size="small">
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          >
+            <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>
+              <DeleteOutlinedIcon sx={{ marginRight: '8px', fontSize: '25px !important' , color: 'error.main' }} />
+              Delete
+            </MenuItem>
+          </Menu>
         </MDBox>
         {/*MESSAGES*/}
         <MDBox>
