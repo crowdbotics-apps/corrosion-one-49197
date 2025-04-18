@@ -241,6 +241,10 @@ class BidCreateSerializer(serializers.ModelSerializer):
         if not hasattr(user, 'inspector'):
             raise serializers.ValidationError('User is not an inspector')
         attrs['inspector'] = user.inspector
+        if not user.stripe_account_linked:
+            raise serializers.ValidationError('User does not have a stripe account linked')
+        if not user.stripe_payouts_enabled:
+            raise serializers.ValidationError('User does not have payouts enabled')
         job = attrs['job']
         if job.status != Job.JobStatus.PENDING:
             raise serializers.ValidationError('Job is not available for bidding')

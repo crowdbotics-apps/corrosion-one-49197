@@ -162,37 +162,12 @@ def payment_intent_succeeded(event):
     """
     logger.info('payment_intent_succeeded')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(transaction_id=payment_intent.id).first()
+    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
     if not transaction_object:
         return Response()
     transaction_object.status = Transaction.COMPLETED
     transaction_object.stripe_response = event
-    if transaction_object.paid_question:
-        paid_question = transaction_object.paid_question
-        paid_question.paid = True
-        paid_question.save()
     transaction_object.save()
-
-    # Send notification
-    if transaction_object.paid_question:
-        participants = transaction_object.paid_question.conversation.participants
-        if participants.exists():
-            specialist_participant = participants.filter(user_type=User.UserType.SPECIALIST).first()
-            seeker_participant = participants.filter(user_type=User.UserType.SEEKER).first()
-
-            send_notifications(
-                users=[specialist_participant.user],
-                title=seeker_participant.user.name,
-                description='Sent you a payment',
-                extra_data={
-                    "message": True,
-                    "code": "payment_received",
-                    "sender_id": seeker_participant.user.id,
-                    "counterpart_id": specialist_participant.user.id
-                },
-                from_user=seeker_participant.user
-            )
-
     return Response()
 
 
@@ -208,7 +183,7 @@ def payment_intent_failed(event):
     """
     logger.info('payment_intent_failed')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(transaction_id=payment_intent.id).first()
+    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
     if not transaction_object:
         return Response()
     transaction_object.status = Transaction.FAILED
@@ -229,7 +204,7 @@ def payment_intent_canceled(event):
     """
     logger.info('payment_intent_canceled')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(transaction_id=payment_intent.id).first()
+    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
     if not transaction_object:
         return Response()
     transaction_object.status = Transaction.CANCELLED

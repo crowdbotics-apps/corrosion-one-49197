@@ -10,15 +10,17 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from notifications.models import Notification
 from payments.models import StripeCard, Transaction
-from payments.serializers import StripeCardListSerializer
+from payments.serializers import StripeCardListSerializer, TransactionListSerializer
 from payments.stripe_api import StripeClient
 from users.serializers import UserDetailSerializer
 from utils.utils import send_notifications, user_is_inspector
+from utils.utils.pagination import CustomPageSizePagination
 
 
 class StripeViewset(viewsets.GenericViewSet):
@@ -235,3 +237,21 @@ class StripeViewset(viewsets.GenericViewSet):
         action_account = request.data.get('action', None)
         client_secret = self.api.account_session_action(user.stripe_account_id, action_account)
         return Response(client_secret)
+
+
+class TransactionListViewset(viewsets.GenericViewSet, viewsets.mixins.ListModelMixin):
+    """
+    A viewset for handling transaction-related operations.
+    """
+    queryset = Transaction.objects.all().order_by('-created')
+    pagination_class = CustomPageSizePagination
+    serializer_class = TransactionListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['status', 'description', 'created_by__first_name', 'created_by__last_name', 'created_by__email',
+                     'job__title', 'recipient__first_name', 'recipient__last_name', 'recipient__email']
+    ordering_fields = ['id', 'created', 'amount', 'status', 'transaction_type', 'description', 'job', 'recipient']
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset().filter(created_by=user)
+        return queryset

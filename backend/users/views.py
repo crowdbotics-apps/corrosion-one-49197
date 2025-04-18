@@ -448,8 +448,8 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
                 return Response(UserLoginResponseSerializer(user).data)
             else:
                 return Response("Unsupported account type", status=status.HTTP_400_BAD_REQUEST)
-        # if not user.email_verified:
-        #     return Response("Please verify your email address", status=status.HTTP_400_BAD_REQUEST)
+        if not user.email_verified:
+            return Response("Please verify your email address", status=status.HTTP_400_BAD_REQUEST)
         # if not user.phone_verified:
         #     return Response("Please verify your phone number", status=status.HTTP_400_BAD_REQUEST)
         if not user.is_active:
