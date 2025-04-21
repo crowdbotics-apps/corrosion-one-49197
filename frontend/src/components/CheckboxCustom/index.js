@@ -14,22 +14,24 @@ export default function CustomCheckbox({ text, onCheck, checked }) {
   return (
     <label style={styles.label}>
       {/* Hidden native checkbox for accessibility */}
-      <input
-        type="checkbox"
-        checked={checkedI}
-        onChange={handleChange}
-        style={styles.hiddenCheckbox}
-      />
-
-      {/* Visual replacement for the checkbox */}
-      <span
-        style={{
-          ...styles.customCheckbox,
-          backgroundColor: checked ? "#087EA4" : "#fff",
-        }}
-      >
+      <div style={{width: '40px'}}>
+        <input
+          type="checkbox"
+          checked={checkedI}
+          onChange={handleChange}
+          style={styles.hiddenCheckbox}
+        />
+        <span
+          style={{
+            ...styles.customCheckbox,
+            backgroundColor: checked ? "#087EA4" : "#fff",
+          }}
+        >
         {checked && <span style={styles.checkmark}></span>}
       </span>
+      </div>
+
+      {/* Visual replacement for the checkbox */}
 
       <span style={styles.text}>{text}</span>
     </label>
