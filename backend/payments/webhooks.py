@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from munch import munchify
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from sentry_sdk import capture_message, set_context
@@ -46,6 +47,8 @@ logger = logging.getLogger('django')
 
 
 class StripeWebhookAPIView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
     """
     API view to handle Stripe webhooks.
     """
@@ -89,10 +92,11 @@ class StripeWebhookAPIView(APIView):
         """
         payload = request.body
         sig_header = request.headers['STRIPE_SIGNATURE']
+        endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
         try:
             event = stripe.Webhook.construct_event(
-                payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+                payload, sig_header, endpoint_secret
             )
         except ValueError as e:  # Invalid payload
             return Response(status=400)
@@ -165,7 +169,11 @@ def payment_intent_succeeded(event):
     transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
     if not transaction_object:
         return Response()
-    transaction_object.status = Transaction.COMPLETED
+    money_held = payment_intent.metadata.get('held', False)
+    if money_held:
+        transaction_object.status = Transaction.HELD
+    else:
+        transaction_object.status = Transaction.COMPLETED
     transaction_object.stripe_response = event
     transaction_object.save()
     return Response()

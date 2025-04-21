@@ -45,8 +45,8 @@ def create_initial_transaction(user_owner, user_inspector, amount, job, currency
     tx = Transaction.objects.create(
         amount=amount,
         currency=currency,
-        owner=user_owner,
-        inspector=user_inspector,
+        created_by=user_owner,
+        recipient=user_inspector,
         description=description,
         status=Transaction.PENDING,
         transaction_type=Transaction.DEBIT,
@@ -66,28 +66,26 @@ def create_initial_transaction(user_owner, user_inspector, amount, job, currency
         customer=customer,
         metadata={
             "transaction_id": tx.id,
-            "user_owner_id": tx.owner.id,
-            "user_inspector_id": tx.inspector.id if tx.inspector else None,
+            "user_owner_id": tx.created_by.id,
+            "user_inspector_id": tx.recipient.id if tx.recipient else None,
+            "held": True
         }
     )
 
 
-    if hasattr(payment_intent, 'status') and payment_intent.status == "succeeded":
-        # Actualiza la transacción
-        tx.stripe_payment_intent_id = payment_intent.id
-        tx.transfer_group = transfer_group
-        tx.status = Transaction.HELD  # Fondos retenidos
-        # tx.stripe_response = payment_intent
-        tx.save()
+    if hasattr(payment_intent, 'status'):
+        if payment_intent.status == "succeeded":
+            tx.stripe_payment_intent_id = payment_intent.id
+            tx.transfer_group = transfer_group
+            tx.status = Transaction.HELD
+            tx.save()
+        else:
+            tx.status = Transaction.FAILED
+            tx.save()
 
-    else:
-        tx.status = Transaction.FAILED
-        # tx.stripe_response = payment_intent
-        tx.save()
+            message = f"PaymentIntent not succeeded: {payment_intent.status}" if hasattr(payment_intent, 'status') else payment_intent.user_message
 
-        message = f"PaymentIntent not succeeded: {payment_intent.status}" if hasattr(payment_intent, 'status') else payment_intent.user_message
-
-        return tx, message
+            return tx, message
 
     return tx, None
 
@@ -99,9 +97,9 @@ def release_funds_to_inspector(tx_id, commission_rate=0):
     tx = Transaction.objects.get(id=tx_id)
 
     if tx.status != Transaction.HELD:
-        return None, f"Transaction {tx.id} cannot be released (status={tx.status})."
+        return None, f"Transaction {tx.id} cannot be released (status={tx.get_status_display()})."
 
-    inspector = tx.inspector
+    inspector = tx.recipient
     if not inspector or not inspector.stripe_account_id:
         return None, "Inspector not set or doesn't have a stripe_account_id."
     if not inspector.stripe_payouts_enabled:
@@ -133,9 +131,58 @@ def release_funds_to_inspector(tx_id, commission_rate=0):
     if hasattr(transfer, 'created'):
         tx.stripe_transfer_id = transfer.id
         tx.status = Transaction.COMPLETED
-        # tx.stripe_response = transfer
         tx.save()
     else:
         return None, transfer.user_message
+
+    return tx, None
+
+
+@transaction.atomic
+def charge_pending_amount(tx_id):
+    """
+    Charge the pending amount for a transaction.
+
+    Args:
+        tx_id (int): The ID of the transaction to charge.
+
+    Returns:
+        tuple: A tuple containing the transaction and an error message (if any).
+    """
+    tx = Transaction.objects.get(id=tx_id)
+
+    if tx.status != Transaction.PENDING:
+        return None, f"Transaction {tx.id} cannot be charged (status={tx.status})."
+    payment_method = tx.created_by.stripe_cards.filter(default=True).first()
+    if not payment_method:
+        return None, "Please add a card before continue"
+
+    stripe_client = StripeClient()
+    payment_intent = stripe_client.create_payment_intent(
+        amount=int(tx.amount * 100),
+        description=tx.description,
+        currency=tx.currency,
+        payment_method_id=payment_method.card_id,
+        customer=tx.created_by.stripe_customer_id,
+        metadata={
+            "transaction_id": tx.id,
+            "user_owner_id": tx.created_by.id,
+            "user_inspector_id": tx.recipient.id if tx.recipient else None,
+            "held": False
+        },
+        account_id=tx.recipient.stripe_account_id
+    )
+
+    if hasattr(payment_intent, 'status'):
+        if payment_intent.status == "succeeded":
+            tx.stripe_payment_intent_id = payment_intent.id
+            tx.status = Transaction.COMPLETED
+            tx.save()
+        else:
+            tx.status = Transaction.FAILED
+            tx.save()
+
+            message = f"PaymentIntent not succeeded: {payment_intent.status}" if hasattr(payment_intent, 'status') else payment_intent.user_message
+            return tx, message
 
     return tx, None

@@ -253,5 +253,7 @@ class TransactionListViewset(viewsets.GenericViewSet, viewsets.mixins.ListModelM
 
     def get_queryset(self):
         user = self.request.user
-        queryset = super().get_queryset().filter(created_by=user)
-        return queryset
+        queryset = super().get_queryset()
+        if user_is_inspector(user):
+            return queryset.filter(recipient=user)
+        return queryset.filter(created_by=user)
