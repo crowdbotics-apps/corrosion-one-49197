@@ -16,6 +16,7 @@ import {
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { PaymentIcon } from "react-svg-credit-card-payment-icons";
 import MDButton from "../../../../components/MDButton";
+import Grid from "@mui/material/Grid"
 
 const PaymentCard = ({
                        nameOnCard,
@@ -50,14 +51,7 @@ const PaymentCard = ({
   };
 
   return (
-    <Card
-      sx={{
-        p: 2,
-        display: "flex",
-        justifyContent: "space-between",
-        borderRadius: "12px",
-      }}
-    >
+    <Card sx={{ p: 2, display: "flex", justifyContent: "space-between", borderRadius: "12px", }}>
       <MDBox
         display="flex"
         alignItems="center"
@@ -85,17 +79,13 @@ const PaymentCard = ({
         </MDBox>
       </MDBox>
 
-      <MDBox
-        borderTop={"2px solid #E4E5E8"}
-        width={"100%"}
-        display={"flex"}
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <MDTypography sx={{ fontSize: "24px", marginTop: "10px" }}>
-          **** **** **** {cardNumber}
-        </MDTypography>
-        <MDBox>
+      <Grid container borderTop={"2px solid #E4E5E8"} alignItems="center" justifyContent="space-between" paddingTop={'10px'}>
+        <Grid>
+          <MDTypography sx={{ fontSize: "24px"}}>
+            **** **** **** {cardNumber}
+          </MDTypography>
+        </Grid>
+        <Grid >
           <Switch
             checked={isActive}
             disabled={loading}
@@ -106,8 +96,9 @@ const PaymentCard = ({
           <IconButton onClick={handleDelete} size="medium" color="error">
             <DeleteOutlinedIcon />
           </IconButton>
-        </MDBox>
-      </MDBox>
+        </Grid>
+      </Grid>
+
       <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
         <DialogTitle>Delete Card</DialogTitle>
         <DialogContent>
