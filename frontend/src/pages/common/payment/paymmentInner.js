@@ -20,6 +20,8 @@ import {
 
 import {CardElement, Elements, useElements, useStripe} from "@stripe/react-stripe-js";
 import DataTable from "../../../components/DataTable";
+import SearchBar from "../../../components/SearchBar";
+import DateBar from "../../../components/DateBar";
 
 const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 
@@ -313,6 +315,21 @@ function PaymentInner() {
   const renderDatatable = () => {
     return (
       <MDBox mt={2}>
+        <MDTypography sx={{fontWeight: 'bold'}} mb={4} mt={2}>Transactions</MDTypography>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <SearchBar loading={loading} search={getTransactions} setSearchQuery={setSearchQuery}/>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <MDBox display="flex" justifyContent={{xs: 'flex-start', md: 'flex-end'}}>
+              <DateBar
+                startDate={startDate}
+                endDate={endDate}
+                onDateChange={handleDateChange}
+              />
+            </MDBox>
+          </Grid>
+        </Grid>
         <DataTable
           loading={loading}
           loadingText={'Loading...'}
