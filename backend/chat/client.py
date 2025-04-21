@@ -7,6 +7,8 @@ from django.conf import settings
 from django.db import transaction
 
 from chat.models import TwilioUserToken, Conversation
+from notifications.models import Notification
+from utils.utils import send_notifications
 
 
 class TwilioClient:
@@ -61,6 +63,16 @@ class TwilioClient:
             chat.participants.add(user)
             chat.participants.add(counterpart)
             chat.save()
+            send_notifications(
+                users=[counterpart],
+                title=f'New Chat Created - {user.get_full_name()}',
+                description=f'New chat from {user.get_full_name()}',
+                extra_data={
+                    'chat_id': chat.id,
+                },
+                n_type=Notification.NotificationType.NEW_MESSAGE,
+                channel=Notification.NotificationChannel.EMAIL,
+            )
         if not chat.conversation_sid:
             friendly_name = f'{user.id}_{counterpart.id}'
             conversation = self.twilio_client.conversations.v1.conversations.create(friendly_name=friendly_name)
