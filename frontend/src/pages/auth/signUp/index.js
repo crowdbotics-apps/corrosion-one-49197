@@ -71,6 +71,7 @@ function SignUp() {
   const recaptchaRef = useRef(null);
   const [recaptchaToken, setRecaptchaToken] = useState('xd');
   const [marketingAgreement, setMarketingAgreement] = useState(false);
+  const [ctaAgreement, setCtaAgreement] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
 
 
@@ -800,8 +801,15 @@ function SignUp() {
             errors={formikSecondStep.errors}
             mb={2}
           />
+          <CustomCheckbox
+            text="I agree to receive SMS messages from Corrosion One LLC. Message and data rates may apply. Message frequency varies. Reply STOP to unsubscribe or HELP for help. View our Privacy Policy and Terms & Conditions."
+            onCheck={(value) => {
+              setCtaAgreement(value)
+            }}
+            checked={ctaAgreement}
+          />
           {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
-            <MDTypography variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
+            <MDTypography sx={{cursor: 'pointer'}} variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
               Didn&apos;t receive the verification email?{" "}
             </MDTypography>
           </MDBox>}
@@ -811,7 +819,7 @@ function SignUp() {
               variant="contained"
               color="primary"
               loading={loading}
-              disabled={loading}
+              disabled={loading || !ctaAgreement}
               size={"large"}
               type='submit'
             >
@@ -882,6 +890,17 @@ function SignUp() {
                 />
               </>
             ) : (
+              <>
+                <MDBox
+                  component={"img"}
+                  onClick={() => fileInputRef?.current?.click()}
+                  src={imgPreview}
+                  alt={"Profile Picture"}
+                  width={100}
+                  height={100}
+                  borderRadius={'50%'}
+                  sx={{objectFit: 'cover'}}
+                />
               <MDTypography
                 component={"span"}
                 variant='caption'
@@ -898,6 +917,7 @@ function SignUp() {
                   onChange={handleFileChange}
                 />
               </MDTypography>
+              </>
             )
             }
             {formikSecondStepInspector.errors.profile_picture && (
@@ -950,12 +970,20 @@ function SignUp() {
             variant={"caption"}
             textAlign={"left"}
             sx={{fontStyle: "italic", color: "#141514"}}
+            mb={3}
 
           >
             Upload documents in your profile settings
           </MDTypography>
+          <CustomCheckbox
+            text="I agree to receive SMS messages from Corrosion One LLC. Message and data rates may apply. Message frequency varies. Reply STOP to unsubscribe or HELP for help. View our Privacy Policy and Terms & Conditions."
+            onCheck={(value) => {
+              setCtaAgreement(value)
+            }}
+            checked={ctaAgreement}
+          />
           {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
-            <MDTypography variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
+            <MDTypography sx={{cursor: 'pointer'}} variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
               Didn&apos;t receive the verification email?{" "}
             </MDTypography>
           </MDBox>}
@@ -965,7 +993,7 @@ function SignUp() {
               variant="contained"
               color="primary"
               loading={loading}
-              disabled={loading}
+              disabled={loading || !ctaAgreement}
               size={"large"}
               type='submit'
             >
@@ -1094,6 +1122,7 @@ function SignUp() {
           <CustomCheckbox
             text="Send Me Marketing And Promotional Emails"
             onCheck={(value) => setMarketingAgreement(value)}
+            checked={marketingAgreement}
           />
           <MDBox display={'flex'} alignItems={'center'} justifyContent={'center'} mt={7}>
             <ReCAPTCHA

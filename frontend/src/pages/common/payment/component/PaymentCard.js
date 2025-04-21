@@ -26,6 +26,7 @@ const PaymentCard = ({
                        loading,
                        onToggle,
                        cardBrand,
+                       deleteCard
                      }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -40,7 +41,7 @@ const PaymentCard = ({
   };
 
   const confirmDelete = () => {
-    console.log("Item deleted");
+    deleteCard(cardId);
     setOpenDeleteModal(false);
   };
 
