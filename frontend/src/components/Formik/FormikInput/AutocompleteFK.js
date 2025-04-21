@@ -70,6 +70,7 @@ const AutocompleteFK = React.memo(
                   name={fieldName}
                   variant="outlined"
                   {...inputPropsWithHeight}
+                  autoComplete={"off"}
                   helperText={overrideError && !!errorText ? overrideError : errorText}
                   error={!!errorText}
                   label={label}

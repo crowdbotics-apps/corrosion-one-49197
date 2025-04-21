@@ -284,7 +284,8 @@ function PostJob() {
                   const currentValues = [...formik.values.country]
                   if (currentValues.find((item) => item.id === value?.[0]?.id)) return
                   currentValues.push(value[0])
-                  formik.setFieldValue('country', currentValues)
+                  formik.setFieldValue('country', [value[0]])
+                  formik.setFieldValue('regions', [])
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
@@ -301,8 +302,7 @@ function PostJob() {
                 onChange={(value) => {
                   const currentValues = [...formik.values.regions]
                   if (currentValues.find((item) => item.id === value?.[0]?.id)) return
-                  currentValues.push(value[0])
-                  formik.setFieldValue('regions', currentValues)
+                  formik.setFieldValue('regions', [value[0]])
                 }}
               />
               <MDBox display="flex" flexDirection="row" flexWrap="wrap" gap={1} mb={2}>
