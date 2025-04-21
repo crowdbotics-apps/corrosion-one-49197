@@ -135,6 +135,19 @@ function PaymentInner() {
     })
   }
 
+  const deleteCard = (cardId) => {
+    const data = {card_id: cardId}
+    setLoading(true)
+    api.deleteCard(data).handle({
+      successMessage: 'Successfully deleted card',
+      onSuccess: (result) => {
+        getCards()
+      },
+      errorMessage: 'Error deleting card',
+      onFinally: () => setLoading(false)
+    })
+  }
+
 
   const handleToggle = (cardId) => {
     setDefaultCard(cardId)
@@ -285,6 +298,7 @@ function PaymentInner() {
                   isActive={card.default}
                   loading={loading}
                   onToggle={handleToggle}
+                  deleteCard={deleteCard}
                 />
               </Grid>
             )
