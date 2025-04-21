@@ -249,9 +249,8 @@ class StripeClient:
         if LOG_ACTIVE:
             logger.info('delete_user_card')
         try:
-            self.stripe.Customer.delete_source(
-                user.stripe_customer_id,
-                card_id
+            self.stripe.PaymentMethod.detach(
+                card_id,
             )
         except Exception as error:
             logger.info(error)
