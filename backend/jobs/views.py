@@ -62,7 +62,8 @@ class JobViewSet(
         if user_is_inspector(user):
             inspector = user.inspector
             credentials = list(inspector.credentials.values_list('id', flat=True))
-            active_jobs = jobs.filter(active=True, certifications__in=credentials)
+            regions = list(inspector.regions.values_list('id', flat=True))
+            active_jobs = jobs.filter(active=True, certifications__in=credentials, regions__in=regions)
             if query_params.get('favorite', None):
                 active_jobs = active_jobs.filter(favorites__inspector=inspector)
                 return active_jobs.distinct()

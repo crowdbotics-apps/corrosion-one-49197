@@ -801,11 +801,6 @@ function SignUp() {
             errors={formikSecondStep.errors}
             mb={2}
           />
-          {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
-            <MDTypography sx={{cursor: 'pointer'}} variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
-              Didn&apos;t receive the verification email?{" "}
-            </MDTypography>
-          </MDBox>}
           <CustomCheckbox
             text="I agree to receive SMS messages from Corrosion One LLC. Message and data rates may apply. Message frequency varies. Reply STOP to unsubscribe or HELP for help. View our Privacy Policy and Terms & Conditions."
             onCheck={(value) => {
@@ -813,6 +808,11 @@ function SignUp() {
             }}
             checked={ctaAgreement}
           />
+          {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
+            <MDTypography sx={{cursor: 'pointer'}} variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
+              Didn&apos;t receive the verification email?{" "}
+            </MDTypography>
+          </MDBox>}
           <MDBox mt={10} textAlign={"center"}>
             <MDButton
               fullWidth
