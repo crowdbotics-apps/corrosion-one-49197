@@ -14,7 +14,7 @@ export const dataTableModel = {
     { Header: "Title", accessor: "title",width: 120},
     { Header: "Description", accessor: "description",width: 400},
     { Header: "Date", accessor: "timestamp",width: 150 },
-    { Header: "Is Read", accessor: "is_read",width: 150 },
+    { Header: "Is Read", accessor: "is_read",width: 80 },
     { Header: "Actions",accessor: "actions", disableOrdering: true, width: 180 },
   ],
   rows: [],
@@ -36,7 +36,7 @@ const renderActions = (item, markAsRead) => {
 export const renderTableRow = (item, markAsRead) => {
   item.timestamp = moment(item.timestamp).format('MM/DD/YYYY hh:mm A' )
   item.is_read_raw = item.is_read
-  item.is_read = item.is_read ? <CheckCircleOutlineIcon color={'primary'} sx={{  width: 20, height: 20 }} /> :''
+  item.is_read = item.is_read ? <MDBox ml={4} display={'flex'} justifyContent={'center'} alignItems={'center'}><CheckCircleOutlineIcon color={'primary'} sx={{  width: 20, height: 20 }} /></MDBox> :''
   item.actions = renderActions(item, markAsRead)
   return item
 }
