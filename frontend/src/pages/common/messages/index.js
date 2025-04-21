@@ -1,7 +1,18 @@
 
 import AdminLayout from "../../../components/AdminLayout"
 import MDBox from "../../../components/MDBox"
-import { CircularProgress, Grid, IconButton, InputAdornment, Menu, MenuItem, TextField } from "@mui/material"
+import {
+  Box,
+  CircularProgress,
+  Dialog, DialogActions, DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Menu,
+  MenuItem,
+  TextField
+} from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search";
 import React, {useEffect, useRef, useState} from "react";
 import {checkUrl, date_fmt, showMessage, useApi} from "../../../services/helpers";
@@ -38,19 +49,7 @@ function HomeOwnerMessages() {
   const fileRef = useRef(null)
 
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleDelete = () => {
-    handleMenuClose();
-  };
-
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const getChatsAvailable = (search = '') => {
     setLoading(true)
@@ -79,6 +78,19 @@ function HomeOwnerMessages() {
         onFinally: () => setLoading(false)
       }
     )
+  }
+
+  const deleteChat = (id) => {
+    api.deleteChat(id).handle({
+      successMessage: 'Successfully deleted chat',
+      onSuccess: (res) => {
+        setOpenDeleteModal(false)
+        setSelectedChat(null)
+        getChatsAvailable()
+      },
+      errorMessage: 'Error deleting chat',
+      onFinally: () => setLoading(false)
+    })
   }
 
   const scrollToBottom = () => {
@@ -172,6 +184,26 @@ function HomeOwnerMessages() {
     }
   };
 
+
+
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+
+  const confirmDelete = () => {
+    deleteChat(selectedChat?.id)
+  };
+
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
+
   useEffect(() => {
     if (currentConversation.conversation_sid && currentConversation.token) {
       initializeTwilio()
@@ -252,7 +284,7 @@ function HomeOwnerMessages() {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           >
-            <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>
+            <MenuItem onClick={() => setOpenDeleteModal(true)} sx={{ color: 'error.main' }}>
               <DeleteOutlinedIcon sx={{ marginRight: '8px', fontSize: '25px !important' , color: 'error.main' }} />
               Delete
             </MenuItem>
@@ -393,7 +425,6 @@ function HomeOwnerMessages() {
             />
           <MDButton
             variant="text"
-            onClick={sendMessage}
             disabled={sendingMessage || loading}
             onClick={() => fileRef.current?.click()}
           >
@@ -401,8 +432,8 @@ function HomeOwnerMessages() {
           </MDButton>
           <TextField
             placeholder="Type a message..."
-            value={messageToSend}
-            disabled={sendingMessage || loading}
+            value={messageToSend || selectedFile ? selectedFile?.name : ''}
+            disabled={sendingMessage || loading || selectedFile}
             onChange={(e) => setMessageToSend(e.target.value)}
             variant="outlined"
             sx={{
@@ -425,6 +456,21 @@ function HomeOwnerMessages() {
               },
             }}
           />
+          {selectedFile && <MDButton
+            variant="contained"
+            color="error"
+            disabled={sendingMessage || loading}
+            onClick={() => setSelectedFile(null)}
+            title={'Remove file'}
+            sx={{
+              height: '40px',
+              borderRadius: '12px',
+              marginRight: '10px',
+            }}
+
+          >
+            <DeleteOutlinedIcon />
+          </MDButton>}
           <MDButton
             variant="contained"
             color="primary"
@@ -612,6 +658,38 @@ function HomeOwnerMessages() {
           {renderCurrentChat()}
         </Grid>
       </Grid>
+      <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
+        <DialogTitle>Delete Chat</DialogTitle>
+        <DialogContent>
+          <p>Are you sure you want to delete this chat?</p>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              flexGrow: 1,
+            }}
+          >
+            <MDButton
+              variant="outlined"
+              onClick={handleCloseDeleteModal}
+              color="secondary"
+            >
+              Cancel
+            </MDButton>
+          </Box>
+          <MDButton onClick={confirmDelete} color="error">
+            Delete
+          </MDButton>
+        </DialogActions>
+      </Dialog>
     </AdminLayout>
   );
 }

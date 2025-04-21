@@ -210,6 +210,10 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/chat/${id}/`);
   }
 
+  deleteChat(id: number | string) {
+    return this.simple_delete(`${API_VERSION_PREFIX}/chat/${id}/`);
+  }
+
   getInspectorPublic(id: string | number) {
     return this.simple_get(`${API_VERSION_PREFIX}/inspector/${id}/public-profile/`);
   }
