@@ -13,7 +13,7 @@ from jobs.models import Job, Bid, JobFavorite
 from jobs.serializers import JobListSerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
 from notifications.models import Notification
-from payments.helpers import create_initial_transaction, release_funds_to_inspector
+from payments.helpers import create_initial_transaction, release_funds_to_inspector, charge_pending_amount
 from payments.models import Transaction
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
@@ -160,9 +160,23 @@ class JobViewSet(
             job=job,
         ).first()
 
-        transfer, error_message =release_funds_to_inspector(tx_id=tx.id)
+        transfer, error_message = release_funds_to_inspector(tx_id=tx.id)
         if error_message:
             return Response(error_message, status=HTTP_400_BAD_REQUEST)
+
+        pending_amount = job.total_amount - tx.amount
+        if pending_amount > 0:
+            tx_2 = Transaction.objects.create(
+                amount=pending_amount,
+                currency=tx.currency,
+                created_by=job.created_by.user,
+                recipient=job.inspector.user,
+                description=f"Job id: {job.id} - {job.title}",
+                status=Transaction.HELD,
+                transaction_type=Transaction.CREDIT,
+                job=job
+            )
+            transfer_2, error_message = charge_pending_amount(tx_id=tx_2.id)
 
         send_notifications(
             users=[job.inspector.user],

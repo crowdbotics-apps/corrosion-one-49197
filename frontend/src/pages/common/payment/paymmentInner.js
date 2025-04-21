@@ -1,5 +1,4 @@
 import AdminLayout from "../../../components/AdminLayout";
-import DataTable from "./component/dataTable"
 import React, {useEffect, useRef, useState} from "react";
 import {dataTableModel, renderTableRow} from "./utils"
 import {useApi, useLoginStore} from "../../../services/helpers";
@@ -20,6 +19,7 @@ import {
 
 
 import {CardElement, Elements, useElements, useStripe} from "@stripe/react-stripe-js";
+import DataTable from "../../../components/DataTable";
 
 const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 
@@ -41,6 +41,7 @@ function PaymentInner() {
   const [searchQuery, setSearchQuery] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [datatable, setDatatable] = useState({...dataTableModel});
 
 
 
@@ -117,6 +118,24 @@ function PaymentInner() {
     })
   }
 
+  const getTransactions = (search = '', page = 1, ordering = order, dates = null) => {
+    setLoading(true);
+    api.getTransactions({search, page, ordering, page_size: 10, dates}).handle({
+      onSuccess: (result) => {
+        const {count, results} = result.data
+        const tmp = {...dataTableModel}
+        tmp.rows = results.map(e => renderTableRow(e))
+        setDatatable(tmp)
+        setNumberOfItems(count)
+        setNumberOfItemsPage(results.length)
+        setOrder(ordering)
+      },
+      errorMessage: 'Error getting jobs',
+      onFinally: () => setLoading(false)
+    })
+  }
+
+
   const handleToggle = (cardId) => {
     setDefaultCard(cardId)
   }
@@ -157,13 +176,33 @@ function PaymentInner() {
   }, [])
 
 
+  const handleDateChange = (newStartDate, newEndDate) => {
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+  };
+
+  useEffect(() => {
+    if (loading) return
+    // Set up the timer
+    const debounceTimer = setTimeout(() => {
+      getTransactions(searchQuery)
+    }, 500)
+
+
+    // Clear the timer if searchQuery changes before the delay is over
+    return () => {
+      clearTimeout(debounceTimer)
+    }
+  }, [searchQuery])
+
   const renderInspectorBody = () => {
     if (accountSecretClient && showStripe) {
       return (
+        <>
         <ConnectComponentsProvider connectInstance={stripeRef.current}>
           {loginStore.stripe_account_linked === false && <ConnectAccountOnboarding
             onExit={() => {
-              getUserDetail()
+              window.location.reload()
             }}
             onLoadError={
               (error) => {
@@ -171,8 +210,13 @@ function PaymentInner() {
               }
             }
           />}
-          {loginStore.stripe_account_linked === true && <><ConnectBalances/><ConnectAccountManagement/></>}
+          {loginStore.stripe_account_linked === true && <><
+            ConnectBalances/>
+            {renderDatatable()}
+            <ConnectAccountManagement/>
+          </>}
         </ConnectComponentsProvider>
+        </>
       )
     }
     if (loginStore.stripe_account_linked === false) {
@@ -210,7 +254,7 @@ function PaymentInner() {
 
   const renderOwnerBody = () => {
     return (
-
+      <>
       <MDBox>
         <Grid container spacing={2} mb={3} mt={0}>
           <Grid item xs={6} sm={3}>
@@ -246,7 +290,30 @@ function PaymentInner() {
             )
           })}
         </Grid>
+      </MDBox>
+        {renderDatatable()}
+      </>
+    )
+  }
 
+  const renderDatatable = () => {
+    return (
+      <MDBox mt={2}>
+        <DataTable
+          loading={loading}
+          loadingText={'Loading...'}
+          table={datatable}
+          currentPage={currentPage}
+          numberOfItems={numberOfItems}
+          numberOfItemsPage={numberOfItemsPage}
+          searchFunc={getTransactions}
+          searchQuery={searchQuery}
+          pageSize={10}
+          onPageChange={page => {
+            getTransactions(searchQuery, page)
+            setCurrentPage(page)
+          }}
+        />
       </MDBox>
     )
   }
@@ -259,21 +326,6 @@ function PaymentInner() {
     >
       {loginStore.user_type === ROLES.INSPECTOR && renderInspectorBody()}
       {loginStore.user_type === ROLES.OWNER && renderOwnerBody()}
-      {/*<DataTable*/}
-      {/*  loading={loading}*/}
-      {/*  loadingText={'Loading...'}*/}
-      {/*  table={[]}*/}
-      {/*  currentPage={currentPage}*/}
-      {/*  numberOfItems={numberOfItems}*/}
-      {/*  numberOfItemsPage={numberOfItemsPage}*/}
-      {/*  searchFunc={() => {}}*/}
-      {/*  searchQuery={searchQuery}*/}
-      {/*  pageSize={10}*/}
-      {/*  onPageChange={page => {*/}
-      {/*    // getNotifications(searchQuery, page)*/}
-      {/*    setCurrentPage(page)*/}
-      {/*  }}*/}
-      {/*/>*/}
     </AdminLayout>
   );
 }

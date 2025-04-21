@@ -97,8 +97,10 @@ class Transaction(TimeStampedModel):
     transaction_id = models.CharField(max_length=100, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=10)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='owner_transactions', null=True, blank=True)
-    inspector = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='inspector_transactions', null=True, blank=True)
+    # Created by / owner
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_by_transactions', null=True, blank=True)
+    # Recipient / inspector
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='recipient_transactions', null=True, blank=True)
     job = models.ForeignKey(Job, on_delete=models.PROTECT, related_name='transactions', null=True, blank=True)
 
     # Stripe Payment Intent details
@@ -109,11 +111,6 @@ class Transaction(TimeStampedModel):
     description = models.TextField(blank=True, null=True)
     stripe_response = models.JSONField(blank=True, null=True)
     transfer_group = models.CharField(max_length=100, null=True, blank=True)
-
-    #booking data
-    # session_id = models.ForeignKey('bookings.Session', on_delete=models.PROTECT, related_name='transactions', null=True, blank=True)
-    #paid question data
-    # paid_question = models.ForeignKey('twilio_client.PaidQuestion', on_delete=models.CASCADE, related_name='transactions', null=True, blank=True)
 
 
     def __str__(self):
@@ -129,11 +126,3 @@ class Transaction(TimeStampedModel):
         verbose_name = 'Transaction'
         verbose_name_plural = 'Transactions'
         ordering = ['-created']
-
-
-# @receiver(post_save, sender=Transaction)
-# def transaction_status_change(sender, instance, created, **kwargs):
-#     if not created and instance.status == Transaction.COMPLETED:
-#         # This code will execute when an existing Transaction is updated to COMPLETED status
-#         # Add your logic here
-#         logger.info(f"Transaction {instance.transaction_id} has been marked as completed.")

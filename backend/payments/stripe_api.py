@@ -483,14 +483,27 @@ class StripeClient:
             logger.info(error)
             return error
 
-    def create_payment_intent(self, user, amount, description):
+    def create_payment_intent(
+            self,
+            amount,
+            description,
+            currency,
+            payment_method_id,
+            customer,
+            metadata,
+            account_id
+    ):
         """
         Create a Stripe PaymentIntent.
 
         Args:
-            user (User): The user for whom to create the PaymentIntent.
             amount (int): The amount for the PaymentIntent.
             description (str): The description of the PaymentIntent.
+            currency (str): The currency for the PaymentIntent.
+            payment_method_id (str): The ID of the payment method.
+            customer (str): The ID of the Stripe customer.
+            metadata (dict): Additional metadata for the PaymentIntent.
+            account_id (str): The ID of the Stripe account.
 
         Returns:
             dict: The created PaymentIntent or an error.
@@ -498,15 +511,18 @@ class StripeClient:
         try:
             payment_intent = self.stripe.PaymentIntent.create(
                 amount=amount,
-                automatic_payment_methods={
-                    "enabled": True,
-                    "allow_redirects": "never"
-                },
-                currency="usd",
-                customer=user.stripe_customer_id,
+                payment_method=payment_method_id,
+                payment_method_types=["card"],
+                off_session=True,
+                currency=currency,
+                customer=customer,
                 description=description,
                 confirm=True,
-                metadata={'user_id': user.id}
+                metadata=metadata,
+                transfer_data={
+                    "destination": account_id,
+                },
+
             )
             return payment_intent
         except Exception as error:

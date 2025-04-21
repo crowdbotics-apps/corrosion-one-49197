@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from munch import munchify
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from sentry_sdk import capture_message, set_context
@@ -46,6 +47,8 @@ logger = logging.getLogger('django')
 
 
 class StripeWebhookAPIView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
     """
     API view to handle Stripe webhooks.
     """
@@ -89,10 +92,11 @@ class StripeWebhookAPIView(APIView):
         """
         payload = request.body
         sig_header = request.headers['STRIPE_SIGNATURE']
+        endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
         try:
             event = stripe.Webhook.construct_event(
-                payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+                payload, sig_header, endpoint_secret
             )
         except ValueError as e:  # Invalid payload
             return Response(status=400)
@@ -162,37 +166,16 @@ def payment_intent_succeeded(event):
     """
     logger.info('payment_intent_succeeded')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(transaction_id=payment_intent.id).first()
+    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
     if not transaction_object:
         return Response()
-    transaction_object.status = Transaction.COMPLETED
+    money_held = payment_intent.metadata.get('held', False)
+    if money_held:
+        transaction_object.status = Transaction.HELD
+    else:
+        transaction_object.status = Transaction.COMPLETED
     transaction_object.stripe_response = event
-    if transaction_object.paid_question:
-        paid_question = transaction_object.paid_question
-        paid_question.paid = True
-        paid_question.save()
     transaction_object.save()
-
-    # Send notification
-    if transaction_object.paid_question:
-        participants = transaction_object.paid_question.conversation.participants
-        if participants.exists():
-            specialist_participant = participants.filter(user_type=User.UserType.SPECIALIST).first()
-            seeker_participant = participants.filter(user_type=User.UserType.SEEKER).first()
-
-            send_notifications(
-                users=[specialist_participant.user],
-                title=seeker_participant.user.name,
-                description='Sent you a payment',
-                extra_data={
-                    "message": True,
-                    "code": "payment_received",
-                    "sender_id": seeker_participant.user.id,
-                    "counterpart_id": specialist_participant.user.id
-                },
-                from_user=seeker_participant.user
-            )
-
     return Response()
 
 
@@ -208,7 +191,7 @@ def payment_intent_failed(event):
     """
     logger.info('payment_intent_failed')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(transaction_id=payment_intent.id).first()
+    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
     if not transaction_object:
         return Response()
     transaction_object.status = Transaction.FAILED
@@ -229,7 +212,7 @@ def payment_intent_canceled(event):
     """
     logger.info('payment_intent_canceled')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(transaction_id=payment_intent.id).first()
+    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
     if not transaction_object:
         return Response()
     transaction_object.status = Transaction.CANCELLED
