@@ -281,6 +281,7 @@ function PaymentInner() {
                   nameOnCard={loginStore.first_name + ' ' + loginStore.last_name}
                   expireDate={card.exp_month + '/' + card.exp_year}
                   cardNumber={card.last4}
+                  cardBrand={card.brand}
                   isActive={card.default}
                   loading={loading}
                   onToggle={handleToggle}
