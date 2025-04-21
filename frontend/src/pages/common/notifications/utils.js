@@ -36,7 +36,7 @@ const renderActions = (item, markAsRead) => {
 export const renderTableRow = (item, markAsRead) => {
   item.timestamp = moment(item.timestamp).format('MM/DD/YYYY hh:mm A' )
   item.is_read_raw = item.is_read
-  item.is_read = item.is_read ? 'Yes' : 'No'
+  item.is_read = item.is_read ? '✅' : ''
   item.actions = renderActions(item, markAsRead)
   return item
 }
