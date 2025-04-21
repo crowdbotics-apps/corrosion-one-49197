@@ -116,24 +116,15 @@ const PaymentCard = ({
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            width: "100%",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              flexGrow: 1,
-            }}
+          <MDButton
+            variant="outlined"
+            onClick={handleCloseDeleteModal}
+            color="secondary"
           >
-            <MDButton
-              variant="outlined"
-              onClick={handleCloseDeleteModal}
-              color="secondary"
-            >
-              Cancel
-            </MDButton>
-          </Box>
+            Cancel
+          </MDButton>
           <MDButton onClick={confirmDelete} color="error">
             Delete
           </MDButton>
