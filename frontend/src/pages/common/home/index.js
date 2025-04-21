@@ -131,8 +131,8 @@ function HomeInspector() {
     </Card>
   );
 
-  const renderInternalCard = (title, number, icon) => (
-    <Grid item sm={4} xs={12}>
+  const renderInternalCard = (title, number, icon, onClick = () => {}) => (
+    <Grid item sm={4} xs={12} onClick={onClick}>
       <MDBox
         display="flex"
         justifyContent="space-between"
@@ -175,18 +175,18 @@ function HomeInspector() {
           <MDBox display="flex" flex={1} flexDirection="column" p={4} >
             <MDTypography sx={{fontWeight: 'bold'}} mb={4}>Recent Activities</MDTypography>
             {loginStore.user_type === ROLES.INSPECTOR && <Grid container borderTop={'2px solid #e0e0e0'} spacing={3}>
-              {renderInternalCard('Applied Jobs', dataInspector.applied, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
-              {renderInternalCard('Available Jobs', dataInspector.available, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
-              {renderInternalCard('Favorite Jobs', dataInspector.favorite, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
+              {renderInternalCard('Applied Jobs', dataInspector.applied, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>, () => navigate(ROUTES.APPLIED_JOBS))}
+              {renderInternalCard('Available Jobs', dataInspector.available, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>, () => navigate(ROUTES.FIND_JOBS))}
+              {renderInternalCard('Favorite Jobs', dataInspector.favorite, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>, () => navigate(ROUTES.FAVORITE))}
               {renderInternalCard('Bids', dataInspector.bids, <NotificationsActiveOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
               {renderInternalCard('Accepted Bids', dataInspector.accepted_bids, <BookmarkOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
               {renderInternalCard('Rejected Bids', dataInspector.rejected_bids, <BookmarkOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
             </Grid>}
             {loginStore.user_type === ROLES.OWNER && <Grid container borderTop={'2px solid #e0e0e0'} spacing={3}>
-              {renderInternalCard('Active Jobs', dataOwner.active, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
-              {renderInternalCard('Bids', dataOwner.bids, <NotificationsActiveOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
-              {renderInternalCard('All Jobs', dataOwner.all, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
-              {renderInternalCard('Finished Jobs', dataOwner.finished_jobs, <BookmarkOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>)}
+              {renderInternalCard('Active Jobs', dataOwner.active, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>, () => navigate(ROUTES.MY_JOBS))}
+              {renderInternalCard('Bids', dataOwner.bids, <NotificationsActiveOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>, () => navigate(ROUTES.BIDS))}
+              {renderInternalCard('All Jobs', dataOwner.all, <WorkOutlineOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>, () => navigate(ROUTES.MY_JOBS))}
+              {renderInternalCard('Finished Jobs', dataOwner.finished_jobs, <BookmarkOutlinedIcon sx={{width: '60px', height: '60px', color: '#006E90'}}/>, () => navigate(ROUTES.HISTORY))}
             </Grid>}
           </MDBox>
         </Card>
