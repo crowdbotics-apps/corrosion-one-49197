@@ -393,7 +393,6 @@ function HomeOwnerMessages() {
             />
           <MDButton
             variant="text"
-            onClick={sendMessage}
             disabled={sendingMessage || loading}
             onClick={() => fileRef.current?.click()}
           >
@@ -401,8 +400,8 @@ function HomeOwnerMessages() {
           </MDButton>
           <TextField
             placeholder="Type a message..."
-            value={messageToSend}
-            disabled={sendingMessage || loading}
+            value={messageToSend || selectedFile ? selectedFile?.name : ''}
+            disabled={sendingMessage || loading || selectedFile}
             onChange={(e) => setMessageToSend(e.target.value)}
             variant="outlined"
             sx={{
@@ -425,6 +424,21 @@ function HomeOwnerMessages() {
               },
             }}
           />
+          {selectedFile && <MDButton
+            variant="contained"
+            color="error"
+            disabled={sendingMessage || loading}
+            onClick={() => setSelectedFile(null)}
+            title={'Remove file'}
+            sx={{
+              height: '40px',
+              borderRadius: '12px',
+              marginRight: '10px',
+            }}
+
+          >
+            <DeleteOutlinedIcon />
+          </MDButton>}
           <MDButton
             variant="contained"
             color="primary"
