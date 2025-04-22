@@ -9,6 +9,7 @@ from rest_framework.relations import PrimaryKeyRelatedField
 
 from inspector.models import Credential, Inspector
 from inspector.serializers import CredentialSerializer, InspectorDetailSerializer, RegionSerializer, CountrySerializer
+from jobs.helpers import send_emails_to_inspectors
 from jobs.models import Job, MagicLinkToken, JobDocument, Bid
 from notifications.models import Notification
 from owner.models import Industry
@@ -107,6 +108,8 @@ class JobManagementSerializer(serializers.ModelSerializer):
     industries = PrimaryKeyRelatedField(many=True, queryset=Industry.objects.all())
     certifications = PrimaryKeyRelatedField(many=True, queryset=Credential.objects.all())
     regions = PrimaryKeyRelatedField(many=True, queryset=Region.objects.all())
+    start_date = serializers.DateField(allow_null=True)
+    end_date = serializers.DateField(allow_null=True)
 
     class Meta:
         model = Job
@@ -115,21 +118,24 @@ class JobManagementSerializer(serializers.ModelSerializer):
                    'regions']
 
     def validate(self, attrs):
-        if attrs['start_date'] > attrs['end_date']:
-            raise serializers.ValidationError('End date should be greater than start date')
-        if attrs['start_date'] < timezone.now().date():
-            raise serializers.ValidationError('Start date should be greater than yesterday')
-        payment_modes = attrs['payment_modes']
-        rate_fields = {
-            Job.PaymentMode.DAILY: 'daily_rate',
-            Job.PaymentMode.PER_DIEM: 'per_diem_rate',
-            Job.PaymentMode.MILEAGE: 'mileage_rate',
-            Job.PaymentMode.MISC_OTHER: 'misc_other_rate'
-        }
-        for mode, rate_field in rate_fields.items():
-            if mode in payment_modes and attrs.get(rate_field, 0) == 0:
-                raise serializers.ValidationError(
-                    f'{rate_field.replace("_", " ").title()} cannot be 0 if {mode.replace("_", " ")} payment mode is selected')
+        draft = self.initial_data.get('draft', False)
+        attrs['draft'] = draft
+        if not draft:
+            if attrs['start_date'] > attrs['end_date']:
+                raise serializers.ValidationError('End date should be greater than start date')
+            if attrs['start_date'] < timezone.now().date():
+                raise serializers.ValidationError('Start date should be greater than yesterday')
+            payment_modes = attrs['payment_modes']
+            rate_fields = {
+                Job.PaymentMode.DAILY: 'daily_rate',
+                Job.PaymentMode.PER_DIEM: 'per_diem_rate',
+                Job.PaymentMode.MILEAGE: 'mileage_rate',
+                Job.PaymentMode.MISC_OTHER: 'misc_other_rate'
+            }
+            for mode, rate_field in rate_fields.items():
+                if mode in payment_modes and attrs.get(rate_field, 0) == 0:
+                    raise serializers.ValidationError(
+                        f'{rate_field.replace("_", " ").title()} cannot be 0 if {mode.replace("_", " ")} payment mode is selected')
         documents = self.initial_data.get('documents')
         if documents:
             for document in documents:
@@ -139,12 +145,13 @@ class JobManagementSerializer(serializers.ModelSerializer):
         return attrs
 
     def save(self, **kwargs):
+        data = self.validated_data
+        draft = data.pop('draft', False)
         if not self.instance:
-            data = self.validated_data
+            if draft:
+                data['status'] = Job.JobStatus.DRAFT
             user = self.context['request'].user
             data['created_by'] = user.owner
-            certifications = self.validated_data['certifications']
-            request = self.context.get('request')
             documents = self.validated_data.get('documents', [])
             if documents:
                 data.pop('documents')
@@ -157,53 +164,9 @@ class JobManagementSerializer(serializers.ModelSerializer):
                 for support_document in documents:
                     if 'file' in support_document:
                         JobDocument.objects.create(job=self.instance, document=support_document['file'])
-            inspector_ids =  []
-            for certification in certifications:
-                inspector_ids_credential = list(certification.documents.values_list('inspector_id', flat=True))
-                inspector_ids.extend(inspector_ids_credential)
-            inspector_ids_to_send = list(set(inspector_ids))
-            for inspector_id in inspector_ids_to_send:
-                user = Inspector.objects.get(id=inspector_id).user
 
-                magic_token = MagicLinkToken.objects.create(
-                    user=user,
-                    token=str(uuid.uuid4()) + '-' + str(self.instance.id)
-                )
-                url = f"{request.scheme}://{request.get_host()}/#/jtv/{magic_token.token}"
-                # TODO: CHECK THIS LATER
-                url = f'https://app.corrosionone.com/#/jtv/{magic_token.token}'
-                send_email_with_template(
-                    subject=f'New Job Created - {settings.PROJECT_NAME}',
-                    email=user.email,
-                    template_to_load='emails/new_job_email_link.html',
-                    context={
-                        "username": user.first_name,
-                        "link": url,
-                        "company_name": self.instance.created_by.company_name,
-                        "job_title": self.instance.title,
-                        "job_description": self.instance.description,
-                        "job_start_date": self.instance.start_date,
-                        "job_end_date": self.instance.end_date,
-                        "job_address": self.instance.address,
-                        "user_phone_number": user.phone_number.as_e164 if user.phone_number else None,
-                    }
-                )
-                if user.phone_number:
-                    message = f"Hello {user.first_name},\n\nA new job has been created. Please check your this {url} for more details.\n\nBest regards,\n{settings.PROJECT_NAME}"
-                    send_sms(message, user.phone_number.as_e164)
-
-                send_notifications(
-                    users=[user],
-                    title=f'New Job Available - {self.instance.title}',
-                    description=f'A new job has been created. Please check your email for more details.',
-                    extra_data={
-                        'job_id': self.instance.id,
-                        'url': url
-                    },
-                    n_type=Notification.NotificationType.JOB_AVAILABLE,
-                    channel=Notification.NotificationChannel.EMAIL,
-                )
-
+            if self.instance.status == Job.JobStatus.PENDING:
+                send_emails_to_inspectors(self.instance)
         else:
             data = self.validated_data
             user = self.context['request'].user
@@ -219,6 +182,10 @@ class JobManagementSerializer(serializers.ModelSerializer):
                     if 'file' in support_document:
                         JobDocument.objects.create(job=self.instance, document=support_document['file'])
             self.instance = super().save(**kwargs)
+            if not draft and self.instance.status == Job.JobStatus.DRAFT:
+                self.instance.status = Job.JobStatus.PENDING
+                self.instance.save()
+                send_emails_to_inspectors(self.instance)
         return self.instance
 
 

@@ -1,3 +1,6 @@
+import uuid
+
+from django.conf import settings
 from django.db import transaction
 from psycopg.pq import error_message
 from rest_framework.decorators import action
@@ -8,8 +11,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
+from inspector.models import Inspector
 from jobs.filters import CustomOrderingFilterJobs, CustomOrderingFilterBids
-from jobs.models import Job, Bid, JobFavorite
+from jobs.models import Job, Bid, JobFavorite, MagicLinkToken
 from jobs.serializers import JobListSerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
 from notifications.models import Notification
@@ -18,7 +22,9 @@ from payments.models import Transaction
 from users.permissions import IsOwner, IsInspector
 from utils.utils import PermissionClassByActionMixin, SerializerClassByActionMixin, user_is_inspector, \
     CollectedMultipartJsonViewMixin, may_fail, send_notifications
+from utils.utils.email import send_email_with_template
 from utils.utils.pagination import CustomPageSizePagination
+from utils.utils.send_sms import send_sms
 
 
 # Create your views here
@@ -347,5 +353,3 @@ class BidViewSet(
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
         self.perform_destroy(instance)
         return Response()
-
-

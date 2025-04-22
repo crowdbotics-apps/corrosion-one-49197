@@ -24,7 +24,9 @@ class JobDocument(TimeStampedModel):
 
 class Job(TimeStampedModel):
     class JobStatus(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
         PENDING = 'pending', 'Pending'
+        AWAITING_PAYMENT = 'awaiting_payment', 'Awaiting Payment'
         STARTED = 'started', 'Started'
         FINISHED_BY_INSPECTOR = 'finished_by_inspector', 'Finished by Inspector'
         FINISHED = 'finished', 'Finished'
@@ -37,14 +39,14 @@ class Job(TimeStampedModel):
         MISC_OTHER = 'misc_other', 'Misc/Other'
 
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     industries = models.ManyToManyField(Industry, blank=True)
     created_by = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='jobs')
     inspector = models.ForeignKey(Inspector, on_delete=models.CASCADE, related_name='jobs', null=True, blank=True)
     certifications = models.ManyToManyField(Credential)
     active = models.BooleanField(default=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=21, choices=JobStatus.choices, default=JobStatus.PENDING)
     daily_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     per_diem_rate = models.DecimalField(decimal_places=2, max_digits=10, default=0)
@@ -64,6 +66,8 @@ class Job(TimeStampedModel):
 
     @property
     def days(self):
+        if not self.start_date or not self.end_date:
+            return 0
         return (self.end_date - self.start_date).days
 
     @property

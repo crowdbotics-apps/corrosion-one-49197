@@ -6,6 +6,7 @@ It includes a viewset for managing Stripe customers, cards, accounts, and paymen
 from decimal import Decimal
 
 from django.conf import settings
+from django.db import transaction
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -13,7 +14,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST
 
+from jobs.models import Job, Bid
 from notifications.models import Notification
 from payments.models import StripeCard, Transaction
 from payments.serializers import StripeCardListSerializer, TransactionListSerializer
@@ -237,6 +240,64 @@ class StripeViewset(viewsets.GenericViewSet):
         action_account = request.data.get('action', None)
         client_secret = self.api.account_session_action(user.stripe_account_id, action_account)
         return Response(client_secret)
+
+    @transaction.atomic
+    @action(methods=['post'], detail=False, url_path='create-payment-intent-held')
+    def create_payment_intent_held(self, request):
+        """
+        Create a payment intent for held transactions.
+
+        Args:
+            request: The HTTP request object containing transaction data.
+
+        Returns:
+            Response: The created payment intent or an error message.
+        """
+        data = request.data
+        user = request.user
+        bid_id = request.data.get('bid_id')
+        bid = Bid.objects.get(pk=bid_id)
+        if bid.job.created_by != user.owner:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        job = bid.job
+        if job.status != Job.JobStatus.PENDING:
+            return Response('This job is not available for bidding', status=HTTP_400_BAD_REQUEST)
+        currency = data.get('currency', 'usd')
+        job = bid.job
+        customer = user.stripe_customer_id
+        if not customer:
+            return None, "Customer id needed"
+
+        tx = Transaction.objects.create(
+            amount=job.total_amount,
+            currency=currency,
+            created_by=user,
+            recipient=bid.inspector.user,
+            description=f"Job id: {job.id} - {job.title}",
+            status=Transaction.PENDING,
+            transaction_type=Transaction.DEBIT,
+            job=job
+        )
+
+        transfer_group = f"group_tx_{tx.id}"
+
+        payment_intent = self.api.create_payment_intent_held(
+            amount=int(tx.amount * 100),
+            description=tx.description,
+            currency=tx.currency,
+            customer=user.stripe_customer_id,
+            metadata={
+                "transaction_id": tx.id,
+                "user_owner_id": tx.created_by.id,
+                "user_inspector_id": tx.recipient.id if tx.recipient else None,
+                "held": True
+            },
+            transfer_group=transfer_group,
+            checkout=True
+        )
+        if hasattr(payment_intent, 'error') and payment_intent.error.message:
+            return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
+        return Response(payment_intent.client_secret)
 
 
 class TransactionListViewset(viewsets.GenericViewSet, viewsets.mixins.ListModelMixin):

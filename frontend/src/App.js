@@ -48,6 +48,8 @@ import useCurrentBreakpoint from "./services/helpers";
 import {ROUTES} from "./services/constants";
 import {SignUp} from "./pages";
 import {GoogleOAuthProvider} from "@react-oauth/google";
+import {loadStripe} from "@stripe/stripe-js";
+import {Elements} from "@stripe/react-stripe-js";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -136,7 +138,12 @@ export default function App() {
     });
 
 
-  console.log('Current Breakpoint:', currentBp);
+  // console.log('Current Breakpoint:', currentBp);
+
+  const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+
+  const stripeInstance = loadStripe(stripePublicKey);
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline/>
@@ -156,10 +163,12 @@ export default function App() {
           />
         </>
       )}
+      <Elements stripe={stripeInstance}>
         <Routes>
           {getRoutes(unprotectedRoutes)}
           {getRoutes(protectedRoutes)}
         </Routes>
+      </Elements>
     </ThemeProvider>
   );
 }

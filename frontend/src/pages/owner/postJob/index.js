@@ -182,8 +182,8 @@ function PostJob() {
     industries: [],
     description: null,
     certifications: [],
-    start_date: '',
-    end_date: '',
+    start_date: null,
+    end_date: null,
     daily_rate: 0,
     per_diem_rate: 0,
     mileage_rate: 0,
@@ -192,18 +192,41 @@ function PostJob() {
     documents: [],
     country: [],
     regions: [],
+    draft: true
   };
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('Job Title is required'),
-    description: Yup.string().required('Job Description is required'),
-    start_date: Yup.date().required('Required'),
-    certifications: Yup.array().min(1, 'At least one certification is required'),
+    country: Yup.array().min(1, 'At least one country is required'),
+    regions: Yup.array().min(1, 'At least one state is required'),
+    address: Yup.string().required('Address is required'),
     industries: Yup.array().min(1, 'At least one industry is required'),
-    end_date: Yup.date()
-      .min(Yup.ref('start_date'), 'Completion date cannot be before the start date')
-      .required('Required'),
-    daily_rate: Yup.number().required('Daily rate is required').min(1, 'Daily rate must be greater than 0'),
+
+    description: Yup.string().when('draft', {
+      is: (draft) => !draft,
+      then: schema => schema.required('Description is required'),
+      otherwise: schema => schema.nullable(),
+    }),
+    certifications: Yup.array().when('draft', {
+      is: (draft) => !draft,
+      then: schema => schema.min(1,'At least one certification is required'),
+      otherwise: schema => schema.nullable(),
+    }),
+    start_date: Yup.date().when('draft', {
+      is: (draft) => !draft,
+      then: schema => schema.required('Start date is required'),
+      otherwise: schema => schema.nullable(),
+    }),
+    end_date: Yup.date().when('draft', {
+      is: (draft) => !draft,
+      then: schema => schema.min(Yup.ref('start_date'), 'Completion date cannot be before the start date').required('Required'),
+      otherwise: schema => schema.nullable(),
+    }),
+    daily_rate: Yup.number().when('draft', {
+      is: (draft) => !draft,
+      then: schema => schema.required('Daily rate is required').min(1, 'Daily rate must be greater than 0'),
+      otherwise: schema => schema.nullable(),
+    }),
     per_diem_rate: Yup.number().when('payment_modes', {
       is: (value) => value.find((item) => item.value === 'per_diem'),
       then: schema => schema.required('Per Diem rate is required').min(1, 'Per Diem rate must be greater than 0'),
@@ -219,8 +242,7 @@ function PostJob() {
       then: schema => schema.required('Misc/Other rate is required').min(1, 'Misc/Other rate must be greater than 0'),
       otherwise: schema => schema.nullable(),
     }),
-    country: Yup.array().min(1, 'At least one country is required'),
-    regions: Yup.array().min(1, 'At least one state is required'),
+
   });
 
   const formik = useFormik({
@@ -236,7 +258,7 @@ function PostJob() {
         payment_modes: values.payment_modes.map((payment_mode) => payment_mode.value),
         regions: values.regions.map((region) => region.id),
       }
-      // console.log('data to send', dataToSend)
+      console.log('data to send', dataToSend)
       if (jobId) {
         editJob(dataToSend);
       } else {
@@ -484,14 +506,38 @@ function PostJob() {
                 >
                   Cancel
                 </MDButton>}
+                {jobId === null && <MDButton
+                  color={'primary'}
+                  onClick={() => {
+                    formik.setFieldValue('draft', true)
+                    setTimeout(
+                      () => {
+                        formik.handleSubmit()
+                      }, 100
+                    )
+                  }}
+                  loading={loading}
+                  disabled={loading}
+                  sx={{mr: 2}}
+                >
+                  Save as draft
+                </MDButton>}
                 <MDButton
                   color={'secondary'}
-                  onClick={formik.handleSubmit}
+                  onClick={() => {
+                    formik.setFieldValue('draft', false)
+                    setTimeout(
+                      () => {
+                        formik.handleSubmit()
+                      }, 100
+                    )
+                  }}
                   loading={loading}
                   disabled={loading}
                 >
                   {jobId ? 'Update' : 'Publish'}
                 </MDButton>
+
               </MDBox>
             </Card>
           </Grid>

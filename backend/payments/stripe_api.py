@@ -948,27 +948,41 @@ class StripeClient:
             currency,
             transfer_group,
             description,
-            payment_method_id,
             metadata,
-            customer
+            customer,
+            payment_method_id='',
+            checkout=False
     ):
         try:
-            if LOG_ACTIVE:
-                logger.info('create_payment_intent_held')
-            payment_intent = self.stripe.PaymentIntent.create(
-                amount=amount,
-                currency=currency,
-                transfer_group=transfer_group,
-                description=description,
-                payment_method=payment_method_id,
-                metadata=metadata,
-                payment_method_types=["card"],
-                confirm=True,
-                off_session=True,
-                customer=customer
-            )
-            return payment_intent
-
+            if not checkout:
+                if LOG_ACTIVE:
+                    logger.info('create_payment_intent_held checkout_false')
+                payment_intent = self.stripe.PaymentIntent.create(
+                    amount=amount,
+                    currency=currency,
+                    transfer_group=transfer_group,
+                    description=description,
+                    payment_method=payment_method_id,
+                    metadata=metadata,
+                    payment_method_types=["card"],
+                    confirm=True,
+                    off_session=True,
+                    customer=customer
+                )
+                return payment_intent
+            else:
+                if LOG_ACTIVE:
+                    logger.info('create_payment_intent_held checkout_true')
+                payment_intent = self.stripe.PaymentIntent.create(
+                    amount=amount,
+                    currency=currency,
+                    transfer_group=transfer_group,
+                    description=description,
+                    metadata=metadata,
+                    automatic_payment_methods={"enabled": True},
+                    customer=customer
+                )
+                return payment_intent
         except Exception as error:
             logger.info(error)
             return error

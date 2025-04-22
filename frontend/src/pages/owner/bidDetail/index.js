@@ -11,6 +11,7 @@ import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
 import {DocumentList} from "../../common/jobDetail/utils";
 import {CredentialDocumentList} from "./utils";
 import Box from "@mui/material/Box";
+import PaymentModal from "../../../components/CheckoutForm/PaymentModal";
 
 
 function BidDetail() {
@@ -21,6 +22,8 @@ function BidDetail() {
   const [bid, setBid] = useState(null);
   const [showActionModal, setShowActionModal] = useState(false);
   const [action, setAction] = useState('reject');
+  const [open, setOpen] = useState(false);
+  const [clientSecret, setClientSecret] = useState(null);
 
 
   const getBid = () => {
@@ -60,11 +63,28 @@ function BidDetail() {
     })
   }
 
+  const createPaymentIntentHeld = () => {
+    setLoading(true)
+    api.createPaymentIntentHeld({bid_id: bidId}).handle({
+      successMessage: 'Bid accepted successfully',
+      onSuccess: (res) => {
+        console.log('createPaymentIntentHeld ', res)
+        setClientSecret(res.data)
+        setTimeout(() => {
+          setOpen(true)
+        }, 300)
+      },
+      errorMessage: 'Error accepting bid',
+      onFinally: () => setLoading(false)
+    })
+  }
+
   const handleAction = () => {
     if (action === 'reject') {
       rejectBid()
     } else if (action === 'accept') {
       acceptBid()
+      // createPaymentIntentHeld()
     }
 
   }
@@ -257,6 +277,11 @@ function BidDetail() {
           </MDButton>
         </DialogActions>
       </Dialog>
+      <PaymentModal
+        open={open}
+        onClose={() => setOpen(false)}
+        clientSecret={clientSecret}
+      />
     </AdminLayout>
   );
 }

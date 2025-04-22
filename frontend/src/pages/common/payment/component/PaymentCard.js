@@ -57,7 +57,7 @@ const PaymentCard = ({
         alignItems="center"
         justifyContent="space-between"
         marginTop={2}
-        mb={5}
+        mb={1}
         width={"100%"}
       >
         <MDBox display="flex">
