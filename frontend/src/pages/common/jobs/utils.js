@@ -30,7 +30,7 @@ export const dataTableModelOwner = {
     { Header: "Views", accessor: "views", width: 80 },
     { Header: "Date Posted", accessor: "created", width: 150 },
     { Header: "Status", accessor: "status",width: 150 },
-    { Header: " ",accessor: "actions", disableOrdering: true, width: 280 },
+    { Header: " ",accessor: "actions", disableOrdering: true, width: 300 },
   ],
   rows: [],
 };
@@ -42,10 +42,10 @@ const renderActions = (item, setSelectedItem, setShowModal, navigate, user_type)
 
   return (
     <MDBox>
-      {user_type === ROLES.OWNER && <MDButton color={'primary'} variant={'outlined'} size={'small'} onClick={() => navigate(ROUTES.JOB_BIDS(item.id))}>Bids</MDButton>}
+      {user_type === ROLES.OWNER && item.raw_status !== 'draft' &&  <MDButton color={'primary'} variant={'outlined'} size={'small'} sx={{ml: 1}} onClick={() => navigate(ROUTES.JOB_BIDS(item.id))}>Bids</MDButton>}
       <MDButton onClick={() => navigate(ROUTES.J0B_DETAIL(item.id))}  color={'secondary'} variant={'outlined'} size={'small'} sx={{ml: 1, mr: 1}}>Detail</MDButton>
-      {item.raw_status === 'pending' && user_type === ROLES.OWNER && <MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ mr: 1}}  onClick={() => navigate(ROUTES.EDIT_JOB(item.id))}>Edit</MDButton>}
-      {item.raw_status === 'pending' && user_type === ROLES.OWNER &&  <MDButton
+      {(item.raw_status === 'pending' || item.raw_status === 'draft') && user_type === ROLES.OWNER && <MDButton color={'secondary'} variant={'outlined'} size={'small'} sx={{ mr: 1}}  onClick={() => navigate(ROUTES.EDIT_JOB(item.id))}>Edit</MDButton>}
+      {(item.raw_status === 'pending' || item.raw_status === 'draft') && user_type === ROLES.OWNER &&  <MDButton
         color={'error'}
         variant={'outlined'}
         size={'small'}

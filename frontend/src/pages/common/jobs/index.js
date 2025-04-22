@@ -38,7 +38,7 @@ function JobList() {
     setLoading(true)
     let status = null
     if (pathname === ROUTES.MY_JOBS || pathname === ROUTES.FIND_JOBS) {
-      status = 'started,pending,finished_by_inspector'
+      status = 'draft,started,pending,finished_by_inspector,awaiting_payment'
     } else if (pathname === ROUTES.HISTORY) {
       status = 'canceled,finished'
     }
