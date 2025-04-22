@@ -546,9 +546,11 @@ CONTENT_SECURITY_POLICY = {
         'img-src': (
             "'self'",
             "data:",
+            "blob:",
             "https://*.stripe.com",
             "https://stgcontent71740.blob.core.windows.net",
             "https://cdnjs.cloudflare.com",
+            "https://app.corrosionone.com",
         ),
 
         # Fonts (Google Fonts, etc.)
