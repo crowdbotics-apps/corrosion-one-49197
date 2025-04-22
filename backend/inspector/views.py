@@ -139,7 +139,8 @@ class InspectorViewSet(
         inspector = user.inspector
         jobs = Job.objects.filter(active=True)
         credentials = list(inspector.credentials.values_list('id', flat=True))
-        available = jobs.filter(certifications__in=credentials)
+        regions = list(inspector.regions.values_list('id', flat=True))
+        available = jobs.filter(certifications__in=credentials,regions__in=regions, status=Job.JobStatus.PENDING).distinct()
         favorite = available.filter(favorites__inspector=inspector).distinct().count()
         my_bids_ids = list(inspector.bids.values_list('job_id', flat=True))
         applied = jobs.filter(id__in=my_bids_ids).distinct().count()
