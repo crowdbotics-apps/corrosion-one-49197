@@ -296,6 +296,8 @@ class StripeViewset(viewsets.GenericViewSet):
             checkout=True
         )
         if hasattr(payment_intent, 'error') and payment_intent.error.message:
+            tx.status = Transaction.FAILED
+            tx.save()
             return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
         return Response(payment_intent.client_secret)
 

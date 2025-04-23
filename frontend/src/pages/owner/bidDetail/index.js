@@ -24,7 +24,16 @@ function BidDetail() {
   const [action, setAction] = useState('reject');
   const [open, setOpen] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
+  const [cards, setCards] = useState([])
 
+  const getCards = () => {
+    api.getCards().handle({
+      onSuccess: (result) => {
+        setCards(result.data)
+      },
+      errorMessage: 'Error getting cards',
+    })
+  }
 
   const getBid = () => {
     setLoading(true)
@@ -69,9 +78,7 @@ function BidDetail() {
   const createPaymentIntentHeld = () => {
     setLoading(true)
     api.createPaymentIntentHeld({bid_id: bidId}).handle({
-      successMessage: 'Bid accepted successfully',
       onSuccess: (res) => {
-        console.log('createPaymentIntentHeld ', res)
         setClientSecret(res.data)
         setTimeout(() => {
           setOpen(true)
@@ -87,7 +94,9 @@ function BidDetail() {
       rejectBid()
     } else if (action === 'accept') {
       acceptBid()
-      // createPaymentIntentHeld()
+    }
+    else if (action === 'pay') {
+      createPaymentIntentHeld()
     }
 
   }
@@ -98,6 +107,7 @@ function BidDetail() {
 
   useEffect(() => {
     getBid()
+    getCards()
   }, []);
 
   return (
@@ -230,6 +240,18 @@ function BidDetail() {
             disabled={loading}
             onClick={
               () => {
+                setAction('pay')
+                setShowActionModal(true)
+              }
+            }
+          >
+            Pay and Approve
+          </MDButton>}
+          {bid?.status === 'pending' && <MDButton
+            color={'primary'}
+            disabled={loading || cards.length === 0}
+            onClick={
+              () => {
                 setAction('accept')
                 setShowActionModal(true)
               }
@@ -261,6 +283,7 @@ function BidDetail() {
         <DialogContent>
           {action === 'reject' && <p>Do you want to reject this bid?</p>}
           {action === 'accept' && <p>Do you want to accept this bid? This action will reject any other bids for this job.</p>}
+          {action === 'pay' && <p>Do you want to pay and approve this bid? This action will reject any other bids for this job. Please note that some payment methods may take longer to process than others.</p>}
         </DialogContent>
         <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
           <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>
