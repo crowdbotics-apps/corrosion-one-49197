@@ -565,7 +565,7 @@ function JobDetail() {
           >
             Mark as done
           </MDButton>}
-          {jobDetails?.status === "pending" && <MDButton
+          {(jobDetails?.status === "pending" || jobDetails?.status === "draft" )&& <MDButton
             color={'secondary'}
             onClick={() => navigate(ROUTES.EDIT_JOB(jobId))}
           >

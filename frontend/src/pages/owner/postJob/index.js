@@ -106,6 +106,7 @@ function PostJob() {
           ...result?.data,
           payment_modes: PaymentOptions.filter((item) => result?.data?.payment_modes?.includes(item.value)),
         }
+        console.log(dataToSet)
         setJob(dataToSet)
         formik.setValues(dataToSet)
       },
@@ -506,7 +507,7 @@ function PostJob() {
                 >
                   Cancel
                 </MDButton>}
-                {jobId === null && <MDButton
+                {(jobId === null || (job && job.status === 'draft')) && <MDButton
                   color={'primary'}
                   onClick={() => {
                     formik.setFieldValue('draft', true)
@@ -535,7 +536,7 @@ function PostJob() {
                   loading={loading}
                   disabled={loading}
                 >
-                  {jobId ? 'Update' : 'Publish'}
+                  {jobId ? job && job.status === 'draft' ? 'Update and Publish' : 'Update' : 'Publish'}
                 </MDButton>
 
               </MDBox>
