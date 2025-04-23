@@ -98,16 +98,17 @@ class JobViewSet(
             job.active = False
             job.save()
             for bid in job.bids.all():
-                send_notifications(
-                    users=[bid.inspector.user],
-                    title=f'Job Canceled - {job.title}',
-                    description=f'Your bid for the job "{job.title}" has been canceled.',
-                    extra_data={
-                        'job_id': job.id,
-                    },
-                    n_type=Notification.NotificationType.JOB_CANCELED,
-                    channel=Notification.NotificationChannel.EMAIL,
-                )
+                if bid.inspector.notify_job_applied:
+                    send_notifications(
+                        users=[bid.inspector.user],
+                        title=f'Job Canceled - {job.title}',
+                        description=f'Your bid for the job "{job.title}" has been canceled.',
+                        extra_data={
+                            'job_id': job.id,
+                        },
+                        n_type=Notification.NotificationType.JOB_CANCELED,
+                        channel=Notification.NotificationChannel.EMAIL,
+                    )
         else:
             self.perform_destroy(instance)
         return Response()
@@ -294,26 +295,28 @@ class BidViewSet(
         for other_bid in other_bids:
             other_bid.status = Bid.StatusChoices.REJECTED
             other_bid.save()
+            if other_bid.inspector.notify_job_applied:
+                send_notifications(
+                    users=[other_bid.inspector.user],
+                    title=f'Bid Rejected - {job.title}',
+                    description=f'Your bid for the job "{job.title}" has been rejected.',
+                    extra_data={
+                        'job_id': job.id,
+                    },
+                    n_type=Notification.NotificationType.BID_REJECTED,
+                    channel=Notification.NotificationChannel.EMAIL,
+                )
+        if bid.inspector.notify_job_applied:
             send_notifications(
-                users=[other_bid.inspector.user],
-                title=f'Bid Rejected - {job.title}',
-                description=f'Your bid for the job "{job.title}" has been rejected.',
+                users=[bid.inspector.user],
+                title=f'Bid Accepted - {job.title}',
+                description=f'Your bid for the job "{job.title}" has been accepted.',
                 extra_data={
                     'job_id': job.id,
                 },
-                n_type=Notification.NotificationType.BID_REJECTED,
+                n_type=Notification.NotificationType.BID_ACCEPTED,
                 channel=Notification.NotificationChannel.EMAIL,
             )
-        send_notifications(
-            users=[bid.inspector.user],
-            title=f'Bid Accepted - {job.title}',
-            description=f'Your bid for the job "{job.title}" has been accepted.',
-            extra_data={
-                'job_id': job.id,
-            },
-            n_type=Notification.NotificationType.BID_ACCEPTED,
-            channel=Notification.NotificationChannel.EMAIL,
-        )
         bid.status = Bid.StatusChoices.ACCEPTED
         bid.save()
         job.status = Job.JobStatus.STARTED
@@ -331,16 +334,17 @@ class BidViewSet(
         if bid.job.created_by != user.owner:
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
         job = bid.job
-        send_notifications(
-            users=[bid.inspector.user],
-            title=f'Bid Rejected - {job.title}',
-            description=f'Your bid for the job "{job.title}" has been rejected.',
-            extra_data={
-                'job_id': job.id,
-            },
-            n_type=Notification.NotificationType.BID_REJECTED,
-            channel=Notification.NotificationChannel.EMAIL,
-        )
+        if bid.inspector.notify_job_applied:
+            send_notifications(
+                users=[bid.inspector.user],
+                title=f'Bid Rejected - {job.title}',
+                description=f'Your bid for the job "{job.title}" has been rejected.',
+                extra_data={
+                    'job_id': job.id,
+                },
+                n_type=Notification.NotificationType.BID_REJECTED,
+                channel=Notification.NotificationChannel.EMAIL,
+            )
         bid.status = Bid.StatusChoices.REJECTED
         bid.save()
         return Response()

@@ -36,8 +36,7 @@ class TwilioWebhookAPIView(APIView):
                                 media_type = json.loads(payload["Media"])[0].get("ContentType").replace("/", ".")
                                 conversation.last_message = media_type
                             conversation.save()
-                            
-                            # TODO: Send signal to update message count
+
 
                         # Sent message notification to other participants
                         send_notifications(
