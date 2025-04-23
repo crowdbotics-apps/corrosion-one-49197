@@ -109,7 +109,11 @@ function JobList() {
   }, [searchQuery])
 
   useEffect(() => {
-    if (startDate && endDate) getJobs(searchQuery, 1, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`)
+    if (startDate && endDate) {
+      getJobs(searchQuery, currentPage, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`)
+    } else {
+      getJobs(searchQuery )
+    }
   }, [startDate, endDate])
 
   useEffect(() => {

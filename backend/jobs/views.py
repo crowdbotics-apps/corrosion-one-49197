@@ -252,13 +252,13 @@ class BidViewSet(
         bids = super().get_queryset()
         query_params = self.request.query_params
         job_id = query_params.get('job_id', None)
+        dates = query_params.get('dates', None)
+        if dates:
+            start_date, end_date = dates.split(',')
+            bids = bids.filter(created__range=[start_date, end_date])
         if job_id:
             bids = bids.filter(job_id=job_id)
         if user_is_inspector(user):
-            dates = query_params.get('dates', None)
-            if dates:
-                start_date, end_date = dates.split(',')
-                bids = bids.filter(created__range=[start_date, end_date])
             return bids.filter(inspector=user.inspector)
         return bids.filter(job__created_by=user.owner)
 

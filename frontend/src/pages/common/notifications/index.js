@@ -72,6 +72,14 @@ function Notifications() {
     }
   }, [searchQuery])
 
+  useEffect(() => {
+    if (startDate && endDate) {
+      getNotifications(searchQuery, currentPage, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`)
+    } else {
+      getNotifications(searchQuery )
+    }
+  }, [startDate, endDate])
+
   return (
     <AdminLayout
       title={'Notifications'}
