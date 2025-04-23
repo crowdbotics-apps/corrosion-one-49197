@@ -1182,6 +1182,7 @@ function SignUp() {
               variant="outlined"
               onClick={() => setShowSignUpModal(false)}
               color={'secondary'}
+              disabled={loading}
             >
               Cancel
             </MDButton>
@@ -1189,6 +1190,8 @@ function SignUp() {
           <MDButton
             onClick={() => googleSignIn()}
             color={'primary'}
+            disabled={loading}
+            loading={loading}
           >
             Confirm
           </MDButton>

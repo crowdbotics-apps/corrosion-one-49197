@@ -59,6 +59,9 @@ function BidDetail() {
         handleCloseModal()
       },
       errorMessage: 'Error accepting bid',
+      onError: () => {
+        handleCloseModal()
+      },
       onFinally: () => setLoading(false)
     })
   }
@@ -265,6 +268,7 @@ function BidDetail() {
               variant="outlined"
               onClick={handleCloseModal}
               color={'secondary'}
+              disabled={loading}
             >
               Cancel
             </MDButton>
@@ -272,6 +276,8 @@ function BidDetail() {
           <MDButton
             onClick={handleAction}
             color={'error'}
+            disabled={loading}
+            loading={loading}
           >
             Confirm
           </MDButton>

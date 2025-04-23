@@ -123,11 +123,20 @@ function Bids() {
         </DialogContent>
         <DialogActions sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexGrow: 1 }}>
-            <MDButton variant="outlined" onClick={() => handleCloseModal()} color={'secondary'}>
+            <MDButton
+              variant="outlined"
+              onClick={() => handleCloseModal()} color={'secondary'}
+              disabled={loading}
+            >
               Cancel
             </MDButton>
           </Box>
-          <MDButton onClick={() => rejectBid()} color={'error'}>
+          <MDButton
+            onClick={() => rejectBid()}
+            color={'error'}
+            disabled={loading}
+            loading={loading}
+          >
             Confirm
           </MDButton>
         </DialogActions>

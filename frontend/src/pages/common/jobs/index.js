@@ -166,6 +166,7 @@ function JobList() {
               variant="outlined"
               onClick={handleCloseModal}
               color={'secondary'}
+              disabled={loading}
             >
               Cancel
             </MDButton>
@@ -173,6 +174,8 @@ function JobList() {
           <MDButton
             onClick={cancelJob}
             color={'error'}
+            disabled={loading}
+            loading={loading}
           >
             Confirm
           </MDButton>

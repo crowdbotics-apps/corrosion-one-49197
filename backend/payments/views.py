@@ -316,5 +316,5 @@ class TransactionListViewset(viewsets.GenericViewSet, viewsets.mixins.ListModelM
         user = self.request.user
         queryset = super().get_queryset()
         if user_is_inspector(user):
-            return queryset.filter(recipient=user)
+            return queryset.filter(recipient=user).exclude(status__in=[Transaction.PENDING, Transaction.FAILED])
         return queryset.filter(created_by=user)

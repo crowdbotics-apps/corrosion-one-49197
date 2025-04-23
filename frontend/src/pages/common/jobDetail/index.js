@@ -615,6 +615,7 @@ function JobDetail() {
               variant="outlined"
               onClick={handleCloseModal}
               color={'secondary'}
+              disabled={loading}
             >
               Cancel
             </MDButton>
@@ -623,6 +624,8 @@ function JobDetail() {
           <MDButton
             onClick={!jobDetails?.payment_modes.includes('mileage')  ? () => handleAction() : () => formikModal.submitForm()}
             color={'error'}
+            disabled={loading}
+            loading={loading}
           >
             Confirm
           </MDButton>
@@ -642,6 +645,7 @@ function JobDetail() {
               variant="outlined"
               onClick={handleCloseModal}
               color={'secondary'}
+              disabled={loading}
             >
               Cancel
             </MDButton>
@@ -649,6 +653,8 @@ function JobDetail() {
           <MDButton
             onClick={handleAction}
             color={'error'}
+            disabled={loading}
+            loading={loading}
           >
             Confirm
           </MDButton>

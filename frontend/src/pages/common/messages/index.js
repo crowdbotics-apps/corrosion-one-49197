@@ -681,11 +681,16 @@ function HomeOwnerMessages() {
               variant="outlined"
               onClick={handleCloseDeleteModal}
               color="secondary"
+              disabled={loading}
             >
               Cancel
             </MDButton>
           </Box>
-          <MDButton onClick={confirmDelete} color="error">
+          <MDButton
+            onClick={confirmDelete}
+            disabled={loading}
+            loading={loading}
+            color="error">
             Delete
           </MDButton>
         </DialogActions>
