@@ -45,7 +45,7 @@ function IllustrationLayout({header = "", title = "", description = "", illustra
   const boldedText = handleDescription(description);
 
   return (
-    <PageLayout background="white">
+    <PageLayout backgroundColor="white">
       <Grid
         container
         sx={{
@@ -63,18 +63,27 @@ function IllustrationLayout({header = "", title = "", description = "", illustra
 
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6} xl={4} sx={{my: "auto"}}>
-          <Card sx={{borderRadius: 0,     width: {
-              xs: '100%',
-              sm: '100%',
-              md: '100%',
-              lg: '97%',
-              xl: '97%',
-            },}}>
-            <MDBox display="flex" flexDirection="column" justifyContent="center" height="96vh" mx={3}
-                   sx={ {xl: { height: "100vh" } }}
-            >
+          <Card
+            sx={{
+              borderRadius: 0,
+              overflowY: "auto",
+              width: {
+                xs: "100%",
+                sm: "100%",
+                md: "100%",
+                lg: "97%",
+                xl: "97%",
+              },
+              height: {
+                sm: "100vh",
+                md: "96vh",
+                xl: "100vh",
+              },
+            }}
+          >
+            <MDBox display="flex" flexDirection="column" justifyContent="center"  mx={3}>
               <MDBox component="img" src={logo} alt="logo" width={"300px"} mx={"auto"} mb={3} display={{xs: "flex", md: "none"}} />
-              <MDBox py={3} px={3} pb={1} textAlign="center">
+              <MDBox py={3} px={3} pb={1} textAlign="center" >
                 {!header ? (
                   <>
                     <MDBox mb={1} textAlign="center">

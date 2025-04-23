@@ -844,10 +844,10 @@ function SignUp() {
 
   const secondStepInspector = () => {
     return (
-      <FormikProvider value={formikSecondStepInspector}>
+      <FormikProvider value={formikSecondStepInspector} >
         {/*<MDTypography variant={"h6"} textAlign={"center"}>{JSON.stringify(formikSecondStepInspector.values)}</MDTypography>*/}
         <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-          <MDBox sx={{position: 'relative'}} display="flex" justifyContent="center" alignItems="center"
+          <MDBox display="flex" justifyContent="center" alignItems="center"
                  flexDirection="column" mb={4}>
             {typeof formikSecondStepInspector.values.profile_picture === 'object' && formikSecondStepInspector.values.profile_picture ? (
               <>
