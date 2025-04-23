@@ -86,7 +86,10 @@ def create_initial_transaction(user_owner, user_inspector, amount, job, currency
             message = f"PaymentIntent not succeeded: {payment_intent.status}" if hasattr(payment_intent, 'status') else payment_intent.user_message
 
             return tx, message
-
+    if hasattr(payment_intent, 'user_message'):
+        tx.status = Transaction.FAILED
+        tx.save()
+        return tx, payment_intent.user_message
     return tx, None
 
 
