@@ -209,6 +209,14 @@ function Payment() {
     }
   }, [searchQuery])
 
+  useEffect(() => {
+    if (startDate && endDate) {
+      getTransactions(searchQuery, currentPage, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`)
+    } else {
+      getTransactions(searchQuery )
+    }
+  }, [startDate, endDate])
+
   const renderInspectorBody = () => {
     if (accountSecretClient && showStripe) {
       return (

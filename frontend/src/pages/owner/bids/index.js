@@ -92,8 +92,12 @@ function Bids() {
   }, [searchQuery])
 
   useEffect(() => {
-    if (startDate && endDate) getBids(searchQuery, 1, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`);
-  }, [startDate, endDate]);
+    if (startDate && endDate) {
+      getBids(searchQuery, currentPage, order, `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`)
+    } else {
+      getBids(searchQuery )
+    }
+  }, [startDate, endDate])
 
   return (
     <AdminLayout title={jobId ? 'Job bids' : 'Bids'} showCard>

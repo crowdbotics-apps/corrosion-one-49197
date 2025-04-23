@@ -8,7 +8,7 @@ from django.db import transaction
 
 from chat.models import TwilioUserToken, Conversation
 from notifications.models import Notification
-from utils.utils import send_notifications
+from utils.utils import send_notifications, user_is_inspector
 
 
 class TwilioClient:
@@ -63,6 +63,7 @@ class TwilioClient:
             chat.participants.add(user)
             chat.participants.add(counterpart)
             chat.save()
+            # if user_is_inspector(counterpart) and counterpart.inspector and counterpart.inspector.notify_new_message:
             send_notifications(
                 users=[counterpart],
                 title=f'New Chat Created - {user.get_full_name()}',

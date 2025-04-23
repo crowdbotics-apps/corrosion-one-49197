@@ -18,7 +18,11 @@ def send_emails_to_inspectors(job):
         inspector_ids.extend(inspector_ids_credential)
     inspector_ids_to_send = list(set(inspector_ids))
     for inspector_id in inspector_ids_to_send:
-        user = Inspector.objects.get(id=inspector_id).user
+        inspector = Inspector.objects.get(id=inspector_id)
+        user = inspector.user
+
+        if not inspector.notify_im_qualified:
+            continue
 
         magic_token = MagicLinkToken.objects.create(
             user=user,

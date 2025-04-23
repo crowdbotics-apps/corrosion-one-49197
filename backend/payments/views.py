@@ -317,6 +317,10 @@ class TransactionListViewset(viewsets.GenericViewSet, viewsets.mixins.ListModelM
     def get_queryset(self):
         user = self.request.user
         queryset = super().get_queryset()
+        query_params = self.request.query_params
+        if query_params.get('dates', None):
+            start_date, end_date = query_params.get('dates').split(',')
+            queryset = queryset.filter(created__range=[start_date, end_date])
         if user_is_inspector(user):
             return queryset.filter(recipient=user).exclude(status__in=[Transaction.PENDING, Transaction.FAILED])
         return queryset.filter(created_by=user)

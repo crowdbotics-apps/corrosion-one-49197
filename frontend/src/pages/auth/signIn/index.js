@@ -110,7 +110,7 @@ function SignIn() {
         if (loginStore.status !== 4) {
           navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
         } else {
-          navigate(ROUTES.DASHBOARD)
+          window.location.replace("https://app.corrosionone.com/#" + ROUTES.DASHBOARD);
         }
       },
       errorMessage: 'Error signing in with Google',

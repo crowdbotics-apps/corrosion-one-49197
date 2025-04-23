@@ -69,6 +69,10 @@ class NotificationsView(viewsets.ModelViewSet):
         """
         user = self.request.user
         queryset = super().get_queryset().filter(targets__in=[user]).order_by('is_read', '-id')
+        query_params = self.request.query_params
+        if query_params.get('dates', None):
+            start_date, end_date = query_params.get('dates').split(',')
+            queryset = queryset.filter(timestamp__range=[start_date, end_date])
         return queryset
 
     @action(detail=True, methods=["POST"])
