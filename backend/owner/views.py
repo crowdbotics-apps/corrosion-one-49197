@@ -51,14 +51,14 @@ class OwnerViewSet(
         user = request.user
         owner = user.owner
         jobs = Job.objects.filter(created_by=owner)
-        bids = Bid.objects.filter(job__in=jobs)
+        bids = Bid.objects.filter(job__in=jobs, status=Bid.StatusChoices.PENDING)
         active_jobs = jobs.filter(status__in=[Job.JobStatus.PENDING, Job.JobStatus.STARTED, Job.JobStatus.FINISHED_BY_INSPECTOR]).distinct()
         finished_jobs = jobs.filter(status=Job.JobStatus.FINISHED).distinct()
 
         data = {
             'all':jobs.count(),
-            'active': bids.count(),
-            'bids': active_jobs.count(),
+            'bids': bids.count(),
+            'active': active_jobs.count(),
             'finished_jobs': finished_jobs.count(),
         }
         return Response(data)

@@ -144,7 +144,7 @@ class InspectorViewSet(
         favorite = available.filter(favorites__inspector=inspector).distinct().count()
         my_bids_ids = list(inspector.bids.values_list('job_id', flat=True))
         applied = jobs.filter(id__in=my_bids_ids).distinct().count()
-        bids = inspector.bids.count()
+        bids = inspector.bids.filter(status=Bid.StatusChoices.PENDING).count()
         accepted_bids = inspector.bids.filter(status=Bid.StatusChoices.ACCEPTED).count()
         rejected_bids = inspector.bids.filter(status=Bid.StatusChoices.REJECTED).count()
         data = {
