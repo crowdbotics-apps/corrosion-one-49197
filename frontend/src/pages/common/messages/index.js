@@ -414,7 +414,7 @@ function HomeOwnerMessages() {
             <input
               ref={fileRef}
               hidden
-              accept=".pdf,.xlsx,.docx"
+              accept=".pdf,.xlsx,.docx,.ods,.txt,.jpg,.jpeg,.png,.doc,.pptx,.ppt,.xls,.csv,"
               type="file"
               onChange={(e) => {
                 const file = e.target.files[0]

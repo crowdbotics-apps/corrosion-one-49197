@@ -69,7 +69,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
       const dataToSend = {
         ...values,
         profile_picture: typeof formik.values.profile_picture === 'object' ? formik.values.profile_picture : checkUrl(loginStore.profile_picture),
-        date_of_birth: moment(values.date_of_birth, "MM/DD/YYYY", true).format("YYYY-MM-DD")
+        date_of_birth: values.date_of_birth ? moment(values.date_of_birth, "MM/DD/YYYY", true).format("YYYY-MM-DD") : null,
       }
       dataToSend.languages = dataToSend.languages.map((item) => item.id)
       updateProfile(dataToSend)
@@ -322,6 +322,7 @@ function ProfileInspector({updateProfile, languages = [], loading = false}) {
           size={"large"}
           sx={{marginLeft: "auto"}}
           disabled={loading}
+          loading={loading}
           onClick={formik.handleSubmit}
         >
           Save Changes

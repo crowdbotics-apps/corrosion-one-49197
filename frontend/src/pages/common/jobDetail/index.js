@@ -317,7 +317,7 @@ function JobDetail() {
                 <QuestionAnswerOutlinedIcon
                   sx={{color: "#006E90", width: "30px", height: "30px", marginLeft: '2px'}}/>
               </MDButton>
-              <MDBox
+              {jobDetails?.created_by?.linkedin && <MDBox
                 sx={{
                   width: '40px',
                   height: '40px',
@@ -334,7 +334,7 @@ function JobDetail() {
                 <MDTypography sx={{fontWeight: 'bold', color: '#006E90', fontSize: '20px'}}>
                   in
                 </MDTypography>
-              </MDBox>
+              </MDBox>}
             </MDBox>}
           </Grid>
         </Grid>

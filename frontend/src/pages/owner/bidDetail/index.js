@@ -1,6 +1,6 @@
 import AdminLayout from "components/AdminLayout";
 import React, {useEffect, useState} from "react"
-import {useApi} from "../../../services/helpers";
+import {useApi, useLoginStore} from "../../../services/helpers";
 import {useNavigate, useParams} from "react-router-dom";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Grid} from "@mui/material";
 import MDBox from "../../../components/MDBox";
@@ -12,10 +12,13 @@ import {DocumentList} from "../../common/jobDetail/utils";
 import {CredentialDocumentList} from "./utils";
 import Box from "@mui/material/Box";
 import PaymentModal from "../../../components/CheckoutForm/PaymentModal";
+import avatar from "assets/images/avatar.png";
+import {ROLES, ROUTES} from "../../../services/constants";
 
 
 function BidDetail() {
   const api = useApi()
+  const loginStore = useLoginStore()
   const {bidId = null} = useParams()
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -33,6 +36,21 @@ function BidDetail() {
       },
       errorMessage: 'Error getting cards',
     })
+  }
+
+  const getCreateChat = () => {
+    setLoading(true)
+    const data = {
+      bid_id: bidId,
+    }
+    api.startChat(data).handle({
+        onSuccess: (res) => {
+          navigate(ROUTES.MESSAGES, { state: { chatId: res?.data?.id } })
+        },
+        errorMessage: 'Error creating chat',
+        onFinally: () => setLoading(false)
+      }
+    )
   }
 
   const getBid = () => {
@@ -119,7 +137,7 @@ function BidDetail() {
         <Grid item xs={12} sm={5}>
           <Grid container spacing={2}>
             <Grid xs={12} sm={4} p={1}>
-              <img src={bid?.inspector?.profile_picture} alt="Bidder Avatar"
+              <img src={bid?.inspector?.profile_picture ? bid?.inspector?.profile_picture : avatar} alt="Bidder Avatar"
                    style={{width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover',}}/>
             </Grid>
             <Grid xs={12} sm={8} p={1}>
@@ -138,7 +156,10 @@ function BidDetail() {
         <Grid item sm={3} display={{xs: 'none', sm: 'flex'}}></Grid>
         <Grid item xs={12} sm={4}>
           <MDBox display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
-            <MDButton sx={{
+            {loginStore.user_type === ROLES.OWNER && <MDButton
+              onClick={() => getCreateChat()}
+              disabled={loading}
+              sx={{
               width: '150px',
               border: '2px solid #006E90',
               backgroundColor: 'white',
@@ -152,7 +173,7 @@ function BidDetail() {
               }}>Message</MDTypography>
               <QuestionAnswerOutlinedIcon
                 sx={{color: "#006E90", width: "30px", height: "30px", marginLeft: '2px'}}/>
-            </MDButton>
+            </MDButton>}
             {bid?.inspector?.user?.linkedin && <MDBox
               sx={{
                 width: '40px',
@@ -226,12 +247,12 @@ function BidDetail() {
             <CredentialDocumentList documents={bid?.inspector?.credentials}/>
           </MDBox>
         </Grid>
-        <Grid item xs={12}>
+        {bid?.note && <Grid item xs={12}>
           <MDBox borderTop={"1px solid #ccc"}>
             <MDTypography sx={{fontSize: "20px", color: '#006E90'}} my={2}>Note</MDTypography>
             <MDTypography>{bid?.note}</MDTypography>
           </MDBox>
-        </Grid>
+        </Grid>}
       </Grid>
       <MDBox borderTop={"1px solid #ccc"} mt={3}>
         <MDBox display={'flex'} justifyContent={'flex-end'} gap={2} marginTop={'20px'} marginBottom={'20px'}>

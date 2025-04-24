@@ -287,6 +287,7 @@ function Settings() {
             changePassword={changePassword}
             formikRefAccountSettings={formikRefAccountSettings}
             setShowDeleteModal={setShowDeleteModal}
+            loading={loading}
           />
         )
       default:

@@ -10,7 +10,7 @@ import {ROLES} from "../../../services/constants";
 import {useLoginStore} from "../../../services/helpers";
 
 
-function AccountSettings({updateNotificationSettings, changePassword, formikRefAccountSettings, setShowDeleteModal }) {
+function AccountSettings({updateNotificationSettings, changePassword, formikRefAccountSettings, setShowDeleteModal, loading = false}) {
   const loginStore = useLoginStore();
 
   const initialValues = {
@@ -99,6 +99,8 @@ function AccountSettings({updateNotificationSettings, changePassword, formikRefA
         variant={"contained"}
         color={"secondary"}
         size={"large"}
+        loading={loading}
+        disabled={loading}
         onClick={formik.handleSubmit}
       >
         Change Password
@@ -117,6 +119,8 @@ function AccountSettings({updateNotificationSettings, changePassword, formikRefA
         color={"error"}
         size={"large"}
         onClick={() => setShowDeleteModal(true)}
+        disabled={loading}
+        loading={loading}
       >
         Delete {loginStore.user_type === ROLES.INSPECTOR ? "Account" : "Company"}
       </MDButton>
