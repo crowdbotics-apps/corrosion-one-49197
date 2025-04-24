@@ -620,6 +620,7 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         data = request.data
         id_token = data.get('code')
         user_type = data.get('account_type', None)
+        create_account = request.data.get('create_account', False)
         # return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
         if not id_token:
             return Response('Invalid token', status=HTTP_400_BAD_REQUEST)
@@ -650,6 +651,8 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
         user = User.objects.filter(email=email).first()
         if not user:
+            if not create_account:
+                return Response('User not found', status=HTTP_400_BAD_REQUEST)
             first_name = user_data.get('given_name', '')
             last_name = user_data.get('family_name', '')
             profile_picture = user_data.get('picture')

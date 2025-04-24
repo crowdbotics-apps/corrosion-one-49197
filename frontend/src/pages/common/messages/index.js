@@ -327,7 +327,6 @@ function HomeOwnerMessages() {
               <CircularProgress color="primary" size={40} sx={{mt: 20}} />
             ) : (
               messages.map((message, index) => {
-                console.log('message ', message)
                 return (
                   <MDBox
                     key={index}
@@ -436,6 +435,11 @@ function HomeOwnerMessages() {
             disabled={sendingMessage || loading || selectedFile}
             onChange={(e) => setMessageToSend(e.target.value)}
             variant="outlined"
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                sendMessage()
+              }
+            }}
             sx={{
               width: '100%',
               pr: 2,

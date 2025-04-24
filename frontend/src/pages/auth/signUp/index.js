@@ -535,7 +535,7 @@ function SignUp() {
       const params = new URLSearchParams(queryString);
       const code = params.get("code");
       if (code) {
-        loginGoogle({code, account_type: loginStore.user_type_sign_up_process ? loginStore.user_type_sign_up_process : formikFirstStep.values.user_type.value})
+        loginGoogle({code, account_type: loginStore.user_type_sign_up_process ? loginStore.user_type_sign_up_process : formikFirstStep.values.user_type.value, create_account: true})
       }
     }
 
