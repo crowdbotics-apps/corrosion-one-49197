@@ -115,7 +115,11 @@ function SignIn() {
       },
       errorMessage: 'Error signing in with Google',
       onError: (result) => {
-        window.location.replace("https://app.corrosionone.com");
+        setTimeout(
+          () => {
+            window.location.replace("https://app.corrosionone.com");
+          }, 1000
+        )
       },
       onFinally: () => setLoading(false)
     })
