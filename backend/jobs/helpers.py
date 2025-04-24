@@ -40,6 +40,7 @@ def send_emails_to_inspectors(job):
                 "username": user.first_name,
                 "link": url,
                 "company_name": job.created_by.company_name,
+                "company_logo": job.created_by.logo if job.created_by.logo else settings.LOGO_URL,
                 "job_title": job.title,
                 "job_description": job.description,
                 "job_start_date": job.start_date,
