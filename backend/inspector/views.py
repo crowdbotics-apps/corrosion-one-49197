@@ -118,13 +118,14 @@ class InspectorViewSet(
         for credential in credentials:
             credential_id = credential.get('credential_id', None)
             if credential_id:
-                credential_document = CredentialDcoument.objects.filter(credential_id=credential_id, inspector=inspector)
+                credential_document = CredentialDcoument.objects.filter(credential_id=credential_id, inspector=inspector).first()
                 if not credential_document:
                     credential_document = CredentialDcoument.objects.create(credential_id=credential_id, inspector=inspector)
-                    document = credential.get('document', None)
-                    if document and hasattr(document, 'file'):
-                        credential_document.document = document
-                        credential_document.save()
+                document = credential.get('document', None)
+                if document and hasattr(document, 'file'):
+                    credential_document.document = document
+                    credential_document.save()
+
             else:
                 if credential['document'] and hasattr(credential['document'], 'file'):
                     credential_document = CredentialDcoument.objects.get(id=credential['id'])
