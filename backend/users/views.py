@@ -182,19 +182,36 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         if not user:
             return Response('User not found', status=HTTP_400_BAD_REQUEST)
 
-        # if not recaptcha_token:
-        #     return Response('Captcha token is missing.', status=HTTP_400_BAD_REQUEST)
-        #
-        # data = {
-        #     "secret": settings.RECAPTCHA_SECRET_KEY,
-        #     "response": recaptcha_token
-        # }
-        # google_verify_url = "https://www.google.com/recaptcha/api/siteverify"
-        # r = requests.post(google_verify_url, data=data)
-        # result = r.json()
-        #
-        # if not result.get("success"):
-        #     return Response("Invalid reCAPTCHA. Please try again.", status=status.HTTP_400_BAD_REQUEST)
+        if not recaptcha_token:
+            return Response('Captcha token is missing.', status=HTTP_400_BAD_REQUEST)
+
+        # Define the URL
+        url = f"https://recaptchaenterprise.googleapis.com/v1/projects/corrosion-one-1738617783339/assessments?key={settings.RECAPTCHA_SECRET_KEY}"
+
+        # Create the request payload
+        payload = {
+            "event": {
+                "token": recaptcha_token,
+                "expectedAction": 'login',
+                "siteKey": settings.RECAPTCHA_SITE_KEY,
+            }
+        }
+
+        # Send POST request
+        response = requests.post(
+            url,
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(payload)
+        )
+
+        result = response.json()
+
+        if response.status_code == 200:
+            if not result.get("tokenProperties", {}).get("valid"):
+                return Response("Invalid reCAPTCHA. Please try again.", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response("Invalid reCAPTCHA. Please try again.", status=status.HTTP_400_BAD_REQUEST)
+
 
         user.phone_verified = True
         user.marketing_notifications = marketing_notifications
