@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from jobs.models import Job
+from jobs.models import Job, Bid
 from notifications.models import Notification
 from chat.serializers import ConversationListSerializer, ReportMessageSerializer, BlockUserSerializer, \
     UnblockUserSerializer, ChatMediaSerializer
@@ -172,13 +172,16 @@ class ConversationsView(
         """
         user = request.user
         job_id = request.data.get('job_id', None)
-        if not job_id:
-            raise ValidationError('job_id is required')
-        job = Job.objects.get(id=job_id)
+        bid_id = request.data.get('bid_id', None)
+        if not job_id and not bid_id:
+            raise ValidationError('Invalid action')
         client = TwilioClient()
-        chat, token = client.get_or_create_conversation(user, job.created_by.user)
-
-
+        if job_id:
+            job = Job.objects.get(id=job_id)
+            chat, token = client.get_or_create_conversation(user, job.created_by.user)
+        else:
+            bid = Bid.objects.get(id=bid_id)
+            chat, token = client.get_or_create_conversation(user, bid.inspector.user)
         data = {
             "id": chat.id,
             "conversation_sid": chat.conversation_sid,
