@@ -12,18 +12,19 @@ from utils.utils.send_sms import send_sms
 
 def send_emails_to_inspectors(job):
     certifications = job.certifications.all()
+    job_regions = job.regions.all()
     inspector_ids = []
     for certification in certifications:
         inspector_ids_credential = list(certification.documents.values_list('inspector_id', flat=True))
         inspector_ids.extend(inspector_ids_credential)
     inspector_ids_to_send = list(set(inspector_ids))
     for inspector_id in inspector_ids_to_send:
-        inspector = Inspector.objects.get(id=inspector_id)
-        user = inspector.user
-
+        inspector = Inspector.objects.filter(id=inspector_id, regions__in=job_regions).first()
+        if not inspector:
+            continue
         if not inspector.notify_im_qualified:
             continue
-
+        user = inspector.user
         magic_token = MagicLinkToken.objects.create(
             user=user,
             token=str(uuid.uuid4()) + '-' + str(job.id)

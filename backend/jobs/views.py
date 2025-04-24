@@ -241,6 +241,7 @@ class BidViewSet(
         'retrieve': [IsInspector, IsOwner],
         'destroy': [IsInspector],
     }
+
     action_serializers = {
         'list': BidListSerializer,
         'create': BidCreateSerializer,
