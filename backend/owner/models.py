@@ -34,9 +34,7 @@ class Owner(models.Model):
         if self.user.phone_verified:
             return 4
         if self.company_name:
-            # TODO: Remove this later
-            # return 2
-            return 4
+            return 2
         return 1
 
     def __str__(self):

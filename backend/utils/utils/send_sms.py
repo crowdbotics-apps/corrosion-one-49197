@@ -18,5 +18,6 @@ def send_sms(message, to):
             to=to,
             from_=settings.TWILIO_NUMBER,
         )
+        # print(f'SMS sent to {to}: {message}')
     except Exception as e:
         print(f"Failed to send SMS: {e}")
