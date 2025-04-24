@@ -279,7 +279,7 @@ function Payment() {
       <>
         <MDBox>
           <Grid container spacing={2} mb={3} mt={0}>
-            <Grid item xs={6} sm={3}>
+            <Grid item xs={12} sm={6} xl={4}>
               <Card sx={{ p: 2, borderRadius: '12px'}}>
                 <MDTypography variant={'h5'}>Add Payment Method</MDTypography>
                 <MDBox my={5}>
@@ -297,7 +297,7 @@ function Payment() {
             </Grid>
             {cards.map((card) => {
               return (
-                <Grid item xs={6} sm={3} key={card.id}>
+                <Grid item xs={12} sm={6} xl={4} key={card.id}>
                   <PaymentCard
                     cardId={card.id}
                     nameOnCard={loginStore.first_name + ' ' + loginStore.last_name}

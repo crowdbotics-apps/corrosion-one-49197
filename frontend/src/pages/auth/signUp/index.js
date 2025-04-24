@@ -110,8 +110,6 @@ function SignUp() {
       onSuccess: (result) => {
         runInAction(() => {
           loginStore.setUser(result.data)
-          //TODO: REVERTIR UNA VEZ QUE ANDE TWILIO
-          navigate(ROUTES.DASHBOARD)
         })
         setStage(2)
 
@@ -163,10 +161,8 @@ function SignUp() {
     setLoading(true)
     api.updateInspectorWorkArea(data).handle({
       onSuccess: (result) => {
-        // setStage(3)
-        //TODO: REVERTIR UNA VEZ QUE ANDE TWILIO
+        setStage(3)
         loginStore.setUser(result.response)
-        navigate(ROUTES.DASHBOARD)
       },
       errorMessage: 'Error updating inspector work area',
       onError: (result) => {
@@ -276,14 +272,11 @@ function SignUp() {
         }
 
 
-        // TODO: RESTORE THIS AFTER TESTING
-        // if (loginStore.status !== 4) {
-        //   navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
-        // } else {
-        //   navigate(ROUTES.DASHBOARD)
-        // }
-        // UNTIL HERE
-        // navigate(ROUTES.DASHBOARD)
+        if (loginStore.status !== 4) {
+          navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
+        } else {
+          window.location.replace("https://app.corrosionone.com/#" + ROUTES.DASHBOARD);
+        }
         setStage(user.status)
       },
       errorMessage: 'Error signing in with Google',
@@ -569,11 +562,11 @@ function SignUp() {
     return (
       <MDBox display={"flex"} justifyContent={"space-between"} alignItems={"center"} width={isInspector ? '90%' : '70%'}
              mx={'auto'} mt={5}>
-        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={'#3C7092'}/>
-        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 1 ? '#3C7092' : '#C6C9CE'}/>
-        <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 2 ? '#3C7092' : '#C6C9CE'}/>
+        <MDBox borderRadius={"7px"} sx={{width: 60, height: 6}} bgColor={'#3C7092'}/>
+        <MDBox borderRadius={"7px"} sx={{width: 60, height: 6}} bgColor={stage >= 1 ? '#3C7092' : '#C6C9CE'}/>
+        <MDBox borderRadius={"7px"} sx={{width: 60, height: 6}} bgColor={stage >= 2 ? '#3C7092' : '#C6C9CE'}/>
         {isInspector &&
-          <MDBox borderRadius={"7px"} sx={{width: 70, height: 6}} bgColor={stage >= 3 ? '#3C7092' : '#C6C9CE'}/>
+          <MDBox borderRadius={"7px"} sx={{width: 60, height: 6}} bgColor={stage >= 3 ? '#3C7092' : '#C6C9CE'}/>
         }
       </MDBox>
     )

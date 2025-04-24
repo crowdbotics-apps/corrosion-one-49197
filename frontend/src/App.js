@@ -138,7 +138,7 @@ export default function App() {
     });
 
 
-  // console.log('Current Breakpoint:', currentBp);
+  console.log('Current Breakpoint:', currentBp);
 
   const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 

@@ -51,7 +51,7 @@ const PaymentCard = ({
   };
 
   return (
-    <Card sx={{ p: 2, display: "flex", justifyContent: "space-between", borderRadius: "12px", }}>
+    <Card sx={{ p: 2, display: "flex", justifyContent: "space-between", borderRadius: "12px", minHeight: "195px" }}>
       <MDBox
         display="flex"
         alignItems="center"
