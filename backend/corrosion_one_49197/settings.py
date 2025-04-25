@@ -599,7 +599,8 @@ CONTENT_SECURITY_POLICY = {
             "https://fonts.gstatic.com",
             "https://stgcontent71740.blob.core.windows.net",
             "wss://tsock.us1.twilio.com",
-            "https://www.gstatic.com"
+            "https://www.gstatic.com",
+            "https://mcs.us1.twilio.com",
         ),
 
     }
