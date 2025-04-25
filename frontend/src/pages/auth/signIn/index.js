@@ -255,7 +255,7 @@ function SignIn() {
               </MDButton>
             </MDBox>
             {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
-              <MDTypography variant="button" color="warning"
+              <MDTypography sx={{cursor: "pointer"}} variant="button" color="warning"
                             onClick={() => resendEmail({email: formikRef.current?.values.email})}>
                 Didn&apos;t receive the verification email?{" "}
               </MDTypography>

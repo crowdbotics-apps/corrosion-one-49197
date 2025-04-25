@@ -515,6 +515,8 @@ CONTENT_SECURITY_POLICY = {
             "https://connect-js.stripe.com",
             "https://js.stripe.com",
             "https://stgcontent71740.blob.core.windows.net",
+            "https://www.google.com",
+            "https://www.gstatic.com"
         ),
         # Some browsers differentiate script-src vs script-src-elem for <script> tags
         'script-src-elem': (
@@ -524,6 +526,8 @@ CONTENT_SECURITY_POLICY = {
             "https://connect-js.stripe.com",
             "https://js.stripe.com",
             "https://stgcontent71740.blob.core.windows.net",
+            "https://www.google.com",
+            "https://www.gstatic.com"
         ),
 
         # Stylesheets from self, Google, unpkg, etc.
@@ -567,6 +571,7 @@ CONTENT_SECURITY_POLICY = {
             "'self'",
             "https://connect-js.stripe.com",
             "https://js.stripe.com",
+            "https://www.gstatic.com"
         ),
 
         # If your app loads web workers via blob: or external domains:
@@ -593,6 +598,7 @@ CONTENT_SECURITY_POLICY = {
             "https://fonts.gstatic.com",
             "https://stgcontent71740.blob.core.windows.net",
             "wss://tsock.us1.twilio.com",
+            "https://www.gstatic.com"
         ),
 
     }
