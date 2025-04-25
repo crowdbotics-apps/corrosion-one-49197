@@ -571,7 +571,8 @@ CONTENT_SECURITY_POLICY = {
             "'self'",
             "https://connect-js.stripe.com",
             "https://js.stripe.com",
-            "https://www.gstatic.com"
+            "https://www.gstatic.com",
+            "https://www.google.com",
         ),
 
         # If your app loads web workers via blob: or external domains:
