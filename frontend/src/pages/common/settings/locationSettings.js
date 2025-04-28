@@ -118,6 +118,7 @@ function LocationSettings({updateLocation, countries, states, getStates, loading
           size={"large"}
           sx={{marginLeft: "auto"}}
           disabled={loading}
+          loading={loading}
           onClick={formikThirdStepInspector.handleSubmit}
         >
           Save Changes
