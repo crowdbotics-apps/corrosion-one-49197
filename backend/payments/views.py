@@ -267,6 +267,16 @@ class StripeViewset(viewsets.GenericViewSet):
         customer = user.stripe_customer_id
         if not customer:
             return None, "Customer id needed"
+        tr = Transaction.objects.filter(
+            created_by=user,
+            job=job,
+            status__in=[Transaction.PENDING]
+        ).first()
+
+        if tr:
+            tr.status = Transaction.CANCELLED
+            tr.save()
+
 
         tx = Transaction.objects.create(
             amount=job.total_amount,
@@ -295,10 +305,14 @@ class StripeViewset(viewsets.GenericViewSet):
             transfer_group=transfer_group,
             checkout=True
         )
+
         if hasattr(payment_intent, 'error') and payment_intent.error.message:
             tx.status = Transaction.FAILED
             tx.save()
             return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
+        tx.stripe_payment_intent_id = payment_intent.id
+        tx.save()
+
         return Response(payment_intent.client_secret)
 
 
