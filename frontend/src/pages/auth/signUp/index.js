@@ -414,7 +414,6 @@ function SignUp() {
         profile_picture: typeof formikSecondStepInspector.values.profile_picture === 'object' ? formikSecondStepInspector.values.profile_picture : null,
         credentials:  values.credentials.map((item) => item.id)
       }
-      console.log(valuesToSend)
       completeInspectorData(valuesToSend)
     }
   })
@@ -554,7 +553,6 @@ function SignUp() {
   }
 
   useEffect(() => {
-    console.log(stage)
     if (stage === 0) {
       analyzedUrl(currentPath)
     }

@@ -67,7 +67,6 @@ function HomeOwnerMessages() {
     api.getChat(id).handle({
         onSuccess: (res) => {
           // setSelectedChat(res.data)
-          console.log(res.data)
           setCurrentConversation(
             {
               conversation_sid: res.data.chat.conversation_sid,

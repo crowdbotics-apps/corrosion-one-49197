@@ -106,7 +106,6 @@ function PostJob() {
           ...result?.data,
           payment_modes: PaymentOptions.filter((item) => result?.data?.payment_modes?.includes(item.value)),
         }
-        console.log(dataToSet)
         setJob(dataToSet)
         formik.setValues(dataToSet)
       },
@@ -259,7 +258,6 @@ function PostJob() {
         payment_modes: values.payment_modes.map((payment_mode) => payment_mode.value),
         regions: values.regions.map((region) => region.id),
       }
-      console.log('data to send', dataToSend)
       if (jobId) {
         editJob(dataToSend);
       } else {
@@ -392,7 +390,7 @@ function PostJob() {
                 placeholder="paymentMethod"
                 value={[]}
                 fieldName="payment_modes"
-                label="How to display pay rates"
+                label="Select pay rates"
                 options={PaymentOptions}
                 accessKey="name"
                 multiple

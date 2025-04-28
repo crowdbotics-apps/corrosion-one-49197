@@ -138,11 +138,9 @@ export default function App() {
     });
 
 
-  console.log('Current Breakpoint:', currentBp);
+  // console.log('Current Breakpoint:', currentBp);
 
-  const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
 
-  const stripeInstance = loadStripe(stripePublicKey);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
@@ -163,12 +161,10 @@ export default function App() {
           />
         </>
       )}
-      <Elements stripe={stripeInstance}>
         <Routes>
           {getRoutes(unprotectedRoutes)}
           {getRoutes(protectedRoutes)}
         </Routes>
-      </Elements>
     </ThemeProvider>
   );
 }

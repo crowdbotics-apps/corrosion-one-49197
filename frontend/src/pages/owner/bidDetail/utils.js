@@ -8,7 +8,6 @@ import React from "react";
 
 
 export const CredentialDocumentList = ({documents}) => {
-  console.log('docuemtns ', documents);
   return (
     <MDBox sx={{display: 'flex', flexWrap: 'wrap', width: '100%', gap: 2}} mt={2}>
       {Array.isArray(documents) && documents.length > 0 ? (

@@ -16,7 +16,7 @@ import avatar from "assets/images/avatar.png";
 import {ROLES, ROUTES} from "../../../services/constants";
 
 
-function BidDetail() {
+function BidDetail({stripeInstance}) {
   const api = useApi()
   const loginStore = useLoginStore()
   const {bidId = null} = useParams()
@@ -136,11 +136,11 @@ function BidDetail() {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={5}>
           <Grid container spacing={2}>
-            <Grid xs={12} sm={4} p={1}>
+            <Grid item xs={12} sm={4} p={1}>
               <img src={bid?.inspector?.profile_picture ? bid?.inspector?.profile_picture : avatar} alt="Bidder Avatar"
                    style={{width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover',}}/>
             </Grid>
-            <Grid xs={12} sm={8} p={1}>
+            <Grid item xs={12} sm={8} p={1}>
               <MDTypography
                 sx={{fontSize: "38px"}}>{bid?.inspector?.user?.first_name} {bid?.inspector?.user?.last_name}</MDTypography>
               <MDTypography
@@ -328,6 +328,7 @@ function BidDetail() {
         </DialogActions>
       </Dialog>
       <PaymentModal
+        stripeInstance={stripeInstance}
         open={open}
         onClose={() => setOpen(false)}
         clientSecret={clientSecret}

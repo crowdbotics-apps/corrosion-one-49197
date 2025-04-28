@@ -170,7 +170,6 @@ function SignIn() {
     const code = nUrl.searchParams.get("code");
     if (code) {
       if (url.includes("signup")) {
-        console.log('signup')
         navigate(ROUTES.SIGN_UP + '?code=' + code)
       } else{
         loginGoogle({code})

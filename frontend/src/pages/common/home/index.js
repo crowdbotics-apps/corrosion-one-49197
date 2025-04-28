@@ -157,7 +157,6 @@ function HomeInspector() {
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      console.log(values)
       verifyCode(values)
     }
   })

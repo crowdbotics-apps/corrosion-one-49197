@@ -42,7 +42,6 @@ function JobDetail() {
     setLoading(true);
     api.getJob(jobId).handle({
       onSuccess: (result) => {
-        console.log('==>  ', result);
         setJobDetails(result.data);
       },
       errorMessage: 'Error getting job details',
@@ -141,7 +140,6 @@ function JobDetail() {
   }
 
   const handleAction = () => {
-    console.log('handleAction')
     if (action === 'delete') {
       cancelJob()
     } else if (action === 'finish') {
