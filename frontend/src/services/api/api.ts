@@ -133,6 +133,13 @@ export class Api extends ApiBase {
   verifyCode(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/users/verify_phone_code/`, data);
   }
+  verifyCodeAndCaptcha(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/verify_phone_code_captcha/`, data);
+  }
+
+  verifyCaptcha(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/verify_captcha/`, data);
+  }
 
   getJobCategories() {
     return this.simple_get(`${API_VERSION_PREFIX}/jobs/categories/`);

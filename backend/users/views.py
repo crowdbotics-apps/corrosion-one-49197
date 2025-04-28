@@ -148,8 +148,8 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             return Response('Phone already verified', status=HTTP_400_BAD_REQUEST)
         code = get_current_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
         if code:
-            if code.last_sent and (timezone.now() - code.last_sent).seconds < 30:
-                return Response('Please wait for 30 seconds before sending another verification code',
+            if code.last_sent and (timezone.now() - code.last_sent).seconds < 300:
+                return Response('Please wait for 5 minutes before sending another verification code',
                                 status=HTTP_400_BAD_REQUEST)
             else:
                 message = f'Your verification code is {code.verification_code}'
@@ -164,6 +164,68 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
 
     @action(detail=False, methods=['POST'])
     def verify_phone_code(self, request):
+        """
+        Verify phone code marketing emails and recaptcha check
+        """
+
+        code = request.data.get("verification_code", None)
+
+        try:
+            token = get_verification_code(code, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
+        except Exception as e:
+            return Response(e, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        if not token:
+            return Response('The code is invalid', status=HTTP_400_BAD_REQUEST)
+        user = self.request.user
+        if not user:
+            return Response('User not found', status=HTTP_400_BAD_REQUEST)
+
+        user.phone_verified = True
+        user.save()
+        token.active = False
+        token.save()
+        return Response(UserDetailSerializer(user).data)
+
+    @action(detail=False, methods=['POST'])
+    def verify_captcha(self, request):
+        """
+        Verify phone code marketing emails and recaptcha check
+        """
+
+        recaptcha_token = request.data.get("recaptcha", None)
+        if not recaptcha_token:
+            return Response('Captcha token is missing.', status=HTTP_400_BAD_REQUEST)
+
+        # Define the URL
+        url = f"https://recaptchaenterprise.googleapis.com/v1/projects/corrosion-one-1738617783339/assessments?key={settings.RECAPTCHA_SECRET_KEY}"
+
+        # Create the request payload
+        payload = {
+            "event": {
+                "token": recaptcha_token,
+                "expectedAction": 'login',
+                "siteKey": settings.RECAPTCHA_SITE_KEY,
+            }
+        }
+
+        # Send POST request
+        response = requests.post(
+            url,
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(payload)
+        )
+
+        result = response.json()
+
+        if response.status_code == 200:
+            if not result.get("tokenProperties", {}).get("valid"):
+                return Response("Invalid reCAPTCHA. Please try again.", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response("Invalid reCAPTCHA. Please try again.", status=status.HTTP_400_BAD_REQUEST)
+        return Response()
+
+    @action(detail=False, methods=['POST'])
+    def verify_phone_code_captcha(self, request):
         """
         Verify phone code marketing emails and recaptcha check
         """

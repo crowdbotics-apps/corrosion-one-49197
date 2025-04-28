@@ -179,7 +179,7 @@ function SignUp() {
       marketing_notifications: marketingAgreement
     }
     setLoading(true)
-    api.verifyCode(dataToSend).handle({
+    api.verifyCodeAndCaptcha(dataToSend).handle({
       onSuccess: (result) => {
         loginStore.setUser(result.response)
         navigate(ROUTES.DASHBOARD)
@@ -241,6 +241,18 @@ function SignUp() {
         // }
         setStates(result?.data)
       },
+      onFinally: () => setLoading(false)
+    })
+  }
+
+  const verifyCaptcha = () => {
+    setLoading(true)
+    api.verifyCaptcha({recaptcha: recaptchaToken}).handle({
+      onSuccess: (result) => {
+        setLoading(false)
+        navigate(ROUTES.DASHBOARD)
+      },
+      errorMessage: 'Error verifying captcha',
       onFinally: () => setLoading(false)
     })
   }
@@ -1138,6 +1150,18 @@ function SignUp() {
               type='submit'
             >
               Continue
+            </MDButton>
+          </MDBox>
+          <MDBox mt={2} mb={1} textAlign={"center"}>
+            <MDButton
+              fullWidth
+              color="secondary"
+              onClick={verifyCaptcha}
+              loading={loading}
+              disabled={loading}
+              size={"large"}
+            >
+              Skip Verification
             </MDButton>
           </MDBox>
           <MDBox mt={2} mb={1} textAlign={"center"}>
