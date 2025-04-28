@@ -142,6 +142,11 @@ class JobManagementSerializer(serializers.ModelSerializer):
                 if 'file' in document and document['file'].size > 20 * 1024 * 1024:
                     raise serializers.ValidationError('Document size should not exceed 20MB')
             attrs['documents'] = documents
+        user = self.context['request'].user
+        if not user.email_verified:
+            raise serializers.ValidationError('Please verify your email to continue with creating a job')
+        if not user.phone_verified:
+            raise serializers.ValidationError('Please verify your phone number to continue with creating a job')
         return attrs
 
     def save(self, **kwargs):
@@ -217,6 +222,10 @@ class BidCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Job is not available for bidding')
         if Bid.objects.filter(job=job, inspector=user.inspector).exists():
             raise serializers.ValidationError('You have already bid for this job')
+        if not user.email_verified:
+            raise serializers.ValidationError('Please verify your email to continue with creating a bid')
+        if not user.phone_verified:
+            raise serializers.ValidationError('Please verify your phone number to continue with creating a bid')
         return attrs
 
     def save(self, **kwargs):

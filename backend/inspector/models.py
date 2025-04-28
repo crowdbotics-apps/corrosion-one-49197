@@ -41,7 +41,7 @@ class Inspector(models.Model):
         if self.user.phone_verified:
             return 4
         if self.regions.exists():
-            return 3
+            return 4
         if self.user.phone_number:
             return 2
         return 1

@@ -75,7 +75,7 @@ function SignIn() {
             loginStore.setUser(user)
             loginStore.setApiToken(access)
           })
-          console.log('user ', user)
+
           if (loginStore.status !== 4) {
             navigate(ROUTES.SIGN_UP, {state: {status: loginStore.status, user_type: loginStore.user_type}})
           } else {
