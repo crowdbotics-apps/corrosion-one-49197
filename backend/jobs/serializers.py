@@ -121,6 +121,11 @@ class JobManagementSerializer(serializers.ModelSerializer):
         draft = self.initial_data.get('draft', False)
         attrs['draft'] = draft
         if not draft:
+            user = self.context['request'].user
+            if not user.email_verified:
+                raise serializers.ValidationError('Please verify your email to continue with creating a job')
+            if not user.phone_verified:
+                raise serializers.ValidationError('Please verify your phone number to continue with creating a job')
             if attrs['start_date'] > attrs['end_date']:
                 raise serializers.ValidationError('End date should be greater than start date')
             if attrs['start_date'] < timezone.now().date():
@@ -142,11 +147,6 @@ class JobManagementSerializer(serializers.ModelSerializer):
                 if 'file' in document and document['file'].size > 20 * 1024 * 1024:
                     raise serializers.ValidationError('Document size should not exceed 20MB')
             attrs['documents'] = documents
-        user = self.context['request'].user
-        if not user.email_verified:
-            raise serializers.ValidationError('Please verify your email to continue with creating a job')
-        if not user.phone_verified:
-            raise serializers.ValidationError('Please verify your phone number to continue with creating a job')
         return attrs
 
     def save(self, **kwargs):
