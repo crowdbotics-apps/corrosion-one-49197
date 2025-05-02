@@ -19,6 +19,7 @@ from payments.models import Transaction
 from utils.utils import user_is_inspector, send_notifications
 from utils.utils.email import send_email_with_template
 from utils.utils.send_sms import send_sms
+from configuration import configs
 
 
 class JobDocumentSerializer(serializers.ModelSerializer):
@@ -72,13 +73,14 @@ class JobDetailSerializer(serializers.ModelSerializer):
     mileage_paid = serializers.SerializerMethodField()
     mileage_amount = serializers.SerializerMethodField()
     transaction_processing = serializers.SerializerMethodField()
+    platform_fee_o = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = ['id', 'title', 'description', 'industries', 'certifications', 'start_date', 'address',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
                   'misc_other_rate', 'payment_modes', 'created_by', 'bids', 'favorite', 'regions', 'country', 'bid',
-                  'total_amount', 'days', 'mileage_paid', 'mileage_amount', 'transaction_processing']
+                  'total_amount', 'days', 'mileage_paid', 'mileage_amount', 'transaction_processing', 'platform_fee_o']
 
     def get_bids(self, obj):
         return obj.bids.count()
@@ -128,6 +130,12 @@ class JobDetailSerializer(serializers.ModelSerializer):
         if obj.transactions.filter(status=Transaction.PROCESSING).exists():
             return True
         return False
+
+    def get_platform_fee_o(self, obj):
+        user = self.context['request'].user
+        if user_is_inspector(user):
+            return 0
+        return obj.total_amount * configs.OWNER_CHARGE_PERCENT / 100
 
 
 class JobManagementSerializer(serializers.ModelSerializer):

@@ -97,6 +97,7 @@ LOCAL_APPS = [
     'notifications',
     'chat',
     'payments',
+    'configuration',
 ]
 
 THIRD_PARTY_APPS = [
