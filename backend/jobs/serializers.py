@@ -3,13 +3,14 @@ import uuid
 
 from cities_light.models import Country, Region
 from django.conf import settings
+from django.db.models import Sum
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from inspector.models import Credential, Inspector
 from inspector.serializers import CredentialSerializer, InspectorDetailSerializer, RegionSerializer, CountrySerializer
-from jobs.helpers import send_emails_to_inspectors
+from jobs.helpers import send_emails_to_inspectors, job_pending_amount
 from jobs.models import Job, MagicLinkToken, JobDocument, Bid
 from notifications.models import Notification
 from owner.models import Industry
@@ -68,14 +69,16 @@ class JobDetailSerializer(serializers.ModelSerializer):
     regions = RegionSerializer(many=True)
     country = serializers.SerializerMethodField()
     bid = serializers.SerializerMethodField()
+    mileage_paid = serializers.SerializerMethodField()
+    mileage_amount = serializers.SerializerMethodField()
+    transaction_processing = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = ['id', 'title', 'description', 'industries', 'certifications', 'start_date', 'address',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
                   'misc_other_rate', 'payment_modes', 'created_by', 'bids', 'favorite', 'regions', 'country', 'bid',
-                  'total_amount', 'days'
-                  ]
+                  'total_amount', 'days', 'mileage_paid', 'mileage_amount', 'transaction_processing']
 
     def get_bids(self, obj):
         return obj.bids.count()
@@ -102,6 +105,29 @@ class JobDetailSerializer(serializers.ModelSerializer):
                 'note': bid.note
             }
         return None
+
+    def get_mileage_paid(self, obj):
+        user = self.context['request'].user
+        if user_is_inspector(user):
+            return True
+        pending_amount = job_pending_amount(obj)
+        if pending_amount > 0:
+            return False
+        return True
+
+    def get_mileage_amount(self, obj):
+        user = self.context['request'].user
+        if user_is_inspector(user):
+            return 0
+        pending_amount = job_pending_amount(obj)
+        if pending_amount > 0:
+            return pending_amount
+        return 0
+
+    def get_transaction_processing(self, obj):
+        if obj.transactions.filter(status=Transaction.PROCESSING).exists():
+            return True
+        return False
 
 
 class JobManagementSerializer(serializers.ModelSerializer):

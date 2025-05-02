@@ -45,11 +45,6 @@ import brandWhite from "./assets/imagesExamples/logo-ct.png";
 import brandDark from "./assets/imagesExamples/logo-ct-dark.png";
 import {setupRootStore} from "./models";
 import useCurrentBreakpoint from "./services/helpers";
-import {ROUTES} from "./services/constants";
-import {SignUp} from "./pages";
-import {GoogleOAuthProvider} from "@react-oauth/google";
-import {loadStripe} from "@stripe/stripe-js";
-import {Elements} from "@stripe/react-stripe-js";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();

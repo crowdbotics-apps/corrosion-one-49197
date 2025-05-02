@@ -290,7 +290,7 @@ function BidDetail({stripeInstance}) {
           </MDButton>}
           {bid?.status === 'pending' && <MDButton
             color={'primary'}
-            disabled={loading || cards.length === 0}
+            disabled={loading || cards.length === 0 || bid?.transaction_processing}
             onClick={
               () => {
                 setAction('accept')

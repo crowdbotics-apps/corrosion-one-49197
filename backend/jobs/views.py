@@ -13,7 +13,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from inspector.models import Inspector
 from jobs.filters import CustomOrderingFilterJobs, CustomOrderingFilterBids
-from jobs.helpers import accept_bid
+from jobs.helpers import accept_bid, job_pending_amount
 from jobs.models import Job, Bid, JobFavorite, MagicLinkToken
 from jobs.serializers import JobListSerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
@@ -165,27 +165,18 @@ class JobViewSet(
         if job.status != Job.JobStatus.FINISHED_BY_INSPECTOR:
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
 
-        tx = Transaction.objects.filter(
-            job=job,
-        ).first()
+        pending_amount = job_pending_amount(job)
 
-        transfer, error_message = release_funds_to_inspector(tx_id=tx.id)
+        if pending_amount > 0:
+            return Response('Pending amount must be charged first', status=HTTP_400_BAD_REQUEST)
+
+        held_transaction = job.transactions.filter(status=Transaction.HELD).first()
+        if not held_transaction:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+
+        transfer, error_message = release_funds_to_inspector(tx_id=held_transaction.id)
         if error_message:
             return Response(error_message, status=HTTP_400_BAD_REQUEST)
-
-        pending_amount = job.total_amount - tx.amount
-        if pending_amount > 0:
-            tx_2 = Transaction.objects.create(
-                amount=pending_amount,
-                currency=tx.currency,
-                created_by=job.created_by.user,
-                recipient=job.inspector.user,
-                description=f"Job id: {job.id} - {job.title}",
-                status=Transaction.HELD,
-                transaction_type=Transaction.CREDIT,
-                job=job
-            )
-            transfer_2, error_message = charge_pending_amount(tx_id=tx_2.id)
 
         send_notifications(
             users=[job.inspector.user],
@@ -201,6 +192,39 @@ class JobViewSet(
         job.status = Job.JobStatus.FINISHED
         job.save()
         return Response()
+
+    @may_fail(Job.DoesNotExist, 'Job not found')
+    @action(detail=True, methods=['post'])
+    def pay_mileage(self, request, pk=None):
+        user = self.request.user
+        if user_is_inspector(user):
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        job = Job.objects.get(pk=pk, created_by=user.owner)
+        if job.status != Job.JobStatus.FINISHED_BY_INSPECTOR:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        bid = job.bids.filter(status=Bid.StatusChoices.ACCEPTED).first()
+        if not bid:
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+        if not bid.mileage:
+            return Response('Mileage is required', status=HTTP_400_BAD_REQUEST)
+        pending_amount = job_pending_amount(job)
+
+        if pending_amount > 0:
+            tx_2 = Transaction.objects.create(
+                amount=pending_amount,
+                currency='usd',
+                created_by=job.created_by.user,
+                recipient=job.inspector.user,
+                description=f"Job id: {job.id} - {job.title}",
+                status=Transaction.PENDING,
+                transaction_type=Transaction.CREDIT,
+                job=job
+            )
+            transfer_2, error_message = charge_pending_amount(tx_id=tx_2.id)
+            if error_message:
+                return Response(error_message, status=HTTP_400_BAD_REQUEST)
+            return Response()
+        return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
 
 
     @may_fail(Job.DoesNotExist, 'Job not found')

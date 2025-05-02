@@ -16,6 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
+from jobs.helpers import job_pending_amount
 from jobs.models import Job, Bid
 from notifications.models import Notification
 from payments.models import StripeCard, Transaction
@@ -242,8 +243,8 @@ class StripeViewset(viewsets.GenericViewSet):
         return Response(client_secret)
 
     @transaction.atomic
-    @action(methods=['post'], detail=False, url_path='create-payment-intent-held')
-    def create_payment_intent_held(self, request):
+    @action(methods=['post'], detail=False, url_path='create-payment-intent-link')
+    def create_payment_intent_link(self, request):
         """
         Create a payment intent for held transactions.
 
@@ -255,66 +256,103 @@ class StripeViewset(viewsets.GenericViewSet):
         """
         data = request.data
         user = request.user
-        bid_id = request.data.get('bid_id')
-        bid = Bid.objects.get(pk=bid_id)
-        if bid.job.created_by != user.owner:
-            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
-        job = bid.job
-        if job.status != Job.JobStatus.PENDING:
-            return Response('This job is not available for bidding', status=HTTP_400_BAD_REQUEST)
+        bid = None
+        job_id = data.get('job_id', None)
+        if job_id:
+            job = Job.objects.filter(id=job_id).first()
+            if not job:
+                return Response('Job not found', status=status.HTTP_400_BAD_REQUEST)
+            if job.status != Job.JobStatus.FINISHED_BY_INSPECTOR:
+                return Response('Invalid action', status=status.HTTP_400_BAD_REQUEST)
+        else:
+            bid_id = data.get('bid_id')
+            bid = Bid.objects.get(pk=bid_id)
+            if bid.job.created_by != user.owner:
+                return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
+            job = bid.job
+            if job.status != Job.JobStatus.PENDING:
+                return Response('This job is not available for bidding', status=HTTP_400_BAD_REQUEST)
         currency = data.get('currency', 'usd')
-        job = bid.job
         customer = user.stripe_customer_id
         if not customer:
-            return None, "Customer id needed"
+            return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
         tr = Transaction.objects.filter(
             created_by=user,
             job=job,
-        ).exclude(status__in=[Transaction.CANCELLED, Transaction.FAILED]).first()
+        ).exclude(status__in=[Transaction.CANCELLED, Transaction.FAILED])
 
+        if job_id:
+            tr = tr.exclude(status__in=[Transaction.HELD])
+
+        tr = tr.first() if tr else None
         if not tr or tr.status == Transaction.PENDING:
 
             if tr:
                 tr.status = Transaction.CANCELLED
                 tr.save()
 
-
+            total_amount = job.total_amount if not job_id else job_pending_amount(job)
             tx = Transaction.objects.create(
-                amount=job.total_amount,
+                amount=total_amount,
                 currency=currency,
                 created_by=user,
-                recipient=bid.inspector.user,
+                recipient=job.inspector.user if job_id else bid.inspector.user,
                 description=f"Job id: {job.id} - {job.title}",
                 status=Transaction.PENDING,
                 transaction_type=Transaction.DEBIT,
                 job=job
             )
 
-            transfer_group = f"group_tx_{tx.id}"
+            if job_id:
+                payment_intent = self.api.create_payment_intent(
+                    amount=int(tx.amount * 100),
+                    description=tx.description,
+                    currency=tx.currency,
+                    customer=tx.created_by.stripe_customer_id,
+                    metadata={
+                        "transaction_id": tx.id,
+                        "user_owner_id": tx.created_by.id,
+                        "user_inspector_id": tx.recipient.id if tx.recipient else None,
+                        "held": False
+                    },
+                    account_id=tx.recipient.stripe_account_id,
+                    checkout=True
+                )
 
-            payment_intent = self.api.create_payment_intent_held(
-                amount=int(tx.amount * 100),
-                description=tx.description,
-                currency=tx.currency,
-                customer=user.stripe_customer_id,
-                metadata={
-                    "transaction_id": tx.id,
-                    "user_owner_id": tx.created_by.id,
-                    "user_inspector_id": tx.recipient.id if tx.recipient else None,
-                    "held": True
-                },
-                transfer_group=transfer_group,
-                checkout=True
-            )
-
-            if hasattr(payment_intent, 'error') and payment_intent.error.message:
-                tx.status = Transaction.FAILED
+                if hasattr(payment_intent, 'error') and payment_intent.error.message:
+                    tx.status = Transaction.FAILED
+                    tx.save()
+                    return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
+                tx.stripe_payment_intent_id = payment_intent.id
                 tx.save()
-                return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
-            tx.stripe_payment_intent_id = payment_intent.id
-            tx.save()
 
-            return Response(payment_intent.client_secret)
+                return Response(payment_intent.client_secret)
+            else:
+                transfer_group = f"group_tx_{tx.id}"
+
+                payment_intent = self.api.create_payment_intent_held(
+                    amount=int(tx.amount * 100),
+                    description=tx.description,
+                    currency=tx.currency,
+                    customer=user.stripe_customer_id,
+                    metadata={
+                        "transaction_id": tx.id,
+                        "user_owner_id": tx.created_by.id,
+                        "user_inspector_id": tx.recipient.id if tx.recipient else None,
+                        "held": True
+                    },
+                    transfer_group=transfer_group,
+                    checkout=True
+                )
+
+                if hasattr(payment_intent, 'error') and payment_intent.error.message:
+                    tx.status = Transaction.FAILED
+                    tx.save()
+                    return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
+                tx.stripe_payment_intent_id = payment_intent.id
+                tx.save()
+
+                return Response(payment_intent.client_secret)
         else:
             if tr.status == Transaction.HELD:
                 return Response('Transaction already created', status=status.HTTP_400_BAD_REQUEST)

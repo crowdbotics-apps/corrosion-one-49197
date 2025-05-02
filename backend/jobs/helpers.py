@@ -1,10 +1,12 @@
 import uuid
 
 from django.conf import settings
+from django.db.models import Sum
 
 from inspector.models import Inspector
 from jobs.models import MagicLinkToken, Bid, Job
 from notifications.models import Notification
+from payments.models import Transaction
 from utils.utils import send_notifications
 from utils.utils.email import send_email_with_template
 from utils.utils.send_sms import send_sms
@@ -101,3 +103,23 @@ def accept_bid(bid):
     job.status = Job.JobStatus.STARTED
     job.inspector = bid.inspector
     job.save()
+
+def job_pending_amount(job):
+    """
+    Calculate the total amount of all pending transactions for a job.
+
+    Args:
+        job (Job): The job object for which to calculate the pending amount.
+
+    Returns:
+        Decimal: The total amount of all pending transactions for the job.
+    """
+    if not job:
+        return 0
+    total_amount_transactions = Transaction.objects.filter(
+        job=job,
+        status__in=[Transaction.HELD, Transaction.COMPLETED],
+    ).aggregate(total=Sum('amount'))['total'] or 0
+
+    pending_amount = job.total_amount - total_amount_transactions
+    return pending_amount

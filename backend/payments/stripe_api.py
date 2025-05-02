@@ -487,10 +487,11 @@ class StripeClient:
             amount,
             description,
             currency,
-            payment_method_id,
             customer,
             metadata,
-            account_id
+            account_id,
+            payment_method_id = None,
+            checkout = False
     ):
         """
         Create a Stripe PaymentIntent.
@@ -508,22 +509,35 @@ class StripeClient:
             dict: The created PaymentIntent or an error.
         """
         try:
-            payment_intent = self.stripe.PaymentIntent.create(
-                amount=amount,
-                payment_method=payment_method_id,
-                payment_method_types=["card"],
-                off_session=True,
-                currency=currency,
-                customer=customer,
-                description=description,
-                confirm=True,
-                metadata=metadata,
-                transfer_data={
-                    "destination": account_id,
-                },
-
-            )
-            return payment_intent
+            if not checkout:
+                payment_intent = self.stripe.PaymentIntent.create(
+                    amount=amount,
+                    payment_method=payment_method_id,
+                    payment_method_types=["card"],
+                    off_session=True,
+                    currency=currency,
+                    customer=customer,
+                    description=description,
+                    confirm=True,
+                    metadata=metadata,
+                    transfer_data={
+                        "destination": account_id,
+                    },
+                )
+                return payment_intent
+            else:
+                payment_intent = self.stripe.PaymentIntent.create(
+                    amount=amount,
+                    currency=currency,
+                    customer=customer,
+                    description=description,
+                    metadata=metadata,
+                    automatic_payment_methods={"enabled": True},
+                    transfer_data={
+                        "destination": account_id,
+                    },
+                )
+                return payment_intent
         except Exception as error:
             logger.info(error)
             return error

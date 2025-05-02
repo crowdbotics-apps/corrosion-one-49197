@@ -192,8 +192,8 @@ def payment_intent_succeeded(event):
     transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
     if not transaction_object:
         return Response()
-    money_held = payment_intent.metadata.get('held', False)
-    if money_held:
+    money_held = payment_intent.metadata.get('held', 'False')
+    if money_held == 'True':
         transaction_object.status = Transaction.HELD
     else:
         transaction_object.status = Transaction.COMPLETED

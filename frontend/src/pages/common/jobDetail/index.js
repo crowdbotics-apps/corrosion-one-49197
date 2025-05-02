@@ -24,8 +24,10 @@ import AdminLayout from "../../../components/AdminLayout";
 import gradientImage from "../../../assets/images/gradient.png";
 import { Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import PaymentModal from "../../../components/CheckoutForm/PaymentModal";
 
-function JobDetail() {
+function JobDetail({stripeInstance}) {
   const api = useApi();
   const {jobId = null} = useParams()
   const navigate = useNavigate()
@@ -37,6 +39,10 @@ function JobDetail() {
   const [action, setAction] = useState('delete');
   const [showMarkAsDoneIM, setShowMarkAsDoneIM] = useState(false);
   const [cards, setCards] = useState([])
+  const [payMileageModal, setPayMileageModal] = useState(false);
+  const [instantModal, setInstantModal] = useState(false)
+  const [clientSecret, setClientSecret] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const getCards = () => {
     api.getCards().handle({
@@ -45,7 +51,6 @@ function JobDetail() {
       },
     })
   }
-
 
   const getJob = () => {
     setLoading(true);
@@ -60,6 +65,19 @@ function JobDetail() {
       onFinally: () => setLoading(false)
     });
   };
+  const createPaymentIntentLink = () => {
+    setLoading(true)
+    api.createPaymentIntentHeld({job_id: jobId}).handle({
+      onSuccess: (res) => {
+        setClientSecret(res.data)
+        setTimeout(() => {
+          setOpen(true)
+        }, 300)
+      },
+      errorMessage: 'Error accepting bid',
+      onFinally: () => setLoading(false)
+    })
+  }
 
   const createBid = (values) => {
     const bidData = {
@@ -110,6 +128,24 @@ function JobDetail() {
     )
   }
 
+  const payMileage = () => {
+    const dataToSend = {
+      id: jobId,
+    }
+
+    setLoading(true)
+    api.payMileage(dataToSend).handle({
+        onSuccess: (res) => {
+          handleCloseModal()
+          setTimeout(() => getJob(), 500)
+        },
+        successMessage: 'Job mileage paid successfully',
+        errorMessage: 'Error paying job mileage',
+        onFinally: () => setLoading(false)
+      }
+    )
+  }
+
   const markAsFavorite = () => {
     setLoading(true)
     api.markAsFavorite(jobId).handle({
@@ -146,6 +182,7 @@ function JobDetail() {
   const handleCloseModal = () => {
     setShowActionModal(false)
     setShowMarkAsDoneIM(false)
+    setPayMileageModal(false)
   }
 
   const handleAction = () => {
@@ -154,7 +191,6 @@ function JobDetail() {
     } else if (action === 'finish') {
       markAsCompleted()
     }
-
   }
 
   const initialValues = {
@@ -558,29 +594,60 @@ function JobDetail() {
           </Form>
         </FormikProvider>
       </MDBox>}
+      {jobDetails?.transaction_processing && <Card sx={{
+        p: 2,
+        border: '1px solid #FB8C00',
+        display: "flex",
+        flex: 1,
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        flexDirection: {xs: 'column', md: 'row'},
+        borderRadius: '12px',
+        mt:3
+      }}>
+        <MDBox>
+          <MDTypography sx={{fontSize: '20px', fontWeight: 'bold'}}>
+            Transaction in progress
+          </MDTypography>
+          <MDTypography sx={{fontSize: '14px', color: '#7B809A'}}>
+            Please wait for the transaction to be completed. You will receive a notification once the transaction is completed.
+          </MDTypography>
+        </MDBox>
+      </Card>}
       {loginStore.user_type === 'OWNER' && <MDBox borderTop={"1px solid #ccc"}>
         <MDBox display={'flex'} justifyContent={'flex-end'} gap={2} marginTop={'20px'} marginBottom={'20px'}>
-          <MDButton
+          {jobDetails?.status !== "finished_by_inspector" && <MDButton
             color={'primary'}
             onClick={() => navigate(ROUTES.JOB_BIDS(jobId))}
           >
             Bids
-          </MDButton>
-          {jobDetails?.status === "finished_by_inspector" && <MDButton
+          </MDButton>}
+          {jobDetails?.status === "finished_by_inspector" && !jobDetails?.mileage_paid && <MDButton
             color={'error'}
             loading={loading}
-            disabled={loading}
+            disabled={loading || cards.length === 0 || jobDetails?.transaction_processing }
             onClick={() => {
-              setAction('finish')
-              setShowActionModal(true)
+              setPayMileageModal(true)
+              setInstantModal(true)
             }}
           >
-            Pay and Mark as done
+            Pay mileage with saved card
           </MDButton>}
-          {jobDetails?.status === "finished_by_inspector" && <MDButton
+          {jobDetails?.status === "finished_by_inspector" && !jobDetails?.mileage_paid && <MDButton
             color={'error'}
             loading={loading}
-            disabled={loading || cards.length === 0}
+            disabled={loading || jobDetails?.transaction_processing }
+            onClick={() => {
+              setPayMileageModal(true)
+              setInstantModal(false)
+            }}
+          >
+            Pay mileage with other stripe method
+          </MDButton>}
+          {jobDetails?.status === "finished_by_inspector" && jobDetails?.mileage_paid && <MDButton
+            color={'error'}
+            loading={loading}
+            disabled={loading || jobDetails?.transaction_processing }
             onClick={() => {
               setAction('finish')
               setShowActionModal(true)
@@ -683,6 +750,42 @@ function JobDetail() {
           </MDButton>
         </DialogActions>
       </Dialog>
+      <Dialog open={payMileageModal} onClose={() => setPayMileageModal(false)}>
+        <DialogTitle>Pay Mileage</DialogTitle>
+        <DialogContent>
+          <p>Do you want to pay mileage pending for this job? <br/><br/> <h2>{money_fmt(jobDetails?.mileage_amount)}</h2></p>
+        </DialogContent>
+        <DialogActions sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+          <Box sx={{display: 'flex', justifyContent: 'flex-start', flexGrow: 1}}>
+            <MDButton
+              variant="outlined"
+              onClick={() => setPayMileageModal(false)}
+              color={'secondary'}
+              disabled={loading}
+            >
+              Cancel
+            </MDButton>
+          </Box>
+          <MDButton
+            onClick={() => instantModal ? payMileage() : createPaymentIntentLink()}
+            color={'error'}
+            disabled={loading}
+            loading={loading}
+          >
+            Confirm
+          </MDButton>
+        </DialogActions>
+      </Dialog>
+      <PaymentModal
+        stripeInstance={stripeInstance}
+        open={open}
+        onClose={() => {
+          setOpen(false)
+          handleCloseModal()
+          setTimeout(() => getJob(), 500)
+        }}
+        clientSecret={clientSecret}
+      />
     </AdminLayout>
   );
 }
