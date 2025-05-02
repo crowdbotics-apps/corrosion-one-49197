@@ -1,10 +1,8 @@
 import AdminLayout from "../../../components/AdminLayout"
 import DataTable from "../../../components/DataTable";
-// import DataTable from "../../../components/AdminLayout/MyJobs/dataTable";
 import React, {useEffect, useState} from "react"
 import {dataTableModel, dataTableModelOwner, renderTableRow} from "./utils"
-// import {dataTableModel} from "../../../components/AdminLayout/MyJobs/utils";
-import {showMessage, useApi, useLoginStore} from "../../../services/helpers";
+import {useApi, useLoginStore} from "../../../services/helpers";
 import {useLocation, useNavigate} from "react-router-dom";
 import MDBox from "../../../components/MDBox";
 import {Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField} from "@mui/material";

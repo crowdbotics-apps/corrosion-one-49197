@@ -36,6 +36,15 @@ function JobDetail() {
   const [showActionModal, setShowActionModal] = useState(false);
   const [action, setAction] = useState('delete');
   const [showMarkAsDoneIM, setShowMarkAsDoneIM] = useState(false);
+  const [cards, setCards] = useState([])
+
+  const getCards = () => {
+    api.getCards().handle({
+      onSuccess: (result) => {
+        setCards(result.data)
+      },
+    })
+  }
 
 
   const getJob = () => {
@@ -194,6 +203,7 @@ function JobDetail() {
   useEffect(() => {
     if (jobId) getJob();
     markAsViewed()
+    getCards()
   }, []);
 
   return (
@@ -409,6 +419,8 @@ function JobDetail() {
         </MDTypography>
         {jobDetails?.status === "started" && jobDetails?.bid?.status === 'accepted' && <MDButton
           color={'error'}
+          loading={loading}
+          disabled={loading}
           onClick={() => {
             setShowMarkAsDoneIM(true)
             setAction('finish')
@@ -556,6 +568,19 @@ function JobDetail() {
           </MDButton>
           {jobDetails?.status === "finished_by_inspector" && <MDButton
             color={'error'}
+            loading={loading}
+            disabled={loading}
+            onClick={() => {
+              setAction('finish')
+              setShowActionModal(true)
+            }}
+          >
+            Pay and Mark as done
+          </MDButton>}
+          {jobDetails?.status === "finished_by_inspector" && <MDButton
+            color={'error'}
+            loading={loading}
+            disabled={loading || cards.length === 0}
             onClick={() => {
               setAction('finish')
               setShowActionModal(true)

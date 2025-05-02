@@ -270,50 +270,59 @@ class StripeViewset(viewsets.GenericViewSet):
         tr = Transaction.objects.filter(
             created_by=user,
             job=job,
-            status__in=[Transaction.PENDING]
-        ).first()
+        ).exclude(status__in=[Transaction.CANCELLED, Transaction.FAILED]).first()
 
-        if tr:
-            tr.status = Transaction.CANCELLED
-            tr.save()
+        if not tr or tr.status == Transaction.PENDING:
+
+            if tr:
+                tr.status = Transaction.CANCELLED
+                tr.save()
 
 
-        tx = Transaction.objects.create(
-            amount=job.total_amount,
-            currency=currency,
-            created_by=user,
-            recipient=bid.inspector.user,
-            description=f"Job id: {job.id} - {job.title}",
-            status=Transaction.PENDING,
-            transaction_type=Transaction.DEBIT,
-            job=job
-        )
+            tx = Transaction.objects.create(
+                amount=job.total_amount,
+                currency=currency,
+                created_by=user,
+                recipient=bid.inspector.user,
+                description=f"Job id: {job.id} - {job.title}",
+                status=Transaction.PENDING,
+                transaction_type=Transaction.DEBIT,
+                job=job
+            )
 
-        transfer_group = f"group_tx_{tx.id}"
+            transfer_group = f"group_tx_{tx.id}"
 
-        payment_intent = self.api.create_payment_intent_held(
-            amount=int(tx.amount * 100),
-            description=tx.description,
-            currency=tx.currency,
-            customer=user.stripe_customer_id,
-            metadata={
-                "transaction_id": tx.id,
-                "user_owner_id": tx.created_by.id,
-                "user_inspector_id": tx.recipient.id if tx.recipient else None,
-                "held": True
-            },
-            transfer_group=transfer_group,
-            checkout=True
-        )
+            payment_intent = self.api.create_payment_intent_held(
+                amount=int(tx.amount * 100),
+                description=tx.description,
+                currency=tx.currency,
+                customer=user.stripe_customer_id,
+                metadata={
+                    "transaction_id": tx.id,
+                    "user_owner_id": tx.created_by.id,
+                    "user_inspector_id": tx.recipient.id if tx.recipient else None,
+                    "held": True
+                },
+                transfer_group=transfer_group,
+                checkout=True
+            )
 
-        if hasattr(payment_intent, 'error') and payment_intent.error.message:
-            tx.status = Transaction.FAILED
+            if hasattr(payment_intent, 'error') and payment_intent.error.message:
+                tx.status = Transaction.FAILED
+                tx.save()
+                return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
+            tx.stripe_payment_intent_id = payment_intent.id
             tx.save()
-            return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
-        tx.stripe_payment_intent_id = payment_intent.id
-        tx.save()
 
-        return Response(payment_intent.client_secret)
+            return Response(payment_intent.client_secret)
+        else:
+            if tr.status == Transaction.HELD:
+                return Response('Transaction already created', status=status.HTTP_400_BAD_REQUEST)
+            elif tr.status == Transaction.COMPLETED:
+                return Response('Transaction already created', status=status.HTTP_400_BAD_REQUEST)
+            elif tr.status == Transaction.PROCESSING:
+                return Response('Transaction in progress', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Error creating transaction', status=status.HTTP_400_BAD_REQUEST)
 
 
 class TransactionListViewset(viewsets.GenericViewSet, viewsets.mixins.ListModelMixin):

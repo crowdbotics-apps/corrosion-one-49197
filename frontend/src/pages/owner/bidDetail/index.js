@@ -14,6 +14,7 @@ import Box from "@mui/material/Box";
 import PaymentModal from "../../../components/CheckoutForm/PaymentModal";
 import avatar from "assets/images/avatar.png";
 import {ROLES, ROUTES} from "../../../services/constants";
+import Card from "@mui/material/Card";
 
 
 function BidDetail({stripeInstance}) {
@@ -34,7 +35,6 @@ function BidDetail({stripeInstance}) {
       onSuccess: (result) => {
         setCards(result.data)
       },
-      errorMessage: 'Error getting cards',
     })
   }
 
@@ -254,11 +254,31 @@ function BidDetail({stripeInstance}) {
           </MDBox>
         </Grid>}
       </Grid>
+      {bid?.transaction_processing && <Card sx={{
+        p: 2,
+        border: '1px solid #FB8C00',
+        display: "flex",
+        flex: 1,
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        flexDirection: {xs: 'column', md: 'row'},
+        borderRadius: '12px',
+        mt:3
+      }}>
+        <MDBox>
+          <MDTypography sx={{fontSize: '20px', fontWeight: 'bold'}}>
+            Transaction in progress
+          </MDTypography>
+          <MDTypography sx={{fontSize: '14px', color: '#7B809A'}}>
+            Please wait for the transaction to be completed. You will receive a notification once the transaction is completed.
+          </MDTypography>
+        </MDBox>
+      </Card>}
       <MDBox borderTop={"1px solid #ccc"} mt={3}>
         <MDBox display={'flex'} justifyContent={'flex-end'} gap={2} marginTop={'20px'} marginBottom={'20px'}>
           {bid?.status === 'pending' && <MDButton
             color={'primary'}
-            disabled={loading}
+            disabled={loading || bid?.transaction_processing}
             onClick={
               () => {
                 setAction('pay')
@@ -281,7 +301,7 @@ function BidDetail({stripeInstance}) {
             Approve
           </MDButton>}
           {bid?.status === 'pending' && <MDButton
-            disabled={loading}
+            disabled={loading || bid?.transaction_processing}
             color={'error'}
             onClick={() => {
               setAction('reject')
@@ -330,7 +350,11 @@ function BidDetail({stripeInstance}) {
       <PaymentModal
         stripeInstance={stripeInstance}
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false)
+          handleCloseModal()
+          setTimeout(() => getBid(), 500)
+        }}
         clientSecret={clientSecret}
       />
     </AdminLayout>

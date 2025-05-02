@@ -30,7 +30,7 @@ export default function PaymentModal({ open, onClose, clientSecret }) {
         </MDBox>
 
         <Elements stripe={stripeInstance} options={options}>
-          <CheckoutForm />
+          <CheckoutForm onClose={onClose} />
         </Elements>
 
       </DialogContent>
@@ -38,7 +38,7 @@ export default function PaymentModal({ open, onClose, clientSecret }) {
   );
 }
 
-function CheckoutForm() {
+function CheckoutForm({ onClose }) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -60,8 +60,10 @@ function CheckoutForm() {
       showMessage(error.message);
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       showMessage('Payment succeeded!', 'success');
+      onClose()
     } else {
-      showMessage('Status: ' + paymentIntent.status);
+      showMessage('Transaction status: ' + paymentIntent.status + ' your transaction has been processed, please wait' , 'info');
+      onClose()
     }
     setLoading(false);
   };

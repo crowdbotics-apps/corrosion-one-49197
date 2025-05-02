@@ -62,6 +62,7 @@ class StripeWebhookAPIView(APIView):
             # 'payment_intent.amount_capturable_updated': log_stripe_event,
             'payment_intent.canceled': payment_intent_canceled,
             'payment_intent.created': payment_intent_created,
+            'payment_intent.processing': payment_intent_processing,
             'payment_intent.partially_funded': payment_intent_failed,
             'payment_intent.payment_failed': payment_intent_failed,
             'payment_intent.requires_action': payment_intent_failed,
@@ -106,6 +107,7 @@ class StripeWebhookAPIView(APIView):
 
         # logger.error('Unhandled event type {}'.format(event))
         # logger.error('{}'.format("#" * 60))
+        logger.info(event['type'])
         if event['type'] in self.listeners:
             listener = self.listeners[event['type']]
             if callable(listener):
@@ -151,6 +153,27 @@ def payment_intent_created(event):
     user = User.objects.filter(stripe_customer_id=payment_intent.customer).first()
     if not user:
         return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
+    return Response()
+
+
+def payment_intent_processing(event):
+    """
+    Handle 'payment_intent.processing' event.
+
+    Args:
+        event (dict): The Stripe event data.
+
+    Returns:
+        Response: The HTTP response object.
+    """
+    logger.info('payment_intent_processing')
+    payment_intent = munchify(event['data']['object'])
+    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
+    if not transaction_object:
+        return Response()
+    transaction_object.status = Transaction.PROCESSING
+    transaction_object.stripe_response = event
+    transaction_object.save()
     return Response()
 
 

@@ -13,6 +13,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from inspector.models import Inspector
 from jobs.filters import CustomOrderingFilterJobs, CustomOrderingFilterBids
+from jobs.helpers import accept_bid
 from jobs.models import Job, Bid, JobFavorite, MagicLinkToken
 from jobs.serializers import JobListSerializer, JobManagementSerializer, JobDetailSerializer, \
     BidListSerializer, BidCreateSerializer, BidDetailSerializer
@@ -278,7 +279,13 @@ class BidViewSet(
         if job.status != Job.JobStatus.PENDING:
             return Response('This job is not available for bidding', status=HTTP_400_BAD_REQUEST)
 
-        # Create stripe money held
+        transaction_processing = bid.job.transactions.filter(status=Transaction.PROCESSING).first()
+        if transaction_processing:
+            return Response('This job has a transaction in process', status=HTTP_400_BAD_REQUEST)
+
+        transaction_held_completed = bid.job.transactions.filter(status__in=[Transaction.HELD, Transaction.COMPLETED]).first()
+        if transaction_held_completed:
+            return Response('This job has a transaction already completed', status=HTTP_400_BAD_REQUEST)
 
         tx, error_message = create_initial_transaction(
             user_owner=user,
@@ -291,38 +298,7 @@ class BidViewSet(
         if error_message:
             return Response(error_message, status=HTTP_400_BAD_REQUEST)
 
-
-        other_bids = Bid.objects.filter(job=job).exclude(id=bid.id)
-        for other_bid in other_bids:
-            other_bid.status = Bid.StatusChoices.REJECTED
-            other_bid.save()
-            if other_bid.inspector.notify_job_applied:
-                send_notifications(
-                    users=[other_bid.inspector.user],
-                    title=f'Bid Rejected - {job.title}',
-                    description=f'Your bid for the job "{job.title}" has been rejected.',
-                    extra_data={
-                        'job_id': job.id,
-                    },
-                    n_type=Notification.NotificationType.BID_REJECTED,
-                    channel=Notification.NotificationChannel.EMAIL,
-                )
-        if bid.inspector.notify_job_applied:
-            send_notifications(
-                users=[bid.inspector.user],
-                title=f'Bid Accepted - {job.title}',
-                description=f'Your bid for the job "{job.title}" has been accepted.',
-                extra_data={
-                    'job_id': job.id,
-                },
-                n_type=Notification.NotificationType.BID_ACCEPTED,
-                channel=Notification.NotificationChannel.EMAIL,
-            )
-        bid.status = Bid.StatusChoices.ACCEPTED
-        bid.save()
-        job.status = Job.JobStatus.STARTED
-        job.inspector = bid.inspector
-        job.save()
+        accept_bid(bid)
 
         return Response()
 
@@ -335,6 +311,12 @@ class BidViewSet(
         if bid.job.created_by != user.owner:
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
         job = bid.job
+        transaction_processing = bid.job.transactions.filter(status=Transaction.PROCESSING).first()
+        if transaction_processing:
+            return Response('This job has a transaction in process', status=HTTP_400_BAD_REQUEST)
+        transaction_held_completed = bid.job.transactions.filter(status__in=[Transaction.HELD, Transaction.COMPLETED]).first()
+        if transaction_held_completed:
+            return Response('This job has a transaction already completed', status=HTTP_400_BAD_REQUEST)
         if bid.inspector.notify_job_applied:
             send_notifications(
                 users=[bid.inspector.user],

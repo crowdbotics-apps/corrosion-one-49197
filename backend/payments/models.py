@@ -72,6 +72,7 @@ class Transaction(TimeStampedModel):
     # Define the status choices as class constants
     PENDING = 10
     HELD = 15
+    PROCESSING = 17
     COMPLETED = 20
     FAILED = 30
     CANCELLED = 40
@@ -80,6 +81,7 @@ class Transaction(TimeStampedModel):
     STATUS_CHOICES = [
         (PENDING, 'Pending'),
         (HELD, 'Held'),
+        (PROCESSING, 'Processing'),
         (COMPLETED, 'Completed'),
         (FAILED, 'Failed'),
         (CANCELLED, 'Cancelled'),

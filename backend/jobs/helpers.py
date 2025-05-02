@@ -3,7 +3,7 @@ import uuid
 from django.conf import settings
 
 from inspector.models import Inspector
-from jobs.models import MagicLinkToken
+from jobs.models import MagicLinkToken, Bid, Job
 from notifications.models import Notification
 from utils.utils import send_notifications
 from utils.utils.email import send_email_with_template
@@ -65,3 +65,39 @@ def send_emails_to_inspectors(job):
             channel=Notification.NotificationChannel.EMAIL,
         )
     return None
+
+def accept_bid(bid):
+    job = bid.job
+    if job.status == Job.JobStatus.STARTED:
+        return
+    other_bids = Bid.objects.filter(job=job).exclude(id=bid.id)
+    for other_bid in other_bids:
+        other_bid.status = Bid.StatusChoices.REJECTED
+        other_bid.save()
+        if other_bid.inspector.notify_job_applied:
+            send_notifications(
+                users=[other_bid.inspector.user],
+                title=f'Bid Rejected - {job.title}',
+                description=f'Your bid for the job "{job.title}" has been rejected.',
+                extra_data={
+                    'job_id': job.id,
+                },
+                n_type=Notification.NotificationType.BID_REJECTED,
+                channel=Notification.NotificationChannel.EMAIL,
+            )
+    if bid.inspector.notify_job_applied:
+        send_notifications(
+            users=[bid.inspector.user],
+            title=f'Bid Accepted - {job.title}',
+            description=f'Your bid for the job "{job.title}" has been accepted.',
+            extra_data={
+                'job_id': job.id,
+            },
+            n_type=Notification.NotificationType.BID_ACCEPTED,
+            channel=Notification.NotificationChannel.EMAIL,
+        )
+    bid.status = Bid.StatusChoices.ACCEPTED
+    bid.save()
+    job.status = Job.JobStatus.STARTED
+    job.inspector = bid.inspector
+    job.save()

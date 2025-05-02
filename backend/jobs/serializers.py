@@ -14,6 +14,7 @@ from jobs.models import Job, MagicLinkToken, JobDocument, Bid
 from notifications.models import Notification
 from owner.models import Industry
 from owner.serializers import OwnerDetailSerializer, IndustrySerializer
+from payments.models import Transaction
 from utils.utils import user_is_inspector, send_notifications
 from utils.utils.email import send_email_with_template
 from utils.utils.send_sms import send_sms
@@ -248,7 +249,13 @@ class BidCreateSerializer(serializers.ModelSerializer):
 class BidDetailSerializer(serializers.ModelSerializer):
     job = JobListSerializer()
     inspector = InspectorDetailSerializer()
+    transaction_processing = serializers.SerializerMethodField()
 
     class Meta:
         model = Bid
-        fields = ['job', 'inspector', 'status', 'note']
+        fields = ['job', 'inspector', 'status', 'note', 'transaction_processing']
+
+    def get_transaction_processing(self, obj):
+        if obj.job.transactions.filter(status=Transaction.PROCESSING).exists():
+            return True
+        return False
