@@ -7,6 +7,7 @@ from django.utils import timezone
 from datetime import timedelta
 from model_utils.models import TimeStampedModel
 
+from configuration import configs
 from inspector.models import Credential, Inspector
 from owner.models import Owner, Industry
 from users.models import User
@@ -84,6 +85,30 @@ class Job(TimeStampedModel):
         if 'misc_other' in self.payment_modes:
             total += self.misc_other_rate
         return total
+
+    @property
+    def total_amount_is_partial(self):
+        partial = False
+        if 'mileage' in self.payment_modes:
+            bid = self.bids.filter(status=Bid.StatusChoices.ACCEPTED).first()
+            if not bid or bid.mileage == 0:
+                partial = True
+        return partial
+
+    @property
+    def total_with_fees(self):
+        total = self.total_amount
+        platform_fees = total * configs.OWNER_CHARGE_PERCENT / 100
+        total_plus_fees = total + platform_fees
+        return total_plus_fees
+
+    @property
+    def total_to_pay_to_inspector(self):
+        total = self.total_amount
+        platform_fees = total * configs.INSPECTOR_CHARGE_PERCENT / 100
+        total_less_fees = total - platform_fees
+        return total_less_fees
+
 
     class Meta:
         ordering = ['-id']

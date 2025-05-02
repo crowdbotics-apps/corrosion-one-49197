@@ -430,7 +430,18 @@ function JobDetail({stripeInstance}) {
             )}
             {jobDetails?.total_amount && (
               <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>
-                Total: {money_fmt(jobDetails?.total_amount)}
+                {jobDetails?.total_amount_is_partial && 'Partial' } Total: {money_fmt(jobDetails?.total_amount)}
+              </MDTypography>
+            )}
+
+            {jobDetails?.platform_fee_o !== 0 && (
+              <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>
+                Platform Fee 10%: {money_fmt(jobDetails?.platform_fee_o)}
+              </MDTypography>
+            )}
+            {jobDetails?.total_with_fees !== 0 && (
+              <MDTypography sx={{fontSize: '16px', marginTop: '15px', marginBottom: '10px'}}>
+                {jobDetails?.total_amount_is_partial && 'Partial' } Total with fees: {money_fmt(jobDetails?.total_with_fees)}
               </MDTypography>
             )}
           </MDBox>

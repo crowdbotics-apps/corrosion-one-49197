@@ -92,7 +92,7 @@ def create_initial_transaction(user_owner, user_inspector, amount, job, currency
         return tx, payment_intent.user_message
     return tx, None
 
-
+@transaction.atomic
 def release_funds_to_inspector(tx_id, commission_rate=0):
     """
 

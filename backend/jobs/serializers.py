@@ -74,13 +74,15 @@ class JobDetailSerializer(serializers.ModelSerializer):
     mileage_amount = serializers.SerializerMethodField()
     transaction_processing = serializers.SerializerMethodField()
     platform_fee_o = serializers.SerializerMethodField()
+    mileage = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = ['id', 'title', 'description', 'industries', 'certifications', 'start_date', 'address',
                   'end_date', 'status', 'created', 'documents', 'daily_rate', 'per_diem_rate', 'mileage_rate',
                   'misc_other_rate', 'payment_modes', 'created_by', 'bids', 'favorite', 'regions', 'country', 'bid',
-                  'total_amount', 'days', 'mileage_paid', 'mileage_amount', 'transaction_processing', 'platform_fee_o']
+                  'total_amount', 'days', 'mileage_paid', 'mileage_amount', 'transaction_processing', 'platform_fee_o',
+                  'mileage', 'total_amount_is_partial', 'total_with_fees']
 
     def get_bids(self, obj):
         return obj.bids.count()
@@ -136,6 +138,13 @@ class JobDetailSerializer(serializers.ModelSerializer):
         if user_is_inspector(user):
             return 0
         return obj.total_amount * configs.OWNER_CHARGE_PERCENT / 100
+
+    def get_mileage(self, obj):
+        accepted_bids = obj.bids.filter(status=Bid.StatusChoices.ACCEPTED).first()
+        if not accepted_bids:
+            return 0
+        return accepted_bids.mileage
+
 
 
 class JobManagementSerializer(serializers.ModelSerializer):
