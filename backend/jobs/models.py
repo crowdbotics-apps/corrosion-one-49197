@@ -72,18 +72,28 @@ class Job(TimeStampedModel):
         return (self.end_date - self.start_date).days
 
     @property
-    def total_amount(self):
+    def total_amount_without_mileage(self):
         total = 0
         if 'daily' in self.payment_modes:
             total += self.daily_rate * self.days
         if 'per_diem' in self.payment_modes:
             total += self.per_diem_rate * self.days
+        if 'misc_other' in self.payment_modes:
+            total += self.misc_other_rate
+        return total
+
+    @property
+    def total_amount_mileage(self):
+        total = 0
         if 'mileage' in self.payment_modes:
             bid = self.bids.filter(status=Bid.StatusChoices.ACCEPTED).first()
             if bid:
                 total += bid.mileage * self.mileage_rate
-        if 'misc_other' in self.payment_modes:
-            total += self.misc_other_rate
+        return total
+
+    @property
+    def total_amount(self):
+        total = self.total_amount_without_mileage + self.total_amount_mileage
         return total
 
     @property
@@ -96,15 +106,37 @@ class Job(TimeStampedModel):
         return partial
 
     @property
+    def total_amount_without_mileage_with_fees(self):
+        total = self.total_amount_without_mileage
+        platform_fees = total * configs.OWNER_CHARGE_PERCENT / 100
+        total_plus_fees = total + platform_fees
+        return total_plus_fees
+
+    @property
+    def total_amount_mileage_with_fees(self):
+        total = self.total_amount_mileage
+        platform_fees = total * configs.OWNER_CHARGE_PERCENT / 100
+        total_plus_fees = total + platform_fees
+        return total_plus_fees
+
+    @property
     def total_with_fees(self):
         total = self.total_amount
         platform_fees = total * configs.OWNER_CHARGE_PERCENT / 100
         total_plus_fees = total + platform_fees
         return total_plus_fees
 
+
     @property
-    def total_to_pay_to_inspector(self):
-        total = self.total_amount
+    def total_to_pay_to_inspector_without_mileage(self):
+        total = self.total_amount_without_mileage
+        platform_fees = total * configs.INSPECTOR_CHARGE_PERCENT / 100
+        total_less_fees = total - platform_fees
+        return total_less_fees
+
+    @property
+    def total_to_pay_to_inspector_mileage(self):
+        total = self.total_amount_mileage
         platform_fees = total * configs.INSPECTOR_CHARGE_PERCENT / 100
         total_less_fees = total - platform_fees
         return total_less_fees

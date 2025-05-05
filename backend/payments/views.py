@@ -290,20 +290,30 @@ class StripeViewset(viewsets.GenericViewSet):
             if tr:
                 tr.status = Transaction.CANCELLED
                 tr.save()
-
-            total_amount = job.total_amount if not job_id else job_pending_amount(job)
-            tx = Transaction.objects.create(
-                amount=total_amount,
-                currency=currency,
-                created_by=user,
-                recipient=job.inspector.user if job_id else bid.inspector.user,
-                description=f"Job id: {job.id} - {job.title}",
-                status=Transaction.PENDING,
-                transaction_type=Transaction.DEBIT,
-                job=job
-            )
-
             if job_id:
+                amount = job.total_amount_mileage_with_fees
+                tx = Transaction.objects.create(
+                    amount=amount,
+                    currency=currency,
+                    created_by=user,
+                    recipient=job.inspector.user,
+                    description=f"Job id: {job.id} - {job.title}",
+                    status=Transaction.PENDING,
+                    transaction_type=Transaction.DEBIT,
+                    job=job
+                )
+
+                tx_2 = Transaction.objects.create(
+                    amount=job.total_to_pay_to_inspector_mileage,
+                    currency=currency,
+                    created_by=user,
+                    recipient=job.inspector.user,
+                    description=f"Job id: {job.id} - {job.title}",
+                    status=Transaction.PENDING,
+                    transaction_type=Transaction.CREDIT,
+                    job=job
+                )
+
                 payment_intent = self.api.create_payment_intent(
                     amount=int(tx.amount * 100),
                     description=tx.description,
@@ -316,18 +326,36 @@ class StripeViewset(viewsets.GenericViewSet):
                         "held": False
                     },
                     account_id=tx.recipient.stripe_account_id,
-                    checkout=True
+                    checkout=True,
+                    inspector_transfer_amount=int(tx_2.amount * 100),
                 )
 
                 if hasattr(payment_intent, 'error') and payment_intent.error.message:
                     tx.status = Transaction.FAILED
                     tx.save()
+                    tx_2.status = Transaction.FAILED
+                    tx_2.save()
                     return Response(payment_intent.error.message, status=status.HTTP_400_BAD_REQUEST)
                 tx.stripe_payment_intent_id = payment_intent.id
                 tx.save()
+                tx_2.stripe_payment_intent_id = payment_intent.id
+                tx_2.save()
 
                 return Response(payment_intent.client_secret)
             else:
+                job = bid.job
+                amount = job.total_amount_without_mileage_with_fees
+                tx = Transaction.objects.create(
+                    amount=amount,
+                    currency=currency,
+                    created_by=user,
+                    recipient= bid.inspector.user,
+                    description=f"Job id: {job.id} - {job.title}",
+                    status=Transaction.PENDING,
+                    transaction_type=Transaction.DEBIT,
+                    job=job
+                )
+
                 transfer_group = f"group_tx_{tx.id}"
 
                 payment_intent = self.api.create_payment_intent_held(
@@ -383,5 +411,5 @@ class TransactionListViewset(viewsets.GenericViewSet, viewsets.mixins.ListModelM
             start_date, end_date = query_params.get('dates').split(',')
             queryset = queryset.filter(created__range=[start_date, end_date])
         if user_is_inspector(user):
-            return queryset.filter(recipient=user).exclude(status__in=[Transaction.PENDING, Transaction.FAILED])
-        return queryset.filter(created_by=user)
+            return queryset.filter(recipient=user, transaction_type=Transaction.CREDIT).exclude(status__in=[Transaction.PENDING, Transaction.FAILED])
+        return queryset.filter(created_by=user, transaction_type=Transaction.DEBIT)

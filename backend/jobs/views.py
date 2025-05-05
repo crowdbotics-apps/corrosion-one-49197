@@ -207,7 +207,7 @@ class JobViewSet(
             return Response('Invalid action', status=HTTP_400_BAD_REQUEST)
         if not bid.mileage:
             return Response('Mileage is required', status=HTTP_400_BAD_REQUEST)
-        pending_amount = job_pending_amount(job)
+        pending_amount = job.total_amount_mileage_with_fees
 
         if pending_amount > 0:
             tx_2 = Transaction.objects.create(
@@ -217,10 +217,23 @@ class JobViewSet(
                 recipient=job.inspector.user,
                 description=f"Job id: {job.id} - {job.title}",
                 status=Transaction.PENDING,
+                transaction_type=Transaction.DEBIT,
+                job=job
+            )
+            tx_2_i = Transaction.objects.create(
+                amount=job.total_to_pay_to_inspector_mileage,
+                currency='usd',
+                created_by=job.created_by.user,
+                recipient=job.inspector.user,
+                description=f"Job id: {job.id} - {job.title}",
+                status=Transaction.PENDING,
                 transaction_type=Transaction.CREDIT,
                 job=job
             )
-            transfer_2, error_message = charge_pending_amount(tx_id=tx_2.id)
+            transfer_2, error_message = charge_pending_amount(
+                tx=tx_2,
+                tx_2=tx_2_i,
+            )
             if error_message:
                 return Response(error_message, status=HTTP_400_BAD_REQUEST)
             return Response()
@@ -314,7 +327,7 @@ class BidViewSet(
         tx, error_message = create_initial_transaction(
             user_owner=user,
             user_inspector=bid.inspector.user,
-            amount=job.total_amount,
+            amount=job.total_amount_without_mileage_with_fees,
             description=f"Job id: {job.id} - {job.title}",
             job=job
         )

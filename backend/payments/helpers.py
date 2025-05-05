@@ -93,9 +93,8 @@ def create_initial_transaction(user_owner, user_inspector, amount, job, currency
     return tx, None
 
 @transaction.atomic
-def release_funds_to_inspector(tx_id, commission_rate=0):
+def release_funds_to_inspector(tx_id):
     """
-
     """
     tx = Transaction.objects.get(id=tx_id)
 
@@ -107,25 +106,25 @@ def release_funds_to_inspector(tx_id, commission_rate=0):
         return None, "Inspector not set or doesn't have a stripe_account_id."
     if not inspector.stripe_payouts_enabled:
         return None, "Inspector doesn't have a payouts enabled."
-
-    # Comission calculation
-    total_cents = int(tx.amount * 100)
-    if commission_rate > 0:
-        # Example: if commission_rate = 0.10 => 10% comission
-        commission_cents = int(total_cents * commission_rate)
-        transfer_amount = total_cents - commission_cents
-    else:
-        transfer_amount = total_cents
-
     stripe_client = StripeClient()
 
     balance = stripe_client.check_stripe_balance()
     if balance <= 0:
-        return None, "Error processing transaction please contact support "
-
+        return None, "Error processing transaction please contact support"
+    job = tx.job
+    tx_i = Transaction.objects.create(
+        amount=job.total_to_pay_to_inspector_without_mileage,
+        currency=tx.currency,
+        created_by=tx.created_by,
+        recipient=tx.recipient,
+        description=tx.description,
+        status=Transaction.PENDING,
+        transaction_type=Transaction.CREDIT,
+        job=job
+    )
 
     transfer = stripe_client.transfer_held_amount(
-        amount=transfer_amount,
+        amount=int(tx.amount * 100),
         currency=tx.currency,
         destination=inspector.stripe_account_id,
         transfer_group=tx.transfer_group,
@@ -135,6 +134,9 @@ def release_funds_to_inspector(tx_id, commission_rate=0):
         tx.stripe_transfer_id = transfer.id
         tx.status = Transaction.COMPLETED
         tx.save()
+        tx_i.stripe_transfer_id = transfer.id
+        tx_i.status = Transaction.COMPLETED
+        tx_i.save()
     else:
         return None, transfer.user_message
 
@@ -142,7 +144,7 @@ def release_funds_to_inspector(tx_id, commission_rate=0):
 
 
 @transaction.atomic
-def charge_pending_amount(tx_id):
+def charge_pending_amount(tx, tx_2):
     """
     Charge the pending amount for a transaction.
 
@@ -152,7 +154,6 @@ def charge_pending_amount(tx_id):
     Returns:
         tuple: A tuple containing the transaction and an error message (if any).
     """
-    tx = Transaction.objects.get(id=tx_id)
 
     if tx.status != Transaction.PENDING:
         return None, f"Transaction {tx.id} cannot be charged (status={tx.status})."
@@ -173,17 +174,23 @@ def charge_pending_amount(tx_id):
             "user_inspector_id": tx.recipient.id if tx.recipient else None,
             "held": False
         },
-        account_id=tx.recipient.stripe_account_id
+        account_id=tx.recipient.stripe_account_id,
+        inspector_transfer_amount=int(tx_2.amount * 100)
     )
 
     if hasattr(payment_intent, 'status'):
         if payment_intent.status == "succeeded":
             tx.stripe_payment_intent_id = payment_intent.id
             tx.status = Transaction.COMPLETED
+            tx_2.stripe_payment_intent_id = tx.id
+            tx_2.status = Transaction.COMPLETED
             tx.save()
+            tx_2.save()
         else:
             tx.status = Transaction.FAILED
+            tx_2.status = Transaction.FAILED
             tx.save()
+            tx_2.save()
 
             message = f"PaymentIntent not succeeded: {payment_intent.status}" if hasattr(payment_intent, 'status') else payment_intent.user_message
             return tx, message

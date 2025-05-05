@@ -491,7 +491,8 @@ class StripeClient:
             metadata,
             account_id,
             payment_method_id = None,
-            checkout = False
+            checkout = False,
+            inspector_transfer_amount = 0
     ):
         """
         Create a Stripe PaymentIntent.
@@ -522,6 +523,7 @@ class StripeClient:
                     metadata=metadata,
                     transfer_data={
                         "destination": account_id,
+                        "amount": inspector_transfer_amount,
                     },
                 )
                 return payment_intent
@@ -535,6 +537,7 @@ class StripeClient:
                     automatic_payment_methods={"enabled": True},
                     transfer_data={
                         "destination": account_id,
+                        "amount": inspector_transfer_amount,
                     },
                 )
                 return payment_intent

@@ -168,12 +168,11 @@ def payment_intent_processing(event):
     """
     logger.info('payment_intent_processing')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
-    if not transaction_object:
-        return Response()
-    transaction_object.status = Transaction.PROCESSING
-    transaction_object.stripe_response = event
-    transaction_object.save()
+    transaction_objects = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id)
+    for transaction_object in transaction_objects:
+        transaction_object.status = Transaction.PROCESSING
+        transaction_object.stripe_response = event
+        transaction_object.save()
     return Response()
 
 
@@ -189,16 +188,15 @@ def payment_intent_succeeded(event):
     """
     logger.info('payment_intent_succeeded')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
-    if not transaction_object:
-        return Response()
-    money_held = payment_intent.metadata.get('held', 'False')
-    if money_held == 'True':
-        transaction_object.status = Transaction.HELD
-    else:
-        transaction_object.status = Transaction.COMPLETED
-    transaction_object.stripe_response = event
-    transaction_object.save()
+    transaction_objects = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id)
+    for transaction_object in transaction_objects:
+        money_held = payment_intent.metadata.get('held', 'False')
+        if money_held == 'True':
+            transaction_object.status = Transaction.HELD
+        else:
+            transaction_object.status = Transaction.COMPLETED
+        transaction_object.stripe_response = event
+        transaction_object.save()
     return Response()
 
 
@@ -214,12 +212,11 @@ def payment_intent_failed(event):
     """
     logger.info('payment_intent_failed')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
-    if not transaction_object:
-        return Response()
-    transaction_object.status = Transaction.FAILED
-    transaction_object.stripe_response = event
-    transaction_object.save()
+    transaction_objects = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id)
+    for transaction_object in transaction_objects:
+        transaction_object.status = Transaction.FAILED
+        transaction_object.stripe_response = event
+        transaction_object.save()
     return Response()
 
 
@@ -235,11 +232,9 @@ def payment_intent_canceled(event):
     """
     logger.info('payment_intent_canceled')
     payment_intent = munchify(event['data']['object'])
-    transaction_object = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id).first()
-    if not transaction_object:
-        return Response()
-    transaction_object.status = Transaction.CANCELLED
-    transaction_object.stripe_response = event
-    transaction_object.save()
-
+    transaction_objects = Transaction.objects.filter(stripe_payment_intent_id=payment_intent.id)
+    for transaction_object in transaction_objects:
+        transaction_object.status = Transaction.CANCELLED
+        transaction_object.stripe_response = event
+        transaction_object.save()
     return Response()

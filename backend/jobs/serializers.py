@@ -123,10 +123,7 @@ class JobDetailSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if user_is_inspector(user):
             return 0
-        pending_amount = job_pending_amount(obj)
-        if pending_amount > 0:
-            return pending_amount
-        return 0
+        return obj.total_amount_mileage_with_fees
 
     def get_transaction_processing(self, obj):
         if obj.transactions.filter(status=Transaction.PROCESSING).exists():

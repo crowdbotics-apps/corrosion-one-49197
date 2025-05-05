@@ -122,7 +122,7 @@ class Transaction(TimeStampedModel):
         Returns:
             str: String representation of the Transaction instance.
         """
-        return self.transaction_id
+        return self.transaction_id if self.transaction_id else str(self.pk)
 
     class Meta:
         verbose_name = 'Transaction'
