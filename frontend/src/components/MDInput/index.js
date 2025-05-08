@@ -40,30 +40,35 @@ const MDInput = forwardRef(({ error = false, success = false, disabled = false, 
   const helperTextStyles = useHelperTextStyles();
 
   return (
-    <MDInputRoot
-      ref={ref}
-      rows={rest.rows}
-      value={value}
-      ownerState={{ error, success, disabled }}
-      autoComplete={"off"}
-      FormHelperTextProps={{
-        error: error,
-        classes: {
-          root: helperTextStyles.root,
-        },
-      }}
-      InputProps={{
-        endAdornment: rest.type === "password" && (
-          <InputAdornment position="end">
-            <IconButton sx={{ marginRight: 0 }} onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-      {...rest}
-      type={rest.type === "password" ? (showPassword ? "text" : "password") : rest.type}
-    />
+    <div style={{position: 'relative'}}>
+      {rest.type === "password" && <IconButton sx={{ position: 'absolute', right: 15, top: 2,  zIndex: 999}} onClick={() => setShowPassword(!showPassword)}>
+        {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon/>}
+      </IconButton>}
+      <MDInputRoot
+        ref={ref}
+        rows={rest.rows}
+        value={value}
+        ownerState={{error, success, disabled}}
+        autoComplete={"off"}
+        FormHelperTextProps={{
+          error: error,
+          classes: {
+            root: helperTextStyles.root,
+          },
+        }}
+        // InputProps={{
+        //   endAdornment: rest.type === "password" && (
+        //     <InputAdornment position="end">
+        //       <IconButton sx={{marginRight: 0}} onClick={() => setShowPassword(!showPassword)}>
+        //         {showPassword ? <VisibilityOffOutlinedIcon/> : <VisibilityOutlinedIcon/>}
+        //       </IconButton>
+        //     </InputAdornment>
+        //   ),
+        // }}
+        {...rest}
+        type={rest.type === "password" ? (showPassword ? "text" : "password") : rest.type}
+      />
+    </div>
   );
 });
 
