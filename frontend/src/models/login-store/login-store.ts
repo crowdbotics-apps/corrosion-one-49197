@@ -42,7 +42,7 @@ export const IndustryModel = types.model("IndustryModel").props({
 
 const ALLOWED_KEYS_USER = ['id', 'email', 'phone_number', 'first_name', 'last_name',
   'status', 'user_type', 'website', 'linkedin', 'access', 'refresh', 'email_verified', 'phone_verified',
-  'stripe_customer_id', 'stripe_account_linked']
+  'stripe_customer_id', 'stripe_account_linked', 'cta_agreement', 'marketing_notifications']
 
 const ALLOWED_KEYS_INSPECTOR = ['inspector_id', 'date_of_birth', 'languages', 'regions', 'credentials', 'support_documents',
   'countries', 'profile_picture','notify_im_qualified', 'notify_new_message', 'notify_job_applied']
@@ -96,6 +96,8 @@ export const LoginStoreModel = types
     stripe_account_linked: types.maybeNull(types.boolean),
     stripe_customer_id: types.maybeNull(types.string),
     inspector_id: types.maybeNull(types.number),
+    cta_agreement: types.maybeNull(types.boolean),
+    marketing_notifications: types.maybeNull(types.boolean),
 
   })
   .views(self => ({

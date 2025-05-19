@@ -137,6 +137,18 @@ function Settings() {
     })
   }
 
+  const updateSMSNotificationSettings = (data) => {
+    setLoading(true)
+    api.updateSMSNotificationSettings(data).handle({
+      onSuccess: (result) => {
+        loginStore.setUser(result.response)
+      },
+      successMessage: 'SMS notification settings updated successfully',
+      errorMessage: 'Error updating SMS notification settings',
+      onFinally: () => setLoading(false)
+    })
+  }
+
   const changePassword = (data) => {
     setLoading(true)
     api.updatePassword(data).handle({
@@ -284,6 +296,7 @@ function Settings() {
         return (
           <AccountSettings
             updateNotificationSettings={updateNotificationSettings}
+            updateSMSNotificationSettings={updateSMSNotificationSettings}
             changePassword={changePassword}
             formikRefAccountSettings={formikRefAccountSettings}
             setShowDeleteModal={setShowDeleteModal}

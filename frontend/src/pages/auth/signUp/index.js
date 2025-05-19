@@ -70,7 +70,7 @@ function SignUp() {
   const [showResendEmail, setShowResendEmail] = useState(false);
   const recaptchaRef = useRef(null);
   const [recaptchaToken, setRecaptchaToken] = useState('xd');
-  const [marketingAgreement, setMarketingAgreement] = useState(false);
+  const [marketingAgreement, setMarketingAgreement] = useState(true);
   const [ctaAgreement, setCtaAgreement] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
 
@@ -335,6 +335,7 @@ function SignUp() {
     last_name: "",
     phone_number: "",
     industry: "",
+    cta_agreement: false
   };
 
   const validationSchemaSecondStep =
@@ -389,6 +390,7 @@ function SignUp() {
     last_name: "",
     credentials: [],
     phone_number: "",
+    cta_agreement: false,
   };
 
   const validationSchemaSecondStepInspector = Yup.object().shape({
@@ -511,15 +513,25 @@ function SignUp() {
       }
     } else if (stage === 2) {
       if (loginStore.user_type === ACCOUNT_TYPES[0].value) {
-        setTitle('Verification Code')
-        setSubtitle(`We’ve sent a verification code to your phone number ${loginStore.phone_number}. Enter the code below to verify your account.`)
+        if (loginStore.cta_agreement) {
+          setTitle('Verification Code')
+          setSubtitle(`We’ve sent a verification code to your phone number ${loginStore.phone_number}. Enter the code below to verify your account.`)
+        } else {
+          setTitle('Verification')
+          setSubtitle('Please check the captcha box to verify you are not a robot.')
+        }
       } else {
         setTitle('Work Area')
         setSubtitle('Select your work area.')
       }
     } else if (stage === 3) {
-      setTitle('Verification Code')
-      setSubtitle(`We’ve sent a verification code to your phone number ${loginStore.phone_number}. Enter the code below to verify your account.`)
+      if (loginStore.cta_agreement) {
+        setTitle('Verification Code')
+        setSubtitle(`We’ve sent a verification code to your phone number ${loginStore.phone_number}. Enter the code below to verify your account.`)
+      } else{
+        setTitle('Verification')
+        setSubtitle('Please check the captcha box to verify you are not a robot.')
+      }
     }
 
   }, [formikFirstStep.values.user_type, stage])
@@ -691,7 +703,7 @@ function SignUp() {
                 variant="button"
                 color="info"
                 fontWeight="medium"
-                sx={{fontSize: 13}}
+                sx={{fontSize: 13, color: '#8EDA4F'}}
                 target="_blank"
               >
                 Terms of Service
@@ -702,7 +714,7 @@ function SignUp() {
                 variant="button"
                 color="info"
                 fontWeight="medium"
-                sx={{fontSize: 13}}
+                sx={{fontSize: 13, color: '#8EDA4F'}}
                 target="_blank"
               >
                 {" "}Privacy Policy
@@ -804,13 +816,37 @@ function SignUp() {
             errors={formikSecondStep.errors}
             mb={2}
           />
-          <CustomCheckbox
-            text="I agree to receive SMS messages from Corrosion One LLC. Message and data rates may apply. Message frequency varies. Reply STOP to unsubscribe or HELP for help. View our Privacy Policy and Terms & Conditions."
-            onCheck={(value) => {
-              setCtaAgreement(value)
-            }}
-            checked={ctaAgreement}
-          />
+          <MDBox display="flex" flexDirection="row" alignItems={'flex-start'}>
+            <CustomCheckbox
+              text=""
+              onCheck={(value) => {
+                setCtaAgreement(value)
+                formikSecondStep.setFieldValue('cta_agreement', value)
+              }}
+              checked={ctaAgreement}
+            />
+            <MDTypography fontSize={'14px'}>
+              I agree to receive SMS messages from Corrosion One LLC. Message and data rates may apply. Message
+              frequency varies. Reply STOP to unsubscribe or HELP for help. View our <MDTypography
+              component={Link}
+              to={ROUTES.PRIVACY_POLICY}
+              variant="button"
+              color="info"
+              fontWeight="medium"
+              sx={{fontSize: 14, color : '#8EDA4F'}}
+              target="_blank"
+            >Privacy Policy </MDTypography>
+              and <MDTypography
+              component={Link}
+              to={ROUTES.TERMS_AND_CONDITIONS}
+              variant="button"
+              color="info"
+              fontWeight="medium"
+              sx={{fontSize: 14, color : '#8EDA4F'}}
+              target="_blank"
+            >Terms & Conditions</MDTypography>.
+            </MDTypography>
+          </MDBox>
           {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
             <MDTypography sx={{cursor: 'pointer'}} variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
               Didn&apos;t receive the verification email?{" "}
@@ -822,7 +858,7 @@ function SignUp() {
               variant="contained"
               color="primary"
               loading={loading}
-              disabled={loading || !ctaAgreement}
+              disabled={loading}
               size={"large"}
               type='submit'
             >
@@ -978,13 +1014,37 @@ function SignUp() {
           >
             Upload documents in your profile settings
           </MDTypography>
-          <CustomCheckbox
-            text="I agree to receive SMS messages from Corrosion One LLC. Message and data rates may apply. Message frequency varies. Reply STOP to unsubscribe or HELP for help. View our Privacy Policy and Terms & Conditions."
-            onCheck={(value) => {
-              setCtaAgreement(value)
-            }}
-            checked={ctaAgreement}
-          />
+          <MDBox display="flex" flexDirection="row" alignItems={'flex-start'}>
+            <CustomCheckbox
+              text=""
+              onCheck={(value) => {
+                setCtaAgreement(value)
+                formikSecondStepInspector.setFieldValue('cta_agreement', value)
+              }}
+              checked={ctaAgreement}
+            />
+            <MDTypography fontSize={'14px'}>
+              I agree to receive SMS messages from Corrosion One LLC. Message and data rates may apply. Message
+              frequency varies. Reply STOP to unsubscribe or HELP for help. View our <MDTypography
+              component={Link}
+              to={ROUTES.PRIVACY_POLICY}
+              variant="button"
+              color="info"
+              fontWeight="medium"
+              sx={{fontSize: 14, color : '#8EDA4F'}}
+              target="_blank"
+            >Privacy Policy </MDTypography>
+              and <MDTypography
+              component={Link}
+              to={ROUTES.TERMS_AND_CONDITIONS}
+              variant="button"
+              color="info"
+              fontWeight="medium"
+              sx={{fontSize: 14, color : '#8EDA4F'}}
+              target="_blank"
+            >Terms & Conditions</MDTypography>.
+            </MDTypography>
+          </MDBox>
           {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
             <MDTypography sx={{cursor: 'pointer'}} variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
               Didn&apos;t receive the verification email?{" "}
@@ -996,7 +1056,7 @@ function SignUp() {
               variant="contained"
               color="primary"
               loading={loading}
-              disabled={loading || !ctaAgreement}
+              disabled={loading}
               size={"large"}
               type='submit'
             >
@@ -1103,25 +1163,28 @@ function SignUp() {
     return (
       <FormikProvider value={formikThirdStep}>
         <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-          <FormikInput
-            name={'verification_code'}
-            label={'Verification Code'}
-            errors={formikThirdStep.errors}
-            style={{mb: 0}}
-          />
-          <MDBox mt={0} mb={3}>
-            <MDTypography
-              onClick={sendVerificationCode}
-              sx={{
-                cursor: "pointer",
-                fontSize: 14,
-                textAlign: "right",
-                color: "#BFBFBF",
-                textDecoration: "underline",
-                fontWeight: "bold"
-              }}
-            >Resend Code</MDTypography>
-          </MDBox>
+          {loginStore.cta_agreement && <>
+            <FormikInput
+              name={'verification_code'}
+              label={'Verification Code'}
+              errors={formikThirdStep.errors}
+              style={{mb: 0}}
+            />
+            <MDBox mt={0} mb={3}>
+              <MDTypography
+                onClick={sendVerificationCode}
+                sx={{
+                  cursor: "pointer",
+                  fontSize: 14,
+                  textAlign: "right",
+                  color: "#BFBFBF",
+                  textDecoration: "underline",
+                  fontWeight: "bold"
+                }}
+              >Resend Code</MDTypography>
+            </MDBox>
+          </>}
+
           <CustomCheckbox
             text="Send Me Marketing And Promotional Emails"
             onCheck={(value) => setMarketingAgreement(value)}
@@ -1137,7 +1200,7 @@ function SignUp() {
               }
             />
           </MDBox>
-          <MDBox mt={10} textAlign={"center"}>
+          {loginStore.cta_agreement && <MDBox mt={10} textAlign={"center"}>
             <MDButton
               fullWidth
               variant="contained"
@@ -1149,8 +1212,8 @@ function SignUp() {
             >
               Continue
             </MDButton>
-          </MDBox>
-          <MDBox mt={2} mb={1} textAlign={"center"}>
+          </MDBox>}
+          <MDBox mt={loginStore.cta_agreement ? 2 : 10} mb={1} textAlign={"center"}>
             <MDButton
               fullWidth
               color="secondary"
@@ -1159,7 +1222,7 @@ function SignUp() {
               disabled={loading}
               size={"large"}
             >
-              Skip Verification
+               {loginStore.cta_agreement ? 'Skip Verification' :  'Continue' }
             </MDButton>
           </MDBox>
           <MDBox mt={2} mb={1} textAlign={"center"}>

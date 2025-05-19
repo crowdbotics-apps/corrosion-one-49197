@@ -86,6 +86,10 @@ export class Api extends ApiBase {
     return this.simple_post(`${API_VERSION_PREFIX}/users/send_phone_code/`);
   }
 
+  updateSMSNotificationSettings(data: any) {
+    return this.simple_post(`${API_VERSION_PREFIX}/users/sms_notification_settings/`, data);
+  }
+
   completeOwnerData(data: any) {
     return this.simple_post(`${API_VERSION_PREFIX}/owner/complete/`, data);
   }

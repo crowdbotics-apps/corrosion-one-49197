@@ -10,7 +10,7 @@ import {ROLES} from "../../../services/constants";
 import {useLoginStore} from "../../../services/helpers";
 
 
-function AccountSettings({updateNotificationSettings, changePassword, formikRefAccountSettings, setShowDeleteModal, loading = false}) {
+function AccountSettings({updateSMSNotificationSettings, updateNotificationSettings, changePassword, formikRefAccountSettings, setShowDeleteModal, loading = false}) {
   const loginStore = useLoginStore();
 
   const initialValues = {
@@ -37,10 +37,15 @@ function AccountSettings({updateNotificationSettings, changePassword, formikRefA
 
   return (
     <MDBox>
+      <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
+        Notifications
+      </MDTypography>
+      <CustomCheckbox
+        checked={loginStore.cta_agreement}
+        text="SMS Notifications"
+        onCheck={() => updateSMSNotificationSettings({sms_notification_settings: "cta_agreement"})}
+      />
       {loginStore.user_type === ROLES.INSPECTOR && <>
-        <MDTypography fontSize={"18px"} sx={{fontWeight: 500}} mb={2}>
-          Notifications
-        </MDTypography>
         <CustomCheckbox
           checked={loginStore.notify_im_qualified}
           text="Notify me when a job I'm qualified for is posted"
