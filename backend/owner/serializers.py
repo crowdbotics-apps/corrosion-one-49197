@@ -23,10 +23,11 @@ class OwnerCompleteSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     phone_number = serializers.CharField()
+    cta_agreement = serializers.BooleanField()
 
     class Meta:
         model = Owner
-        fields = ['industry', 'company_name', 'first_name', 'last_name', 'phone_number']
+        fields = ['industry', 'company_name', 'first_name', 'last_name', 'phone_number', 'cta_agreement']
 
     def validate(self, attrs):
         user = self.context['request'].user
@@ -49,14 +50,16 @@ class OwnerCompleteSerializer(serializers.ModelSerializer):
         user.first_name = data['first_name']
         user.last_name = data['last_name']
         user.phone_number = data['phone_number']
+        user.cta_agreement = data['cta_agreement']
         user.save()
         self.instance = user.owner
         self.instance.industry = data['industry']
         self.instance.company_name = data['company_name']
         self.instance.save()
-        code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
-        message = f'Your verification code is {code}'
-        send_sms(message, user.phone_number.as_e164)
+        if user.cta_agreement:
+            code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
+            message = f'Your verification code is {code}'
+            send_sms(message, user.phone_number.as_e164)
         return super().save(**kwargs)
 
 

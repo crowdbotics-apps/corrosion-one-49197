@@ -51,7 +51,7 @@ def send_emails_to_inspectors(job):
                 "user_phone_number": user.phone_number.as_e164 if user.phone_number else None,
             }
         )
-        if user.phone_number:
+        if user.phone_number and user.cta_agreement:
             message = f"Hello {user.first_name},\n\nA new job has been created. Please check your this {url} for more details.\n\nBest regards,\n{settings.PROJECT_NAME}"
             send_sms(message, user.phone_number.as_e164)
 

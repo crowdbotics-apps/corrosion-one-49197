@@ -62,6 +62,8 @@ class User(AbstractUser):
     # Notifications
     marketing_notifications = models.BooleanField(_("Marketing Notifications"), default=True)
 
+    cta_agreement = models.BooleanField(_("CTA Agreement"), default=False)
+
 
     class Meta:
         ordering = ['-id']

@@ -41,12 +41,13 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
     credentials = serializers.PrimaryKeyRelatedField(queryset=Credential.objects.all(), many=True)
     first_name = serializers.CharField()
     last_name = serializers.CharField()
+    cta_agreement = serializers.BooleanField()
     profile_picture = SmartUpdatableImageField(required=False, allow_null=True, allow_empty_file=True)
     phone_number = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
     class Meta:
         model = Inspector
-        fields = ['credentials', 'profile_picture', 'first_name', 'last_name', 'phone_number']
+        fields = ['credentials', 'profile_picture', 'first_name', 'last_name', 'phone_number', 'cta_agreement']
 
     def validate(self, attrs):
         user = self.context['request'].user
@@ -75,6 +76,7 @@ class InspectorCompleteSerializer(serializers.ModelSerializer):
         user.first_name = data['first_name']
         user.last_name = data['last_name']
         user.phone_number = data['phone_number']
+        user.cta_agreement = data['cta_agreement']
         user.save()
         self.instance = user.inspector
         self.instance.credentials.set(data['credentials'])

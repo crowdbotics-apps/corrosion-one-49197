@@ -185,7 +185,7 @@ class UserDetailSerializer(ModelSerializer):
         model = User
         fields = ['email', 'name', 'first_name', 'last_name', 'status', 'user_type', 'phone_number', 'linkedin',
                   'website', 'owner', 'inspector', 'phone_verified', 'email_verified', 'stripe_account_linked',
-                  'stripe_customer_id']
+                  'stripe_customer_id', 'marketing_notifications', 'cta_agreement']
 
     def get_status(self, obj):
         if hasattr(obj, 'owner'):
@@ -215,10 +215,6 @@ class UserDetailSerializer(ModelSerializer):
         if hasattr(obj, 'owner'):
             return OwnerDetailSerializer(obj.owner).data
         return None
-
-
-
-
 
 
 class UserLoginResponseSerializer(Serializer):

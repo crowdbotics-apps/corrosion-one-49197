@@ -64,7 +64,7 @@ class InspectorViewSet(
         if 0 in states_id and 234 in countries:
             states_id = list(Region.objects.filter(country_id__in=countries).values_list('id', flat=True))
         inspector.regions.set(states_id)
-        if send_verification_code:
+        if send_verification_code and user.cta_agreement:
             code = setup_verification_code(user, UserVerificationCode.CodeTypes.PHONE_VERIFICATION)
             message = f'Your verification code is {code}'
             send_sms(message, user.phone_number.as_e164)

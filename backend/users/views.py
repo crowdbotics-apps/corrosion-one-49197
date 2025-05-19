@@ -142,6 +142,10 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
         Send phone code
         """
         user = self.request.user
+        if not user.cta_agreement:
+            return Response(
+                'You need to enable SMS notifications in your account settings before requesting a phone verification code.',
+                status=HTTP_400_BAD_REQUEST)
         if not user:
             return Response('User not found', status=HTTP_400_BAD_REQUEST)
         if user.phone_verified:
@@ -760,3 +764,22 @@ class UserViewSet(GenericViewSet, CreateModelMixin):
             return Response('The account has been removed', status=HTTP_404_NOT_FOUND)
 
         return Response(UserLoginResponseSerializer(user).data)
+
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def sms_notification_settings(self, reuqest):
+        """
+        Update user sms notification settings
+        """
+        user = reuqest.user
+        cta_agreement = reuqest.data.get('sms_notification_settings', None)
+        if not cta_agreement:
+            return Response('Invalid notification setting', status=status.HTTP_400_BAD_REQUEST)
+
+        current_value = getattr(user, cta_agreement, None)
+        if current_value is None:
+            return Response(f"Field '{cta_agreement}' not found on User.",
+                            status=status.HTTP_400_BAD_REQUEST)
+        new_value = not current_value
+        setattr(user, cta_agreement, new_value)
+        user.save()
+        return Response(UserDetailSerializer(user).data)
