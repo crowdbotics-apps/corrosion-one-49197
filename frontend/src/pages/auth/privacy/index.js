@@ -88,6 +88,17 @@ const PrivacyPolicy = () => {
       </p>
 
       <h2 style={{ marginTop: '40px', marginBottom: '20px', fontSize: '2em', color: '#333' }}>
+        Service Providers
+      </h2>
+      <p style={{ maxWidth: '800px', textAlign: 'left' }}>
+        We do not share, sell, rent, or trade end-user phone numbers or any other
+        personal information with third  parties or affiliates for marketing or
+        promotional purposes. Any sharing of opt-in data with outsourced service
+        providers is done exclusively to fulfill the services we provide to you,
+        the end-user.
+      </p>
+
+      <h2 style={{ marginTop: '40px', marginBottom: '20px', fontSize: '2em', color: '#333' }}>
         Security
       </h2>
       <p style={{ maxWidth: '800px', textAlign: 'left' }}>
