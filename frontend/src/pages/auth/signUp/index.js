@@ -1014,7 +1014,7 @@ function SignUp() {
           >
             Upload documents in your profile settings
           </MDTypography>
-          <MDBox display="flex" flexDirection="row" alignItems={'flex-start'}>
+          <MDBox display="flex" flexDirection="colum" alignItems={'flex-start'}>
             <CustomCheckbox
               text=""
               onCheck={(value) => {
@@ -1023,18 +1023,18 @@ function SignUp() {
               }}
               checked={ctaAgreement}
             />
-            <MDTypography fontSize={'14px'}>
-              I agree to receive SMS messages from Corrosion One LLC. Message and data rates may apply. Message
-              frequency varies. Reply STOP to unsubscribe or HELP for help. View our <MDTypography
-              component={Link}
-              to={ROUTES.PRIVACY_POLICY}
-              variant="button"
-              color="info"
-              fontWeight="medium"
-              sx={{fontSize: 14, color : '#8EDA4F'}}
-              target="_blank"
-            >Privacy Policy </MDTypography>
-              and <MDTypography
+            <MDTypography fontSize={'14px'}>I would like to receive offers and news</MDTypography>
+          </MDBox>
+          <MDTypography fontSize={'14px'}>View our <MDTypography
+            component={Link}
+            to={ROUTES.PRIVACY_POLICY}
+            variant="button"
+            color="info"
+            fontWeight="medium"
+            sx={{fontSize: 14, color : '#8EDA4F'}}
+            target="_blank"
+          >Privacy Policy </MDTypography>
+            and <MDTypography
               component={Link}
               to={ROUTES.TERMS_AND_CONDITIONS}
               variant="button"
@@ -1042,9 +1042,8 @@ function SignUp() {
               fontWeight="medium"
               sx={{fontSize: 14, color : '#8EDA4F'}}
               target="_blank"
-            >Terms & Conditions</MDTypography>.
-            </MDTypography>
-          </MDBox>
+            >Terms & Conditions</MDTypography></MDTypography>
+          <MDTypography sx={{marginTop:'10px', fontSize:'14px'}}>By providing your phone number you agree to receive informational text messages from Corrosion One. Consent is not a condition of signup. Messages frequency will vary. Msg & data rates may apply. Reply HELP for help or STOP to cancel.</MDTypography>
           {showResendEmail && <MDBox mt={3} textAlign="center" color={"primary"}>
             <MDTypography sx={{cursor: 'pointer'}} variant="button" color="warning" onClick={() => resendEmail({email: loginStore.email})}>
               Didn&apos;t receive the verification email?{" "}
